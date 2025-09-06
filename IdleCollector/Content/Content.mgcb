@@ -36,3 +36,8 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/atlas.png
+
+#begin Effects/Pixel.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/Pixel.fx

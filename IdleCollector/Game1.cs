@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using IdleEngine;
+using System.Collections.Generic;
 
 namespace IdleCollector
 {
@@ -14,6 +15,9 @@ namespace IdleCollector
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.IsFullScreen = false;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -21,6 +25,14 @@ namespace IdleCollector
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Renderer.Initialize(GraphicsDevice);
+            Renderer.DrawEvent += (_spriteBatch) =>
+            {
+                int size = 24;
+                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(20, 50, size, size), ResourceAtlas.GetTileRect("green"), Color.White, .5f, Vector2.Zero, SpriteEffects.None, 0);
+                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(20, 50, size, size), ResourceAtlas.GetTileRect("red"), Color.White);
+                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(Mouse.GetState().X * 240 / 1920, Mouse.GetState().Y * 135 / 1080, size, size), ResourceAtlas.GetTileRect("blue"), Color.White);
+            };
 
             base.Initialize();
         }
@@ -31,8 +43,37 @@ namespace IdleCollector
 
             ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(3, 1));
 
+            LoadEffects();
+
             // TODO: use this.Content to load your game content here
         }
+
+        #region LoadEffects 
+
+        protected void LoadEffects()
+        {
+            Effect pixel = Content.Load<Effect>("Effects/Pixel");
+            EffectValues[] effectValues = new EffectValues[1];
+            effectValues[0].ints = new KeyValuePair<string, int>[] {
+                new KeyValuePair<string, int>("pixelsX",1920),
+                new KeyValuePair<string, int>("pixelsY", 1080),
+                new KeyValuePair<string, int>("pixelation", 64)
+            };
+
+            BatchConfig pixelConfig = new BatchConfig(
+                SpriteSortMode.Deferred,
+                null,
+                SamplerState.PointClamp,
+                null, null,
+                pixel,
+                effectValues,
+                Matrix.Identity
+            );
+
+            //Renderer.AddEffectPass( pixelConfig );
+        }
+
+        #endregion
 
         protected override void Update(GameTime gameTime)
         {
@@ -46,17 +87,9 @@ namespace IdleCollector
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             // TODO: Add your drawing code here
 
-            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
-
-            _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(100, 200, 64, 64), ResourceAtlas.GetTileRect("red"), Color.White);
-            _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(200, 200, 64, 64), ResourceAtlas.GetTileRect("green"), Color.White);
-            _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(300, 200, 64, 64), ResourceAtlas.GetTileRect("blue"), Color.White);
-
-            _spriteBatch.End();
+            Renderer.Draw(_spriteBatch);
 
             base.Draw(gameTime);
         }

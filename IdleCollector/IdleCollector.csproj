@@ -30,7 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IdleEngine">
-      <HintPath>..\IdleEngine\obj\Debug\net6.0\IdleEngine.dll</HintPath>
+      <HintPath>..\IdleEngine\obj\Release\net6.0\IdleEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

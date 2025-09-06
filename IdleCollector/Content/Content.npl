@@ -35,6 +35,14 @@
 			"action": "build",
 			"importer": "Mp3Importer",
 			"processor": "SoundEffectProcessor"
+		},
+
+		"effects": {
+			"path": "Effects/*.fx",
+			"recursive": "True",
+			"action": "build",
+			"importer": "EffectImporter",
+			"processor": "EffectProcessor"
 		}
 	}
 }
