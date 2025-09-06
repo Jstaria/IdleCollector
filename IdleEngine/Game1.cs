@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using IdleEngine;
-
-namespace IdleCollector
+namespace IdleEngine
 {
     public class Game1 : Game
     {
