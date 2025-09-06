@@ -11,14 +11,13 @@ namespace IdleCollector
 {
     internal static class FileIO
     {
-        // Not particularly useful for this project
         /// <summary>
         /// Initializes file path for writing, useful for created save files
         /// </summary>
         /// <param name="name">Name of document</param>
-        public static void CreateTxtFile(string name)
+        public static void CreateTxtFile(string name, string folder)
         {
-            string stream = "../../../Content/Saved Files/" + name + ".txt";
+            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
 
             StreamWriter fileWriter = new StreamWriter(stream);
 
@@ -30,9 +29,9 @@ namespace IdleCollector
         /// </summary>
         /// <param name="name">Name of document</param>
         /// <param name="data">List of strings</param>
-        public static void WriteTo(string name, List<string> data)
+        public static void WriteTo(string name, string folder, List<string> data)
         {
-            string stream = "../../../Content/Saved Files/" + name + ".txt";
+            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
 
             try
             {
@@ -47,7 +46,6 @@ namespace IdleCollector
             }
             catch
             {
-                // oh well
                 // This catch is specifically for the problem that I kept having with it not closing a document from what I assume is
                 // too-fast of reading and writing and then opening before it can close, I haven't experienced any loss of save data since
                 // implementing this, so I see it as a win
@@ -59,9 +57,9 @@ namespace IdleCollector
         /// </summary>
         /// <param name="name">Name of document</param>
         /// <param name="data">Data being written to document</param>
-        public static void AppendTo(string name, List<string> data)
+        public static void AppendTo(string name, string folder, List<string> data)
         {
-            string stream = "../../../Content/Saved Files/" + name + ".txt";
+            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
 
             StreamWriter fileWriter = new StreamWriter(stream, true);
 
@@ -78,9 +76,9 @@ namespace IdleCollector
         /// </summary>
         /// <param name="name">Name of document</param>
         /// <param name="data">Float Data being written to document</param>
-        public static void WriteTo(string name, List<float> data)
+        public static void WriteTo(string name, string folder, List<float> data)
         {
-            string stream = "../../../Content/Saved Files/" + name + ".txt";
+            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
 
             StreamWriter fileWriter = new StreamWriter(stream);
 
@@ -97,10 +95,22 @@ namespace IdleCollector
         /// </summary>
         /// <param name="name">Name of document</param>
         /// <returns></returns>
-        public static List<string> ReadFrom(string name)
+        public static List<string> ReadFrom(string name, string folder)
+        {
+            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+
+            return ReadFrom(stream);
+        }
+
+        /// <summary>
+        /// Returns a list of string information from document 
+        /// </summary>
+        /// <param name="name">Name of document</param>
+        /// <returns></returns>
+        public static List<string> ReadFrom(string path)
         {
             List<string> data = new List<string>();
-            string stream = "../../../Content/Saved Files/" + name + ".txt";
+            string stream = path;
 
             StreamReader fileReader = new StreamReader(stream);
 
@@ -124,10 +134,10 @@ namespace IdleCollector
         /// </summary>
         /// <param name="name">name of document</param>
         /// <returns></returns>
-        public static List<float> NumReadFrom(string name)
+        public static List<float> NumReadFrom(string name, string folder)
         {
             List<float> data = new List<float>();
-            string stream = "../../../Content/Saved Files/" + name + ".txt";
+            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
 
             StreamReader fileReader = new StreamReader(stream);
 

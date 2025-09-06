@@ -29,6 +29,8 @@ namespace IdleCollector
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(3, 1));
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -47,6 +49,14 @@ namespace IdleCollector
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+
+            _spriteBatch.Begin(samplerState:SamplerState.PointClamp);
+
+            _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(100, 200, 64, 64), ResourceAtlas.GetTileRect("red"), Color.White);
+            _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(200, 200, 64, 64), ResourceAtlas.GetTileRect("green"), Color.White);
+            _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(300, 200, 64, 64), ResourceAtlas.GetTileRect("blue"), Color.White);
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
