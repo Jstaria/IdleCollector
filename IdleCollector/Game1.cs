@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using IdleEngine;
+using Particles;
 using System.Collections.Generic;
+using System;
 
 namespace IdleCollector
 {
@@ -11,6 +13,8 @@ namespace IdleCollector
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        private Texture2D squareTex;
 
         public Game1()
         {
@@ -40,6 +44,8 @@ namespace IdleCollector
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            squareTex = Content.Load<Texture2D>("Textures/grass");
 
             ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(3, 1));
 
@@ -89,7 +95,24 @@ namespace IdleCollector
         {
             // TODO: Add your drawing code here
 
-            Renderer.Draw(_spriteBatch);
+            Renderer.Draw(_spriteBatch, squareTex);
+
+            //Matrix shear = Matrix.Identity;
+            //shear.M21 = .25f * MathF.Sin(2 * (float)gameTime.TotalGameTime.TotalSeconds) * MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds);
+            //Matrix rotation = Matrix.CreateRotationZ(MathF.PI);
+            //Matrix translation = Matrix.CreateTranslation(new Vector3(400, 400, 0));
+            //Matrix final = shear * rotation * translation;
+
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    shear = Matrix.Identity;
+            //    shear.M21 = .25f * MathF.Sin(2 * (float)gameTime.TotalGameTime.TotalSeconds + i * .5f) * MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds);
+            //    rotation = Matrix.CreateRotationZ(MathF.PI);
+            //    translation = Matrix.CreateTranslation(new Vector3(100 + 120 * i, 400, 0));
+            //    final = shear * rotation * translation;
+
+            //    VertexPositionTexture[] verts = new VertexPositionTexture[5];
+            //}
 
             base.Draw(gameTime);
         }

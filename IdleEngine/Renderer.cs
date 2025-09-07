@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Particles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -47,7 +48,7 @@ namespace IdleEngine
 
         public static void AddEffectPass(BatchConfig process) => processes.Add(process);
 
-        public static void DrawToTexture(SpriteBatch sb)
+        public static void DrawToTexture(SpriteBatch sb, Texture2D squareTex)
         {
             sb.GraphicsDevice.SetRenderTarget(renderTexture);
             sb.GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -63,6 +64,13 @@ namespace IdleEngine
                 );
             DrawEvent?.Invoke(sb);
             sb.End();
+
+            ShapeBatch.BeginTextured(sb.GraphicsDevice, squareTex, renderTexture);
+
+            ShapeBatch.BoxTextured(0, 0, 16*16, 16*16);
+
+            ShapeBatch.End();
+
             sb.GraphicsDevice.SetRenderTarget(null);
 
             for (int i = 0; i < processes.Count; i++)
@@ -142,9 +150,9 @@ namespace IdleEngine
             }
         }
 
-        public static void Draw(SpriteBatch sb)
+        public static void Draw(SpriteBatch sb, Texture2D squareTex)
         {
-            DrawToTexture(sb);
+            DrawToTexture(sb, squareTex);
 
             Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
 
