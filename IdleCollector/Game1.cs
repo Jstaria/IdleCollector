@@ -14,7 +14,7 @@ namespace IdleCollector
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D squareTex;
+        private bool MainScene = true;
 
         public Game1()
         {
@@ -29,14 +29,33 @@ namespace IdleCollector
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            Renderer.Initialize(GraphicsDevice);
-            Renderer.DrawEvent += (_spriteBatch) =>
+            SceneManager.Initialize("Main Scene", GraphicsDevice);
+
+            Renderer.AddToSceneDraw((_spriteBatch) =>
             {
                 int size = 24;
                 _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(20, 50, size, size), ResourceAtlas.GetTileRect("green"), Color.White, .5f, Vector2.Zero, SpriteEffects.None, 0);
                 _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(20, 50, size, size), ResourceAtlas.GetTileRect("red"), Color.White);
                 _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(Mouse.GetState().X * 240 / 1920, Mouse.GetState().Y * 135 / 1080, size, size), ResourceAtlas.GetTileRect("blue"), Color.White);
-            };
+            });
+            
+            SceneManager.AddScene("Sample Scene");
+            Renderer.AddToSceneDraw("Sample Scene", (_spriteBatch) =>
+            {
+                int size = 24;
+                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(20, 100, size, size), ResourceAtlas.GetTileRect("blue"), Color.White, 1.5f, Vector2.Zero, SpriteEffects.None, 0);
+                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(100, 50, size, size), ResourceAtlas.GetTileRect("green"), Color.White);
+                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(Mouse.GetState().X * 240 / 1920, Mouse.GetState().Y * 135 / 1080, size, size), ResourceAtlas.GetTileRect("red"), Color.White);
+            });
+
+            Updater.AddToUpdate(UpdateType.Standard, (gameTime) => 
+            { 
+                if (Input.IsButtonDownOnce(Keys.Space))
+                {
+                    SceneManager.SwapScene(MainScene ? "Sample Scene" : "Main Scene");
+                    MainScene = !MainScene;
+                }
+            });
 
             base.Initialize();
         }
@@ -44,8 +63,6 @@ namespace IdleCollector
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            squareTex = Content.Load<Texture2D>("Textures/grass");
 
             ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(3, 1));
 
@@ -86,7 +103,7 @@ namespace IdleCollector
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            Updater.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -95,7 +112,7 @@ namespace IdleCollector
         {
             // TODO: Add your drawing code here
 
-            Renderer.Draw(_spriteBatch, squareTex);
+            Renderer.Draw(_spriteBatch);
 
             //Matrix shear = Matrix.Identity;
             //shear.M21 = .25f * MathF.Sin(2 * (float)gameTime.TotalGameTime.TotalSeconds) * MathF.Cos((float)gameTime.TotalGameTime.TotalSeconds);

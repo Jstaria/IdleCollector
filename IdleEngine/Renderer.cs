@@ -7,6 +7,7 @@ using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,7 +16,9 @@ namespace IdleEngine
     public static class Renderer
     {
         public delegate void OnDraw(SpriteBatch sb);
-        public static event OnDraw DrawEvent;
+        public static Dictionary<string, OnDraw> DrawEvents;
+        private static event OnDraw DrawEvent;
+        private static event OnDraw IndependentDrawEvent;
 
         private static RenderTarget2D renderTexture;
         private static RenderTarget2D finalTexture;
@@ -28,6 +31,8 @@ namespace IdleEngine
 
         public static void Initialize(GraphicsDevice GraphicsDevice)
         {
+            DrawEvents = new();
+
             processes = new List<BatchConfig>();
 
             renderTexture = new RenderTarget2D(GraphicsDevice, 240, 135);
@@ -48,7 +53,7 @@ namespace IdleEngine
 
         public static void AddEffectPass(BatchConfig process) => processes.Add(process);
 
-        public static void DrawToTexture(SpriteBatch sb, Texture2D squareTex)
+        public static void DrawToTexture(SpriteBatch sb)
         {
             sb.GraphicsDevice.SetRenderTarget(renderTexture);
             sb.GraphicsDevice.Clear(Color.CornflowerBlue);
@@ -63,13 +68,15 @@ namespace IdleEngine
                 transformMatrix: renderTexConfig.transformMatrix
                 );
             DrawEvent?.Invoke(sb);
+            IndependentDrawEvent?.Invoke(sb);
             sb.End();
 
-            ShapeBatch.BeginTextured(sb.GraphicsDevice, squareTex, renderTexture);
+            // Idea of another set of draw calls for primitives not using spritebatch
+            //ShapeBatch.BeginTextured(sb.GraphicsDevice, squareTex, renderTexture);
 
-            ShapeBatch.BoxTextured(0, 0, 16*16, 16*16);
+            //ShapeBatch.BoxTextured(0, 0, 16*32, 16*32);
 
-            ShapeBatch.End();
+            //ShapeBatch.End();
 
             sb.GraphicsDevice.SetRenderTarget(null);
 
@@ -150,9 +157,9 @@ namespace IdleEngine
             }
         }
 
-        public static void Draw(SpriteBatch sb, Texture2D squareTex)
+        public static void Draw(SpriteBatch sb)
         {
-            DrawToTexture(sb, squareTex);
+            DrawToTexture(sb);
 
             Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
 
@@ -160,5 +167,46 @@ namespace IdleEngine
             sb.Draw(finalTexture, destinationRect, Color.White);
             sb.End();
         }
+
+        internal static void SwapScene(string sceneName)
+        {
+            DrawEvent = DrawEvents[sceneName];
+        }
+
+        internal static void AddScene(string sceneName)
+        {
+            if (DrawEvents.ContainsKey(sceneName))
+                throw new Exception(String.Format("Events already has scene: {0}", sceneName));
+            DrawEvents.Add(sceneName, (SpriteBatch sb) => { });
+        }
+
+        /// <summary>
+        /// Adds to a scene's draw loop, must swap scene to see effects
+        /// </summary>
+        public static void AddToSceneDraw(string sceneName, IDrawable drawable) => AddToSceneDraw(sceneName, drawable.Draw);
+        /// <summary>
+        /// Adds to a scene's draw loop, must swap scene to see effects
+        /// </summary>
+        public static void AddToSceneDraw(string sceneName, OnDraw func) => DrawEvents[sceneName] += func;
+        /// <summary>
+        /// Adds to current scene's draw loop, does not require scene swap
+        /// </summary>
+        public static void AddToSceneDraw(IDrawable drawable) => AddToSceneDraw(drawable.Draw);
+        /// <summary>
+        /// Adds to current scene's draw loop, does not require scene swap
+        /// </summary>
+        public static void AddToSceneDraw(OnDraw func)
+        {
+            DrawEvent += func;
+            DrawEvents[SceneManager.CurrentSceneName] = DrawEvent;
+        }
+        /// <summary>
+        /// Adds to scene independent draw loop, does not require scene swap
+        /// </summary>
+        public static void AddToDraw(IDrawable drawable) => AddToDraw(drawable.Draw);
+        /// <summary>
+        /// Adds to scene independent draw loop, does not require scene swap
+        /// </summary>
+        public static void AddToDraw(OnDraw func) => IndependentDrawEvent += func;
     }
 }
