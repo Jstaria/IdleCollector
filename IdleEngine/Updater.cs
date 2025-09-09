@@ -29,6 +29,8 @@ namespace IdleEngine
 
         public static void Initialize()
         {
+            ControlledUpdateCount = 1;
+
             UpdateEvents = new();
             
             UpdateEvent = new();
@@ -44,15 +46,27 @@ namespace IdleEngine
 
         public static void Update(GameTime gameTime)
         {
+            ControlledUpdate(gameTime);
+            StandardUpdate(gameTime);
+            SlowUpdate(gameTime);
+        }
+
+        private static void ControlledUpdate(GameTime gameTime)
+        {
             for (int i = 0; i < ControlledUpdateCount; i++)
             {
                 UpdateEvent[UpdateType.Controlled]?.Invoke(gameTime);
                 IndependentUpdateEvent[UpdateType.Controlled]?.Invoke(gameTime);
             }
-
+        }
+        private static void StandardUpdate(GameTime gameTime)
+        {
             UpdateEvent[UpdateType.Standard]?.Invoke(gameTime);
             IndependentUpdateEvent[UpdateType.Standard]?.Invoke(gameTime);
+        }
 
+        private static void SlowUpdate(GameTime gameTime)
+        {
             if ((frameCount = ++frameCount % 60) % slowFrameSkip == 0)
             {
                 UpdateEvent[UpdateType.Slow]?.Invoke(gameTime);

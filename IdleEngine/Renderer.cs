@@ -26,16 +26,25 @@ namespace IdleEngine
         private static Color[] colorData;
 
         private static BatchConfig renderTexConfig;
-
         private static List<BatchConfig> processes;
 
-        public static void Initialize(GraphicsDevice GraphicsDevice)
+        private static GraphicsDeviceManager _graphics;
+
+        public static Point RenderSize {  get; private set; }
+        public static Point ScreenSize { get; private set; }
+
+        public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {
             DrawEvents = new();
-
             processes = new List<BatchConfig>();
 
-            renderTexture = new RenderTarget2D(GraphicsDevice, 240, 135);
+            _graphics = deviceManager;
+
+            RenderSize = renderSize;
+            ScreenSize = _graphics.IsFullScreen ? 
+                new Point(_graphics.GraphicsDevice.DisplayMode.Width, _graphics.GraphicsDevice.DisplayMode.Height) :
+                new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            renderTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
             renderTexConfig = new BatchConfig(
                 SpriteSortMode.Immediate,
                 null,
@@ -45,8 +54,8 @@ namespace IdleEngine
                 );
 
             targets = new RenderTarget2D[] {
-                new RenderTarget2D(GraphicsDevice, renderTexture.Width, renderTexture.Height),
-                new RenderTarget2D(GraphicsDevice, renderTexture.Width, renderTexture.Height) };
+                new RenderTarget2D(_graphics.GraphicsDevice, renderTexture.Width, renderTexture.Height),
+                new RenderTarget2D(_graphics.GraphicsDevice, renderTexture.Width, renderTexture.Height) };
 
             colorData = new Color[renderTexture.Width * renderTexture.Height];
         }
@@ -178,6 +187,14 @@ namespace IdleEngine
             if (DrawEvents.ContainsKey(sceneName))
                 throw new Exception(String.Format("Events already has scene: {0}", sceneName));
             DrawEvents.Add(sceneName, (SpriteBatch sb) => { });
+        }
+
+        public static void ToggleFullScreen()
+        {
+            _graphics.ToggleFullScreen();
+            ScreenSize = _graphics.IsFullScreen ?
+                    new Point(_graphics.GraphicsDevice.DisplayMode.Width, _graphics.GraphicsDevice.DisplayMode.Height) :
+                    new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         }
 
         /// <summary>

@@ -16,13 +16,13 @@ namespace IdleEngine
 
         internal static string CurrentSceneName => currentSceneName;
 
-        public static void Initialize(string sceneName, GraphicsDevice device)
+        public static void Initialize(string sceneName, GraphicsDeviceManager deviceManager, Point renderSize)
         {
             sceneNames = new List<string>();
             currentSceneName = sceneName;
 
             Updater.Initialize();
-            Renderer.Initialize(device);
+            Renderer.Initialize(deviceManager, renderSize);
             Input.Initialize();
 
             AddScene(sceneName);

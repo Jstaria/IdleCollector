@@ -27,7 +27,7 @@ namespace Particles
 		// Internal initialization and drawing fields
 		private static bool initialized = false;
 		private static bool batchActive = false;
-		private static bool texturedBatchActive = false;
+		// private static bool texturedBatchActive = false;
 		private static BasicEffect effect = null;
 		private static GraphicsDevice device = null;
 
