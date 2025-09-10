@@ -8,13 +8,8 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
-    public interface IDrawable
+    public interface IRenderable
     {
-        public Color TintColor { get; protected set; }
-        public Point Size { get; protected set; }
-        public Point DrawSize { get; protected set; }
-        public Texture2D Texture { get; protected set; }
-
         // Possibly add property here to control draw layer/order
 
         public void Draw(SpriteBatch sb);

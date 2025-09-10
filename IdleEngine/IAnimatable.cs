@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
-    public interface IAnimatable: IDrawable
+    public interface IAnimatable: IRenderable
     {
         public Point FrameCount { get; protected set; }
         public Point CurrentFrame { get; protected set; }

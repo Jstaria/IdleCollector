@@ -24,10 +24,10 @@ namespace IdleEngine
 
         private static bool RectangleCollision(ICollidable c1, ICollidable c2)
         {
-            return (c1.Position.X + c1.Bounds.Width >= c2.Position.X &&
-                c1.Position.X <= c2.Position.X + c2.Bounds.Width &&
-                c1.Position.Y >= c2.Position.Y + c2.Bounds.Height &&
-                c1.Position.Y + c1.Bounds.Height <= c2.Position.Y);
+            return (c1.Position.X < c2.Position.X + c2.Bounds.Width &&
+                    c1.Position.X + c1.Bounds.Width > c2.Position.X &&
+                    c1.Position.Y < c2.Position.Y + c2.Bounds.Height &&
+                    c1.Position.Y + c1.Bounds.Height > c2.Position.Y);
         }
 
         private static bool CircleRectangleCollision(ICollidable c1, ICollidable c2)

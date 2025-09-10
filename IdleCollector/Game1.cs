@@ -21,8 +21,10 @@ namespace IdleCollector
         private Spring springX = new Spring(20, .75f, 250);
         private Spring springY = new Spring(20, .75f, 150);
         private Texture2D circle;
+        private Texture2D square;
+        private Texture2D prevFrame;
         private TestCollider[] testColliders = new TestCollider[4];
-
+        private Button button;
         private bool[] bools = new bool[4];
 
         public Game1()
@@ -32,7 +34,7 @@ namespace IdleCollector
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.SynchronizeWithVerticalRetrace = true;
             _graphics.HardwareModeSwitch = false;
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -59,7 +61,7 @@ namespace IdleCollector
             testColliders[3] = new TestCollider();
             testColliders[3].CollisionType = CollisionType.Rectangle;
             testColliders[3].Bounds = new Rectangle(0, 0, 75, 75);
-            testColliders[3].Position = new Point(300, 75);
+            testColliders[3].Position = new Point(100, 75);
 
             Renderer.AddToSceneDraw((_spriteBatch) =>
             {
@@ -69,13 +71,16 @@ namespace IdleCollector
                 _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(Input.GetMousePos(), new Point(size, size)), ResourceAtlas.GetTileRect("blue"), Color.White);
             });
 
+            //Renderer.AddToDraw((_spriteBatch) => { _spriteBatch.Draw(prevFrame, new Rectangle(0,0, 160,90), Color.White); });
+
             SceneManager.AddScene("Sample Scene");
             Renderer.AddToSceneDraw("Sample Scene", (_spriteBatch) =>
             {
                 int size = 24;
-                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(testColliders[2].Position, testColliders[2].Bounds.Size), bools[2] ? ResourceAtlas.GetTileRect("green") : ResourceAtlas.GetTileRect("red"), Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(testColliders[2].Position, testColliders[2].Bounds.Size), bools[2] ? ResourceAtlas.GetTileRect("red") : ResourceAtlas.GetTileRect("blue"), Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
+                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(testColliders[3].Position, testColliders[3].Bounds.Size), bools[3] ? ResourceAtlas.GetTileRect("red") : ResourceAtlas.GetTileRect("green"), Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
                 _spriteBatch.Draw(circle, new Rectangle(testColliders[1].Position + testColliders[1].Bounds.Location, testColliders[1].Bounds.Size), bools[1] ? Color.Purple : Color.Green);
-                _spriteBatch.Draw(circle, new Rectangle(testColliders[0].Position + testColliders[0].Bounds.Location, testColliders[0].Bounds.Size), bools[0] ? Color.Blue : Color.Aqua);
+                //_spriteBatch.Draw(circle, new Rectangle(testColliders[0].Position + testColliders[0].Bounds.Location, testColliders[0].Bounds.Size), bools[0] ? Color.Blue : Color.Aqua);
             });
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
@@ -83,29 +88,27 @@ namespace IdleCollector
                 if (Input.IsButtonDownOnce(Keys.F11) || Input.AreButtonsDownOnce(Keys.LeftAlt, Keys.Enter))
                     Renderer.ToggleFullScreen();
 
-                if (Input.IsButtonDownOnce(Keys.Space))
-                {
-                    SceneManager.SwapScene(MainScene ? "Sample Scene" : "Main Scene");
-                    MainScene = !MainScene;
-                }
-
-
+                prevFrame = Renderer.GetLastRender();
             });
 
-            Updater.AddToSceneUpdate(UpdateType.Standard, (gameTime) => { position.Y += Input.GetMouseScrollDelta() * 5; });
+            Updater.AddToSceneUpdate(UpdateType.Standard, (gameTime) => 
+            { 
+                position.Y += Input.GetMouseScrollDelta() * 5; 
+                
+            });
             Updater.AddToSceneUpdate("Sample Scene", UpdateType.Controlled, (gameTime) =>
             {
                 springX.Update();
                 springY.Update();
 
                 
-                bool temp1 = CollisionHelper.CheckForCollision(testColliders[0], testColliders[2]);
+                bool temp1 = CollisionHelper.CheckForCollision(testColliders[3], testColliders[1]);
 
-                bools[0] = temp1;
-                bools[2] = temp1;
+                bools[3] = temp1;
+                bools[1] = temp1;
 
                 Point pos = Input.GetMousePos();
-                testColliders[0].Position = pos;
+                testColliders[3].Position = pos;
             });
 
             base.Initialize();
@@ -115,12 +118,31 @@ namespace IdleCollector
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             circle = Content.Load<Texture2D>("Textures/circle");
+            square = Content.Load<Texture2D>("Textures/square");
             ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(3, 1));
 
+            LoadButtons();
             //LoadEffects();
         }
 
-        #region LoadEffects 
+        #region Load
+
+        protected void LoadButtons()
+        {
+            ButtonConfig config = new ButtonConfig();
+            config.bounds = new Rectangle(200, 100, 100, 50);
+            config.textures = new[] { square, circle };
+
+            button = new Button(config);
+            button.OnClick += () =>
+            {
+                SceneManager.SwapScene(MainScene ? "Sample Scene" : "Main Scene");
+                MainScene = !MainScene;
+            };
+
+            Updater.AddToUpdate(button);
+            Renderer.AddToDraw(button);
+        }
 
         protected void LoadEffects()
         {
