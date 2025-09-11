@@ -67,6 +67,13 @@ namespace IdleEngine
             Point position = new Point(-target.X - (target.Width / 2), -target.Y - (target.Height / 2));
             SetTarget(position);
         }
+        public void SetTranslation(Point position)
+        {
+            SetTarget(position);
+            SetPosition(position);
+            actualPosition = position.ToVector2();
+        }
+
         public void SetTarget(Point target)
         {
             switch (movementType)

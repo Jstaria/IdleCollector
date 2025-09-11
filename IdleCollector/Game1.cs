@@ -15,16 +15,7 @@ namespace IdleCollector
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private bool MainScene = true;
-        private Point position = new Point(20, 50);
-        private Spring springX = new Spring(20, .75f, 250);
-        private Spring springY = new Spring(20, .75f, 150);
-        private Texture2D newGameH;
-        private Texture2D newGame;
-        private Texture2D prevFrame;
-        private TestCollider[] testColliders = new TestCollider[4];
         private Button button;
-        private bool[] bools = new bool[4];
         private Camera camera;
 
         public Game1()
@@ -43,113 +34,52 @@ namespace IdleCollector
         protected override void Initialize()
         {
             SceneManager.Initialize("Main Scene", _graphics, new Point(240 * 2, 135 * 2));
-
+            
             camera = new Camera(480, 270, .05f);
+            camera.SetTranslation(new Point(240, 135));
             Renderer.CurrentCamera = camera;
 
-            testColliders[0] = new TestCollider();
-            testColliders[0].CollisionType = CollisionType.Circle;
-            testColliders[0].Radius = 25;
-            testColliders[0].Position = new Point(100, 75);
-            testColliders[0].Bounds = new Rectangle(-25, -25, 50, 50);
-            testColliders[1] = new TestCollider();
-            testColliders[1].CollisionType = CollisionType.Circle;
-            testColliders[1].Radius = 50;
-            testColliders[1].Bounds = new Rectangle(-50, -50, 100, 100);
-            testColliders[1].Position = new Point(300, 75);
-            testColliders[2] = new TestCollider();
-            testColliders[2].CollisionType = CollisionType.Rectangle;
-            testColliders[2].Bounds = new Rectangle(0, 0, 100, 50);
-            testColliders[2].Position = new Point(300, 75);
-            testColliders[3] = new TestCollider();
-            testColliders[3].CollisionType = CollisionType.Rectangle;
-            testColliders[3].Bounds = new Rectangle(0, 0, 75, 75);
-            testColliders[3].Position = new Point(100, 75);
-
-            Renderer.AddToSceneDraw((_spriteBatch) =>
-            {
-                int size = 24;
-                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(20, 50, size, size), ResourceAtlas.GetTileRect("green"), Color.White, .5f, Vector2.Zero, SpriteEffects.None, 0);
-                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(position, new Point(size, size)), ResourceAtlas.GetTileRect("red"), Color.White);
-                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(Input.GetMousePos(), new Point(size, size)), ResourceAtlas.GetTileRect("blue"), Color.White);
-            });
-
-            //Renderer.AddToDraw((_spriteBatch) => { _spriteBatch.Draw(prevFrame, new Rectangle(0,0, 160,90), Color.White); });
-
             SceneManager.AddScene("Sample Scene");
-            Renderer.AddToSceneDraw("Sample Scene", (_spriteBatch) =>
-            {
-                int size = 24;
-                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(testColliders[2].Position, testColliders[2].Bounds.Size), bools[2] ? ResourceAtlas.GetTileRect("red") : ResourceAtlas.GetTileRect("blue"), Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-                _spriteBatch.Draw(ResourceAtlas.TilemapAtlas, new Rectangle(testColliders[3].Position, testColliders[3].Bounds.Size), bools[3] ? ResourceAtlas.GetTileRect("red") : ResourceAtlas.GetTileRect("green"), Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0);
-                _spriteBatch.Draw(newGameH, new Rectangle(testColliders[1].Position + testColliders[1].Bounds.Location, testColliders[1].Bounds.Size), bools[1] ? Color.Purple : Color.Green);
-                //_spriteBatch.Draw(circle, new Rectangle(testColliders[0].Position + testColliders[0].Bounds.Location, testColliders[0].Bounds.Size), bools[0] ? Color.Blue : Color.Aqua);
-            });
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
             {
                 if (Input.IsButtonDownOnce(Keys.F11) || Input.AreButtonsDownOnce(Keys.LeftAlt, Keys.Enter))
                     Renderer.ToggleFullScreen();
 
-                //prevFrame = Renderer.GetLastRender();
-
                 camera.Update(gameTime);
-
-                if (Input.IsRightButtonDownOnce())
-                    camera.SetTarget(Input.GetMousePos());
-            });
-
-            Updater.AddToSceneUpdate(UpdateType.Standard, (gameTime) => 
-            { 
-                position.Y += Input.GetMouseScrollDelta() * 5; 
-                
-            });
-            Updater.AddToSceneUpdate("Sample Scene", UpdateType.Controlled, (gameTime) =>
-            {
-                springX.Update();
-                springY.Update();
-
-                
-                bool temp1 = CollisionHelper.CheckForCollision(testColliders[3], testColliders[1]);
-
-                bools[3] = temp1;
-                bools[1] = temp1;
-
-                Point pos = Input.GetMousePos();
-                testColliders[3].Position = pos;
             });
 
             base.Initialize();
         }
 
+        #region Load
+
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            newGameH = Content.Load<Texture2D>("Textures/newGameH");
-            newGame = Content.Load<Texture2D>("Textures/newGame");
+
             ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(3, 1));
+            ResourceAtlas.LoadTextures(Content, "../../../Content/Textures/", "Textures");
+
+            Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
 
             LoadButtons();
             //LoadEffects();
         }
 
-        #region Load
-
         protected void LoadButtons()
         {
             ButtonConfig config = new ButtonConfig();
-            config.bounds = new Rectangle(100, 100, 192, 64);
-            config.textures = new[] { newGame, newGameH };
+            config.bounds = new Rectangle(10, 50, 192, 64);
+            config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
 
             button = new Button(config);
-            button.OnClick += () =>
-            {
-                SceneManager.SwapScene(MainScene ? "Sample Scene" : "Main Scene");
-                MainScene = !MainScene;
-            };
+            button.OnClick += () => { SceneManager.SwapScene("Sample Scene"); };
 
-            Updater.AddToUpdate(button);
-            Renderer.AddToDraw(button);
+            Updater.AddToSceneUpdate("Main Scene", button);
+            Renderer.AddToSceneUIDraw("Main Scene", button);
+
+            SceneManager.SwapScene("Main Scene");
         }
 
         protected void LoadEffects()

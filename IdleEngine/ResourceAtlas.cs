@@ -1,4 +1,5 @@
 ﻿using IdleCollector;
+using Microsoft.VisualBasic.FileIO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -20,6 +21,7 @@ namespace IdleEngine
         // Texture2D Resource
         private static Texture2D tilemapAtlas;
         private static Point tileSize;
+        private static Dictionary<string, Texture2D> textureCache;
         private static Dictionary<string, Point> tilemapAtlasKeys;
     
         // Sound Effects and Audio
@@ -35,6 +37,12 @@ namespace IdleEngine
             if (!tilemapAtlasKeys.ContainsKey(tileName)) throw new Exception(String.Format("Tile {0} does not exist!", tileName));
             
             return new Rectangle(tilemapAtlasKeys[tileName], tileSize);
+        }
+        public static Texture2D GetTexture(string name)
+        {
+            if (!textureCache.ContainsKey(name)) throw new Exception(string.Format("Texture cache does not contain: {0}", name));
+
+            return textureCache[name];
         }
 
         public static void LoadTilemap(ContentManager Content, string tilemapPath, string tilemapKeysPath, Point tilemapResolution)
@@ -57,6 +65,24 @@ namespace IdleEngine
                 }
             }
 
+        }
+
+        public static void LoadTextures(ContentManager Content, string fullFilePath, string folder)
+        {
+            textureCache = new Dictionary<string, Texture2D>();
+
+            DirectoryInfo di = new DirectoryInfo(fullFilePath);
+            FileInfo[] files = di.GetFiles("*.png");
+
+            int filesLength = files.Length;
+
+            for (int i = 0; i < filesLength; i++)
+            {
+                string name = files[i].Name.Remove(files[i].Name.Length - 4, 4);
+                Texture2D media = Content.Load<Texture2D>(folder + "/" + name);
+
+                textureCache.Add(name, media);
+            }
         }
 
         /// <summary>
