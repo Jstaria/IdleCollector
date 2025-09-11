@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using IdleEngine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,8 @@ using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+public interface IScene : IUpdatable, IRenderable { }
 
 namespace IdleEngine
 {
@@ -45,6 +48,23 @@ namespace IdleEngine
 
             Updater.AddScene(sceneName);
             Renderer.AddScene(sceneName);
+        }
+
+        public static void AddToScene(IScene obj)
+        {
+            Updater.AddToSceneUpdate(obj);
+            Renderer.AddToSceneDraw(obj);
+        }
+        public static void AddToScene(string sceneName, IScene obj)
+        {
+            Updater.AddToSceneUpdate(sceneName, obj);
+            Renderer.AddToSceneDraw(sceneName, obj);
+        }
+
+        public static void AddToIndependent(IScene obj)
+        {
+            Updater.AddToUpdate(obj);
+            Renderer.AddToDraw(obj);
         }
     }
 }

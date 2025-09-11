@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 // Simple particle for particle systems or one off text
 
-namespace IdleCollector
+namespace IdleEngine
 {
     internal class Particle
     {

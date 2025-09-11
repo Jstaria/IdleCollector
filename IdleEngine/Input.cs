@@ -54,8 +54,10 @@ namespace IdleEngine
             currentMousePos = currentMouseState.Position;
             Point renderSize = Renderer.RenderSize;
             Point screenSize = Renderer.ScreenSize;
+            Point transform = Renderer.CurrentCamera.Position;
             currentMousePos.X = (int)(currentMousePos.X * ((float)renderSize.X / (float)screenSize.X));
             currentMousePos.Y = (int)(currentMousePos.Y * ((float)renderSize.Y / (float)screenSize.Y));
+            currentMousePos -= transform;
 
             currentScroll = currentMouseState.ScrollWheelValue;
 

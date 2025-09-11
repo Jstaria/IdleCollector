@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Particles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -34,6 +33,7 @@ namespace IdleEngine
 
         public static Point RenderSize {  get; private set; }
         public static Point ScreenSize { get; private set; }
+        public static Camera CurrentCamera { get; set; }
 
         public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {
@@ -77,7 +77,7 @@ namespace IdleEngine
                 depthStencilState: renderTexConfig.depthStencilState,
                 rasterizerState: renderTexConfig.rasterizerState,
                 effect: renderTexConfig.effect,
-                transformMatrix: renderTexConfig.transformMatrix
+                transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
                 );
             DrawEvent?.Invoke(sb);
             UIDrawEvent?.Invoke(sb);
