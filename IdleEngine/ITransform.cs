@@ -9,9 +9,9 @@ namespace IdleEngine
 {
     public interface ITransform
     {
-        public Point Position { get; protected set; }
+        public Vector2 Position { get; protected set; }
         
-        public void Move(Point direction);
+        public void Move(Vector2 direction);
         public void MoveTo(Point position);
     }
 }

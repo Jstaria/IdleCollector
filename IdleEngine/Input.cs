@@ -36,6 +36,9 @@ namespace IdleEngine
             prevKeysPressed = new Keys[64];
             currentKeysPressed = new Keys[64];
 
+            currentMousePos = new Point(0, 0);
+            prevMousePos = new Point(0, 0);
+
             // Initialize can be found in SceneManager.cs just after Updater Init
             Updater.AddToUpdate(UpdateType.Standard, Update);
         }
@@ -54,7 +57,7 @@ namespace IdleEngine
             currentMousePos = currentMouseState.Position;
             Point renderSize = Renderer.RenderSize;
             Point screenSize = Renderer.ScreenSize;
-            Point transform = Renderer.CurrentCamera.Position;
+            Point transform = Renderer.CurrentCamera == null ? Point.Zero : Renderer.CurrentCamera.Position;
             currentMousePos.X = (int)(currentMousePos.X * ((float)renderSize.X / (float)screenSize.X));
             currentMousePos.Y = (int)(currentMousePos.Y * ((float)renderSize.Y / (float)screenSize.Y));
             currentMousePos -= transform;

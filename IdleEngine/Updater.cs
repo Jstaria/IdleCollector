@@ -18,8 +18,11 @@ namespace IdleEngine
     public static class Updater
     {
         public delegate void OnUpdate(GameTime gameTime);
-        public static Dictionary<string, Dictionary<UpdateType,OnUpdate>> UpdateEvents;
-        private static Dictionary<UpdateType,OnUpdate> UpdateEvent;
+        public delegate void OnSwap();
+        private static Dictionary<string, Dictionary<UpdateType,OnUpdate>> UpdateEvents;
+        private static Dictionary<string, OnSwap> OnEnterEvents;
+        private static Dictionary<string, OnSwap> OnExitEvents;
+        private static Dictionary<UpdateType, OnUpdate> UpdateEvent;
         private static Dictionary<UpdateType, OnUpdate> IndependentUpdateEvent;
 
         private readonly static int slowFrameSkip = 3;
@@ -30,7 +33,8 @@ namespace IdleEngine
         public static void Initialize()
         {
             ControlledUpdateCount = 1;
-
+            OnEnterEvents = new();
+            OnExitEvents = new();
             UpdateEvents = new();
             
             UpdateEvent = new();
@@ -76,6 +80,8 @@ namespace IdleEngine
 
         internal static void SwapScene(string sceneName)
         {
+            OnExitEvents[SceneManager.CurrentSceneName].Invoke();
+            OnEnterEvents[sceneName]?.Invoke();
             UpdateEvent = UpdateEvents[sceneName];
         }
 
@@ -84,8 +90,9 @@ namespace IdleEngine
             if (UpdateEvents.ContainsKey(sceneName))
                 throw new Exception(String.Format("Events already has scene: {0}", sceneName));
 
+            OnEnterEvents.Add(sceneName, () => { });
+            OnExitEvents.Add(sceneName, () => { });
             UpdateEvents.Add(sceneName, new());
-
             UpdateEvents[sceneName].Add(UpdateType.Controlled, (GameTime gameTime) => { });
             UpdateEvents[sceneName].Add(UpdateType.Standard, (GameTime gameTime) => { });
             UpdateEvents[sceneName].Add(UpdateType.Slow, (GameTime gameTime) => { });
@@ -119,5 +126,13 @@ namespace IdleEngine
         /// Adds to scene independent update loop, doesn't requires swap
         /// </summary>
         public static void AddToUpdate(UpdateType type, OnUpdate func) => IndependentUpdateEvent[type] += func;
+        /// <summary>
+        /// Add to event that is invoked on scene enter
+        /// </summary>
+        public static void AddToSceneEnter(string sceneName, OnSwap func) => OnEnterEvents[sceneName] += func;
+        /// <summary>
+        /// Add to event that is invoked on scene exit
+        /// </summary>
+        public static void AddToSceneExit(string sceneName, OnSwap func) => OnExitEvents[sceneName] += func;
     }
 }

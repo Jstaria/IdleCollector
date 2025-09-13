@@ -1,2 +1,2 @@
-﻿Speed: 5
-PickUpRange: 5
+﻿speed: 3
+pickupRange: 5

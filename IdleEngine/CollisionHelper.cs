@@ -8,10 +8,19 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
+    public enum CollisionCheck
+    {
+        Circle,
+        Rectangle,
+        CircleRect
+    }
     public static class CollisionHelper
     {
         public static bool CheckForCollision(ICollidable c1, ICollidable c2)
         {
+            if (c1.CollisionType == CollisionType.Both || c2.CollisionType == CollisionType.Both)
+                throw new Exception("Cannot check for collision, please specify collision type!");
+
             if (c1.CollisionType == CollisionType.Circle && c2.CollisionType == CollisionType.Circle)
                 return CircleCollision(c1, c2);
             else if ((c1.CollisionType == CollisionType.Circle && c2.CollisionType == CollisionType.Rectangle) ||
@@ -20,6 +29,20 @@ namespace IdleEngine
             else if (c1.CollisionType == CollisionType.Rectangle && c2.CollisionType == CollisionType.Rectangle)
                 return RectangleCollision(c1, c2);
             else return false;
+        }
+        public static bool CheckForCollision(ICollidable c1, ICollidable c2, CollisionCheck collisionType)
+        {
+            switch (collisionType)
+            {
+                case CollisionCheck.Circle:
+                    return CircleCollision(c1, c2);
+                case CollisionCheck.Rectangle:
+                    return RectangleCollision(c1, c2);
+                case CollisionCheck.CircleRect:
+                    return CircleRectangleCollision(c1, c2);
+            }
+
+            return false;
         }
 
         private static bool RectangleCollision(ICollidable c1, ICollidable c2)
@@ -34,20 +57,20 @@ namespace IdleEngine
         {
             ICollidable c = c1.CollisionType == CollisionType.Circle ? c1 : c2;
             ICollidable r = c2.CollisionType == CollisionType.Rectangle ? c2 : c1;
-            int testX = c.Position.X; int testY = c.Position.Y;
+            float testX = c.Position.X; float testY = c.Position.Y;
 
-            if (c.Position.X < r.Position.X)                       
+            if (c.Position.X < r.Position.X)
                 testX = r.Position.X;
-            else if (c.Position.X > r.Position.X + r.Bounds.Width) 
+            else if (c.Position.X > r.Position.X + r.Bounds.Width)
                 testX = r.Position.X + r.Bounds.Width;
             if (c.Position.Y < r.Position.Y)
                 testY = r.Position.Y;
             else if (c.Position.Y > r.Position.Y + r.Bounds.Height)
                 testY = r.Position.Y + r.Bounds.Height;
 
-            int distX = c.Position.X - testX;
-            int distY = c.Position.Y - testY;
-            int dist = distX*distX + distY*distY;
+            float distX = c.Position.X - testX;
+            float distY = c.Position.Y - testY;
+            float dist = distX * distX + distY * distY;
 
             return dist <= c.Radius * c.Radius;
         }

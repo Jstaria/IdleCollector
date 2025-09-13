@@ -72,6 +72,12 @@ namespace IdleEngine
             SetTarget(position);
             SetPosition(position);
             actualPosition = position.ToVector2();
+
+            if (movementType == MovementType.Spring)
+            {
+                movementSprings[0].Position = position.X;
+                movementSprings[1].Position = position.Y;
+            }
         }
 
         public void SetTarget(Point target)

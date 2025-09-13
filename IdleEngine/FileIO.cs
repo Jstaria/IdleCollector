@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace IdleCollector
 {
-    internal static class FileIO
+    public static class FileIO
     {
         /// <summary>
         /// Initializes file path for writing, useful for created save files
@@ -154,6 +156,22 @@ namespace IdleCollector
             }
 
             return data;
+        }
+
+        public static void LoadDataInto<T>(T instance, List<string> data)
+        {
+            Type type = typeof(T);
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                string[] splitLine = data[i].Split(":");
+                try
+                {
+                    FieldInfo field = type.GetField(splitLine[0], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    field.SetValue(instance, Convert.ChangeType(splitLine[1].Trim(), field.FieldType));
+                }
+                catch { }
+            }
         }
     }
 }

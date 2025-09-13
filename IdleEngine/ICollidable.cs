@@ -9,6 +9,7 @@ public enum CollisionType
 {
     Circle,
     Rectangle,
+    Both,
     // Polygon
 }
 
@@ -17,7 +18,7 @@ namespace IdleEngine
     public interface ICollidable
     {
         public CollisionType CollisionType { get; protected set; }
-        public Point Position { get; protected set; }
+        public Vector2 Position { get; protected set; }
         public int Radius { get; protected set; }
         public Rectangle Bounds { get; protected set; }
         public bool IsCollidable { get; protected set; }

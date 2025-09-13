@@ -16,9 +16,8 @@ namespace IdleCollector
         private SpriteBatch _spriteBatch;
 
         private Button button;
-        private Camera camera;
-        private int charSheetCount = 0;
-
+        private GameManager _gameManager;
+        public static string MainScene = "Main Scene";
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -36,8 +35,8 @@ namespace IdleCollector
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            SceneManager.Initialize("Main Scene", _graphics, new Point(240 * 2, 135 * 2));
-            Drawn.Initialize(_spriteBatch);
+            SceneManager.Initialize(MainScene, _graphics, new Point(240 * 2, 135 * 2));
+            Drawing.Initialize(_spriteBatch);
 
             base.Initialize();
         }
@@ -51,21 +50,13 @@ namespace IdleCollector
 
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
 
-            Renderer.AddToDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("charSheet"), new Rectangle(100, 100, 128, 128), new Rectangle(0,64 * (((int)charSheetCount++ / 8) % 8), 64,64), Color.White); });
-
-            camera = new Camera(480, 270, .05f);
-            camera.SetTranslation(new Point(240, 135));
-            Renderer.CurrentCamera = camera;
-
-            SceneManager.AddScene("Sample Scene");
-
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
             {
                 if (Input.IsButtonDownOnce(Keys.F11) || Input.AreButtonsDownOnce(Keys.LeftAlt, Keys.Enter))
                     Renderer.ToggleFullScreen();
-
-                camera.Update(gameTime);
             });
+
+            _gameManager = new GameManager();
 
             LoadButtons();
             //LoadEffects();
@@ -78,12 +69,12 @@ namespace IdleCollector
             config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
 
             button = new Button(config);
-            button.OnClick += () => { SceneManager.SwapScene("Sample Scene"); };
+            button.OnClick += () => { SceneManager.SwapScene("Game Scene"); };
 
-            Updater.AddToSceneUpdate("Main Scene", button);
-            Renderer.AddToSceneUIDraw("Main Scene", button);
+            Updater.AddToSceneUpdate(button);
+            Renderer.AddToSceneUIDraw(button);
 
-            SceneManager.SwapScene("Main Scene");
+            SceneManager.SwapScene(MainScene);
         }
 
         protected void LoadEffects()
