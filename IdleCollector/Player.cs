@@ -65,7 +65,7 @@ namespace IdleCollector
 
             //if (direction != Vector2.Zero)
             //    direction.Normalize();
-            Move(direction * speed);
+            //Move(direction * speed);
         }
 
         private void SetSpriteDirection(bool[] bools)

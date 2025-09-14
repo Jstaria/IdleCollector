@@ -1,6 +1,7 @@
 ﻿using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +12,25 @@ namespace IdleCollector
 {
     internal class GameManager : IScene
     {
-        // Player Variables
+        #region // Player Variables
         private Player player;
         private Camera camera;
         private bool followPlayer;
+        #endregion
 
-        private string GameScene = "Game Scene";
-
-        public UpdateType Type { get; set; }
-
+        #region // Pause
+        private string PauseScene = "Pause Scene";
+        private Texture2D prevTexture;
+        private Button menuButton;
+        private bool isPaused;
+        #endregion
+        
         #region // GameManager Instance
         private static GameManager instance;
         private GameTime gameTime;
+        private string GameScene = "Game Scene";
+
+        public UpdateType Type { get; set; }
 
         public static GameManager Instance { 
             get { 
@@ -33,12 +41,16 @@ namespace IdleCollector
         }
         #endregion
 
+        private WorldManager worldManager;
+
         public GameManager()
         {
             Type = UpdateType.Standard;
 
             SetupGameScene(GameScene);
+            SetupWorld();
             SetupPlayer();
+            SetupPause();
         }
 
         public void Update(GameTime gameTime)
@@ -83,7 +95,7 @@ namespace IdleCollector
                 followPlayer = false;
                 camera.SetTranslation(screenHalf);
             });
-            Updater.AddToSceneUpdate(GameScene, player);
+            SceneManager.AddToScene(GameScene, player);
             Updater.AddToSceneUpdate(GameScene, UpdateType.Controlled, (gameTime) => {
                     if (followPlayer) camera.SetTarget(player.Position.ToPoint());
                 });
@@ -91,5 +103,47 @@ namespace IdleCollector
             camera.SetTranslation(screenHalf);
         }
 
+        private void SetupPause()
+        {
+            SceneManager.AddScene(PauseScene);
+            Updater.AddToUpdate(UpdateType.Standard, (gameTime) => {
+                if (Input.IsButtonDownOnce(Keys.Escape) && SceneManager.CurrentSceneName != Game1.MainScene)
+                {
+                    if (isPaused)
+                    {
+                        isPaused = false;
+                        SceneManager.SwapPrevScene();
+                    }
+                    else
+                    {
+                        isPaused = true;
+                        SceneManager.SwapScene(PauseScene);
+                    }
+                }  
+            });
+            Updater.AddToSceneEnter(PauseScene, () => { prevTexture = Renderer.GetLastRender(); camera.SetTranslation((Renderer.RenderSize.ToVector2() / 2).ToPoint()); });
+            Renderer.AddToSceneDraw(PauseScene, (sb) => { sb.Draw(prevTexture, prevTexture.Bounds, Color.White); });
+            Renderer.AddToSceneUIDraw(PauseScene, (sb) => { 
+                sb.Draw(ResourceAtlas.GetTexture("tempPause"), new Rectangle(0,0,480,270), Color.White);
+            });
+
+            ButtonConfig config = new ButtonConfig();
+            config.textures = new[] { ResourceAtlas.GetTexture("tempMenu"), ResourceAtlas.GetTexture("tempMenuH") };
+            config.bounds = new Rectangle(14, 14, 127, 52);
+            
+            menuButton = new Button(config);
+            menuButton.OnClick += () => { SceneManager.SwapScene(Game1.MainScene); isPaused = false; };
+            Renderer.AddToSceneUIDraw(PauseScene, menuButton);
+            Updater.AddToSceneUpdate(PauseScene, menuButton);
+            Updater.AddToSceneExit(PauseScene, () => { prevTexture?.Dispose(); });
+
+        }
+
+        private void SetupWorld()
+        {
+            worldManager = new WorldManager();
+            SceneManager.AddToScene(GameScene, worldManager);
+            Updater.AddToSceneEnter(GameScene, worldManager.CreateWorld);
+        }
     }
 }

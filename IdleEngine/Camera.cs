@@ -76,7 +76,9 @@ namespace IdleEngine
             if (movementType == MovementType.Spring)
             {
                 movementSprings[0].Position = position.X;
+                movementSprings[0].Velocity = 0;
                 movementSprings[1].Position = position.Y;
+                movementSprings[1].Velocity = 0;
             }
         }
 

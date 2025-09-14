@@ -31,6 +31,7 @@ namespace IdleEngine
 
         private static GraphicsDeviceManager _graphics;
 
+        public static Point TopLeftCorner { get => (-CurrentCamera.Position.ToVector2()).ToPoint(); }
         public static Point RenderSize {  get; private set; }
         public static Point ScreenSize { get; private set; }
         public static Camera CurrentCamera { get; set; }

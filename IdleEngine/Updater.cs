@@ -24,6 +24,7 @@ namespace IdleEngine
         private static Dictionary<string, OnSwap> OnExitEvents;
         private static Dictionary<UpdateType, OnUpdate> UpdateEvent;
         private static Dictionary<UpdateType, OnUpdate> IndependentUpdateEvent;
+        private static OnUpdate LateUpdate;
 
         private readonly static int slowFrameSkip = 3;
         private static int frameCount = 0;
@@ -53,6 +54,8 @@ namespace IdleEngine
             ControlledUpdate(gameTime);
             StandardUpdate(gameTime);
             SlowUpdate(gameTime);
+
+            LateUpdate?.Invoke(gameTime);
         }
 
         private static void ControlledUpdate(GameTime gameTime)
@@ -134,5 +137,9 @@ namespace IdleEngine
         /// Add to event that is invoked on scene exit
         /// </summary>
         public static void AddToSceneExit(string sceneName, OnSwap func) => OnExitEvents[sceneName] += func;
+        /// <summary>
+        /// Add to event that is invoked after all other updates
+        /// </summary>
+        public static void AddToLateUpdate(OnUpdate func) => LateUpdate += func;
     }
 }

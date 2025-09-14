@@ -16,8 +16,9 @@ namespace IdleEngine
     {
         private static List<string> sceneNames;
         private static string currentSceneName;
+        private static string prevSceneName;
 
-        internal static string CurrentSceneName => currentSceneName;
+        public static string CurrentSceneName => currentSceneName;
 
         public static void Initialize(string sceneName, GraphicsDeviceManager deviceManager, Point renderSize)
         {
@@ -36,11 +37,14 @@ namespace IdleEngine
             if (!sceneNames.Contains(sceneName))
                 AddScene(sceneName);
 
-            currentSceneName = sceneName;
-
             Updater.SwapScene(sceneName);
             Renderer.SwapScene(sceneName);
+
+            prevSceneName = currentSceneName;
+            currentSceneName = sceneName;
         }
+
+        public static void SwapPrevScene() => SwapScene(prevSceneName);
 
         public static void AddScene(string sceneName)
         {

@@ -45,7 +45,7 @@ namespace IdleCollector
 
         protected override void LoadContent()
         {
-            ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(3, 1));
+            ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(1, 1));
             ResourceAtlas.LoadTextures(Content, "../../../Content/Textures/", "Textures");
 
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
@@ -105,9 +105,6 @@ namespace IdleCollector
         #region Update & Draw
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             Updater.Update(gameTime);
 
             base.Update(gameTime);

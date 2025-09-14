@@ -1,2 +1,3 @@
 ﻿speed: 3
 pickupRange: 5
+

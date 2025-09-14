@@ -28,6 +28,7 @@ namespace IdleEngine
         private static Dictionary<string, SoundEffect> soundEffects;
         private static Dictionary<string, Song> songs;
 
+        public static Dictionary<string, Point> TilemapAtlasKeys { get => tilemapAtlasKeys; }
         public static Texture2D TilemapAtlas { get => tilemapAtlas; }
         public static Rectangle GetTileRect(string tileName)
         {

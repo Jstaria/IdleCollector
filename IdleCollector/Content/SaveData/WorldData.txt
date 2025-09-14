@@ -1,2 +1,4 @@
 ﻿WorldSizeX: 50
 WorldSizeY: 50
+WorldNoiseFrequency: .99
+TileSize: 32

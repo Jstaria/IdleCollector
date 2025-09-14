@@ -168,7 +168,10 @@ namespace IdleCollector
                 try
                 {
                     FieldInfo field = type.GetField(splitLine[0], BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    field.SetValue(instance, Convert.ChangeType(splitLine[1].Trim(), field.FieldType));
+                    if (field != null)
+                    {
+                        field.SetValue(instance, Convert.ChangeType(splitLine[1].Trim(), field.FieldType));
+                    }
                 }
                 catch { }
             }
