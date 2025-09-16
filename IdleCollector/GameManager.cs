@@ -121,7 +121,7 @@ namespace IdleCollector
                     }
                 }  
             });
-            Updater.AddToSceneEnter(PauseScene, () => { prevTexture = Renderer.GetLastRender(); camera.SetTranslation((Renderer.RenderSize.ToVector2() / 2).ToPoint()); });
+            Updater.AddToSceneEnter(PauseScene, () => { prevTexture = Renderer.GetLastRender(); });
             Renderer.AddToSceneDraw(PauseScene, (sb) => { sb.Draw(prevTexture, prevTexture.Bounds, Color.White); });
             Renderer.AddToSceneUIDraw(PauseScene, (sb) => { 
                 sb.Draw(ResourceAtlas.GetTexture("tempPause"), new Rectangle(0,0,480,270), Color.White);
@@ -144,6 +144,14 @@ namespace IdleCollector
             worldManager = new WorldManager();
             SceneManager.AddToScene(GameScene, worldManager);
             Updater.AddToSceneEnter(GameScene, worldManager.CreateWorld);
+            Updater.AddToSceneEnter(GameScene, () => { 
+                Renderer.CurrentCamera.SetBounds(worldManager.WorldBounds);
+                Renderer.CurrentCamera.UseBounds = true;
+            });
+            Updater.AddToSceneExit(GameScene, () =>
+            {
+                Renderer.CurrentCamera.UseBounds = false;
+            });
         }
     }
 }

@@ -22,6 +22,7 @@ namespace IdleEngine
         private static event OnDraw UIDrawEvent;
 
         private static RenderTarget2D renderTexture;
+        private static RenderTarget2D uiTexture;
         private static RenderTarget2D finalTexture;
         private static RenderTarget2D[] targets;
         private static Color[] colorData;
@@ -35,6 +36,7 @@ namespace IdleEngine
         public static Point RenderSize {  get; private set; }
         public static Point ScreenSize { get; private set; }
         public static Camera CurrentCamera { get; set; }
+        public static Rectangle CameraBounds { get { return new Rectangle(TopLeftCorner, RenderSize); } }
 
         public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {
@@ -49,6 +51,7 @@ namespace IdleEngine
                 new Point(_graphics.GraphicsDevice.DisplayMode.Width, _graphics.GraphicsDevice.DisplayMode.Height) :
                 new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             renderTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
+            uiTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
             renderTexConfig = new BatchConfig(
                 SpriteSortMode.Immediate,
                 null,
@@ -81,7 +84,6 @@ namespace IdleEngine
                 transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
                 );
             DrawEvent?.Invoke(sb);
-            UIDrawEvent?.Invoke(sb);
             IndependentDrawEvent?.Invoke(sb);
             sb.End();
 
@@ -92,8 +94,23 @@ namespace IdleEngine
                 ApplyEffectValues(processes[i], sb);
             }
 
-            if (processes.Count == 0)
-                finalTexture = renderTexture;
+            sb.GraphicsDevice.SetRenderTarget(uiTexture);
+            sb.Begin(
+                renderTexConfig.sortMode,
+                blendState: renderTexConfig.blendState,
+                samplerState: renderTexConfig.samplerState,
+                depthStencilState: renderTexConfig.depthStencilState,
+                rasterizerState: renderTexConfig.rasterizerState,
+                effect: renderTexConfig.effect,
+                transformMatrix: Matrix.Identity
+                );
+
+            Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
+            sb.Draw(finalTexture == null ? renderTexture : finalTexture, destinationRect, Color.White);
+            UIDrawEvent?.Invoke(sb);
+
+            sb.End();
+            sb.GraphicsDevice.SetRenderTarget(null);
         }
 
         private static void ApplyEffectValues(BatchConfig process, SpriteBatch sb)
@@ -171,7 +188,7 @@ namespace IdleEngine
             Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
 
             sb.Begin(samplerState: SamplerState.PointClamp);
-            sb.Draw(finalTexture, destinationRect, Color.White);
+            sb.Draw(uiTexture, destinationRect, Color.White);
             sb.End();
         }
 
@@ -249,9 +266,9 @@ namespace IdleEngine
         {
             Texture2D tempTexture = new Texture2D(_graphics.GraphicsDevice, renderTexture.Width, renderTexture.Height);
 
-            if (finalTexture != null)
+            if (uiTexture != null)
             {
-                finalTexture.GetData(colorData);
+                uiTexture.GetData(colorData);
                 tempTexture.SetData(colorData);
             }
 

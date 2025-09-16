@@ -40,6 +40,8 @@ namespace IdleEngine
         private MovementType movementType;
         private Vector2 actualPosition;
 
+        public Rectangle Bounds { get; private set; }
+        public bool UseBounds {  get; set; }
         public Point Position { get; set; }
         public Matrix Transform 
         { 
@@ -49,6 +51,7 @@ namespace IdleEngine
 
         public UpdateType Type { get; set; }
 
+        public void SetBounds(Rectangle bounds) => Bounds = bounds; 
         private void SetPosition(Point target) => SetPosition(target.X, target.Y);
         private void SetPosition(Vector2 target) => SetPosition((int)target.X, (int)target.Y);
         private void SetPosition(Vector3 target) => SetPosition((int)target.X, (int)target.Y);
@@ -99,19 +102,29 @@ namespace IdleEngine
 
         public void Update(GameTime gameTime)
         {
+            Vector2 position = Vector2.Zero;
+
             switch (movementType)
             {
                 case MovementType.Lerp:
                     actualPosition = Vector2.Lerp(actualPosition, targetPoint.ToVector2(), lerpSpeed);
-                    SetPosition(actualPosition);
+                    position = actualPosition;
                     break;
 
                 case MovementType.Spring:
                     foreach (Spring spring in movementSprings)
                         { spring.Update(); }
-                    SetPosition((int)movementSprings[0].Position, (int)movementSprings[1].Position);
+                    position = new Vector2(movementSprings[0].Position, movementSprings[1].Position);
                     break;
             }
+
+            if (UseBounds)
+            {
+                position.X = Math.Clamp(position.X, Bounds.Left + viewportSize.X / 2, Bounds.Right - viewportSize.X / 2);
+                position.Y = Math.Clamp(position.Y, Bounds.Top + viewportSize.Y / 2, Bounds.Bottom - viewportSize.Y / 2);
+            }
+
+            SetPosition(position);
         }
     }
 }

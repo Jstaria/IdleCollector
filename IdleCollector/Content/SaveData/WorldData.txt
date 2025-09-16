@@ -1,4 +1,4 @@
 ﻿WorldSizeX: 50
 WorldSizeY: 50
-WorldNoiseFrequency: .99
+WorldNoiseFrequency: .075
 TileSize: 32

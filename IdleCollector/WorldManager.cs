@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace IdleCollector
 {
-    internal class WorldManager: IScene
+    internal class WorldManager : IScene
     {
         private int WorldSizeX;
         private int WorldSizeY;
-        private int WorldNoiseFrequency;
+        private float WorldNoiseFrequency;
         private int TileSize;
 
-        private int seed = 0;
+        private int seed = 1;
 
         private FastNoiseLite noise; // Cosmetic for rn
         private Random randomInstance;
 
-        private string[,] worldFloor;
+        private KeyValuePair<string, Rectangle>[,] worldFloor;
         private Rectangle worldBounds;
 
         public Rectangle WorldBounds { get { return worldBounds; } }
@@ -35,7 +35,7 @@ namespace IdleCollector
 
         public void Update(GameTime gameTime)
         {
-
+            
         }
 
         public void Draw(SpriteBatch sb)
@@ -43,9 +43,14 @@ namespace IdleCollector
             for (int j = 0; j < WorldSizeY; j++)
                 for (int i = 0; i < WorldSizeX; i++)
                 {
-                    Rectangle position = new Rectangle(i * TileSize - TileSize * WorldSizeX / 2, j * TileSize - TileSize * WorldSizeY / 2, TileSize, TileSize);
-                    Color color = Color.White * noise.GetNoise(i, j);
-                    sb.Draw(ResourceAtlas.TilemapAtlas, position, ResourceAtlas.GetTileRect(worldFloor[i, j]), color);
+                    if (!worldFloor[i, j].Value.Intersects(Renderer.CameraBounds)) continue;
+
+                    float noiseValue = noise.GetNoise((float)i, (float)j);
+                    //Debug.WriteLine(noiseValue);
+                    Color color = Color.Lerp(Color.White, Color.Brown, noiseValue / 5);
+                    //if (i % 2 == 0 && j % 2 == 0)
+                    //    color = Color.Red;
+                    sb.Draw(ResourceAtlas.TilemapAtlas, worldFloor[i, j].Value, ResourceAtlas.GetTileRect(worldFloor[i, j].Key), color);
                 }
         }
 
@@ -72,20 +77,26 @@ namespace IdleCollector
 
         public void CreateWorld()
         {
-            int worldHalfX = WorldSizeX / 2;
-            int worldHalfY = WorldSizeY / 2;
+            int worldHalfX = (WorldSizeX * TileSize) / 2;
+            int worldHalfY = (WorldSizeY * TileSize) / 2;
+            Point offset = (Renderer.RenderSize.ToVector2() / 2).ToPoint();
 
-            worldBounds = new Rectangle(32 * worldHalfX, 32 * worldHalfY, 32 * WorldSizeX, 32 * WorldSizeY);
-            worldFloor = new string[WorldSizeX, WorldSizeY];
+            worldBounds = new Rectangle(-worldHalfX + offset.X, -worldHalfY + offset.Y, TileSize * WorldSizeX, TileSize * WorldSizeY);
+            worldFloor = new KeyValuePair<string, Rectangle>[WorldSizeX, WorldSizeY];
 
             List<string> keys = ResourceAtlas.TilemapAtlasKeys.Keys.ToList();
 
             for (int j = 0; j < WorldSizeX; j++)
                 for (int i = 0; i < WorldSizeY; i++)
-                {
+                {   
+                    Rectangle position = new Rectangle(
+                        (int)(i * TileSize - worldHalfX) + offset.X,
+                        (int)(j * TileSize - worldHalfY) + offset.Y,
+                        TileSize, TileSize);
+
                     string tileName = keys[randomInstance.Next(0, keys.Count)];
 
-                    worldFloor[i, j] = tileName;
+                    worldFloor[i, j] = new KeyValuePair<string, Rectangle>(tileName, position);
                 }
         }
     }
