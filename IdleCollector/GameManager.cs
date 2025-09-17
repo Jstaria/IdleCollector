@@ -24,7 +24,7 @@ namespace IdleCollector
         private Button menuButton;
         private bool isPaused;
         #endregion
-        
+
         #region // GameManager Instance
         private static GameManager instance;
         private GameTime gameTime;
@@ -32,16 +32,21 @@ namespace IdleCollector
 
         public UpdateType Type { get; set; }
 
-        public static GameManager Instance { 
-            get { 
-                if (instance == null) 
-                    instance = new GameManager(); 
-                return instance; 
-            } 
+        public static GameManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new GameManager();
+                return instance;
+            }
         }
         #endregion
 
         private WorldManager worldManager;
+
+        private BezierCurve curve;
+        private float time;
 
         public GameManager()
         {
@@ -55,7 +60,7 @@ namespace IdleCollector
 
         public void Update(GameTime gameTime)
         {
-            
+            time = (float)gameTime.TotalGameTime.TotalSeconds;
         }
 
         public void Draw(SpriteBatch sb)
@@ -87,18 +92,21 @@ namespace IdleCollector
             Updater.AddToUpdate(camera);
             followPlayer = false;
 
-            Updater.AddToSceneEnter(GameScene, () => {
+            Updater.AddToSceneEnter(GameScene, () =>
+            {
                 followPlayer = true;
-                camera.SetTranslation(player.Position.ToPoint()); 
+                camera.SetTranslation(player.Position.ToPoint());
             });
-            Updater.AddToSceneExit(GameScene, () => {
+            Updater.AddToSceneExit(GameScene, () =>
+            {
                 followPlayer = false;
                 camera.SetTranslation(screenHalf);
             });
             SceneManager.AddToScene(GameScene, player);
-            Updater.AddToSceneUpdate(GameScene, UpdateType.Controlled, (gameTime) => {
-                    if (followPlayer) camera.SetTarget(player.Position.ToPoint());
-                });
+            Updater.AddToSceneUpdate(GameScene, UpdateType.Controlled, (gameTime) =>
+            {
+                if (followPlayer) camera.SetTarget(player.Position.ToPoint());
+            });
 
             camera.SetTranslation(screenHalf);
         }
@@ -106,7 +114,8 @@ namespace IdleCollector
         private void SetupPause()
         {
             SceneManager.AddScene(PauseScene);
-            Updater.AddToUpdate(UpdateType.Standard, (gameTime) => {
+            Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
+            {
                 if (Input.IsButtonDownOnce(Keys.Escape) && SceneManager.CurrentSceneName != Game1.MainScene)
                 {
                     if (isPaused)
@@ -119,18 +128,19 @@ namespace IdleCollector
                         isPaused = true;
                         SceneManager.SwapScene(PauseScene);
                     }
-                }  
+                }
             });
             Updater.AddToSceneEnter(PauseScene, () => { prevTexture = Renderer.GetLastRender(); });
             Renderer.AddToSceneDraw(PauseScene, (sb) => { sb.Draw(prevTexture, prevTexture.Bounds, Color.White); });
-            Renderer.AddToSceneUIDraw(PauseScene, (sb) => { 
-                sb.Draw(ResourceAtlas.GetTexture("tempPause"), new Rectangle(0,0,480,270), Color.White);
+            Renderer.AddToSceneUIDraw(PauseScene, (sb) =>
+            {
+                sb.Draw(ResourceAtlas.GetTexture("tempPause"), new Rectangle(0, 0, 480, 270), Color.White);
             });
 
             ButtonConfig config = new ButtonConfig();
             config.textures = new[] { ResourceAtlas.GetTexture("tempMenu"), ResourceAtlas.GetTexture("tempMenuH") };
             config.bounds = new Rectangle(14, 14, 127, 52);
-            
+
             menuButton = new Button(config);
             menuButton.OnClick += () => { SceneManager.SwapScene(Game1.MainScene); isPaused = false; };
             Renderer.AddToSceneUIDraw(PauseScene, menuButton);
@@ -144,13 +154,29 @@ namespace IdleCollector
             worldManager = new WorldManager();
             SceneManager.AddToScene(GameScene, worldManager);
             Updater.AddToSceneEnter(GameScene, worldManager.CreateWorld);
-            Updater.AddToSceneEnter(GameScene, () => { 
+            Updater.AddToSceneEnter(GameScene, () =>
+            {
                 Renderer.CurrentCamera.SetBounds(worldManager.WorldBounds);
                 Renderer.CurrentCamera.UseBounds = true;
             });
             Updater.AddToSceneExit(GameScene, () =>
             {
                 Renderer.CurrentCamera.UseBounds = false;
+            });
+
+            curve = new BezierCurve(
+                new Vector2(250, 125),
+                new Vector2(375, 125),
+                new Vector2(375, 375),
+                new Vector2(125, 375),
+                new Vector2(125, 125),
+                new Vector2(250, 125));
+            Renderer.AddToDraw((sb) => { 
+                curve.Draw(sb, 40, 3); 
+                Vector2 point = curve.GetPointAlongCurve(time);
+                Vector2 point2 = curve.GetPointAlongCurve(time * .75f);
+                sb.Draw(ResourceAtlas.GetTexture("square"), new Rectangle((int)point.X - 5, (int)point.Y - 5, 10, 10), Color.Magenta);
+                sb.Draw(ResourceAtlas.GetTexture("square"), new Rectangle((int)point2.X - 5, (int)point2.Y - 5, 10, 10), Color.Green);
             });
         }
     }

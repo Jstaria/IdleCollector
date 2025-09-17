@@ -13,7 +13,7 @@ using System.Reflection;
 
 namespace IdleCollector
 {
-    internal class Player: IAnimatable, IScene, ITransform, ICollidable
+    internal class Player : IAnimatable, IScene, ITransform, ICollidable
     {
         private Texture2D spriteSheet;
         private int speed;
@@ -28,6 +28,7 @@ namespace IdleCollector
         public int Radius { get; set; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
+        public Rectangle WorldBounds { get; set; }
 
         public Player(Texture2D spriteSheet, Point position, Rectangle bounds, Point frameCount)
         {
@@ -44,11 +45,24 @@ namespace IdleCollector
         public void Update(GameTime gameTime)
         {
             GetInput();
+            ClampPosition();
         }
 
         public void Draw(SpriteBatch sb)
         {
             sb.Draw(spriteSheet, new Rectangle(Position.ToPoint() - (Bounds.Size.ToVector2() / 2).ToPoint(), Bounds.Size), new Rectangle(64 * CurrentFrame.X, 64 * CurrentFrame.Y, 64, 64), Color.White);
+        }
+
+        private void ClampPosition()
+        {
+            Vector2 position = Vector2.Zero;
+
+            if (WorldBounds == Rectangle.Empty) return;
+
+            position.X = Math.Clamp(Position.X, WorldBounds.Left, WorldBounds.Right);
+            position.Y = Math.Clamp(Position.Y, WorldBounds.Top, WorldBounds.Bottom);
+
+            Position = position;
         }
 
         private void GetInput()
@@ -70,7 +84,7 @@ namespace IdleCollector
 
         private void SetSpriteDirection(bool[] bools)
         {
-            if (bools[0]) 
+            if (bools[0])
             {
                 SetFrame(CurrentFrame.X, 2);
                 if (bools[1]) SetFrame(CurrentFrame.X, 4);
