@@ -109,6 +109,8 @@ namespace IdleCollector
             });
 
             camera.SetTranslation(screenHalf);
+
+            player.Spawn += worldManager.SpawnFlora;
         }
 
         private void SetupPause()

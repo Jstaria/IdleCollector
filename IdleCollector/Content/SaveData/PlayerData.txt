@@ -1,3 +1,3 @@
 ﻿speed: 3
 pickupRange: 5
-
+spawnFrequency: 1

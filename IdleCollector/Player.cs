@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace IdleCollector
 {
@@ -18,6 +19,8 @@ namespace IdleCollector
         private Texture2D spriteSheet;
         private int speed;
         private int pickupRange;
+        private float spawnFrequency;
+        private float prevSpawnTime;
 
         public Point FrameCount { get; set; }
         public Point CurrentFrame { get; set; }
@@ -25,10 +28,13 @@ namespace IdleCollector
         public UpdateType Type { get; set; }
         public Vector2 Position { get; set; }
         public CollisionType CollisionType { get; set; }
-        public int Radius { get; set; }
+        public int Radius { get => pickupRange; set => pickupRange = value; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
         public Rectangle WorldBounds { get; set; }
+
+        public delegate void SpawnFlora(ICollidable spawn);
+        public event SpawnFlora Spawn;
 
         public Player(Texture2D spriteSheet, Point position, Rectangle bounds, Point frameCount)
         {
@@ -46,11 +52,22 @@ namespace IdleCollector
         {
             GetInput();
             ClampPosition();
+            OnPositionSpawnFlora(gameTime);
         }
 
         public void Draw(SpriteBatch sb)
         {
             sb.Draw(spriteSheet, new Rectangle(Position.ToPoint() - (Bounds.Size.ToVector2() / 2).ToPoint(), Bounds.Size), new Rectangle(64 * CurrentFrame.X, 64 * CurrentFrame.Y, 64, 64), Color.White);
+        }
+
+        private void OnPositionSpawnFlora(GameTime gameTime)
+        {
+            float time = (float)gameTime.TotalGameTime.TotalSeconds;
+
+            if (time - prevSpawnTime < spawnFrequency) return;
+            
+            prevSpawnTime = time;
+            Spawn?.Invoke(this);
         }
 
         private void ClampPosition()

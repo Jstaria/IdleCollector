@@ -60,6 +60,12 @@ namespace IdleCollector
             LoadNoise();
         }
 
+        public void SpawnFlora(ICollidable collider)
+        {
+            if (collider.Radius <= 0) throw new Exception("Collider must have a radius for spawning flora!");
+            Debug.WriteLine("{0} spawned flora in a radius of {1} with an area of {2} at ({3})", collider, collider.Radius, MathF.PI * collider.Radius * collider.Radius, collider.Position);
+        }
+
         private void LoadWorldData(string name, string folder)
         {
             List<string> data = FileIO.ReadFrom(name, folder);
