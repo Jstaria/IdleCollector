@@ -24,12 +24,14 @@ namespace IdleEngine
                 new Spring(angularFrequency, dampingRatio, 0), 
                 new Spring(angularFrequency, dampingRatio, 0) };
             movementType = MovementType.Spring;
+            Zoom = 1;
         }
         public Camera(int ViewWidth, int ViewHeight, float lerpSpeed)
         {
             viewportSize = new Point(ViewWidth, ViewHeight);
             this.lerpSpeed = lerpSpeed;
             movementType = MovementType.Lerp;
+            Zoom = 1;
         }
 
         private Point viewportSize;
@@ -43,6 +45,7 @@ namespace IdleEngine
         public Rectangle Bounds { get; private set; }
         public bool UseBounds {  get; set; }
         public Point Position { get; set; }
+        public float Zoom { get; set; }
         public Matrix Transform 
         { 
             get { return transform; }
@@ -58,11 +61,12 @@ namespace IdleEngine
         private void SetPosition(int x, int y)
         {
             Matrix position = Matrix.CreateTranslation(-x, -y, 0);
-            Matrix offset = Matrix.CreateTranslation(viewportSize.X / 2, viewportSize.Y / 2, 0);
+            Matrix offset = Matrix.CreateTranslation(viewportSize.X / 2 / Zoom, viewportSize.Y / 2 / Zoom, 0);
+            Matrix zoom = Matrix.CreateScale(Zoom);
 
             Position = new Point(-x + viewportSize.X / 2, -y + viewportSize.Y / 2);
 
-            transform = position * offset;
+            transform = position * offset * zoom;
         }
 
         public void SetTarget(Rectangle target)
@@ -120,8 +124,17 @@ namespace IdleEngine
 
             if (UseBounds)
             {
-                position.X = Math.Clamp(position.X, Bounds.Left + viewportSize.X / 2, Bounds.Right - viewportSize.X / 2);
-                position.Y = Math.Clamp(position.Y, Bounds.Top + viewportSize.Y / 2, Bounds.Bottom - viewportSize.Y / 2);
+                if (Bounds.Width < viewportSize.X)
+                {
+                    position.X = (Bounds.Left) + (Bounds.Width / 2);
+                }
+                else position.X = Math.Clamp(position.X, Bounds.Left + viewportSize.X / 2, Bounds.Right - viewportSize.X / 2);
+
+                if (Bounds.Height < viewportSize.Y)
+                {
+                    position.Y = (Bounds.Top) + (Bounds.Height / 2);
+                }
+                else position.Y = Math.Clamp(position.Y, Bounds.Top + viewportSize.Y / 2, Bounds.Bottom - viewportSize.Y / 2);
             }
 
             SetPosition(position);

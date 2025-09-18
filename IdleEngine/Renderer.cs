@@ -33,10 +33,29 @@ namespace IdleEngine
         private static GraphicsDeviceManager _graphics;
 
         public static Point TopLeftCorner { get => (-CurrentCamera.Position.ToVector2()).ToPoint(); }
+        public static Point ScaledTopLeftCorner
+        {
+            get
+            {
+                Vector2 corner = TopLeftCorner.ToVector2();
+                Vector2 origin = CameraBounds.Center.ToVector2();
+                Vector2 direction = corner - origin;
+                return (corner + direction / CurrentCamera.Zoom).ToPoint();
+            }
+        }
         public static Point RenderSize {  get; private set; }
         public static Point ScreenSize { get; private set; }
         public static Camera CurrentCamera { get; set; }
         public static Rectangle CameraBounds { get { return new Rectangle(TopLeftCorner, RenderSize); } }
+        public static Rectangle ScaledCameraBounds { 
+            get { 
+                Vector2 center = CameraBounds.Center.ToVector2();
+                Vector2 scaledCorner = ScaledTopLeftCorner.ToVector2();
+                Vector2 halfSize = center - scaledCorner;
+                Point scaledSize = (halfSize * 2).ToPoint();
+                return new Rectangle(ScaledTopLeftCorner, scaledSize); 
+            } 
+        }
 
         public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {

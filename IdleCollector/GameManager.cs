@@ -44,9 +44,7 @@ namespace IdleCollector
         #endregion
 
         private WorldManager worldManager;
-
-        private BezierCurve curve;
-        private float time;
+        private CollisionTree collisionTree;
 
         public GameManager()
         {
@@ -60,7 +58,7 @@ namespace IdleCollector
 
         public void Update(GameTime gameTime)
         {
-            time = (float)gameTime.TotalGameTime.TotalSeconds;
+            camera.Zoom -= Input.GetMouseScrollDelta() * .1f;
         }
 
         public void Draw(SpriteBatch sb)
@@ -160,25 +158,12 @@ namespace IdleCollector
             {
                 Renderer.CurrentCamera.SetBounds(worldManager.WorldBounds);
                 Renderer.CurrentCamera.UseBounds = true;
+                collisionTree = new CollisionTree(worldManager.WorldBounds, 4);
+                Renderer.AddToDraw(collisionTree);
             });
             Updater.AddToSceneExit(GameScene, () =>
             {
                 Renderer.CurrentCamera.UseBounds = false;
-            });
-
-            curve = new BezierCurve(
-                new Vector2(250, 125),
-                new Vector2(375, 125),
-                new Vector2(375, 375),
-                new Vector2(125, 375),
-                new Vector2(125, 125),
-                new Vector2(250, 125));
-            Renderer.AddToDraw((sb) => { 
-                curve.Draw(sb, 40, 3); 
-                Vector2 point = curve.GetPointAlongCurve(time);
-                Vector2 point2 = curve.GetPointAlongCurve(time * .75f);
-                sb.Draw(ResourceAtlas.GetTexture("square"), new Rectangle((int)point.X - 5, (int)point.Y - 5, 10, 10), Color.Magenta);
-                sb.Draw(ResourceAtlas.GetTexture("square"), new Rectangle((int)point2.X - 5, (int)point2.Y - 5, 10, 10), Color.Green);
             });
         }
     }

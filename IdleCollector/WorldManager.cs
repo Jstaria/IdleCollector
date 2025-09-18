@@ -22,7 +22,7 @@ namespace IdleCollector
         private FastNoiseLite noise; // Cosmetic for rn
         private Random randomInstance;
 
-        private KeyValuePair<string, Rectangle>[,] worldFloor;
+        private TilePiece[,] worldFloor;
         private Rectangle worldBounds;
 
         public Rectangle WorldBounds { get { return worldBounds; } }
@@ -43,14 +43,16 @@ namespace IdleCollector
             for (int j = 0; j < WorldSizeY; j++)
                 for (int i = 0; i < WorldSizeX; i++)
                 {
-                    if (!worldFloor[i, j].Value.Intersects(Renderer.CameraBounds)) continue;
+                    if (!worldFloor[i, j].Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
 
                     float noiseValue = noise.GetNoise((float)i, (float)j);
                     //Debug.WriteLine(noiseValue);
                     Color color = Color.Lerp(Color.White, Color.Brown, noiseValue / 5);
-                    //if (i % 2 == 0 && j % 2 == 0)
-                    //    color = Color.Red;
-                    sb.Draw(ResourceAtlas.TilemapAtlas, worldFloor[i, j].Value, ResourceAtlas.GetTileRect(worldFloor[i, j].Key), color);
+                    if (worldFloor[i,j].debugColorSwap)
+                    {
+                        color = Color.Yellow;
+                    }
+                    sb.Draw(ResourceAtlas.TilemapAtlas, worldFloor[i, j].Bounds, ResourceAtlas.GetTileRect(worldFloor[i, j].TextureKey), color);
                 }
         }
 
@@ -64,6 +66,18 @@ namespace IdleCollector
         {
             if (collider.Radius <= 0) throw new Exception("Collider must have a radius for spawning flora!");
             Debug.WriteLine("{0} spawned flora in a radius of {1} with an area of {2} at ({3})", collider, collider.Radius, MathF.PI * collider.Radius * collider.Radius, collider.Position);
+
+            for (int j = 0; j < WorldSizeY;j++) 
+                for (int i = 0; i < WorldSizeX; i++)
+                {
+                    TilePiece tp = worldFloor[i,j];
+
+                    tp.debugColorSwap = false;
+
+                    if (!CollisionHelper.CheckForCollision(collider, tp, CollisionCheck.CircleRect)) continue;
+
+                    tp.debugColorSwap = true;
+                }
         }
 
         private void LoadWorldData(string name, string folder)
@@ -88,21 +102,21 @@ namespace IdleCollector
             Point offset = (Renderer.RenderSize.ToVector2() / 2).ToPoint();
 
             worldBounds = new Rectangle(-worldHalfX + offset.X, -worldHalfY + offset.Y, TileSize * WorldSizeX, TileSize * WorldSizeY);
-            worldFloor = new KeyValuePair<string, Rectangle>[WorldSizeX, WorldSizeY];
+            worldFloor = new TilePiece[WorldSizeX, WorldSizeY];
 
             List<string> keys = ResourceAtlas.TilemapAtlasKeys.Keys.ToList();
 
             for (int j = 0; j < WorldSizeX; j++)
                 for (int i = 0; i < WorldSizeY; i++)
                 {   
-                    Rectangle position = new Rectangle(
+                    Rectangle bounds = new Rectangle(
                         (int)(i * TileSize - worldHalfX) + offset.X,
                         (int)(j * TileSize - worldHalfY) + offset.Y,
                         TileSize, TileSize);
 
                     string tileName = keys[randomInstance.Next(0, keys.Count)];
 
-                    worldFloor[i, j] = new KeyValuePair<string, Rectangle>(tileName, position);
+                    worldFloor[i, j] = new TilePiece(bounds, tileName);
                 }
         }
     }

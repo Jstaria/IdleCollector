@@ -53,10 +53,8 @@ namespace IdleEngine
                     c1.Position.Y + c1.Bounds.Height > c2.Position.Y);
         }
 
-        private static bool CircleRectangleCollision(ICollidable c1, ICollidable c2)
+        private static bool CircleRectangleCollision(ICollidable c, ICollidable r)
         {
-            ICollidable c = c1.CollisionType == CollisionType.Circle ? c1 : c2;
-            ICollidable r = c2.CollisionType == CollisionType.Rectangle ? c2 : c1;
             float testX = c.Position.X; float testY = c.Position.Y;
 
             if (c.Position.X < r.Position.X)
