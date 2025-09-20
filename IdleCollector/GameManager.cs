@@ -44,7 +44,6 @@ namespace IdleCollector
         #endregion
 
         private WorldManager worldManager;
-        private CollisionTree collisionTree;
 
         public GameManager()
         {
@@ -158,8 +157,6 @@ namespace IdleCollector
             {
                 Renderer.CurrentCamera.SetBounds(worldManager.WorldBounds);
                 Renderer.CurrentCamera.UseBounds = true;
-                collisionTree = new CollisionTree(worldManager.WorldBounds, 4);
-                Renderer.AddToDraw(collisionTree);
             });
             Updater.AddToSceneExit(GameScene, () =>
             {

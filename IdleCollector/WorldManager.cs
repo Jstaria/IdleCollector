@@ -25,6 +25,8 @@ namespace IdleCollector
         private TilePiece[,] worldFloor;
         private Rectangle worldBounds;
 
+        private CollisionTree<TilePiece> tileTree;
+
         public Rectangle WorldBounds { get { return worldBounds; } }
         public UpdateType Type { get; set; }
 
@@ -35,25 +37,38 @@ namespace IdleCollector
 
         public void Update(GameTime gameTime)
         {
-            
+
         }
 
         public void Draw(SpriteBatch sb)
         {
-            for (int j = 0; j < WorldSizeY; j++)
-                for (int i = 0; i < WorldSizeX; i++)
-                {
-                    if (!worldFloor[i, j].Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
+            EmptyCollider collider = new();
+            collider.Bounds = Renderer.ScaledCameraBounds;
+            collider.Position = collider.Bounds.Location.ToVector2();
+            collider.CollisionType = CollisionType.Rectangle;
+            tileTree.GetActiveLeaves(collider, CollisionCheck.Rectangle);
+            List<TilePiece> pieces = tileTree.GetCollidedWith(collider, CollisionCheck.Rectangle);
 
-                    float noiseValue = noise.GetNoise((float)i, (float)j);
-                    //Debug.WriteLine(noiseValue);
-                    Color color = Color.Lerp(Color.White, Color.Brown, noiseValue / 5);
-                    if (worldFloor[i,j].debugColorSwap)
-                    {
-                        color = Color.Yellow;
-                    }
-                    sb.Draw(ResourceAtlas.TilemapAtlas, worldFloor[i, j].Bounds, ResourceAtlas.GetTileRect(worldFloor[i, j].TextureKey), color);
+            for (int i = 0; i < pieces.Count; i++)
+            {
+                TilePiece piece = pieces[i];
+
+                if (!piece.Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
+
+                float noiseValue = noise.GetNoise(piece.TilePosition.X, piece.TilePosition.Y);
+                //Debug.WriteLine(noiseValue);
+                Color color = Color.Lerp(Color.White, Color.Brown, noiseValue / 5);
+                if (piece.debugColorSwap)
+                {
+                    color = Color.Yellow;
                 }
+                sb.Draw(ResourceAtlas.TilemapAtlas, piece.Bounds, ResourceAtlas.GetTileRect(piece.TextureKey), color);
+            }
+
+            if (tileTree != null)
+            {
+                tileTree.DrawActiveBounds(sb);
+            }
         }
 
         private void Initialize()
@@ -67,17 +82,18 @@ namespace IdleCollector
             if (collider.Radius <= 0) throw new Exception("Collider must have a radius for spawning flora!");
             Debug.WriteLine("{0} spawned flora in a radius of {1} with an area of {2} at ({3})", collider, collider.Radius, MathF.PI * collider.Radius * collider.Radius, collider.Position);
 
-            for (int j = 0; j < WorldSizeY;j++) 
-                for (int i = 0; i < WorldSizeX; i++)
-                {
-                    TilePiece tp = worldFloor[i,j];
+            List<TilePiece> tilePieces = tileTree.GetCollidedWith(collider, CollisionCheck.CircleRect);
 
-                    tp.debugColorSwap = false;
+            for (int i = 0; i < tilePieces.Count; i++)
+            {
+                TilePiece tp = tilePieces[i];
 
-                    if (!CollisionHelper.CheckForCollision(collider, tp, CollisionCheck.CircleRect)) continue;
+                tp.debugColorSwap = false;
 
-                    tp.debugColorSwap = true;
-                }
+                if (!CollisionHelper.CheckForCollision(collider, tp, CollisionCheck.CircleRect)) continue;
+
+                tp.debugColorSwap = true;
+            }
         }
 
         private void LoadWorldData(string name, string folder)
@@ -104,11 +120,12 @@ namespace IdleCollector
             worldBounds = new Rectangle(-worldHalfX + offset.X, -worldHalfY + offset.Y, TileSize * WorldSizeX, TileSize * WorldSizeY);
             worldFloor = new TilePiece[WorldSizeX, WorldSizeY];
 
+            tileTree = new CollisionTree<TilePiece>(WorldBounds, 6);
             List<string> keys = ResourceAtlas.TilemapAtlasKeys.Keys.ToList();
 
             for (int j = 0; j < WorldSizeX; j++)
                 for (int i = 0; i < WorldSizeY; i++)
-                {   
+                {
                     Rectangle bounds = new Rectangle(
                         (int)(i * TileSize - worldHalfX) + offset.X,
                         (int)(j * TileSize - worldHalfY) + offset.Y,
@@ -116,7 +133,8 @@ namespace IdleCollector
 
                     string tileName = keys[randomInstance.Next(0, keys.Count)];
 
-                    worldFloor[i, j] = new TilePiece(bounds, tileName);
+                    worldFloor[i, j] = new TilePiece(bounds, tileName, new Point(i, j));
+                    tileTree.AddChild(worldFloor[i, j], bounds.Location);
                 }
         }
     }

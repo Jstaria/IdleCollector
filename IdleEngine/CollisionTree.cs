@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
-    public class CollisionTree : ICollidable, IRenderable
+    public class CollisionTree<T> : ICollidable, IRenderable
     {
         public CollisionType CollisionType { get; set; }
         public Vector2 Position { get; set; }
@@ -17,18 +17,43 @@ namespace IdleEngine
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
 
-        private TreeLeaf[,] children;
+        private TreeLeaf<T> root;
+
+        private List<TreeLeaf<T>> activeLeaves;
 
         public CollisionTree(Rectangle bounds, int depth)
         {
             Bounds = bounds;
             Position = bounds.Location.ToVector2();
+            activeLeaves = new();
 
-            children = new TreeLeaf[2, 2];
+            root = new TreeLeaf<T>(Bounds, 0, depth);
+        }
 
-            for (int i = 0; i < 2; i++)
-                for (int j = 0; j < 2; j++)
-                    children[i, j] = new TreeLeaf(Bounds, 0, depth);
+        public void GetActiveLeaves(ICollidable collider, CollisionCheck type)
+        {
+            activeLeaves = root.GetContainingLeaves(collider, type);
+
+            if (0 == 0)
+            {
+                int r = 0;
+                int y = r + 5;
+                Radius += 1;
+            }
+        }
+
+        public List<T> GetCollidedWith(ICollidable collider, CollisionCheck type)
+        {
+            List<T> containingChildren = new List<T>();
+            foreach (TreeLeaf<T> child in activeLeaves)
+                containingChildren.AddRange(child.containingChildren);
+
+            return containingChildren;
+        }
+
+        public void AddChild(T child, Point position)
+        {
+            root.AddChild(child, position);
         }
 
         public void Draw(SpriteBatch sb)
@@ -38,10 +63,13 @@ namespace IdleEngine
             sb.DrawLine((Bounds.Location + new Point(Bounds.Width, 0)).ToVector2(), (Bounds.Location + new Point(Bounds.Width, Bounds.Height)).ToVector2(), 2, Color.Black);
             sb.DrawLine((Bounds.Location + new Point(0, Bounds.Height)).ToVector2(), (Bounds.Location + new Point(Bounds.Width, Bounds.Height)).ToVector2(), 2, Color.Black);
 
-            foreach (TreeLeaf leaf in children)
-            {
-                leaf.Draw(sb);
-            }
+            root.Draw(sb);
+        }
+
+        public void DrawActiveBounds(SpriteBatch sb)
+        {
+            foreach (TreeLeaf<T> leaf in activeLeaves)
+                leaf.DrawBounds(sb);
         }
     }
 }

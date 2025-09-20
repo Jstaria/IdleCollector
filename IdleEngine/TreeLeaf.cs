@@ -5,13 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace IdleEngine
 {
-    internal class TreeLeaf : ICollidable, IRenderable
+    internal class TreeLeaf<T> : ICollidable, IRenderable
     {
+        internal List<T> containingChildren;
+
         internal bool IsLeaf { get; set; }
-        internal TreeLeaf[,] Children { get; set; }
+        internal TreeLeaf<T>[,] Children { get; set; }
         public CollisionType CollisionType { get; set; }
         public Vector2 Position { get; set; }
         public int Radius { get; set; }
@@ -22,8 +25,9 @@ namespace IdleEngine
         private int maxDepth;
         private Color[] colors;
 
-        public TreeLeaf(Rectangle bounds, int depth, int maxDepth) 
+        public TreeLeaf(Rectangle bounds, int depth, int maxDepth)
         {
+            containingChildren = new();
             colors = new Color[] { Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.Green, Color.LightBlue, Color.Blue, Color.BlueViolet, Color.Violet, Color.Purple };
             IsLeaf = true;
 
@@ -38,7 +42,7 @@ namespace IdleEngine
 
         public void CreateChildren(int maxDepth)
         {
-            Children = new TreeLeaf[2,2];
+            Children = new TreeLeaf<T>[2, 2];
             IsLeaf = false;
 
             int childWidth = Bounds.Width / 2;
@@ -48,31 +52,58 @@ namespace IdleEngine
             {
                 for (int i = 0; i < 2; i++)
                 {
-                    Rectangle bounds = new Rectangle(Bounds.Location + new Point(childWidth * i, childHeight * j), new Point(childWidth,childHeight));
-                    Children[i,j] = (new TreeLeaf(bounds, Depth + 1, maxDepth));
+                    Rectangle bounds = new Rectangle(Bounds.Location + new Point(childWidth * i, childHeight * j), new Point(childWidth, childHeight));
+                    Children[i, j] = (new TreeLeaf<T>(bounds, Depth + 1, maxDepth));
                 }
             }
         }
 
-        public TreeLeaf GetContainingLeaf(ICollidable collider, CollisionCheck type)
-        {
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            // TODO: ADD YOUR CODE FOR ACTIVITY TWO HERE
-            // If the rectangle param fits inside me and I have children...
-            // Check each of my children and see if it fits in them
-            // And if so, then call this again
-            // If I don't have children or none of my children has the rectangle, it must be me
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-            if (CollisionHelper.CheckForCollision(collider, this, type))
-            {  if (!IsLeaf)
-                {  foreach (TreeLeaf node in Children)
-                    { if (CollisionHelper.CheckForCollision(collider, node, type))
-                        { return node.GetContainingLeaf(collider, type); 
+        public void AddChild(T containingChild, Point position) 
+        { 
+            if (Bounds.Contains(position)) 
+            { 
+                if (!IsLeaf) 
+                { 
+                    foreach (TreeLeaf<T> leaf in Children) 
+                    { 
+                        if (leaf.Bounds.Contains(position)) 
+                        { 
+                            leaf.AddChild(containingChild, position); 
                         } 
                     } 
-                } return this;
-            } return null;
+                }
+                else
+                {
+                    containingChildren.Add(containingChild);
+                    return;
+                } 
+            } 
+        }
+
+        public List<TreeLeaf<T>> GetContainingLeaves(ICollidable collider, CollisionCheck type)
+        {
+            List<TreeLeaf<T>> leaves = new();
+
+            if (CollisionHelper.CheckForCollision(collider, this, type))
+            {
+                if (IsLeaf)
+                    leaves.Add(this);
+
+                if (!IsLeaf)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        TreeLeaf<T> node = Children[i % 2, i / 2];
+
+                        if (CollisionHelper.CheckForCollision(collider, node, type))
+                        {
+                            leaves.AddRange(node.GetContainingLeaves(collider, type));
+                        }
+                    }
+                }
+            }
+
+            return leaves;
         }
 
         public void Draw(SpriteBatch sb)
@@ -83,9 +114,16 @@ namespace IdleEngine
             sb.DrawLine((Bounds.Location + new Point(Bounds.Width, 0)).ToVector2(), (Bounds.Location + new Point(Bounds.Width, Bounds.Height)).ToVector2(), size, colors[Depth % colors.Length]);
             sb.DrawLine((Bounds.Location + new Point(0, Bounds.Height)).ToVector2(), (Bounds.Location + new Point(Bounds.Width, Bounds.Height)).ToVector2(), size, colors[Depth % colors.Length]);
 
-            if (IsLeaf) return;
-            foreach (TreeLeaf leaf in Children)
-            { leaf.Draw(sb); }
+            if (Children == null) return;
+
+            for (int y = 0; y < 2; y++)
+                for (int x = 0; x < 2; x++)
+                    Children[x, y]?.Draw(sb);
+        }
+
+        public void DrawBounds(SpriteBatch sb)
+        {
+            sb.Draw(ResourceAtlas.GetTexture("square"), Bounds, colors[Depth] * .4f);
         }
     }
 }

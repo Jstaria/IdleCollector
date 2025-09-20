@@ -20,13 +20,15 @@ namespace IdleCollector
         public Vector2 Position { get; set; }
         public int Radius { get; set; }
         public bool IsCollidable { get; set; }
+        public Point TilePosition { get; set; }
 
-        public TilePiece(Rectangle bounds, string textureKey)
+        public TilePiece(Rectangle bounds, string textureKey, Point tilePosition)
         {
             this.bounds = bounds;
             this.textureKey = textureKey;
             this.CollisionType = CollisionType.Rectangle;
             Position = bounds.Location.ToVector2();
+            TilePosition = tilePosition;
         }
     }
 }
