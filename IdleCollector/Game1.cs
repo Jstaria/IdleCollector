@@ -45,7 +45,7 @@ namespace IdleCollector
 
         protected override void LoadContent()
         {
-            ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(1, 1));
+            ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt", new Point(4, 1));
             ResourceAtlas.LoadTextures(Content, "../../../Content/Textures/", "Textures");
 
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });

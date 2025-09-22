@@ -21,6 +21,7 @@ namespace IdleEngine
         // Texture2D Resource
         private static Texture2D tilemapAtlas;
         private static Point tileSize;
+        private static Random random;
         private static Dictionary<string, Texture2D> textureCache;
         private static Dictionary<string, Point> tilemapAtlasKeys;
     
@@ -38,6 +39,13 @@ namespace IdleEngine
             if (!tilemapAtlasKeys.ContainsKey(tileName)) throw new Exception(String.Format("Tile {0} does not exist!", tileName));
             
             return new Rectangle(tilemapAtlasKeys[tileName], tileSize);
+        }
+        public static Rectangle GetRandomTileRect() => GetTileRect(GetRandomAtlasKey());
+        public static string GetRandomAtlasKey()
+        {
+            if (random == null) random = new Random();
+            string tileName = tilemapAtlasKeys.Keys.ToList()[random.Next(0, tilemapAtlasKeys.Count)];
+            return tileName;
         }
         public static Texture2D GetTexture(string name)
         {

@@ -80,7 +80,7 @@ namespace IdleCollector
         public void SpawnFlora(ICollidable collider)
         {
             if (collider.Radius <= 0) throw new Exception("Collider must have a radius for spawning flora!");
-            Debug.WriteLine("{0} spawned flora in a radius of {1} with an area of {2} at ({3})", collider, collider.Radius, MathF.PI * collider.Radius * collider.Radius, collider.Position);
+            //Debug.WriteLine("{0} spawned flora in a radius of {1} with an area of {2} at ({3})", collider, collider.Radius, MathF.PI * collider.Radius * collider.Radius, collider.Position);
 
             List<TilePiece> tilePieces = tileTree.GetCollidedWith(collider, CollisionCheck.CircleRect);
 
@@ -120,8 +120,7 @@ namespace IdleCollector
             worldBounds = new Rectangle(-worldHalfX + offset.X, -worldHalfY + offset.Y, TileSize * WorldSizeX, TileSize * WorldSizeY);
             worldFloor = new TilePiece[WorldSizeX, WorldSizeY];
 
-            tileTree = new CollisionTree<TilePiece>(WorldBounds, 6);
-            List<string> keys = ResourceAtlas.TilemapAtlasKeys.Keys.ToList();
+            tileTree = new CollisionTree<TilePiece>(WorldBounds, 8);
 
             for (int j = 0; j < WorldSizeX; j++)
                 for (int i = 0; i < WorldSizeY; i++)
@@ -131,7 +130,7 @@ namespace IdleCollector
                         (int)(j * TileSize - worldHalfY) + offset.Y,
                         TileSize, TileSize);
 
-                    string tileName = keys[randomInstance.Next(0, keys.Count)];
+                    string tileName = ResourceAtlas.GetRandomAtlasKey();
 
                     worldFloor[i, j] = new TilePiece(bounds, tileName, new Point(i, j));
                     tileTree.AddChild(worldFloor[i, j], bounds.Location);

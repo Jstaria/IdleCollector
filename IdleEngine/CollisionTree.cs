@@ -33,13 +33,6 @@ namespace IdleEngine
         public void GetActiveLeaves(ICollidable collider, CollisionCheck type)
         {
             activeLeaves = root.GetContainingLeaves(collider, type);
-
-            if (0 == 0)
-            {
-                int r = 0;
-                int y = r + 5;
-                Radius += 1;
-            }
         }
 
         public List<T> GetCollidedWith(ICollidable collider, CollisionCheck type)
