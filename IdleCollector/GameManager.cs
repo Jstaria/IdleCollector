@@ -93,6 +93,7 @@ namespace IdleCollector
             {
                 followPlayer = true;
                 camera.SetTranslation(player.Position.ToPoint());
+                player.WorldBounds = worldManager.WorldBounds;
             });
             Updater.AddToSceneExit(GameScene, () =>
             {

@@ -76,8 +76,8 @@ namespace IdleCollector
 
             if (WorldBounds == Rectangle.Empty) return;
 
-            position.X = Math.Clamp(Position.X, WorldBounds.Left, WorldBounds.Right);
-            position.Y = Math.Clamp(Position.Y, WorldBounds.Top, WorldBounds.Bottom);
+            position.X = Math.Clamp(Position.X, WorldBounds.Left + Bounds.Width / 6, WorldBounds.Right - Bounds.Width / 6);
+            position.Y = Math.Clamp(Position.Y, WorldBounds.Top + Bounds.Height / 6, WorldBounds.Bottom - Bounds.Height / 6);
 
             Position = position;
         }

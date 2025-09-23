@@ -1,1 +1,2 @@
-sand1,sand2,sand3,sand4
+sand:sand1,sand2,sand3,sand4
+grass:grass1,grass2,grass3,grass4

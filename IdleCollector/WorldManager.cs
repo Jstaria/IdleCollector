@@ -12,10 +12,11 @@ namespace IdleCollector
 {
     internal class WorldManager : IScene
     {
-        private int WorldSizeX;
-        private int WorldSizeY;
-        private float WorldNoiseFrequency;
-        private int TileSize;
+        private int WorldTreeDepth = 1;
+        private int WorldSizeX = 10;
+        private int WorldSizeY = 10;
+        private float WorldNoiseFrequency = .01f;
+        private int TileSize = 32;
 
         private int seed = 1;
 
@@ -55,20 +56,13 @@ namespace IdleCollector
 
                 if (!piece.Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
 
-                float noiseValue = noise.GetNoise(piece.TilePosition.X, piece.TilePosition.Y);
-                //Debug.WriteLine(noiseValue);
-                Color color = Color.Lerp(Color.White, Color.Brown, noiseValue / 5);
-                if (piece.debugColorSwap)
-                {
-                    color = Color.Yellow;
-                }
-                sb.Draw(ResourceAtlas.TilemapAtlas, piece.Bounds, ResourceAtlas.GetTileRect(piece.TextureKey), color);
+                piece.Draw(sb);
             }
 
-            if (tileTree != null)
-            {
-                tileTree.DrawActiveBounds(sb);
-            }
+            //if (tileTree != null)
+            //{
+            //    tileTree.DrawActiveBounds(sb);
+            //}
         }
 
         private void Initialize()
@@ -120,7 +114,7 @@ namespace IdleCollector
             worldBounds = new Rectangle(-worldHalfX + offset.X, -worldHalfY + offset.Y, TileSize * WorldSizeX, TileSize * WorldSizeY);
             worldFloor = new TilePiece[WorldSizeX, WorldSizeY];
 
-            tileTree = new CollisionTree<TilePiece>(WorldBounds, 8);
+            tileTree = new CollisionTree<TilePiece>(WorldBounds, WorldTreeDepth);
 
             for (int j = 0; j < WorldSizeX; j++)
                 for (int i = 0; i < WorldSizeY; i++)
@@ -129,10 +123,17 @@ namespace IdleCollector
                         (int)(i * TileSize - worldHalfX) + offset.X,
                         (int)(j * TileSize - worldHalfY) + offset.Y,
                         TileSize, TileSize);
+                    string tileType = "sand";
+                    string tileName = ResourceAtlas.GetRandomAtlasKey(tileType);
 
-                    string tileName = ResourceAtlas.GetRandomAtlasKey();
+                    float noiseValue = noise.GetNoise(i / 2, j / 2);
+                    Color sandColor = new Color(250, 204, 158);
+                    Color color = Color.Lerp(sandColor, Color.Brown, noiseValue / 4);
 
-                    worldFloor[i, j] = new TilePiece(bounds, tileName, new Point(i, j));
+                    noiseValue = noise.GetNoise((i / 4.0f) + 100, (j / 4.0f) + 100, j);
+                    color = Color.Lerp(color, Color.Gold, noiseValue / 6);
+
+                    worldFloor[i, j] = new TilePiece(bounds, tileName, tileType, new Point(i, j), color);
                     tileTree.AddChild(worldFloor[i, j], bounds.Location);
                 }
         }
