@@ -27,5 +27,20 @@ namespace IdleCollector
         {
             
         }
+
+        public override void SetRotation(ICollidable collider, int tileOriginX)
+        {
+            Vector2 colliderOrigin = collider.Position - (collider.Bounds.Size.ToVector2() / 2);
+            Vector2 position = Position + Origin;
+
+            float distance = Vector2.Distance(position, colliderOrigin);
+            if (distance > 20) return;
+
+            float lerp = 1 - distance / 20;
+            float rotation = MathF.Sign(position.X - tileOriginX) * 20;
+            
+
+            Rotation = MathHelper.Lerp(0, rotation, lerp);
+        }
     }
 }

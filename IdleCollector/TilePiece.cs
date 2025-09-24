@@ -88,12 +88,17 @@ namespace IdleCollector
                     grass.Radius = 8;
                     grass.Position = position;
                     grass.Bounds = new Rectangle(position.ToPoint(), new Point(16, 16));
-                    grass.LayerDepth = (position.Y - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+                    grass.LayerDepth = Math.Max(0, position.Y - worldBounds.Y - grass.Bounds.Height) / (float)worldBounds.Height + float.Epsilon;
                     grass.Color = Color;
 
                     interactables[pairs.Key].Add(grass);
                 }
             }
+        }
+
+        public void CheckInteractables(ICollidable collider)
+        {
+
         }
 
         public void Draw(SpriteBatch sb)

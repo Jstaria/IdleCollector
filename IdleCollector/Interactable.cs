@@ -14,8 +14,13 @@ namespace IdleCollector
     {
         protected string textureKey;
         protected string tileType;
+        protected Rectangle textureSourceRect;
 
-        protected Interactable() { }
+        protected Interactable() 
+        {
+            textureSourceRect = ResourceAtlas.GetTileRect(tileType, textureKey);
+            Origin = new Vector2(rect.Width / 2, rect.Height);
+        }
 
         public UpdateType Type { get; set; }
         public CollisionType CollisionType { get; set; }
@@ -25,12 +30,15 @@ namespace IdleCollector
         public bool IsCollidable { get; set; }
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
+        public float Rotation { get; set; }
+        public Vector2 Origin {  get; set; }
 
         public abstract void Update(GameTime gameTime);
         public virtual void Draw(SpriteBatch sb)
         {
-            sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, ResourceAtlas.GetTileRect(tileType, textureKey), Color, 0, Vector2.Zero, SpriteEffects.None, LayerDepth);
+            sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, textureSourceRect, Color, Rotation, Origin, SpriteEffects.None, LayerDepth);
         }
+        public abstract void SetRotation(ICollidable collider, int tileOriginX);
         public abstract void InteractWith(ICollidable collider);
     }
 }
