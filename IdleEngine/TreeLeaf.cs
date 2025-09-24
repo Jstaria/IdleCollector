@@ -21,6 +21,8 @@ namespace IdleEngine
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
         public int Depth { get; set; }
+        public float LayerDepth { get; set; }
+        public Color Color { get; set; }
 
         private int maxDepth;
         private Color[] colors;

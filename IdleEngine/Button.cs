@@ -42,6 +42,9 @@ namespace IdleCollector
 
         public UpdateType Type { get { return updateType; } set { updateType = value; } }
 
+        public float LayerDepth { get; set; }
+        public Color Color { get; set; }
+
         public event OnButtonClick OnClick;
         public event OnButtonClickString OnClickString;
 

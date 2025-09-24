@@ -30,7 +30,9 @@ namespace IdleCollector
         private GameTime gameTime;
         private string GameScene = "Game Scene";
 
+        public float LayerDepth { get; set; }
         public UpdateType Type { get; set; }
+        public Color Color { get; set; }
 
         public static GameManager Instance
         {
@@ -104,6 +106,7 @@ namespace IdleCollector
             Updater.AddToSceneUpdate(GameScene, UpdateType.Controlled, (gameTime) =>
             {
                 if (followPlayer) camera.SetTarget(player.Position.ToPoint());
+                worldManager.ChangePlayerLayerDepth(player);
             });
 
             camera.SetTranslation(screenHalf);

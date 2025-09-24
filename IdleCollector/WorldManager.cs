@@ -30,6 +30,8 @@ namespace IdleCollector
 
         public Rectangle WorldBounds { get { return worldBounds; } }
         public UpdateType Type { get; set; }
+        public float LayerDepth { get; set; }
+        public Color Color { get; set; }
 
         public WorldManager()
         {
@@ -82,11 +84,9 @@ namespace IdleCollector
             {
                 TilePiece tp = tilePieces[i];
 
-                tp.debugColorSwap = false;
-
                 if (!CollisionHelper.CheckForCollision(collider, tp, CollisionCheck.CircleRect)) continue;
 
-                tp.debugColorSwap = true;
+                tp.SpawnGrass(collider, worldBounds);
             }
         }
 
@@ -134,8 +134,14 @@ namespace IdleCollector
                     color = Color.Lerp(color, Color.Gold, noiseValue / 6);
 
                     worldFloor[i, j] = new TilePiece(bounds, tileName, tileType, new Point(i, j), color);
+                    worldFloor[i, j].LayerDepth = 0.0f;
                     tileTree.AddChild(worldFloor[i, j], bounds.Location);
                 }
+        }
+
+        public void ChangePlayerLayerDepth(Player player)
+        {
+            player.LayerDepth = (player.Position.Y - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
         }
     }
 }

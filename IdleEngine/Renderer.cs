@@ -72,7 +72,7 @@ namespace IdleEngine
             renderTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
             uiTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
             renderTexConfig = new BatchConfig(
-                SpriteSortMode.Immediate,
+                SpriteSortMode.FrontToBack,
                 null,
                 SamplerState.PointClamp,
                 null, null, null, null,

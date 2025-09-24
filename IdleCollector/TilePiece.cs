@@ -17,6 +17,7 @@ namespace IdleCollector
         private Rectangle bounds;
         private Color color;
         private Dictionary<EmptyCollider, List<Interactable>> interactables;
+        private float layerDepth;
 
         public bool debugColorSwap {  get; set; }
         public string TextureKey { get => textureKey; }
@@ -27,7 +28,8 @@ namespace IdleCollector
         public int Radius { get; set; }
         public bool IsCollidable { get; set; }
         public Point TilePosition { get; set; }
-        public Color Color { get => color; }
+        public Color Color { get => color; set => color = value; }
+        public float LayerDepth { get => layerDepth; set => layerDepth = value; }
         #endregion
 
         public TilePiece(Rectangle bounds, string textureKey, string tileType, Point tilePosition, Color color)
@@ -65,20 +67,42 @@ namespace IdleCollector
             }
         }
 
-        public void SpawnGrass(ICollidable collider)
+        public void SpawnGrass(ICollidable collider, Rectangle worldBounds)
         {
             foreach (KeyValuePair<EmptyCollider, List<Interactable>> pairs in interactables)
             {
                 if (pairs.Value.Count > 0) continue;
-                if (!CollisionHelper.CheckForCollision(collider, pairs.Key)) continue;
+                //if (!CollisionHelper.CheckForCollision(collider, pairs.Key)) continue;
 
-                interactables[pairs.Key].Add(Interactable);
+                Random random = new Random();
+                Rectangle keyBounds = pairs.Key.Bounds;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Vector2 position = new Vector2(
+                    keyBounds.Left + (float)random.NextDouble() * keyBounds.Width,
+                    keyBounds.Top + (float)random.NextDouble() * keyBounds.Height);
+
+                    Grass grass = new Grass("grass", ResourceAtlas.GetRandomAtlasKey("grass"));
+                    grass.CollisionType = CollisionType.Circle;
+                    grass.Radius = 8;
+                    grass.Position = position;
+                    grass.Bounds = new Rectangle(position.ToPoint(), new Point(16, 16));
+                    grass.LayerDepth = (position.Y - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+                    grass.Color = Color;
+
+                    interactables[pairs.Key].Add(grass);
+                }
             }
         }
 
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, ResourceAtlas.GetTileRect(TileType, TextureKey), color);
+            sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, ResourceAtlas.GetTileRect(TileType, TextureKey), color, 0, Vector2.Zero, SpriteEffects.None, layerDepth);
+        
+            foreach (List<Interactable> interactables in  interactables.Values)
+                foreach (Interactable interactable in interactables)
+                    interactable.Draw(sb);
         }
     }
 }

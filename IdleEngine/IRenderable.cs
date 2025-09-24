@@ -11,7 +11,8 @@ namespace IdleEngine
     public interface IRenderable
     {
         // Possibly add property here to control draw layer/order
-
+        public float LayerDepth { get; set; }
+        public Color Color { get; set; }
         public void Draw(SpriteBatch sb);
     }
 }

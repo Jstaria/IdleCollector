@@ -16,6 +16,8 @@ namespace IdleEngine
         public int Radius { get; set; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
+        public float LayerDepth { get; set; }
+        public Color Color { get; set; }
 
         private TreeLeaf<T> root;
 
