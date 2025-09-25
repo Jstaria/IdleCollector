@@ -16,11 +16,7 @@ namespace IdleCollector
         protected string tileType;
         protected Rectangle textureSourceRect;
 
-        protected Interactable() 
-        {
-            textureSourceRect = ResourceAtlas.GetTileRect(tileType, textureKey);
-            Origin = new Vector2(rect.Width / 2, rect.Height);
-        }
+        protected Interactable() { }
 
         public UpdateType Type { get; set; }
         public CollisionType CollisionType { get; set; }
@@ -31,7 +27,7 @@ namespace IdleCollector
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
         public float Rotation { get; set; }
-        public Vector2 Origin {  get; set; }
+        public virtual Vector2 Origin { get => new Vector2(Bounds.Width, Bounds.Height); }
 
         public abstract void Update(GameTime gameTime);
         public virtual void Draw(SpriteBatch sb)

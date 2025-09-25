@@ -111,7 +111,8 @@ namespace IdleCollector
 
             camera.SetTranslation(screenHalf);
 
-            player.Spawn += worldManager.SpawnFlora;
+            player.OnSpawn += worldManager.SpawnFlora;
+            player.OnMove += worldManager.InteractWithFlora;
         }
 
         private void SetupPause()
@@ -156,7 +157,6 @@ namespace IdleCollector
         {
             worldManager = new WorldManager();
             SceneManager.AddToScene(GameScene, worldManager);
-            Updater.AddToSceneEnter(GameScene, worldManager.CreateWorld);
             Updater.AddToSceneEnter(GameScene, () =>
             {
                 Renderer.CurrentCamera.SetBounds(worldManager.WorldBounds);

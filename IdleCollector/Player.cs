@@ -35,8 +35,9 @@ namespace IdleCollector
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
 
-        public delegate void SpawnFlora(ICollidable spawn);
-        public event SpawnFlora Spawn;
+        public delegate void PlayerWalk(ICollidable spawn);
+        public event PlayerWalk OnSpawn;
+        public event PlayerWalk OnMove;
 
         public Player(Texture2D spriteSheet, Point position, Rectangle bounds, Point frameCount)
         {
@@ -55,6 +56,7 @@ namespace IdleCollector
             GetInput();
             ClampPosition();
             OnPositionSpawnFlora(gameTime);
+            OnMove?.Invoke(this);
         }
 
         public void Draw(SpriteBatch sb)
@@ -69,7 +71,7 @@ namespace IdleCollector
             if (time - prevSpawnTime < spawnFrequency) return;
             
             prevSpawnTime = time;
-            Spawn?.Invoke(this);
+            OnSpawn?.Invoke(this);
         }
 
         private void ClampPosition()

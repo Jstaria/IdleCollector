@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IdleCollector
 {
-    internal class TilePiece: ICollidable, IRenderable
+    internal class TilePiece: ICollidable, IRenderable, IUpdatable
     {
         #region // Variables
         private string textureKey;
@@ -30,6 +30,7 @@ namespace IdleCollector
         public Point TilePosition { get; set; }
         public Color Color { get => color; set => color = value; }
         public float LayerDepth { get => layerDepth; set => layerDepth = value; }
+        public UpdateType Type { get; set; }
         #endregion
 
         public TilePiece(Rectangle bounds, string textureKey, string tileType, Point tilePosition, Color color)
@@ -88,7 +89,7 @@ namespace IdleCollector
                     grass.Radius = 8;
                     grass.Position = position;
                     grass.Bounds = new Rectangle(position.ToPoint(), new Point(16, 16));
-                    grass.LayerDepth = Math.Max(0, position.Y - worldBounds.Y - grass.Bounds.Height) / (float)worldBounds.Height + float.Epsilon;
+                    grass.LayerDepth = (position.Y - worldBounds.Y - grass.Origin.Y) / (float)worldBounds.Height + float.Epsilon;
                     grass.Color = Color;
 
                     interactables[pairs.Key].Add(grass);
@@ -98,7 +99,11 @@ namespace IdleCollector
 
         public void CheckInteractables(ICollidable collider)
         {
-
+            foreach (List<Interactable> interactables in interactables.Values)
+                foreach (Interactable interactable in interactables)
+                {
+                    interactable.SetRotation(collider, bounds.X);
+                }
         }
 
         public void Draw(SpriteBatch sb)
@@ -108,6 +113,13 @@ namespace IdleCollector
             foreach (List<Interactable> interactables in  interactables.Values)
                 foreach (Interactable interactable in interactables)
                     interactable.Draw(sb);
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            foreach (List<Interactable> interactables in interactables.Values)
+                foreach (Interactable interactable in interactables)
+                    interactable.Update(gameTime);
         }
     }
 }

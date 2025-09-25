@@ -27,7 +27,7 @@ namespace IdleCollector
         private Rectangle worldBounds;
 
         private CollisionTree<TilePiece> tileTree;
-
+        private List<TilePiece> activeTiles;
         public Rectangle WorldBounds { get { return worldBounds; } }
         public UpdateType Type { get; set; }
         public float LayerDepth { get; set; }
@@ -40,21 +40,22 @@ namespace IdleCollector
 
         public void Update(GameTime gameTime)
         {
-
-        }
-
-        public void Draw(SpriteBatch sb)
-        {
             EmptyCollider collider = new();
             collider.Bounds = Renderer.ScaledCameraBounds;
             collider.Position = collider.Bounds.Location.ToVector2();
             collider.CollisionType = CollisionType.Rectangle;
-            tileTree.GetActiveLeaves(collider, CollisionCheck.Rectangle);
-            List<TilePiece> pieces = tileTree.GetCollidedWith(collider, CollisionCheck.Rectangle);
 
-            for (int i = 0; i < pieces.Count; i++)
+            tileTree.GetActiveLeaves(collider, CollisionCheck.Rectangle);
+            activeTiles = tileTree.GetCollidedWith(collider, CollisionCheck.Rectangle);
+        }
+
+        public void Draw(SpriteBatch sb)
+        {
+            if (activeTiles == null) return;
+
+            for (int i = 0; i < activeTiles.Count; i++)
             {
-                TilePiece piece = pieces[i];
+                TilePiece piece = activeTiles[i];
 
                 if (!piece.Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
 
@@ -71,6 +72,19 @@ namespace IdleCollector
         {
             LoadWorldData("WorldData", "SaveData");
             LoadNoise();
+            CreateWorld();
+        }
+
+        public void InteractWithFlora(ICollidable collider)
+        {
+            List<TilePiece> tilePieces = tileTree.GetCollidedWith(collider, CollisionCheck.CircleRect);
+
+            for (int i = 0; i < tilePieces.Count; i++)
+            {
+                TilePiece tp = tilePieces[i];
+
+                tp.CheckInteractables(collider);
+            }
         }
 
         public void SpawnFlora(ICollidable collider)
@@ -141,7 +155,7 @@ namespace IdleCollector
 
         public void ChangePlayerLayerDepth(Player player)
         {
-            player.LayerDepth = (player.Position.Y - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+            player.LayerDepth = (player.Position.Y - player.Bounds.Height / 8 - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
         }
     }
 }
