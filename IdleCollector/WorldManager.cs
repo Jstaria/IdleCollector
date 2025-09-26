@@ -47,6 +47,15 @@ namespace IdleCollector
 
             tileTree.GetActiveLeaves(collider, CollisionCheck.Rectangle);
             activeTiles = tileTree.GetCollidedWith(collider, CollisionCheck.Rectangle);
+
+            for (int i = 0; i < activeTiles.Count; i++)
+            {
+                TilePiece piece = activeTiles[i];
+
+                if (!piece.Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
+
+                piece.Update(gameTime);
+            }
         }
 
         public void Draw(SpriteBatch sb)

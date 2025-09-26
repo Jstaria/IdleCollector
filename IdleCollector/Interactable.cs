@@ -34,7 +34,7 @@ namespace IdleCollector
         {
             sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, textureSourceRect, Color, Rotation, Origin, SpriteEffects.None, LayerDepth);
         }
-        public abstract void SetRotation(ICollidable collider, int tileOriginX);
+        public abstract void SetRotation(ICollidable collider);
         public abstract void InteractWith(ICollidable collider);
     }
 }

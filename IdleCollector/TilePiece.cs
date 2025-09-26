@@ -78,7 +78,7 @@ namespace IdleCollector
                 Random random = new Random();
                 Rectangle keyBounds = pairs.Key.Bounds;
 
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 8; i++)
                 {
                     Vector2 position = new Vector2(
                     keyBounds.Left + (float)random.NextDouble() * keyBounds.Width,
@@ -102,7 +102,7 @@ namespace IdleCollector
             foreach (List<Interactable> interactables in interactables.Values)
                 foreach (Interactable interactable in interactables)
                 {
-                    interactable.SetRotation(collider, bounds.X);
+                    interactable.InteractWith(collider);
                 }
         }
 
