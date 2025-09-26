@@ -164,7 +164,8 @@ namespace IdleCollector
 
         public void ChangePlayerLayerDepth(Player player)
         {
-            player.LayerDepth = (player.Position.Y - player.Bounds.Height / 8 - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+            float yPos = player.Position.Y + player.Origin.Y; /*- player.Bounds.Height / 8;*/
+            player.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
         }
     }
 }

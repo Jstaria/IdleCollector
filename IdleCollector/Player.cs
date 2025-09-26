@@ -34,6 +34,7 @@ namespace IdleCollector
         public Rectangle WorldBounds { get; set; }
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
+        public Vector2 Origin { get; set; }
 
         public delegate void PlayerWalk(ICollidable spawn);
         public event PlayerWalk OnSpawn;
@@ -47,7 +48,7 @@ namespace IdleCollector
             this.FrameCount = frameCount;
             this.Type = UpdateType.Controlled;
             this.CollisionType = CollisionType.Circle;
-
+            this.Origin = new Vector2(bounds.Width / 2, bounds.Height * .65f);
             LoadPlayerData("PlayerData", "SaveData");
         }
 
@@ -61,7 +62,7 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(spriteSheet, new Rectangle(Position.ToPoint() - (Bounds.Size.ToVector2() / 2).ToPoint(), Bounds.Size), new Rectangle(64 * CurrentFrame.X, 64 * CurrentFrame.Y, 64, 64), Color.White, 0, Vector2.Zero, SpriteEffects.None, LayerDepth);
+            sb.Draw(spriteSheet, new Rectangle(Position.ToPoint(), Bounds.Size), new Rectangle(64 * CurrentFrame.X, 64 * CurrentFrame.Y, 64, 64), Color.White, 0, Origin, SpriteEffects.None, LayerDepth);
         }
 
         private void OnPositionSpawnFlora(GameTime gameTime)

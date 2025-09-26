@@ -18,6 +18,7 @@ namespace IdleEngine
         public bool IsCollidable { get; set; }
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
+        public Vector2 Origin { get; set; }
 
         private TreeLeaf<T> root;
 

@@ -14,5 +14,6 @@ namespace IdleEngine
         public int Radius { get; set; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
+        public Vector2 Origin { get; set; }
     }
 }

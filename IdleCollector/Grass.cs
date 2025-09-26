@@ -16,6 +16,8 @@ namespace IdleCollector
         private Spring xSpring;
         private Spring ySpring;
 
+        public override Vector2 Origin { get => new Vector2(Bounds.Width, Bounds.Height * 2); }
+
         public Grass(string atlasType, string atlasKey) : base()
         {
             tileType = atlasType;
@@ -36,7 +38,11 @@ namespace IdleCollector
 
         public override void Draw(SpriteBatch sb)
         {
-            Rectangle rect = new Rectangle(Bounds.Location + (xOffsetAmt * xSpring.Position).ToPoint(), Bounds.Size);
+            Vector2 offset = xOffsetAmt * xSpring.Position;
+            Rectangle rect = new Rectangle(Bounds.Location + offset.ToPoint(), Bounds.Size);
+
+            float yPos = Position.Y + offset.Y + Origin.Y + Rotation;
+            LayerDepth = (yPos - WorldDepth) / (float)WorldHeight + float.Epsilon;
 
             sb.Draw(ResourceAtlas.TilemapAtlas, rect, textureSourceRect, Color, Rotation, Origin, SpriteEffects.None, LayerDepth);
         }
@@ -50,7 +56,8 @@ namespace IdleCollector
         {
             Vector2 colliderOrigin = collider.Position;
             Vector2 position = Position;
-            Vector2 direction = colliderOrigin - position;
+            Vector2 direction = position - colliderOrigin;
+            direction.Normalize();
 
             float dot = Vector2.Dot(Vector2.UnitX, direction);
 
@@ -60,8 +67,8 @@ namespace IdleCollector
             if (distance > amt) return;
 
             float lerp = 1 - distance / amt;
-            rotationAmt = -MathF.Sign(dot) * MathHelper.ToRadians(45);
-            xOffsetAmt = Vector2.UnitX * MathF.Sign(-dot) * amt * .75f;
+            rotationAmt = MathF.Sign(dot) * MathHelper.ToRadians(45);
+            xOffsetAmt = direction * amt * .5f; // Vector2.UnitX * MathF.Sign(dot) * amt * .75f;
 
             xSpring.RestPosition = lerp;
         }

@@ -31,6 +31,7 @@ namespace IdleCollector
         public Color Color { get => color; set => color = value; }
         public float LayerDepth { get => layerDepth; set => layerDepth = value; }
         public UpdateType Type { get; set; }
+        public Vector2 Origin { get; set; }
         #endregion
 
         public TilePiece(Rectangle bounds, string textureKey, string tileType, Point tilePosition, Color color)
@@ -89,9 +90,11 @@ namespace IdleCollector
                     grass.Radius = 8;
                     grass.Position = position;
                     grass.Bounds = new Rectangle(position.ToPoint(), new Point(16, 16));
-                    grass.LayerDepth = (position.Y - worldBounds.Y - grass.Origin.Y) / (float)worldBounds.Height + float.Epsilon;
+                    float yPos = position.Y + grass.Origin.Y;
+                    grass.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
                     grass.Color = Color;
-
+                    grass.WorldDepth = worldBounds.Y;
+                    grass.WorldHeight = worldBounds.Height;
                     interactables[pairs.Key].Add(grass);
                 }
             }

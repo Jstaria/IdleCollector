@@ -27,7 +27,9 @@ namespace IdleCollector
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
         public float Rotation { get; set; }
-        public virtual Vector2 Origin { get => new Vector2(Bounds.Width, Bounds.Height); }
+        public virtual Vector2 Origin { get; set; }
+        public float WorldDepth { get; set; }
+        public int WorldHeight { get; internal set; }
 
         public abstract void Update(GameTime gameTime);
         public virtual void Draw(SpriteBatch sb)

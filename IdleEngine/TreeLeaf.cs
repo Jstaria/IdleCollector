@@ -23,6 +23,7 @@ namespace IdleEngine
         public int Depth { get; set; }
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
+        public Vector2 Origin { get; set; }
 
         private int maxDepth;
         private Color[] colors;
