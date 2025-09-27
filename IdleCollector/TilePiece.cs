@@ -89,12 +89,14 @@ namespace IdleCollector
                     grass.CollisionType = CollisionType.Circle;
                     grass.Radius = 8;
                     grass.Position = position;
-                    grass.Bounds = new Rectangle(position.ToPoint(), new Point(16, 16));
+                    grass.Bounds = new Rectangle(position.ToPoint(), new Point(32, 32));
                     float yPos = position.Y + grass.Origin.Y;
                     grass.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
                     grass.Color = Color;
                     grass.WorldDepth = worldBounds.Y;
                     grass.WorldHeight = worldBounds.Height;
+
+                    grass.Nudge((((float)(new Random().NextDouble()) - .5f) * 25));
                     interactables[pairs.Key].Add(grass);
                 }
             }

@@ -157,7 +157,7 @@ namespace IdleCollector
                     string tileType = "sand";
                     string tileName = ResourceAtlas.GetRandomAtlasKey(tileType);
 
-                    float noiseValue = noise.GetNoise(i / 2, j / 2);
+                    float noiseValue = noise.GetNoise(bounds.Location.X, bounds.Location.Y);
                     Color sandColor = new Color(250, 204, 158);
                     Color color = Color.Lerp(sandColor, Color.Brown, noiseValue / 4);
 

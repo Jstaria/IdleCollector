@@ -19,16 +19,19 @@ namespace IdleCollector
         private Color WaveColor;
         private Color InvWaveColor;
 
-        public override Vector2 Origin { get => new Vector2(Bounds.Width, Bounds.Height * 2); }
+        public override Vector2 Origin { get => new Vector2(Bounds.Width / 2, Bounds.Height / 2); }
 
         public Grass(string atlasType, string atlasKey) : base()
         {
             tileType = atlasType;
             textureKey = atlasKey;
 
+            Random random = new Random();
+
             posSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotationAmt = MathHelper.ToRadians(45);
+            xOffsetAmt = Vector2.Normalize(new Vector2((float)random.NextDouble() - .5f, (float)random.NextDouble() - .5f)) * 5;
 
             textureSourceRect = ResourceAtlas.GetTileRect(tileType, textureKey);
         }
@@ -46,7 +49,7 @@ namespace IdleCollector
             Vector2 offset = xOffsetAmt * posSpring.Position;
             Rectangle rect = new Rectangle(Bounds.Location + offset.ToPoint(), Bounds.Size);
 
-            float yPos = Position.Y + offset.Y + Origin.Y + Rotation;
+            float yPos = Position.Y + offset.Y + Origin.Y * 2 + Rotation;
             LayerDepth = (yPos - WorldDepth) / (float)WorldHeight + float.Epsilon;
 
             sb.Draw(ResourceAtlas.TilemapAtlas, rect, textureSourceRect, DrawColor, Rotation, Origin, SpriteEffects.None, LayerDepth);
@@ -73,7 +76,7 @@ namespace IdleCollector
 
             float lerp = 1 - distance / amt;
             rotationAmt = MathF.Sign(dot) * MathHelper.ToRadians(45);
-            xOffsetAmt = direction * amt * .25f; // Vector2.UnitX * MathF.Sign(dot) * amt * .75f;
+            xOffsetAmt = direction * amt * .5f; // Vector2.UnitX * MathF.Sign(dot) * amt * .75f;
 
             posSpring.RestPosition = lerp;
             rotSpring.RestPosition = lerp;
@@ -81,7 +84,8 @@ namespace IdleCollector
 
         public override void Nudge(float strength)
         {
-            rotSpring.Nudge(strength);
+            posSpring.Nudge(strength);
+            rotSpring.Nudge(MathHelper.ToRadians(strength));
         }
         public override void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
         {
