@@ -100,6 +100,19 @@ namespace IdleCollector
             }
         }
 
+        public void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
+        {
+            for (int i = 0; i < interactables.Count; i++)
+            {
+                EmptyCollider key = interactables.Keys.ToList()[i];
+
+                for (int j = 0; j < interactables[key].Count; j++)
+                {
+                    interactables[key][j].ApplyWind(windScroll, noise);
+                }
+            }
+        }
+
         public void CheckInteractables(ICollidable collider)
         {
             foreach (List<Interactable> interactables in interactables.Values)

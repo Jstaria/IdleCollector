@@ -157,6 +157,7 @@ namespace IdleCollector
         {
             worldManager = new WorldManager();
             SceneManager.AddToScene(GameScene, worldManager);
+            Updater.AddToSceneUpdate(GameScene, UpdateType.Slow, worldManager.SlowUpdate);
             Updater.AddToSceneEnter(GameScene, () =>
             {
                 Renderer.CurrentCamera.SetBounds(worldManager.WorldBounds);

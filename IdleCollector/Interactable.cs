@@ -26,6 +26,7 @@ namespace IdleCollector
         public bool IsCollidable { get; set; }
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
+        public Color DrawColor { get; set; }
         public float Rotation { get; set; }
         public virtual Vector2 Origin { get; set; }
         public float WorldDepth { get; set; }
@@ -38,5 +39,7 @@ namespace IdleCollector
         }
         public abstract void SetRotation(ICollidable collider);
         public abstract void InteractWith(ICollidable collider);
+        public abstract void Nudge(float strength);
+        public abstract void ApplyWind(Vector2 windScroll, FastNoiseLite noise);
     }
 }

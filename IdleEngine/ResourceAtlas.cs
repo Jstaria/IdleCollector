@@ -45,7 +45,10 @@ namespace IdleEngine
         public static string GetRandomAtlasKey(string accessKey)
         {
             if (random == null) random = new Random();
-            string tileName = tilemapAtlasKeys[accessKey].Keys.ToList()[random.Next(0, tilemapAtlasKeys.Count)];
+
+            List<string> keys = tilemapAtlasKeys[accessKey].Keys.ToList();
+
+            string tileName = keys[random.Next(0, keys.Count)];
             return tileName;
         }
         public static Texture2D GetTexture(string name)

@@ -22,6 +22,7 @@ namespace IdleCollector
 
         private FastNoiseLite noise; // Cosmetic for rn
         private Random randomInstance;
+        private WindManager windManager;
 
         private TilePiece[,] worldFloor;
         private Rectangle worldBounds;
@@ -54,8 +55,14 @@ namespace IdleCollector
 
                 if (!piece.Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
 
+                piece.ApplyWind(windManager.TotalWindMovement, noise);
                 piece.Update(gameTime);
             }
+        }
+
+        public void SlowUpdate(GameTime gameTime)
+        {
+            windManager.Update(gameTime);
         }
 
         public void Draw(SpriteBatch sb)
@@ -134,6 +141,7 @@ namespace IdleCollector
             int worldHalfY = (WorldSizeY * TileSize) / 2;
             Point offset = (Renderer.RenderSize.ToVector2() / 2).ToPoint();
 
+            windManager = new WindManager();
             worldBounds = new Rectangle(-worldHalfX + offset.X, -worldHalfY + offset.Y, TileSize * WorldSizeX, TileSize * WorldSizeY);
             worldFloor = new TilePiece[WorldSizeX, WorldSizeY];
 
