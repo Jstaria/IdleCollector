@@ -16,6 +16,11 @@ namespace IdleCollector
         protected string tileType;
         protected Rectangle textureSourceRect;
 
+        protected Vector2 xOffsetAmt;
+        protected float rotationAmt;
+        protected Spring posSpring;
+        protected Spring rotSpring;
+
         protected Interactable() { }
 
         public UpdateType Type { get; set; }

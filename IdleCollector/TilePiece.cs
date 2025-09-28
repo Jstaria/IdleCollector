@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IdleCollector
 {
-    internal class TilePiece: ICollidable, IRenderable, IUpdatable
+    internal class TilePiece : ICollidable, IRenderable, IUpdatable
     {
         #region // Variables
         private string textureKey;
@@ -19,7 +19,7 @@ namespace IdleCollector
         private Dictionary<EmptyCollider, List<Interactable>> interactables;
         private float layerDepth;
 
-        public bool debugColorSwap {  get; set; }
+        public bool debugColorSwap { get; set; }
         public string TextureKey { get => textureKey; }
         public string TileType { get => tileType; }
         public Rectangle Bounds { get => bounds; set => bounds = value; }
@@ -59,7 +59,7 @@ namespace IdleCollector
                 {
                     EmptyCollider tempCollider = new EmptyCollider();
                     Rectangle bounds = new Rectangle(Bounds.Location + new Point(childWidth * i, childHeight * j), new Point(childWidth, childHeight));
-                    
+
                     tempCollider.Bounds = bounds;
                     tempCollider.Position = bounds.Location.ToVector2();
                     tempCollider.CollisionType = CollisionType.Rectangle;
@@ -79,17 +79,35 @@ namespace IdleCollector
                 Random random = new Random();
                 Rectangle keyBounds = pairs.Key.Bounds;
 
+                if (random.Next(0, 200) >= 199)
+                {
+                    Vector2 position = new Vector2(
+                        Bounds.Left + (float)random.NextDouble() * Bounds.Width,
+                        Bounds.Top + (float)random.NextDouble() * Bounds.Height);
+
+                    Cactus cactus = new Cactus();
+                    cactus.Bounds = new Rectangle(position.ToPoint(), ResourceAtlas.GetRandomTileRect("cactus").Size);
+                    cactus.Position = position;
+                    cactus.Radius = 8;
+                    float yPos = position.Y + cactus.Origin.Y;
+                    cactus.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+                    cactus.WorldDepth = worldBounds.Y;
+                    cactus.WorldHeight = worldBounds.Height;
+                    cactus.DrawColor = Color;
+                    interactables.ElementAt(0).Value.Add(cactus);
+                }
+
                 for (int i = 0; i < 8; i++)
                 {
                     Vector2 position = new Vector2(
                     keyBounds.Left + (float)random.NextDouble() * keyBounds.Width,
                     keyBounds.Top + (float)random.NextDouble() * keyBounds.Height);
 
-                    Grass grass = new Grass("grass", ResourceAtlas.GetRandomAtlasKey("grass"));
+                    Grass grass = new Grass();
                     grass.CollisionType = CollisionType.Circle;
                     grass.Radius = 8;
                     grass.Position = position;
-                    grass.Bounds = new Rectangle(position.ToPoint(), new Point(32, 32));
+                    grass.Bounds = new Rectangle(position.ToPoint(), ResourceAtlas.GetRandomTileRect("grass").Size);
                     float yPos = position.Y + grass.Origin.Y;
                     grass.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
                     grass.Color = Color;
@@ -127,8 +145,8 @@ namespace IdleCollector
         public void Draw(SpriteBatch sb)
         {
             sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, ResourceAtlas.GetTileRect(TileType, TextureKey), color, 0, Vector2.Zero, SpriteEffects.None, layerDepth);
-        
-            foreach (List<Interactable> interactables in  interactables.Values)
+
+            foreach (List<Interactable> interactables in interactables.Values)
                 foreach (Interactable interactable in interactables)
                     interactable.Draw(sb);
         }

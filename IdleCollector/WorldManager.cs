@@ -157,12 +157,12 @@ namespace IdleCollector
                     string tileType = "sand";
                     string tileName = ResourceAtlas.GetRandomAtlasKey(tileType);
 
-                    float noiseValue = noise.GetNoise(bounds.Location.X, bounds.Location.Y);
+                    float noiseValue = noise.GetNoise(bounds.Location.X / 2, bounds.Location.Y / 2);
                     Color sandColor = new Color(250, 204, 158);
                     Color color = Color.Lerp(sandColor, Color.Brown, noiseValue / 4);
 
-                    noiseValue = noise.GetNoise((i / 4.0f) + 100, (j / 4.0f) + 100, j);
-                    color = Color.Lerp(color, Color.Gold, noiseValue / 6);
+                    noiseValue = noise.GetNoise((bounds.Location.X / 4 + 1000), (bounds.Location.Y / 4 + 1000));
+                    color = Color.Lerp(color, Color.Gold, noiseValue / 10);
 
                     worldFloor[i, j] = new TilePiece(bounds, tileName, tileType, new Point(i, j), color);
                     worldFloor[i, j].LayerDepth = 0.0f;

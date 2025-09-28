@@ -24,6 +24,7 @@ namespace IdleEngine
         private static Random random;
         private static Dictionary<string, Texture2D> textureCache;
         private static Dictionary<string, Dictionary<string, Point>> tilemapAtlasKeys;
+        private static Dictionary<string, Point> textureSize;
     
         // Sound Effects and Audio
         private static Dictionary<string, SoundEffect> soundEffects;
@@ -39,7 +40,7 @@ namespace IdleEngine
             if (tilemapAtlasKeys[accessKey] == null) throw new Exception(String.Format("Tilemap atlas does not contain access key {0}", accessKey));
             if (!tilemapAtlasKeys[accessKey].ContainsKey(tileName)) throw new Exception(String.Format("Tile {0} does not exist!", tileName));
             
-            return new Rectangle(tilemapAtlasKeys[accessKey][tileName], tileSize);
+            return new Rectangle(tilemapAtlasKeys[accessKey][tileName], textureSize[accessKey]);
         }
         public static Rectangle GetRandomTileRect(string accessKey) => GetTileRect(accessKey, GetRandomAtlasKey(accessKey));
         public static string GetRandomAtlasKey(string accessKey)
@@ -62,23 +63,43 @@ namespace IdleEngine
         {
             tilemapAtlasKeys = new Dictionary<string, Dictionary<string, Point>>();
             tilemapAtlas = Content.Load<Texture2D>(tilemapPath);
+            textureSize = new();
 
             List<string> fileLines = FileIO.ReadFrom(tilemapKeysPath);
 
             tileSize = new Point(tilemapAtlas.Width / tilemapResolution.X, tilemapAtlas.Height / tilemapResolution.Y);
 
+            int xOffset = 0;
+            int yOffset = 0;
+
             for (int j = 0; j < fileLines.Count; j++)
             {
-                string[] title = fileLines[j].Split(':');
-                string[] names = title[1].Split(",");
+                string[] entries = fileLines[j].Split(' ');
 
-                tilemapAtlasKeys.Add(title[0], new());
+                string[] dim = entries[0].Split('x');
 
-                for (int i = 0; i < names.Length; i++)
+                int x = int.Parse(dim[0]);  
+                int y = int.Parse(dim[1]);
+
+                for (int k = 1; k < entries.Length; k++)
                 {
-                    Point position = new Point(tileSize.X * i, tileSize.Y * j);
-                    tilemapAtlasKeys[title[0]].Add(names[i], position);        
+                    string[] title = entries[k].Split(':');
+                    string[] names = title[1].Split(",");
+
+                    tilemapAtlasKeys.Add(title[0], new());
+                    textureSize.Add(title[0], new Point(x, y));
+
+                    for (int i = 0; i < names.Length; i++)
+                    {
+                        Point position = new Point(xOffset, yOffset);
+                        tilemapAtlasKeys[title[0]].Add(names[i], position);
+                    
+                        xOffset += x;
+                    }
                 }
+                
+                xOffset = 0;
+                yOffset += y;
             }
 
         }

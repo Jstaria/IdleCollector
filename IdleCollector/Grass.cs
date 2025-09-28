@@ -11,23 +11,17 @@ namespace IdleCollector
 {
     internal class Grass : Interactable
     {
-        private Vector2 xOffsetAmt;
-        private float rotationAmt;
-        private Spring posSpring;
-        private Spring rotSpring;
-
         private Color WaveColor;
         private Color InvWaveColor;
 
         public override Vector2 Origin { get => new Vector2(Bounds.Width / 2, Bounds.Height / 2); }
 
-        public Grass(string atlasType, string atlasKey) : base()
+        public Grass() : base()
         {
-            tileType = atlasType;
-            textureKey = atlasKey;
+            tileType = "grass";
+            textureKey =  ResourceAtlas.GetRandomAtlasKey("grass");
 
             Random random = new Random();
-
             posSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotationAmt = MathHelper.ToRadians(45);

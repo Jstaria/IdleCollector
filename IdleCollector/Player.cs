@@ -18,7 +18,7 @@ namespace IdleCollector
     {
         private Texture2D spriteSheet;
         private int speed;
-        private int pickupRange;
+        private int range;
         private float spawnFrequency;
         private float prevSpawnTime;
 
@@ -28,7 +28,7 @@ namespace IdleCollector
         public UpdateType Type { get; set; }
         public Vector2 Position { get; set; }
         public CollisionType CollisionType { get; set; }
-        public int Radius { get => pickupRange; set => pickupRange = value; }
+        public int Radius { get => range; set => range = value; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
         public Rectangle WorldBounds { get; set; }
