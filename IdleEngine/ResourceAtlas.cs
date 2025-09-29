@@ -23,24 +23,22 @@ namespace IdleEngine
         private static Point tileSize;
         private static Random random;
         private static Dictionary<string, Texture2D> textureCache;
-        private static Dictionary<string, Dictionary<string, Point>> tilemapAtlasKeys;
-        private static Dictionary<string, Point> textureSize;
+        private static Dictionary<string, Dictionary<string, Rectangle>> tilemapAtlasKeys;
     
         // Sound Effects and Audio
         private static Dictionary<string, SoundEffect> soundEffects;
         private static Dictionary<string, Song> songs;
 
-        public static Dictionary<string, Dictionary<string, Point>> TilemapAtlasKeys { get => tilemapAtlasKeys; }
+        public static Dictionary<string, Dictionary<string, Rectangle>> TilemapAtlasKeys { get => tilemapAtlasKeys; }
         public static Texture2D TilemapAtlas { get => tilemapAtlas; }
         public static Rectangle GetTileRect(string accessKey, string tileName)
         {
             if (TilemapAtlas == null) throw new Exception("Tilemap Atlas is empty!");
-            if (tileSize == Point.Zero) throw new Exception("Tile size not set!");
             if (tilemapAtlasKeys == null) throw new Exception("Tilemap atlas keys missing!");
             if (tilemapAtlasKeys[accessKey] == null) throw new Exception(String.Format("Tilemap atlas does not contain access key {0}", accessKey));
             if (!tilemapAtlasKeys[accessKey].ContainsKey(tileName)) throw new Exception(String.Format("Tile {0} does not exist!", tileName));
             
-            return new Rectangle(tilemapAtlasKeys[accessKey][tileName], textureSize[accessKey]);
+            return tilemapAtlasKeys[accessKey][tileName];
         }
         public static Rectangle GetRandomTileRect(string accessKey) => GetTileRect(accessKey, GetRandomAtlasKey(accessKey));
         public static string GetRandomAtlasKey(string accessKey)
@@ -61,13 +59,10 @@ namespace IdleEngine
 
         public static void LoadTilemap(ContentManager Content, string tilemapPath, string tilemapKeysPath, Point tilemapResolution)
         {
-            tilemapAtlasKeys = new Dictionary<string, Dictionary<string, Point>>();
+            tilemapAtlasKeys = new Dictionary<string, Dictionary<string, Rectangle>>();
             tilemapAtlas = Content.Load<Texture2D>(tilemapPath);
-            textureSize = new();
 
             List<string> fileLines = FileIO.ReadFrom(tilemapKeysPath);
-
-            tileSize = new Point(tilemapAtlas.Width / tilemapResolution.X, tilemapAtlas.Height / tilemapResolution.Y);
 
             int xOffset = 0;
             int yOffset = 0;
@@ -87,12 +82,11 @@ namespace IdleEngine
                     string[] names = title[1].Split(",");
 
                     tilemapAtlasKeys.Add(title[0], new());
-                    textureSize.Add(title[0], new Point(x, y));
 
                     for (int i = 0; i < names.Length; i++)
                     {
                         Point position = new Point(xOffset, yOffset);
-                        tilemapAtlasKeys[title[0]].Add(names[i], position);
+                        tilemapAtlasKeys[title[0]].Add(names[i], new Rectangle(position, new Point(x,y)));
                     
                         xOffset += x;
                     }

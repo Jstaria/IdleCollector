@@ -25,7 +25,7 @@ namespace IdleCollector
         private WindManager windManager;
 
         private TilePiece[,] worldFloor;
-        private Rectangle worldBounds;
+        private static Rectangle worldBounds;
 
         private CollisionTree<TilePiece> tileTree;
         private List<TilePiece> activeTiles;
@@ -173,7 +173,12 @@ namespace IdleCollector
         public void ChangePlayerLayerDepth(Player player)
         {
             float yPos = player.Position.Y + player.Origin.Y; /*- player.Bounds.Height / 8;*/
-            player.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+            player.LayerDepth = WorldManager.GetLayerDepth(yPos);
+        }
+
+        public static float GetLayerDepth(float yPos)
+        {
+            return (yPos - worldBounds.Y + 100) / ((float)worldBounds.Height * 4) + float.Epsilon;
         }
     }
 }

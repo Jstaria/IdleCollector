@@ -79,22 +79,28 @@ namespace IdleCollector
                 Random random = new Random();
                 Rectangle keyBounds = pairs.Key.Bounds;
 
-                if (random.Next(0, 200) >= 199)
+                List<Type> types = SpawnManager.Instance.GetSpawnedTypes();
+
+                for (int i = 0; i < types.Count; i++)
                 {
                     Vector2 position = new Vector2(
                         Bounds.Left + (float)random.NextDouble() * Bounds.Width,
                         Bounds.Top + (float)random.NextDouble() * Bounds.Height);
 
-                    Cactus cactus = new Cactus();
-                    cactus.Bounds = new Rectangle(position.ToPoint(), ResourceAtlas.GetRandomTileRect("cactus").Size);
-                    cactus.Position = position;
-                    cactus.Radius = 8;
-                    float yPos = position.Y + cactus.Origin.Y;
-                    cactus.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
-                    cactus.WorldDepth = worldBounds.Y;
-                    cactus.WorldHeight = worldBounds.Height;
-                    cactus.DrawColor = Color;
-                    interactables.ElementAt(0).Value.Add(cactus);
+                    object interactable = Activator.CreateInstance(types[i]);
+
+                    {
+                        Interactable plant = (Interactable)interactable;
+                        plant.Bounds = new Rectangle(position.ToPoint(), plant.Bounds.Size);
+                        plant.Position = position;
+                        plant.Radius = 8;
+                        float yPos = position.Y + plant.Origin.Y;
+                        plant.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+                        plant.WorldDepth = worldBounds.Y;
+                        plant.WorldHeight = worldBounds.Height;
+                        plant.DrawColor = Color;
+                        interactables.ElementAt(0).Value.Add(plant);
+                    }
                 }
 
                 for (int i = 0; i < 8; i++)
@@ -109,7 +115,7 @@ namespace IdleCollector
                     grass.Position = position;
                     grass.Bounds = new Rectangle(position.ToPoint(), ResourceAtlas.GetRandomTileRect("grass").Size);
                     float yPos = position.Y + grass.Origin.Y;
-                    grass.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+                    grass.LayerDepth = MathHelper.Clamp((yPos - worldBounds.Y - worldBounds.Height) / ((float)worldBounds.Height * 2), 0.00001f, .9999f);
                     grass.Color = Color;
                     grass.WorldDepth = worldBounds.Y;
                     grass.WorldHeight = worldBounds.Height;

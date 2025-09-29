@@ -21,7 +21,9 @@ namespace IdleCollector
         float leftRotation;
         float rightRotation;
 
-        public override Vector2 Origin { get => new Vector2(middleCactus.Width / 2, middleCactus.Height * .75f); }
+        private Vector2 origin;
+
+        public override Vector2 Origin { get => origin; }
         private Vector2 LeftOrigin { get => new Vector2(leftCactus.Width * .975f, leftCactus.Height * .75f); }
         private Vector2 RightOrigin { get => new Vector2(rightCactus.Width * .025f, rightCactus.Height * .75f); }
 
@@ -45,24 +47,45 @@ namespace IdleCollector
             rotSpringLeft = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotSpringRight = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
 
+            Stats = SpawnManager.Instance.GetStats("Cactus");
+
             switch (MultiStructure)
             {
                 case true:
-                    SetupMulti();
+                    SetupMulti(random);
                     break;
 
                 case false:
-                    SetupSingle();
+                    SetupSingle(random);
                     break;
             }
         }
 
-        private void SetupSingle()
+        private void SetupSingle(Random random)
         {
-            middleCactus = ResourceAtlas.GetRandomTileRect("cactus");
+            double randNum = random.NextDouble();
+            Rectangle rect = Rectangle.Empty;
+
+            if (randNum < Stats.RareSpawnChance)
+            {
+                rect = ResourceAtlas.GetRandomTileRect("rareCactus");
+                if (rect.Height == 112)
+                {
+                    origin = new Vector2(rect.Width / 2, rect.Height * .625f);
+                    rotationAmt = MathHelper.ToRadians(5f);
+                }
+            }
+            else
+            {
+                rect = ResourceAtlas.GetRandomTileRect("cactus");
+                origin = new Vector2(rect.Width / 2, rect.Height * .75f);
+            }
+
+            Bounds = new Rectangle(Bounds.Location, rect.Size);
+            middleCactus = rect;
         }
 
-        private void SetupMulti()
+        private void SetupMulti(Random random)
         {
             leftCactus = ResourceAtlas.GetRandomTileRect("cactusLeft");
             middleCactus = ResourceAtlas.GetRandomTileRect("cactusMiddle");
@@ -134,7 +157,7 @@ namespace IdleCollector
             Rectangle rect = new Rectangle(Bounds.Location + offset.ToPoint(), Bounds.Size);
 
             float yPos = Position.Y + offset.Y + Origin.Y *.65f + Rotation;
-            LayerDepth = (yPos - WorldDepth) / (float)WorldHeight + float.Epsilon;
+            LayerDepth = WorldManager.GetLayerDepth(yPos);
 
             sb.Draw(ResourceAtlas.TilemapAtlas, rect, middleCactus, DrawColor, Rotation, Origin, flipSprite[0] ? SpriteEffects.FlipHorizontally : SpriteEffects.None, LayerDepth);
 

@@ -36,6 +36,7 @@ namespace IdleCollector
         public virtual Vector2 Origin { get; set; }
         public float WorldDepth { get; set; }
         public int WorldHeight { get; internal set; }
+        public InteractableStats Stats { get; set; }
 
         public abstract void Update(GameTime gameTime);
         public virtual void Draw(SpriteBatch sb)

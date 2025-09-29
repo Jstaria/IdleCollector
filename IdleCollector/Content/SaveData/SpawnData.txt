@@ -1,0 +1,1 @@
+﻿Cactus| SpawnChance: 0.005, ProductionRate: 1, RareSpawnChance: 0.01

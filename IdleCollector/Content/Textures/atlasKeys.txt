@@ -1,3 +1,4 @@
 32x32 sand:sand1,sand2,sand3,sand4,sand5,sand6,sand7,sand8
 16x32 grass:grass1,grass2,grass3,grass4,grass5,grass6,grass7,grass8,grass9,grass10,grass11,grass12,grass13,grass14,grass15,grass16,grass17
 32x64 cactus:cactus1,cactus2,cactus3 cactusLeft:cactus1,cactus2 cactusMiddle:cactus1,cactus2 cactusRight:cactus1,cactus2
+64x112 rareCactus:mc1,mc2,mc3,mc4

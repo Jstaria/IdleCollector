@@ -44,7 +44,7 @@ namespace IdleCollector
             Rectangle rect = new Rectangle(Bounds.Location + offset.ToPoint(), Bounds.Size);
 
             float yPos = Position.Y + offset.Y + Origin.Y * 2 + Rotation;
-            LayerDepth = (yPos - WorldDepth) / (float)WorldHeight + float.Epsilon;
+            LayerDepth = WorldManager.GetLayerDepth(yPos);
 
             sb.Draw(ResourceAtlas.TilemapAtlas, rect, textureSourceRect, DrawColor, Rotation, Origin, SpriteEffects.None, LayerDepth);
         }

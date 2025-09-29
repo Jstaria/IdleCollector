@@ -1,5 +1,5 @@
-﻿WorldSizeX: 500
-WorldSizeY: 500
+﻿WorldSizeX: 50
+WorldSizeY: 50
 WorldTreeDepth: 5
 WorldNoiseFrequency: .0025
 TileSize: 32
