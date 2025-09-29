@@ -32,7 +32,7 @@ namespace IdleCollector
         public Vector2 TotalWindMovement { get; set; }
         public UpdateType Type { get; set; }
 
-        public void Update(GameTime gameTime)
+        public void SlowUpdate(GameTime gameTime)
         {
             float time = (float)gameTime.TotalGameTime.TotalSeconds;
 
@@ -51,6 +51,16 @@ namespace IdleCollector
             WindDirection = Vector2.Normalize(Vector2.LerpPrecise(WindDirection, targetDirection, lerpSpeed));
             windSpeed = MathHelper.Lerp(windSpeed, targetWindSpeed, lerpSpeed);
             TotalWindMovement += WindDirection * windSpeed;
+        }
+
+        void IUpdatable.ControlledUpdate(GameTime gameTime)
+        {
+
+        }
+
+        void IUpdatable.StandardUpdate(GameTime gameTime)
+        {
+
         }
     }
 }

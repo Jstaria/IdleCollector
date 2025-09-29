@@ -104,7 +104,12 @@ namespace IdleEngine
         /// <summary>
         /// Adds to a scene's update loop, requires swap
         /// </summary>
-        public static void AddToSceneUpdate(string sceneName, IUpdatable updatable) => AddToSceneUpdate(sceneName, updatable.Type, updatable.Update);
+        public static void AddToSceneUpdate(string sceneName, IUpdatable updatable)
+        {
+            AddToSceneUpdate(sceneName, UpdateType.Controlled, updatable.ControlledUpdate);
+            AddToSceneUpdate(sceneName, UpdateType.Standard, updatable.StandardUpdate);
+            AddToSceneUpdate(sceneName, UpdateType.Slow, updatable.SlowUpdate);
+        }
         /// <summary>
         /// Adds to a scene's update loop, requires swap
         /// </summary>
@@ -112,7 +117,12 @@ namespace IdleEngine
         /// <summary>
         /// Adds to current scene's update loop, doesn't requires swap
         /// </summary>
-        public static void AddToSceneUpdate(IUpdatable updatable) => AddToSceneUpdate(updatable.Type, updatable.Update);
+        public static void AddToSceneUpdate(IUpdatable updatable)
+        {
+            AddToSceneUpdate(UpdateType.Controlled, updatable.ControlledUpdate);
+            AddToSceneUpdate(UpdateType.Standard, updatable.StandardUpdate);
+            AddToSceneUpdate(UpdateType.Slow, updatable.SlowUpdate);
+        }
         /// <summary>
         /// Adds to current scene's update loop, doesn't requires swap
         /// </summary>
@@ -124,7 +134,12 @@ namespace IdleEngine
         /// <summary>
         /// Adds to scene independent update loop, doesn't requires swap
         /// </summary>
-        public static void AddToUpdate(IUpdatable updatable) => AddToUpdate(updatable.Type, updatable.Update);
+        public static void AddToUpdate(IUpdatable updatable)
+        {
+            AddToUpdate(UpdateType.Controlled, updatable.ControlledUpdate);
+            AddToUpdate(UpdateType.Standard, updatable.StandardUpdate);
+            AddToUpdate(UpdateType.Slow, updatable.SlowUpdate);
+        }
         /// <summary>
         /// Adds to scene independent update loop, doesn't requires swap
         /// </summary>

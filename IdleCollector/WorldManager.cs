@@ -37,9 +37,11 @@ namespace IdleCollector
         public WorldManager()
         {
             Initialize();
+
+            Type = UpdateType.Controlled;
         }
 
-        public void Update(GameTime gameTime)
+        public void ControlledUpdate(GameTime gameTime)
         {
             EmptyCollider collider = new();
             collider.Bounds = Renderer.ScaledCameraBounds;
@@ -55,14 +57,36 @@ namespace IdleCollector
 
                 if (!piece.Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
 
-                piece.ApplyWind(windManager.TotalWindMovement, noise);
-                piece.Update(gameTime);
+                piece.ControlledUpdate(gameTime);
             }
         }
 
         public void SlowUpdate(GameTime gameTime)
         {
-            windManager.Update(gameTime);
+            windManager.SlowUpdate(gameTime);
+
+            if (activeTiles == null) return;
+
+            for (int i = 0; i < activeTiles.Count; i++)
+            {
+                TilePiece piece = activeTiles[i];
+                piece.SlowUpdate(gameTime);
+            }
+        }
+
+        public void StandardUpdate(GameTime gameTime)
+        {
+            if (activeTiles == null) return;
+
+            for (int i = 0; i < activeTiles.Count; i++)
+            {
+                TilePiece piece = activeTiles[i];
+
+                if (!piece.Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
+
+                piece.ApplyWind(windManager.TotalWindMovement, noise);
+                piece.StandardUpdate(gameTime);
+            }
         }
 
         public void Draw(SpriteBatch sb)
@@ -116,7 +140,7 @@ namespace IdleCollector
 
                 if (!CollisionHelper.CheckForCollision(collider, tp, CollisionCheck.CircleRect)) continue;
 
-                tp.SpawnGrass(collider, worldBounds);
+                tp.SpawnFlora(collider, worldBounds);
             }
         }
 

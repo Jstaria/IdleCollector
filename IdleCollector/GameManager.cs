@@ -57,9 +57,25 @@ namespace IdleCollector
             SetupPause();
         }
 
-        public void Update(GameTime gameTime)
+        public void ControlledUpdate(GameTime gameTime)
         {
+
+        }
+
+
+        public void StandardUpdate(GameTime gameTime)
+        {
+            if (Input.AreButtonsDownOnce(Keys.OemPlus))
+                Updater.ControlledUpdateCount++;
+            if (Input.AreButtonsDownOnce(Keys.OemMinus))
+                Updater.ControlledUpdateCount--;
+
             camera.Zoom -= Input.GetMouseScrollDelta() * .1f;
+        }
+
+        public void SlowUpdate(GameTime gameTime)
+        {
+
         }
 
         public void Draw(SpriteBatch sb)
@@ -157,7 +173,6 @@ namespace IdleCollector
         {
             worldManager = new WorldManager();
             SceneManager.AddToScene(GameScene, worldManager);
-            Updater.AddToSceneUpdate(GameScene, UpdateType.Slow, worldManager.SlowUpdate);
             Updater.AddToSceneEnter(GameScene, () =>
             {
                 Renderer.CurrentCamera.SetBounds(worldManager.WorldBounds);

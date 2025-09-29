@@ -17,6 +17,7 @@ namespace IdleCollector
         private Rectangle bounds;
         private Color color;
         private Dictionary<EmptyCollider, List<Interactable>> interactables;
+        private List<Interactable> producingInteractables;
         private float layerDepth;
 
         public bool debugColorSwap { get; set; }
@@ -50,6 +51,7 @@ namespace IdleCollector
         private void SetupInnerBounds()
         {
             interactables = new();
+            producingInteractables = new();
             int childWidth = Bounds.Width / 2;
             int childHeight = Bounds.Height / 2;
 
@@ -69,7 +71,7 @@ namespace IdleCollector
             }
         }
 
-        public void SpawnGrass(ICollidable collider, Rectangle worldBounds)
+        public void SpawnFlora(ICollidable collider, Rectangle worldBounds)
         {
             foreach (KeyValuePair<EmptyCollider, List<Interactable>> pairs in interactables)
             {
@@ -99,7 +101,7 @@ namespace IdleCollector
                         plant.WorldDepth = worldBounds.Y;
                         plant.WorldHeight = worldBounds.Height;
                         plant.DrawColor = Color;
-                        interactables.ElementAt(0).Value.Add(plant);
+                        producingInteractables.Add(plant);
                     }
                 }
 
@@ -152,16 +154,31 @@ namespace IdleCollector
         {
             sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, ResourceAtlas.GetTileRect(TileType, TextureKey), color, 0, Vector2.Zero, SpriteEffects.None, layerDepth);
 
+            foreach (Interactable interactable in producingInteractables)
+                interactable.Draw(sb);
+
             foreach (List<Interactable> interactables in interactables.Values)
                 foreach (Interactable interactable in interactables)
                     interactable.Draw(sb);
         }
 
-        public void Update(GameTime gameTime)
+        public void ControlledUpdate(GameTime gameTime)
+        {
+            foreach (Interactable interactable in producingInteractables)
+                interactable.ControlledUpdate(gameTime);
+        }
+
+        public void StandardUpdate(GameTime gameTime)
         {
             foreach (List<Interactable> interactables in interactables.Values)
                 foreach (Interactable interactable in interactables)
-                    interactable.Update(gameTime);
+                    interactable.StandardUpdate(gameTime);
+        }
+
+        public void SlowUpdate(GameTime gameTime)
+        {
+            foreach (Interactable interactable in producingInteractables)
+                interactable.SlowUpdate(gameTime);
         }
     }
 }

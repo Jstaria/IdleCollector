@@ -104,7 +104,7 @@ namespace IdleEngine
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void ControlledUpdate(GameTime gameTime)
         {
             Vector2 position = Vector2.Zero;
 
@@ -138,6 +138,16 @@ namespace IdleEngine
             }
 
             SetPosition(position);
+        }
+
+        void IUpdatable.StandardUpdate(GameTime gameTime)
+        {
+
+        }
+
+        void IUpdatable.SlowUpdate(GameTime gameTime)
+        {
+
         }
     }
 }

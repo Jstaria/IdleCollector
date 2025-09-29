@@ -38,7 +38,9 @@ namespace IdleCollector
         public int WorldHeight { get; internal set; }
         public InteractableStats Stats { get; set; }
 
-        public abstract void Update(GameTime gameTime);
+        public abstract void ControlledUpdate(GameTime gameTime);
+        public abstract void StandardUpdate(GameTime gameTime);
+        public abstract void SlowUpdate(GameTime gameTime);
         public virtual void Draw(SpriteBatch sb)
         {
             sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, textureSourceRect, Color, Rotation, Origin, SpriteEffects.None, LayerDepth);

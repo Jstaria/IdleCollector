@@ -71,7 +71,7 @@ namespace IdleCollector
             );
         }
 
-        public void Update(GameTime gameTime)
+        public void ControlledUpdate(GameTime gameTime)
         {
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
@@ -105,6 +105,16 @@ namespace IdleCollector
             
             if (font == null) return;
             sb.DrawString(font, text, textPosition, fontColor);
+        }
+
+        void IUpdatable.StandardUpdate(GameTime gameTime)
+        {
+
+        }
+
+        void IUpdatable.SlowUpdate(GameTime gameTime)
+        {
+
         }
     }
 }

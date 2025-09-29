@@ -11,6 +11,8 @@ namespace IdleEngine
     {
         public UpdateType Type { get; protected set; }
 
-        public void Update(GameTime gameTime);
+        public void ControlledUpdate(GameTime gameTime);
+        public void StandardUpdate(GameTime gameTime);
+        public void SlowUpdate(GameTime gameTime);
     }
 }

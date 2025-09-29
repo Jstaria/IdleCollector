@@ -20,7 +20,7 @@ namespace IdleCollector
         private int speed;
         private int range;
         private float spawnFrequency;
-        private float prevSpawnTime;
+        private int prevSpawnTime;
 
         public Point FrameCount { get; set; }
         public Point CurrentFrame { get; set; }
@@ -52,13 +52,19 @@ namespace IdleCollector
             LoadPlayerData("PlayerData", "SaveData");
         }
 
-        public void Update(GameTime gameTime)
+        public void ControlledUpdate(GameTime gameTime)
         {
             GetInput();
             ClampPosition();
             OnPositionSpawnFlora(gameTime);
             OnMove?.Invoke(this);
         }
+
+        public void StandardUpdate(GameTime gameTime)
+        { }
+        
+        public void SlowUpdate(GameTime gameTime)
+        { }
 
         public void Draw(SpriteBatch sb)
         {
@@ -67,11 +73,11 @@ namespace IdleCollector
 
         private void OnPositionSpawnFlora(GameTime gameTime)
         {
-            float time = (float)gameTime.TotalGameTime.TotalSeconds;
+            prevSpawnTime++;
 
-            if (time - prevSpawnTime < spawnFrequency) return;
+            if (prevSpawnTime < spawnFrequency * 60) return;
             
-            prevSpawnTime = time;
+            prevSpawnTime = 0;
             OnSpawn?.Invoke(this);
         }
 

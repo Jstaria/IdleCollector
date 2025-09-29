@@ -30,12 +30,19 @@ namespace IdleCollector
             textureSourceRect = ResourceAtlas.GetTileRect(tileType, textureKey);
         }
 
-        public override void Update(GameTime gameTime)
+        public override void StandardUpdate(GameTime gameTime)
         {
             posSpring.Update();
             rotSpring.Update();
 
             Rotation = rotSpring.Position * rotationAmt;
+        }
+
+        public override void ControlledUpdate(GameTime gameTime) 
+        {
+        }
+        public override void SlowUpdate(GameTime gameTime)
+        {
         }
 
         public override void Draw(SpriteBatch sb)
@@ -81,6 +88,7 @@ namespace IdleCollector
             posSpring.Nudge(strength);
             rotSpring.Nudge(MathHelper.ToRadians(strength));
         }
+
         public override void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
         {
             if (WaveColor == Color.Transparent)
