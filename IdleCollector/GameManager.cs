@@ -102,7 +102,7 @@ namespace IdleCollector
                 new Rectangle(0, 0, 64, 64),
                 new Point(4, 8));
 
-            camera = new Camera(screenWidth, screenHeight, 20, 1);
+            camera = new Camera(screenWidth, screenHeight, 20, 1.25f);
             Renderer.CurrentCamera = camera;
             Updater.AddToUpdate(camera);
             followPlayer = false;

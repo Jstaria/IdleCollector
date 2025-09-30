@@ -22,10 +22,12 @@ namespace IdleCollector
         float rightRotation;
 
         private Vector2 origin;
+        private Vector2 leftOrigin;
+        private Vector2 rightOrigin;
 
         public override Vector2 Origin { get => origin; }
-        private Vector2 LeftOrigin { get => new Vector2(leftCactus.Width * .975f, leftCactus.Height * .75f); }
-        private Vector2 RightOrigin { get => new Vector2(rightCactus.Width * .025f, rightCactus.Height * .75f); }
+        private Vector2 LeftOrigin { get => leftOrigin; }
+        private Vector2 RightOrigin { get => rightOrigin; }
 
         private Spring rotSpringLeft;
         private Spring rotSpringRight;
@@ -90,7 +92,9 @@ namespace IdleCollector
             rightCactus = ResourceAtlas.GetRandomTileRect("cactusRight");
 
             Bounds = new Rectangle(Bounds.Location, middleCactus.Size);
-            origin = new Vector2(Bounds.Width / 2, Bounds.Height * .625f);
+            origin = new Vector2(Bounds.Width / 2, Bounds.Height * .75f);
+            leftOrigin = new Vector2(leftCactus.Width * .975f, leftCactus.Height * .75f);
+            rightOrigin = new Vector2(rightCactus.Width * .025f, rightCactus.Height * .75f);
         }
 
         public override void ApplyWind(Vector2 windScroll, FastNoiseLite noise)

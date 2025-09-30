@@ -153,7 +153,7 @@ namespace IdleCollector
         private void LoadNoise()
         {
             random = RandomHelper.Instance;
-            random.SetSeed(2);
+            random.SetSeed(0);
             noise = new FastNoiseLite(random.GetSeed());
 
             noise.SetFrequency(WorldNoiseFrequency);
@@ -172,8 +172,8 @@ namespace IdleCollector
 
             tileTree = new CollisionTree<TilePiece>(WorldBounds, WorldTreeDepth);
 
-            for (int j = 0; j < WorldSizeX; j++)
-                for (int i = 0; i < WorldSizeY; i++)
+            for (int j = 0; j < WorldSizeY; j++)
+                for (int i = 0; i < WorldSizeX; i++)
                 {
                     Rectangle bounds = new Rectangle(
                         (int)(i * TileSize - worldHalfX) + offset.X,

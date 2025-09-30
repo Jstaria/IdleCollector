@@ -118,7 +118,7 @@ namespace IdleCollector
                     grass.WorldDepth = worldBounds.Y;
                     grass.WorldHeight = worldBounds.Height;
 
-                    grass.Nudge(random.GetFloat(-25,25));
+                    grass.Nudge(random.GetFloat(-50,50));
                     interactables[pairs.Key].Add(grass);
                 }
             }

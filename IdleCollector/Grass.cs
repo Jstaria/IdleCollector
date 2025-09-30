@@ -86,7 +86,7 @@ namespace IdleCollector
         public override void Nudge(float strength)
         {
             posSpring.Nudge(strength);
-            rotSpring.Nudge(MathHelper.ToRadians(strength));
+            rotSpring.Nudge(strength);
         }
 
         public override void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
