@@ -21,11 +21,10 @@ namespace IdleCollector
             tileType = "grass";
             textureKey =  ResourceAtlas.GetRandomAtlasKey("grass");
 
-            Random random = new Random();
             posSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotationAmt = MathHelper.ToRadians(45);
-            xOffsetAmt = Vector2.Normalize(new Vector2((float)random.NextDouble() - .5f, (float)random.NextDouble() - .5f)) * 5;
+            xOffsetAmt = RandomHelper.Instance.GetVector2(-Vector2.One, Vector2.One);
 
             textureSourceRect = ResourceAtlas.GetTileRect(tileType, textureKey);
         }
@@ -66,7 +65,8 @@ namespace IdleCollector
             Vector2 colliderOrigin = collider.Position;
             Vector2 position = Position;
             Vector2 direction = position - colliderOrigin;
-            direction.Normalize();
+            if (direction != Vector2.Zero)
+                direction.Normalize();
 
             float dot = Vector2.Dot(Vector2.UnitX, direction);
 
@@ -76,7 +76,7 @@ namespace IdleCollector
             if (distance > amt) return;
 
             float lerp = 1 - distance / amt;
-            rotationAmt = MathF.Sign(dot) * MathHelper.ToRadians(45);
+            rotationAmt = Math.Sign(dot) * MathHelper.ToRadians(45);
             xOffsetAmt = direction * amt * .5f; // Vector2.UnitX * MathF.Sign(dot) * amt * .75f;
 
             posSpring.RestPosition = lerp;

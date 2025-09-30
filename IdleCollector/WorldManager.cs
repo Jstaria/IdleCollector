@@ -21,7 +21,7 @@ namespace IdleCollector
         private int seed = 1;
 
         private FastNoiseLite noise; // Cosmetic for rn
-        private Random randomInstance;
+        private RandomHelper random;
         private WindManager windManager;
 
         private TilePiece[,] worldFloor;
@@ -152,8 +152,9 @@ namespace IdleCollector
 
         private void LoadNoise()
         {
-            randomInstance = new Random(seed);
-            noise = new FastNoiseLite(seed);
+            random = RandomHelper.Instance;
+            random.SetSeed(2);
+            noise = new FastNoiseLite(random.GetSeed());
 
             noise.SetFrequency(WorldNoiseFrequency);
             noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);

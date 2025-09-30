@@ -32,15 +32,13 @@ namespace IdleCollector
 
         public Cactus()
         {
-            Random random = new Random();
+            RandomHelper random = RandomHelper.Instance;
 
-            MultiStructure = random.Next(0, 2) == 1;
+            MultiStructure = random.GetBool();
             rotationAmt = MathHelper.ToRadians(7.5f);
             xOffsetAmt = Vector2.UnitX;
 
-            flipSprite = new bool[3];
-            for (int i = 0; i < 3; i++)
-                flipSprite[i] = random.Next(0, 2) == 1;
+            flipSprite = random.GetBools(3);
 
             posSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
@@ -52,18 +50,18 @@ namespace IdleCollector
             switch (MultiStructure)
             {
                 case true:
-                    SetupMulti(random);
+                    SetupMulti();
                     break;
 
                 case false:
-                    SetupSingle(random);
+                    SetupSingle();
                     break;
             }
         }
 
-        private void SetupSingle(Random random)
+        private void SetupSingle()
         {
-            double randNum = random.NextDouble();
+            double randNum = RandomHelper.Instance.GetDouble();
             Rectangle rect = Rectangle.Empty;
 
             if (randNum < Stats.RareSpawnChance)
@@ -85,11 +83,14 @@ namespace IdleCollector
             middleCactus = rect;
         }
 
-        private void SetupMulti(Random random)
+        private void SetupMulti()
         {
             leftCactus = ResourceAtlas.GetRandomTileRect("cactusLeft");
             middleCactus = ResourceAtlas.GetRandomTileRect("cactusMiddle");
             rightCactus = ResourceAtlas.GetRandomTileRect("cactusRight");
+
+            Bounds = new Rectangle(Bounds.Location, middleCactus.Size);
+            origin = new Vector2(Bounds.Width / 2, Bounds.Height * .625f);
         }
 
         public override void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
@@ -123,7 +124,9 @@ namespace IdleCollector
             Vector2 colliderOrigin = collider.Position;
             Vector2 position = Position;
             Vector2 direction = position - colliderOrigin;
-            direction.Normalize();
+            
+            if (direction != Vector2.Zero)
+                direction.Normalize();
 
             float dot = Vector2.Dot(Vector2.UnitX, direction);
 

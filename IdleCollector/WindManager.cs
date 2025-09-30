@@ -18,12 +18,10 @@ namespace IdleCollector
 
         private Vector2 targetDirection;
         private float targetWindSpeed;
-        private Random random;
 
         public WindManager()
         {
             Type = UpdateType.Slow;
-            random = new Random();
             WindDirection = Vector2.UnitX;
             TotalWindMovement = Vector2.UnitX;
         }
@@ -35,16 +33,17 @@ namespace IdleCollector
         public void SlowUpdate(GameTime gameTime)
         {
             float time = (float)gameTime.TotalGameTime.TotalSeconds;
+            RandomHelper random = RandomHelper.Instance;
 
             if (time - lastTimeStamp > waitTime)
             {
-                targetDirection = new Vector2((float)random.NextDouble() - .5f, (float)random.NextDouble() - .5f);
-                targetWindSpeed = (float)(random.NextDouble() + 1) * 5;
+                targetDirection = random.GetVector2(-Vector2.One, Vector2.One);
+                targetWindSpeed = random.GetFloat(1, 5);
 
                 if (targetDirection != Vector2.Zero)
                     targetDirection.Normalize();
 
-                waitTime = (float)(random.NextDouble() * 20 + 1.0f);
+                waitTime = random.GetFloat(1,15);
                 lastTimeStamp = time;
             }
 

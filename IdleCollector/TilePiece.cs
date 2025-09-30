@@ -78,16 +78,14 @@ namespace IdleCollector
                 if (pairs.Value.Count > 0) continue;
                 //if (!CollisionHelper.CheckForCollision(collider, pairs.Key)) continue;
 
-                Random random = new Random();
+                RandomHelper random = RandomHelper.Instance;
                 Rectangle keyBounds = pairs.Key.Bounds;
 
                 List<Type> types = SpawnManager.Instance.GetSpawnedTypes();
 
                 for (int i = 0; i < types.Count; i++)
                 {
-                    Vector2 position = new Vector2(
-                        Bounds.Left + (float)random.NextDouble() * Bounds.Width,
-                        Bounds.Top + (float)random.NextDouble() * Bounds.Height);
+                    Vector2 position = random.GetVector2(Bounds);
 
                     object interactable = Activator.CreateInstance(types[i]);
 
@@ -107,9 +105,7 @@ namespace IdleCollector
 
                 for (int i = 0; i < 8; i++)
                 {
-                    Vector2 position = new Vector2(
-                    keyBounds.Left + (float)random.NextDouble() * keyBounds.Width,
-                    keyBounds.Top + (float)random.NextDouble() * keyBounds.Height);
+                    Vector2 position = random.GetVector2(keyBounds);
 
                     Grass grass = new Grass();
                     grass.CollisionType = CollisionType.Circle;
@@ -122,7 +118,7 @@ namespace IdleCollector
                     grass.WorldDepth = worldBounds.Y;
                     grass.WorldHeight = worldBounds.Height;
 
-                    grass.Nudge((((float)(new Random().NextDouble()) - .5f) * 25));
+                    grass.Nudge(random.GetFloat(-25,25));
                     interactables[pairs.Key].Add(grass);
                 }
             }
@@ -139,6 +135,9 @@ namespace IdleCollector
                     interactables[key][j].ApplyWind(windScroll, noise);
                 }
             }
+
+            foreach (Interactable interactable in producingInteractables) 
+                interactable.ApplyWind(windScroll, noise);
         }
 
         public void CheckInteractables(ICollidable collider)
@@ -148,6 +147,8 @@ namespace IdleCollector
                 {
                     interactable.InteractWith(collider);
                 }
+            foreach (Interactable interactable in producingInteractables)
+                interactable.InteractWith(collider);
         }
 
         public void Draw(SpriteBatch sb)
@@ -173,6 +174,9 @@ namespace IdleCollector
             foreach (List<Interactable> interactables in interactables.Values)
                 foreach (Interactable interactable in interactables)
                     interactable.StandardUpdate(gameTime);
+
+            foreach (Interactable interactable in producingInteractables)
+                interactable.StandardUpdate(gameTime);
         }
 
         public void SlowUpdate(GameTime gameTime)

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using IdleEngine;
+using Microsoft.VisualBasic.FileIO;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,6 @@ namespace IdleCollector
     public class SpawnManager
     {
         private static SpawnManager instance;
-        private Random rand;
 
         public static SpawnManager Instance { get
             {
@@ -41,7 +41,7 @@ namespace IdleCollector
             {
                 List<string> keys = floraStats.Keys.ToList();
 
-                double randomNum = rand.NextDouble();
+                double randomNum = RandomHelper.Instance.GetDouble();
 
                 if (randomNum < floraStats[keys[i]].SpawnChance)
                 {
@@ -56,8 +56,6 @@ namespace IdleCollector
         private void Initialize()
         {
             CreateDict();
-
-            rand = new Random();
         }
 
         private void CreateDict()

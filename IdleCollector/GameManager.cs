@@ -59,7 +59,7 @@ namespace IdleCollector
 
         public void ControlledUpdate(GameTime gameTime)
         {
-
+            
         }
 
 
