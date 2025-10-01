@@ -187,6 +187,9 @@ namespace IdleEngine
             sb.GraphicsDevice.SetRenderTarget(null);
         }
 
+        public static Vector2 GetScreenPosition(Vector2 position) => position - CurrentCamera.Position.ToVector2();
+        public static Vector2 GetWorldPosition(Vector2 position) => (position - CurrentCamera.Position.ToVector2()) * (CurrentCamera.Bounds.Width / CurrentCamera.Bounds.Height);
+
         private static void SaveTextureToFile(Texture2D texture, string filename)
         {
             if (texture == null) return;

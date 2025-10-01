@@ -21,7 +21,7 @@ namespace IdleCollector
             tileType = "grass";
             textureKey =  ResourceAtlas.GetRandomAtlasKey("grass");
 
-            posSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.8f, /*Resting Position*/0);
+            posSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.5f, /*Resting Position*/0);
             rotSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotationAmt = MathHelper.ToRadians(45);
             xOffsetAmt = RandomHelper.Instance.GetVector2(-Vector2.One, Vector2.One);

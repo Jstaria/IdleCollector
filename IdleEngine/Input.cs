@@ -25,6 +25,7 @@ namespace IdleEngine
             Keys.LeftShift, Keys.RightShift,
         };
 
+        private static Point screenMousePos;
         private static Point currentMousePos;
         private static Point prevMousePos;
 
@@ -55,6 +56,7 @@ namespace IdleEngine
             currentKBState = Keyboard.GetState();
             
             currentMousePos = currentMouseState.Position;
+            screenMousePos = currentMousePos;
             Point renderSize = Renderer.RenderSize;
             Point screenSize = Renderer.ScreenSize;
             Point transform = Renderer.CurrentCamera == null ? Point.Zero : Renderer.CurrentCamera.Position;
@@ -100,6 +102,7 @@ namespace IdleEngine
         public static bool IsButtonDown(Keys key) => (currentKBState.IsKeyDown(key));
         public static bool AreButtonsDown(params Keys[] keys) => (keys == currentKeysPressed);
         public static Point GetMousePos() => currentMousePos;
+        public static Point GetMouseScreenPos() => screenMousePos;
         public static Point GetMouseDelta() => prevMousePos - currentMousePos;
         public static int GetMouseScroll() => currentScroll;
         public static int GetMouseScrollDelta() => (int)MathF.Max(-1, MathF.Min(prevScroll - currentScroll, 1));

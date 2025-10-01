@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,7 +76,8 @@ namespace IdleCollector
 
         public void SlowUpdate(GameTime gameTime)
         {
-
+            Debug.WriteLine(Renderer.GetWorldPosition(Input.GetMouseScreenPos().ToVector2()));
+            Debug.WriteLine(Input.GetMousePos().ToVector2());
         }
 
         public void Draw(SpriteBatch sb)
