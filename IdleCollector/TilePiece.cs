@@ -71,7 +71,7 @@ namespace IdleCollector
             }
         }
 
-        public void SpawnFlora(ICollidable collider, Rectangle worldBounds)
+        public void SpawnFlora(Entity entity, Rectangle worldBounds)
         {
             foreach (KeyValuePair<EmptyCollider, List<Interactable>> pairs in interactables)
             {
@@ -140,15 +140,15 @@ namespace IdleCollector
                 interactable.ApplyWind(windScroll, noise);
         }
 
-        public void CheckInteractables(ICollidable collider)
+        public void CheckInteractables(Entity entity)
         {
             foreach (List<Interactable> interactables in interactables.Values)
                 foreach (Interactable interactable in interactables)
                 {
-                    interactable.InteractWith(collider);
+                    interactable.InteractWith(entity);
                 }
             foreach (Interactable interactable in producingInteractables)
-                interactable.InteractWith(collider);
+                interactable.InteractWith(entity);
         }
 
         public void Draw(SpriteBatch sb)

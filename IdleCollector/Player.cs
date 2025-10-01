@@ -14,32 +14,8 @@ using System.Runtime.CompilerServices;
 
 namespace IdleCollector
 {
-    internal class Player : IAnimatable, IScene, ITransform, ICollidable
+    internal class Player : Entity
     {
-        private Texture2D spriteSheet;
-        private int speed;
-        private int range;
-        private float spawnFrequency;
-        private int prevSpawnTime;
-
-        public Point FrameCount { get; set; }
-        public Point CurrentFrame { get; set; }
-        public bool IsPlaying { get; set; }
-        public UpdateType Type { get; set; }
-        public Vector2 Position { get; set; }
-        public CollisionType CollisionType { get; set; }
-        public int Radius { get => range; set => range = value; }
-        public Rectangle Bounds { get; set; }
-        public bool IsCollidable { get; set; }
-        public Rectangle WorldBounds { get; set; }
-        public float LayerDepth { get; set; }
-        public Color Color { get; set; }
-        public Vector2 Origin { get; set; }
-
-        public delegate void PlayerWalk(ICollidable spawn);
-        public event PlayerWalk OnSpawn;
-        public event PlayerWalk OnMove;
-
         public Player(Texture2D spriteSheet, Point position, Rectangle bounds, Point frameCount)
         {
             this.spriteSheet = spriteSheet;
@@ -52,21 +28,21 @@ namespace IdleCollector
             LoadPlayerData("PlayerData", "SaveData");
         }
 
-        public void ControlledUpdate(GameTime gameTime)
+        public override void ControlledUpdate(GameTime gameTime)
         {
             GetInput();
             ClampPosition();
             OnPositionSpawnFlora(gameTime);
-            OnMove?.Invoke(this);
+            InvokeOnMove(this);
         }
 
-        public void StandardUpdate(GameTime gameTime)
+        public override void StandardUpdate(GameTime gameTime)
         { }
         
-        public void SlowUpdate(GameTime gameTime)
+        public override void SlowUpdate(GameTime gameTime)
         { }
 
-        public void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb)
         {
             sb.Draw(spriteSheet, new Rectangle(Position.ToPoint(), Bounds.Size), new Rectangle(64 * CurrentFrame.X, 64 * CurrentFrame.Y, 64, 64), Color.White, 0, Origin, SpriteEffects.None, LayerDepth);
         }
@@ -78,7 +54,7 @@ namespace IdleCollector
             if (prevSpawnTime < spawnFrequency * 60) return;
             
             prevSpawnTime = 0;
-            OnSpawn?.Invoke(this);
+            InvokeOnSpawn(this);
         }
 
         private void ClampPosition()
@@ -143,13 +119,5 @@ namespace IdleCollector
             List<string> data = FileIO.ReadFrom(name, folder);
             FileIO.LoadDataInto(this, data);
         }
-
-        public void Move(Vector2 direction) => Position += direction;
-        public void MoveTo(Point position) => Position = position.ToVector2();
-        public void NextFrame() => CurrentFrame = new Point((CurrentFrame.X + 1) % FrameCount.X, CurrentFrame.Y);
-        public void PrevFrame() => CurrentFrame = new Point((CurrentFrame.X - 1) % FrameCount.X, CurrentFrame.Y);
-        public void Pause() => IsPlaying = false;
-        public void Play() => IsPlaying = true;
-        public void SetFrame(int x, int y) => CurrentFrame = new Point(x, y);
     }
 }

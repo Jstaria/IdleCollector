@@ -21,7 +21,7 @@ namespace IdleCollector
             tileType = "grass";
             textureKey =  ResourceAtlas.GetRandomAtlasKey("grass");
 
-            posSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
+            posSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.8f, /*Resting Position*/0);
             rotSpring = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
             rotationAmt = MathHelper.ToRadians(45);
             xOffsetAmt = RandomHelper.Instance.GetVector2(-Vector2.One, Vector2.One);
@@ -55,32 +55,9 @@ namespace IdleCollector
             sb.Draw(ResourceAtlas.TilemapAtlas, rect, textureSourceRect, DrawColor, Rotation, Origin, SpriteEffects.None, LayerDepth);
         }
 
-        public override void InteractWith(ICollidable collider)
+        public override void InteractWith(Entity collider)
         {
-            SetRotation(collider);
-        }
-
-        public override void SetRotation(ICollidable collider)
-        {
-            Vector2 colliderOrigin = collider.Position;
-            Vector2 position = Position;
-            Vector2 direction = position - colliderOrigin;
-            if (direction != Vector2.Zero)
-                direction.Normalize();
-
-            float dot = Vector2.Dot(Vector2.UnitX, direction);
-
-            float amt = 20;
-
-            float distance = Vector2.Distance(position, colliderOrigin);
-            if (distance > amt) return;
-
-            float lerp = 1 - distance / amt;
-            rotationAmt = Math.Sign(dot) * MathHelper.ToRadians(45);
-            xOffsetAmt = direction * amt * .5f; // Vector2.UnitX * MathF.Sign(dot) * amt * .75f;
-
-            posSpring.RestPosition = lerp;
-            rotSpring.RestPosition = lerp;
+            SetRotation(collider, 25, .5f, true);
         }
 
         public override void Nudge(float strength)

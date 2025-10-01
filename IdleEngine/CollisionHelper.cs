@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
@@ -81,6 +81,25 @@ namespace IdleEngine
             int radius = (int)MathF.Pow(c1.Radius + c2.Radius, 2);
 
             return Vector2.DistanceSquared(pos1, pos2) < radius;
+        }
+
+        public static float GetDistance(ICollidable c1, ICollidable c2)
+        {
+            Vector2 colliderOrigin = c1.Position;
+            Vector2 position = c2.Position;
+
+            float distance = Vector2.Distance(position, colliderOrigin);
+
+            return distance;
+        }
+
+        public static Vector2 GetDirection(ICollidable c1, ICollidable c2)
+        {
+            Vector2 direction = c1.Position - c2.Position;
+            if (direction != Vector2.Zero)
+                direction.Normalize();
+
+            return direction;
         }
     }
 }

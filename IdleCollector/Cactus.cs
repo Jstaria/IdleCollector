@@ -112,37 +112,24 @@ namespace IdleCollector
             rotSpringRight.Nudge(noiseValue);
         }
 
-        public override void InteractWith(ICollidable collider)
+        public override void InteractWith(Entity collider)
         {
-            SetRotation(collider);
+            float distance = CollisionHelper.GetDistance(this, collider);
+
+            Color color = DrawColor;
+
+            if (collider.InteractRange > distance)
+            {
+                DrawColor = Color.Red;
+            }
+
+            SetRotation(collider, 20, .2f, false);
         }
 
         public override void Nudge(float strength)
         {
             posSpring.Nudge(strength);
             rotSpring.Nudge(MathHelper.ToRadians(strength));
-        }
-
-        public override void SetRotation(ICollidable collider)
-        {
-            Vector2 colliderOrigin = collider.Position;
-            Vector2 position = Position;
-            Vector2 direction = position - colliderOrigin;
-            
-            if (direction != Vector2.Zero)
-                direction.Normalize();
-
-            float dot = Vector2.Dot(Vector2.UnitX, direction);
-
-            float amt = 20;
-
-            float distance = Vector2.Distance(position, colliderOrigin);
-            if (distance > amt) return;
-
-            float lerp = 1 - distance / amt;
-            xOffsetAmt = direction * amt * .2f; // Vector2.UnitX * MathF.Sign(dot) * amt * .75f;
-
-            posSpring.RestPosition = lerp;
         }
 
         public override void StandardUpdate(GameTime gameTime)

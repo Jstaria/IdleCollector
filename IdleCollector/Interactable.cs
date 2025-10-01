@@ -45,8 +45,28 @@ namespace IdleCollector
         {
             sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, textureSourceRect, Color, Rotation, Origin, SpriteEffects.None, LayerDepth);
         }
-        public abstract void SetRotation(ICollidable collider);
-        public abstract void InteractWith(ICollidable collider);
+        public virtual void SetRotation(Entity collider, float amt, float offsetModifier, bool rotate)
+        {
+            Vector2 direction = CollisionHelper.GetDirection(this, collider);
+
+            float dot = Vector2.Dot(Vector2.UnitX, direction);
+
+            float distance = CollisionHelper.GetDistance(this, collider);
+
+            if (distance > amt) return;
+
+            float lerp = 1 - distance / amt;
+            xOffsetAmt = direction * amt * offsetModifier; // Vector2.UnitX * MathF.Sign(dot) * amt * .75f;
+
+            posSpring.RestPosition = lerp;
+
+            if (!rotate) return;
+
+            rotationAmt = Math.Sign(dot) * MathHelper.ToRadians(45);
+            rotSpring.RestPosition = lerp;
+        }
+
+        public abstract void InteractWith(Entity entity);
         public abstract void Nudge(float strength);
         public abstract void ApplyWind(Vector2 windScroll, FastNoiseLite noise);
     }

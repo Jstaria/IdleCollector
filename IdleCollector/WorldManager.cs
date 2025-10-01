@@ -115,32 +115,32 @@ namespace IdleCollector
             CreateWorld();
         }
 
-        public void InteractWithFlora(ICollidable collider)
+        public void InteractWithFlora(Entity entity)
         {
-            List<TilePiece> tilePieces = tileTree.GetCollidedWith(collider, CollisionCheck.CircleRect);
+            List<TilePiece> tilePieces = tileTree.GetCollidedWith(entity, CollisionCheck.CircleRect);
 
             for (int i = 0; i < tilePieces.Count; i++)
             {
                 TilePiece tp = tilePieces[i];
 
-                tp.CheckInteractables(collider);
+                tp.CheckInteractables(entity);
             }
         }
 
-        public void SpawnFlora(ICollidable collider)
+        public void SpawnFlora(Entity entity)
         {
-            if (collider.Radius <= 0) throw new Exception("Collider must have a radius for spawning flora!");
+            if (entity.Radius <= 0) throw new Exception("Collider must have a radius for spawning flora!");
             //Debug.WriteLine("{0} spawned flora in a radius of {1} with an area of {2} at ({3})", collider, collider.Radius, MathF.PI * collider.Radius * collider.Radius, collider.Position);
 
-            List<TilePiece> tilePieces = tileTree.GetCollidedWith(collider, CollisionCheck.CircleRect);
+            List<TilePiece> tilePieces = tileTree.GetCollidedWith(entity, CollisionCheck.CircleRect);
 
             for (int i = 0; i < tilePieces.Count; i++)
             {
                 TilePiece tp = tilePieces[i];
 
-                if (!CollisionHelper.CheckForCollision(collider, tp, CollisionCheck.CircleRect)) continue;
+                if (!CollisionHelper.CheckForCollision(entity, tp, CollisionCheck.CircleRect)) continue;
 
-                tp.SpawnFlora(collider, worldBounds);
+                tp.SpawnFlora(entity, worldBounds);
             }
         }
 
