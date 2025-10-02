@@ -81,6 +81,11 @@ namespace IdleEngine
                 }
             }
 
+            /* new Vector2(
+                    (float)(Math.Cos(MathHelper.ToRadians(spreadAngle)) - Math.Sin(MathHelper.ToRadians(spreadAngle))) * speed,
+                    (float)(Math.Sin(MathHelper.ToRadians(spreadAngle)) + Math.Cos(MathHelper.ToRadians(spreadAngle))) * speed);
+            */
+
             // If list is not full, another will be spawned
             if (particles.Count < particleAmount)
             {

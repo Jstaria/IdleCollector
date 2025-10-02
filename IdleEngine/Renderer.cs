@@ -187,8 +187,19 @@ namespace IdleEngine
             sb.GraphicsDevice.SetRenderTarget(null);
         }
 
-        public static Vector2 GetScreenPosition(Vector2 position) => position - CurrentCamera.Position.ToVector2();
-        public static Vector2 GetWorldPosition(Vector2 position) => (position - CurrentCamera.Position.ToVector2()) * (CurrentCamera.Bounds.Width / CurrentCamera.Bounds.Height);
+        public static Vector2 GetScreenPosition(Vector2 worldPosition) => worldPosition - CurrentCamera.Position.ToVector2();
+        public static Vector2 GetWorldPosition(Vector2 screenPosition)
+        {
+            float scaleX = RenderSize.X / (float)ScreenSize.X;
+            float scaleY = RenderSize.Y / (float)ScreenSize.Y;
+
+            Vector2 worldPosition = new Vector2(
+                screenPosition.X * scaleX - CurrentCamera.Position.X,
+                screenPosition.Y * scaleY - CurrentCamera.Position.Y
+            );
+
+            return worldPosition;
+        }
 
         private static void SaveTextureToFile(Texture2D texture, string filename)
         {

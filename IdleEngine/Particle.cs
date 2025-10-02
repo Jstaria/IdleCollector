@@ -10,10 +10,36 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
+    public delegate float Curve(float t);
+
+    public struct ParticleStats
+    {
+        public Vector2 StartingVelocity;
+        public Vector2 ActingForce;
+
+        public float Lifespan;
+        public string TextureKey;
+
+        public Color StartColor;
+        public Color EndColor;
+        public Curve ColorDecayRate;
+
+        public float Size;
+        public Curve SizeDecayRate;
+
+        public float RotationAngle;
+        public float RotationSpeed;
+
+        public string ParticleText;
+        public SpriteFont Font;
+    }
+
     internal class Particle
     {
         private Vector2 position;
-        private float decayRate;
+        private Vector2 velocity;
+
+        private float lifeSpan;
 
         private Texture2D asset;
         private Color startColor;
@@ -31,120 +57,28 @@ namespace IdleEngine
 
         private SpriteFont particleFont;
 
-        public float LifeSpan { get; private set; }
+        public float LifeSpan { get => lifeSpan; }
 
-        // Because it is only me using this particular particle system, I will not comment out each ad every one of these
-        public Particle(Vector2 postiion, float decayRate, string amount, SpriteFont particleFont)
+        private ParticleStats stats;
+
+        public Particle(ParticleStats stats)
         {
-            this.particleFont = particleFont;
-            position = postiion;
-            LifeSpan = 1;
-            this.decayRate = decayRate;
-            this.amount = amount;
-            speed = def;
-            rotationSpeed = 0;
-            rotationAngle = 0;
-            size = 1;
+            this.stats = stats;
+            lifeSpan = stats.Lifespan;
         }
 
-        public Particle(Vector2 postiion, float decayRate, Texture2D asset, Color color)
+        public void Update(GameTime gameTime)
         {
-            position = postiion;
-            LifeSpan = 1;
-            this.decayRate = decayRate;
-            this.asset = asset;
-            startColor = color;
-            endColor = color;
-            speed = def;
-            rotationSpeed = 0;
-            rotationAngle = 0;
-            size = 1;
-        }
+            position += velocity;
+            velocity += stats.ActingForce;
 
-        public Particle(Vector2 postiion, float decayRate, Texture2D asset, Color startColor, Color endColor)
-        {
-            position = postiion;
-            LifeSpan = 1;
-            this.decayRate = decayRate;
-            this.asset = asset;
-            this.startColor = startColor;
-            this.endColor = endColor;
-            speed = def;
-            rotationSpeed = 0;
-            rotationAngle = 0;
-            size = 1;
-        }
+            lifeSpan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        public Particle(Vector2 postiion, float decayRate, Texture2D asset, Color startColor, Color endColor, int speed)
-        {
-            position = postiion;
-            LifeSpan = 1;
-            this.decayRate = decayRate;
-            this.asset = asset;
-            this.startColor = startColor;
-            this.endColor = endColor;
-            this.speed = speed;
-            rotationSpeed = 0;
-            rotationAngle = 0;
-            size = 1;
-        }
+            float t = lifeSpan / stats.Lifespan;
 
-        public Particle(Vector2 postiion, float decayRate, Texture2D asset, Color startColor, Color endColor, int speed, float rotationSpeed)
-        {
-            position = postiion;
-            LifeSpan = 1;
-            this.decayRate = decayRate;
-            this.asset = asset;
-            this.startColor = startColor;
-            this.endColor = endColor;
-            this.speed = speed;
-            this.rotationSpeed = rotationSpeed;
-            rotationAngle = 0;
-            size = 1;
-        }
+            size = stats.SizeDecayRate(t);
 
-        public Particle(Vector2 postiion, float decayRate, Texture2D asset, Color startColor, Color endColor, int speed, float rotationSpeed, float spreadAngle, bool isRadial)
-        {
-            position = postiion;
-            LifeSpan = 1;
-            this.decayRate = decayRate;
-            this.asset = asset;
-            this.startColor = startColor;
-            this.endColor = endColor;
-            this.speed = speed;
-            this.rotationSpeed = rotationSpeed;
-            rotationAngle = 0;
-            size = 1;
-            this.spreadAngle = spreadAngle - 135;
-            this.isRadial = isRadial;
-            colorDecay = 1f;
-        }
-
-        public void Update()
-        {
-            if (isRadial)
-            {
-                position += new Vector2(
-                    (float)(Math.Cos(MathHelper.ToRadians(spreadAngle)) - Math.Sin(MathHelper.ToRadians(spreadAngle))) * speed,
-                    (float)(Math.Sin(MathHelper.ToRadians(spreadAngle)) + Math.Cos(MathHelper.ToRadians(spreadAngle))) * speed);
-            }
-            else
-            {
-                position.Y -= speed;
-            }
-
-            if (LifeSpan > .005f)
-            {
-                LifeSpan *= decayRate;
-            }
-
-            else
-            {
-                LifeSpan = 0;
-            }
-
-            size *= .995f;
-            colorDecay *= new Random().Next(970, 985) * .001f;
+            colorDecay = stats.ColorDecayRate(t);
 
             rotationAngle += rotationSpeed;
         }

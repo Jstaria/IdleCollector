@@ -76,8 +76,7 @@ namespace IdleCollector
 
         public void SlowUpdate(GameTime gameTime)
         {
-            Debug.WriteLine(Renderer.GetWorldPosition(Input.GetMouseScreenPos().ToVector2()));
-            Debug.WriteLine(Input.GetMousePos().ToVector2());
+
         }
 
         public void Draw(SpriteBatch sb)
