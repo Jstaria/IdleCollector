@@ -9,8 +9,6 @@ namespace IdleEngine
 {
     public interface IUpdatable
     {
-        public UpdateType Type { get; protected set; }
-
         public void ControlledUpdate(GameTime gameTime);
         public void StandardUpdate(GameTime gameTime);
         public void SlowUpdate(GameTime gameTime);

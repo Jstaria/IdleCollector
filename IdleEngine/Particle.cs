@@ -14,6 +14,7 @@ namespace IdleEngine
 
     public struct ParticleStats
     {
+        public Vector2 Position;
         public Vector2 StartingVelocity;
         public Vector2 ActingForce;
 
@@ -34,7 +35,7 @@ namespace IdleEngine
         public SpriteFont Font;
     }
 
-    internal class Particle
+    internal class Particle: IRenderable, IUpdatable
     {
         private Vector2 position;
         private Vector2 velocity;
@@ -58,21 +59,50 @@ namespace IdleEngine
         private SpriteFont particleFont;
 
         public float LifeSpan { get => lifeSpan; }
+        public float LayerDepth { get; set; }
+        public Color Color { get; set; }
 
         private ParticleStats stats;
 
         public Particle(ParticleStats stats)
         {
             this.stats = stats;
+            position = stats.Position;
             lifeSpan = stats.Lifespan;
         }
 
         public void Update(GameTime gameTime)
         {
+
+        }
+
+        public void Draw(SpriteBatch sb)
+        {
+            if (stats.Font != null)
+                DrawString(sb);
+            else 
+                DrawAsset(sb);
+        }
+
+        private void DrawString(SpriteBatch sb)
+        {
+            sb.DrawString(particleFont, amount, position - particleFont.MeasureString(amount) / 2, Color.Black * LifeSpan);
+        }
+
+        private void DrawAsset(SpriteBatch sb)
+        {
+            sb.Draw(asset, position, null, Color.Lerp(endColor, startColor, colorDecay) * LifeSpan, rotationAngle, new Vector2(asset.Width / 2, asset.Height / 2), size, SpriteEffects.None, 0);
+        }
+
+        public void ControlledUpdate(GameTime gameTime)
+        {
+            lifeSpan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        public void StandardUpdate(GameTime gameTime)
+        {
             position += velocity;
             velocity += stats.ActingForce;
-
-            lifeSpan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             float t = lifeSpan / stats.Lifespan;
 
@@ -83,14 +113,9 @@ namespace IdleEngine
             rotationAngle += rotationSpeed;
         }
 
-        public void DrawString(SpriteBatch sb)
+        public void SlowUpdate(GameTime gameTime)
         {
-            sb.DrawString(particleFont, amount, position - particleFont.MeasureString(amount) / 2, Color.Black * LifeSpan);
-        }
-
-        public void DrawAsset(SpriteBatch sb)
-        {
-            sb.Draw(asset, position, null, Color.Lerp(endColor, startColor, colorDecay) * LifeSpan, rotationAngle, new Vector2(asset.Width / 2, asset.Height / 2), size, SpriteEffects.None, 0);
+            
         }
     }
 }

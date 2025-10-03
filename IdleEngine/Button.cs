@@ -31,7 +31,6 @@ namespace IdleCollector
         private Texture2D[] textures;
         private SpriteFont font;
         private Rectangle bounds;
-        private UpdateType updateType = UpdateType.Standard;
         private string text;
         private string textParticle;
         private Vector2 textPosition;
@@ -39,8 +38,6 @@ namespace IdleCollector
         private float timer = .05f;
         private float timeOfLastPress;
         private bool active;
-
-        public UpdateType Type { get { return updateType; } set { updateType = value; } }
 
         public float LayerDepth { get; set; }
         public Color Color { get; set; }

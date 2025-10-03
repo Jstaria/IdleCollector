@@ -3,33 +3,33 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace IdleEngine
 {
+    public delegate Vector2 GetVector();
+
+    public struct ParticleSystemStats
+    {
+        public Rectangle Position;
+        public GetVector TrackPosition;
+        public int MaxParticleCount;
+        public Color[] ParticleStartColor;
+        public Color[] ParticleEndColor;
+        public Texture2D ParticleTexture;
+        public float[] ParticleSpeed;
+        public float[] SpreadAngle;
+        public float[] ParticleRotationSpeed;
+    }
+
     public class ParticleSystem
     {
         private List<Particle> particles;
-        private Rectangle position;
-        private Random random;
-
-        private int particleAmount;
-        private float decaySpeed;
-        private Color startColor;
-        private Color endColor;
-        private Texture2D asset;
-        private int speed;
-        private float rotationSpeed;
-        private bool doesRotate;
-        private float spreadAngle;
-        private float spawnAmount;
-
-        public Vector2 Position { set { position = new Rectangle((int)value.X, (int)value.Y, 0, 0); } }
-        public int ParticleAmount { get { return particleAmount; } set { particleAmount = value; spawnAmount = particleAmount * .005f; } }
-        public Color StartColor { get { return startColor; } set { startColor = value; } }
-        public int Speed { get { return speed; } set { speed = value; } }
+        
+        private ParticleSystemStats stats;
 
         /// <summary>
         /// Simple particle system
@@ -91,11 +91,15 @@ namespace IdleEngine
             {
                 if (doesRotate)
                 {
+                    ParticleStats stats = new ParticleStats();
+                    stats.Position = RandomHelper.Instance.GetVector2(position);
+                    stats.RotationSpeed = RandomHelper.Instance.GetFloat(-speed, speed);
+
                     rotationSpeed = random.Next(-5, 5) * .01f;
 
                     for (int i = 0; i < spawnAmount; i++)
                     {
-                        particles.Add(new Particle(new Vector2(random.Next(position.X, position.X + position.Width + 1), random.Next(position.Y, position.Y + position.Height + 1)), random.Next((int)(decaySpeed * 100 - 10), (int)(decaySpeed * 100)) * .01f, asset, startColor, endColor, speed, rotationSpeed, random.Next((int)spreadAngle), doesRotate));
+                        particles.Add(new Particle(, ), random.Next((int)(decaySpeed * 100 - 10), (int)(decaySpeed * 100)) * .01f, asset, startColor, endColor, speed, rotationSpeed, random.Next((int)spreadAngle), doesRotate));
                     }
                 }
 
