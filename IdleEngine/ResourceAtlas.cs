@@ -20,7 +20,6 @@ namespace IdleEngine
 
         // Texture2D Resource
         private static Texture2D tilemapAtlas;
-        private static Point tileSize;
         private static Dictionary<string, Texture2D> textureCache;
         private static Dictionary<string, Dictionary<string, Rectangle>> tilemapAtlasKeys;
     

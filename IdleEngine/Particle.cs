@@ -14,11 +14,13 @@ namespace IdleEngine
 
     public struct ParticleStats
     {
-        public Vector2 Position;
+        public GetVector Position;
         public Vector2 StartingVelocity;
-        public Vector2 ActingForce;
+        public GetVector ActingForce;
+        public float Speed;
 
         public float Lifespan;
+        public float LayerDepth;
         public string TextureKey;
 
         public Color StartColor;
@@ -28,7 +30,7 @@ namespace IdleEngine
         public float Size;
         public Curve SizeDecayRate;
 
-        public float RotationAngle;
+        public float Rotation;
         public float RotationSpeed;
 
         public string ParticleText;
@@ -37,26 +39,15 @@ namespace IdleEngine
 
     internal class Particle: IRenderable, IUpdatable
     {
-        private Vector2 position;
+        public Vector2 position;
         private Vector2 velocity;
 
         private float lifeSpan;
-
-        private Texture2D asset;
-        private Color startColor;
-        private Color endColor;
-        private float rotationSpeed;
-        private float rotationAngle;
         private float colorDecay;
+        private Texture2D texture;
 
-        private const int def = 1;
-        private int speed;
-        private string amount;
         private float size;
-        private bool isRadial;
-        private float spreadAngle;
-
-        private SpriteFont particleFont;
+        private float rotationAngle;
 
         public float LifeSpan { get => lifeSpan; }
         public float LayerDepth { get; set; }
@@ -67,55 +58,70 @@ namespace IdleEngine
         public Particle(ParticleStats stats)
         {
             this.stats = stats;
-            position = stats.Position;
-            lifeSpan = stats.Lifespan;
-        }
 
-        public void Update(GameTime gameTime)
-        {
-
+            if (stats.TextureKey != null && stats.TextureKey != "")
+                texture = ResourceAtlas.GetTexture(stats.TextureKey);
+            
+            Reset();
         }
 
         public void Draw(SpriteBatch sb)
         {
-            if (stats.Font != null)
+            if (stats.Font == null)
+                DrawAsset(sb); 
+            else if (texture == null)
                 DrawString(sb);
-            else 
+            else
+            {
                 DrawAsset(sb);
+                DrawString(sb);
+            }
         }
 
         private void DrawString(SpriteBatch sb)
         {
-            sb.DrawString(particleFont, amount, position - particleFont.MeasureString(amount) / 2, Color.Black * LifeSpan);
+            sb.DrawString(stats.Font, stats.ParticleText, position, Color.Black * LifeSpan, 0, stats.Font.MeasureString(stats.ParticleText) / 2, size, SpriteEffects.None, stats.LayerDepth);
         }
 
         private void DrawAsset(SpriteBatch sb)
         {
-            sb.Draw(asset, position, null, Color.Lerp(endColor, startColor, colorDecay) * LifeSpan, rotationAngle, new Vector2(asset.Width / 2, asset.Height / 2), size, SpriteEffects.None, 0);
+            
+            sb.Draw(texture, position, null, Color.Lerp(stats.StartColor, stats.EndColor, colorDecay), rotationAngle, new Vector2(texture.Width / 2, texture.Height / 2), size, SpriteEffects.None, LayerDepth);
         }
 
         public void ControlledUpdate(GameTime gameTime)
         {
             lifeSpan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            position += velocity * stats.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
+            if (stats.ActingForce != null)
+                velocity += stats.ActingForce.Invoke();
         }
 
         public void StandardUpdate(GameTime gameTime)
         {
-            position += velocity;
-            velocity += stats.ActingForce;
-
+            velocity = Vector2.Zero;
             float t = lifeSpan / stats.Lifespan;
 
             size = stats.SizeDecayRate(t);
 
             colorDecay = stats.ColorDecayRate(t);
 
-            rotationAngle += rotationSpeed;
+            rotationAngle += stats.RotationSpeed;
         }
 
         public void SlowUpdate(GameTime gameTime)
         {
             
+        }
+
+        public void Reset()
+        {
+            lifeSpan = stats.Lifespan;
+            position = stats.Position.Invoke();
+            velocity = stats.StartingVelocity;
+            rotationAngle = stats.Rotation;
         }
     }
 }

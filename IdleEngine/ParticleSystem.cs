@@ -11,111 +11,167 @@ using System.Threading.Tasks;
 namespace IdleEngine
 {
     public delegate Vector2 GetVector();
+    public delegate float GetFloat();
 
     public struct ParticleSystemStats
     {
-        public Rectangle Position;
+        public Vector2[] StartingVelocity;
+        public Rectangle[] SpawnBounds;
         public GetVector TrackPosition;
+        public GetVector ActingForce;
+        public float ParticleDespawnDistance;
+        public GetFloat TrackLayerDepth;
         public int MaxParticleCount;
         public Color[] ParticleStartColor;
         public Color[] ParticleEndColor;
-        public Texture2D ParticleTexture;
+        public string ParticleTextureKey;
         public float[] ParticleSpeed;
-        public float[] SpreadAngle;
         public float[] ParticleRotationSpeed;
+        public float[] ParticleRotation;
+        public float[] ParticleSize;
+        public float[] EmitRate;
+
+        public SpriteFont Font;
+        public string ParticleText;
+
+        public Curve ParticleColorDecayRate;
+        public Curve ParticleSizeDecayRate;
     }
 
-    public class ParticleSystem
+    public class ParticleSystem : IRenderable, IUpdatable
     {
         private List<Particle> particles;
-        
+        private List<int> particleIndices;
         private ParticleSystemStats stats;
+        private Rectangle[] bounds;
+        private float emitWaitTime;
 
-        /// <summary>
-        /// Simple particle system
-        /// </summary>
-        /// <param name="particleAmount"></param>
-        /// <param name="startColor"></param>
-        /// <param name="endColor"></param>
-        /// <param name="decaySpeed">The speed the particles will fade away at</param>
-        /// <param name="asset">Particle texture</param>
-        /// <param name="position">Position of the system</param>
-        /// <param name="speed">Speed of the particles from their source</param>
-        /// <param name="doesRotate">Do the particles rotate as they move</param>
-        /// <param name="spreadAngle">Currently only supports 0 degrees or 360 degrees</param>
-        public ParticleSystem(int particleAmount, Color startColor, Color endColor, float decaySpeed, Texture2D asset, Rectangle position, int speed, bool doesRotate, float spreadAngle)
+        public ParticleSystem(ParticleSystemStats stats)
         {
-            this.particleAmount = particleAmount;
-            this.decaySpeed = decaySpeed;
-            this.asset = asset;
-            this.startColor = startColor;
-            this.endColor = endColor;
-            this.speed = speed;
+            particleIndices = new List<int>();
+            particles = new List<Particle>();   
 
-            this.position = position;
-            particles = new List<Particle>();
-            random = new Random();
-            this.doesRotate = doesRotate;
-            rotationSpeed = 0;
-            this.spreadAngle = spreadAngle;
+            this.stats = stats;
 
-            // Spawning amount is based on how many particles are allowed in the system
-            // Even with this simple formula, the higher numbers will never fill a list
-            // but it will get pretty laggy past 100,000 particles allowed (this is with a Ryzen 7 3700X) considering this is all CPU bound
-            // and that I couldn't offload anything to the GPU bc HLSL is outdated and not even chat gpt can help me with it, well... sort of
-            spawnAmount = particleAmount * .005f;
+            bounds = stats.SpawnBounds;
         }
 
-        public void Update()
+        public float LayerDepth { get; set; }
+        public Color Color { get; set; }
+
+        public void ControlledUpdate(GameTime gameTime)
         {
-            // Basic update information to cull list of non relevant particles
+            foreach (Particle particle in particles)
+            {
+                particle.ControlledUpdate(gameTime);
+            }
+
+            if (particles.Count < stats.MaxParticleCount && emitWaitTime <= 0)
+            {
+                EmitParticle();
+            }
+
+            emitWaitTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        public void SlowUpdate(GameTime gameTime)
+        {
+            foreach(Particle particle in particles)
+                particle.SlowUpdate(gameTime);
+        }
+
+        public void StandardUpdate(GameTime gameTime)
+        {
             for (int i = 0; i < particles.Count; i++)
             {
-                particles[i].Update();
+                Particle particle = particles[i];
+                particle.StandardUpdate(gameTime);
 
-                if (particles[i].LifeSpan == 0)
-                {
-                    particles.RemoveAt(i);
-
-                    i--;
-                }
+                if (particle.LifeSpan <= 0)
+                    particleIndices.Add(i);
+                
+                if (Vector2.Distance(particle.position, stats.TrackPosition.Invoke()) > stats.ParticleDespawnDistance)
+                    particleIndices.Add(i);
             }
 
-            /* new Vector2(
-                    (float)(Math.Cos(MathHelper.ToRadians(spreadAngle)) - Math.Sin(MathHelper.ToRadians(spreadAngle))) * speed,
-                    (float)(Math.Sin(MathHelper.ToRadians(spreadAngle)) + Math.Cos(MathHelper.ToRadians(spreadAngle))) * speed);
-            */
-
-            // If list is not full, another will be spawned
-            if (particles.Count < particleAmount)
-            {
-                if (doesRotate)
-                {
-                    ParticleStats stats = new ParticleStats();
-                    stats.Position = RandomHelper.Instance.GetVector2(position);
-                    stats.RotationSpeed = RandomHelper.Instance.GetFloat(-speed, speed);
-
-                    rotationSpeed = random.Next(-5, 5) * .01f;
-
-                    for (int i = 0; i < spawnAmount; i++)
-                    {
-                        particles.Add(new Particle(, ), random.Next((int)(decaySpeed * 100 - 10), (int)(decaySpeed * 100)) * .01f, asset, startColor, endColor, speed, rotationSpeed, random.Next((int)spreadAngle), doesRotate));
-                    }
-                }
-
-                else
-                {
-                    particles.Add(new Particle(new Vector2(random.Next(position.X, position.X + position.Width + 1), random.Next(position.Y, position.Y + position.Height + 1)), decaySpeed, asset, startColor, endColor, speed, random.Next((int)spreadAngle)));
-                }
-            }
+            UpdateBounds();
+            CullParticles();
         }
 
         public void Draw(SpriteBatch sb)
         {
             foreach (Particle particle in particles)
+                particle.Draw(sb);
+        }
+
+        private void UpdateBounds()
+        {
+            if (stats.TrackPosition == null) return;
+
+            for(int i = 0; i < bounds.Length; i++)
             {
-                particle.DrawAsset(sb);
+                bounds[i].Location = stats.SpawnBounds[i].Location + stats.TrackPosition.Invoke().ToPoint();
             }
+        }
+
+        private void EmitParticle()
+        {
+            emitWaitTime = stats.EmitRate.Length == 1 ? stats.EmitRate[0] : RandomHelper.Instance.GetFloat(stats.EmitRate[0], stats.EmitRate[1]);
+
+            ParticleStats particleStats = new ParticleStats();
+
+            particleStats.ColorDecayRate = stats.ParticleColorDecayRate;
+            particleStats.SizeDecayRate = stats.ParticleSizeDecayRate;
+
+            particleStats.StartColor = stats.ParticleStartColor.Length == 1 ?
+                stats.ParticleStartColor[0] :
+                RandomHelper.Instance.GetColor(stats.ParticleStartColor[0], stats.ParticleStartColor[1]);
+
+            particleStats.EndColor = stats.ParticleEndColor.Length == 1 ?
+                stats.ParticleEndColor[0] :
+                RandomHelper.Instance.GetColor(stats.ParticleEndColor[0], stats.ParticleEndColor[1]);
+
+            particleStats.Position += () =>
+            {
+                int ind = RandomHelper.Instance.GetIntExclusive(0, bounds.Length);
+                return RandomHelper.Instance.GetVector2(bounds[ind]);
+            };
+
+            particleStats.TextureKey = stats.ParticleTextureKey;
+            if (stats.ParticleSize != null)
+                particleStats.Size = stats.ParticleSize.Length == 1 ? stats.ParticleSize[0] : RandomHelper.Instance.GetFloat(stats.ParticleSize[0], stats.ParticleSize[1]);
+            if (stats.ParticleRotationSpeed != null)
+                particleStats.RotationSpeed = stats.ParticleRotationSpeed.Length == 1 ? stats.ParticleRotationSpeed[0] : RandomHelper.Instance.GetFloat(stats.ParticleRotationSpeed[0], stats.ParticleRotationSpeed[1]);
+            if (stats.StartingVelocity != null)
+                particleStats.StartingVelocity = stats.StartingVelocity.Length == 1 ? stats.StartingVelocity[0] : RandomHelper.Instance.GetVector2(stats.StartingVelocity[0], stats.StartingVelocity[1]);
+            particleStats.ActingForce = stats.ActingForce;
+            particleStats.Font = stats.Font;
+            particleStats.ParticleText = stats.ParticleText;
+            if (stats.ParticleRotation != null)
+                particleStats.Rotation = stats.ParticleRotation.Length == 1 ? stats.ParticleRotation[0] : RandomHelper.Instance.GetFloat(stats.ParticleRotation[0], stats.ParticleRotation[1]);
+            if (stats.ParticleSpeed != null)
+                particleStats.Speed = stats.ParticleSpeed.Length == 1 ? stats.ParticleSpeed[0] : RandomHelper.Instance.GetFloat(stats.ParticleSpeed[0], stats.ParticleSpeed[1]);
+
+            particleStats.ColorDecayRate = stats.ParticleColorDecayRate;
+            particleStats.SizeDecayRate = stats.ParticleSizeDecayRate;
+
+            Particle particle = new Particle(particleStats);
+            particles.Add(particle);
+        }
+
+        private void CullParticles()
+        {
+            for (int i = 0; i < particleIndices.Count; i++)
+            {
+                particles[particleIndices[i]].Reset();
+            }
+
+            particleIndices.Clear();
+        }
+
+        public void SwapTrackPosition(GetVector position)
+        {
+            stats.TrackPosition = position;
         }
 
         /// <summary>

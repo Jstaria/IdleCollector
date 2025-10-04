@@ -12,7 +12,6 @@ namespace IdleEngine
     public static class Drawing
     {
         private static Texture2D pixel;
-        private static SpriteBatch _spriteBatch;
 
         public static void Initialize(SpriteBatch sb)
         {

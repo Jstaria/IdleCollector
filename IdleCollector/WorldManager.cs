@@ -23,6 +23,7 @@ namespace IdleCollector
         private FastNoiseLite noise; // Cosmetic for rn
         private RandomHelper random;
         private WindManager windManager;
+        private ParticleSystem windParticles;
 
         private TilePiece[,] worldFloor;
         private static Rectangle worldBounds;
@@ -59,11 +60,14 @@ namespace IdleCollector
 
                 piece.ControlledUpdate(gameTime);
             }
+
+            windParticles.ControlledUpdate(gameTime);
         }
 
         public void SlowUpdate(GameTime gameTime)
         {
             windManager.SlowUpdate(gameTime);
+            windParticles.SlowUpdate(gameTime);
 
             if (activeTiles == null) return;
 
@@ -87,6 +91,8 @@ namespace IdleCollector
                 piece.ApplyWind(windManager.TotalWindMovement, noise);
                 piece.StandardUpdate(gameTime);
             }
+
+            windParticles.StandardUpdate(gameTime);
         }
 
         public void Draw(SpriteBatch sb)
@@ -102,6 +108,8 @@ namespace IdleCollector
                 piece.Draw(sb);
             }
 
+            windParticles.Draw(sb);
+
             //if (tileTree != null)
             //{
             //    tileTree.DrawActiveBounds(sb);
@@ -113,6 +121,7 @@ namespace IdleCollector
             LoadWorldData("WorldData", "SaveData");
             LoadNoise();
             CreateWorld();
+            LoadWind();
         }
 
         public void InteractWithFlora(Entity entity)
@@ -160,13 +169,48 @@ namespace IdleCollector
             noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
         }
 
+        private void LoadWind()
+        {
+            windManager = new WindManager();
+            
+            ParticleSystemStats stats = new ParticleSystemStats();
+            stats.ActingForce = () => windManager.WindDirection;
+            stats.ParticleSize = new float[]{ 20 };
+            stats.EmitRate = new float[] { .1f };
+            stats.ParticleStartColor = new Color[] { new Color(250, 204, 158), new Color(230, 184, 138) };
+            stats.ParticleEndColor = new Color[] { new Color(250, 204, 158), new Color(230, 184, 138) };
+            stats.MaxParticleCount = 1000;
+            stats.ParticleColorDecayRate += (float t) => t;
+            stats.ParticleSizeDecayRate += (float t) => 1;
+            stats.ParticleDespawnDistance = 300;
+            stats.TrackLayerDepth += () => .995f;
+            stats.ParticleTextureKey = "square";
+
+            Point renderSize = Renderer.RenderSize;
+            int width = 20;
+            int height = 20;
+
+            Rectangle[] bounds = new Rectangle[]
+            {
+                new Rectangle(-width, -height, width, renderSize.Y + height),
+                new Rectangle(0, -height, renderSize.X, height),
+                new Rectangle(renderSize.X, -height, width, renderSize.Y + height),
+                new Rectangle(0, renderSize.Y, renderSize.X, height)
+            };
+            stats.SpawnBounds = bounds;
+            stats.ParticleRotation = new float[] { 0,5 };
+            stats.ParticleRotationSpeed = new float[] { 0 };
+            stats.ParticleSpeed = new float[] { .001f };
+
+            windParticles = new ParticleSystem(stats);
+        }
+
         public void CreateWorld()
         {
             int worldHalfX = (WorldSizeX * TileSize) / 2;
             int worldHalfY = (WorldSizeY * TileSize) / 2;
             Point offset = (Renderer.RenderSize.ToVector2() / 2).ToPoint();
 
-            windManager = new WindManager();
             worldBounds = new Rectangle(-worldHalfX + offset.X, -worldHalfY + offset.Y, TileSize * WorldSizeX, TileSize * WorldSizeY);
             worldFloor = new TilePiece[WorldSizeX, WorldSizeY];
 
@@ -199,6 +243,11 @@ namespace IdleCollector
         {
             float yPos = player.Position.Y + player.Origin.Y; /*- player.Bounds.Height / 8;*/
             player.LayerDepth = WorldManager.GetLayerDepth(yPos);
+        }
+
+        public void SyncWindParticlesToPlayer(Player player)
+        {
+            windParticles.SwapTrackPosition(() => player.Position);
         }
 
         public static float GetLayerDepth(float yPos)

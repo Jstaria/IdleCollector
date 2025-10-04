@@ -130,6 +130,7 @@ namespace IdleCollector
 
             player.OnSpawn += worldManager.SpawnFlora;
             player.OnMove += worldManager.InteractWithFlora;
+            worldManager.SyncWindParticlesToPlayer(player);
         }
 
         private void SetupPause()

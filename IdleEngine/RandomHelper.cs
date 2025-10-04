@@ -129,5 +129,12 @@ namespace IdleEngine
 
             return bools;
         }
+
+        public Color GetColor(Color a, Color b)
+        {
+            float t = (float)GetDouble();
+
+            return Color.Lerp(a, b, t);
+        }
     }
 }
