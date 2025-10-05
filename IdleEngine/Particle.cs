@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -86,25 +87,24 @@ namespace IdleEngine
         private void DrawAsset(SpriteBatch sb)
         {
             
-            sb.Draw(texture, position, null, Color.Lerp(stats.StartColor, stats.EndColor, colorDecay), rotationAngle, new Vector2(texture.Width / 2, texture.Height / 2), size, SpriteEffects.None, LayerDepth);
+            sb.Draw(texture, position, null, Color.Lerp(stats.StartColor, stats.EndColor, colorDecay), rotationAngle, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), size, SpriteEffects.None, stats.LayerDepth);
         }
 
         public void ControlledUpdate(GameTime gameTime)
         {
             lifeSpan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            position += velocity * stats.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            
             if (stats.ActingForce != null)
                 velocity += stats.ActingForce.Invoke();
+
+            position += velocity * stats.Speed;
         }
 
-        public void StandardUpdate(GameTime gameTime)
+       public void StandardUpdate(GameTime gameTime)
         {
-            velocity = Vector2.Zero;
-            float t = lifeSpan / stats.Lifespan;
+            float t = 1 - lifeSpan / stats.Lifespan;
 
-            size = stats.SizeDecayRate(t);
+            size = stats.SizeDecayRate(t) * stats.Size;
 
             colorDecay = stats.ColorDecayRate(t);
 
@@ -123,5 +123,7 @@ namespace IdleEngine
             velocity = stats.StartingVelocity;
             rotationAngle = stats.Rotation;
         }
+        public void SetStartingVelocity(Vector2 vec) => stats.StartingVelocity = vec;
+        public void SetVelocity(Vector2 vec) => velocity = vec;
     }
 }

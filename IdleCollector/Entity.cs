@@ -18,6 +18,7 @@ namespace IdleCollector
         protected int interactRange;
         protected float spawnFrequency;
         protected int prevSpawnTime;
+        protected Vector2 velocity;
 
         public Point FrameCount { get; set; }
         public Point CurrentFrame { get; set; }

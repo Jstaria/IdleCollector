@@ -118,7 +118,9 @@ namespace IdleCollector
                     grass.WorldDepth = worldBounds.Y;
                     grass.WorldHeight = worldBounds.Height;
 
-                    grass.Nudge(random.GetFloat(-50,50));
+                    if (Vector2.Distance(position, entity.Position) > 35)
+                        grass.Nudge(random.GetFloat(-50, 50));
+
                     interactables[pairs.Key].Add(grass);
                 }
             }

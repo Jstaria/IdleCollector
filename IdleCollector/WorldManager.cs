@@ -93,6 +93,7 @@ namespace IdleCollector
             }
 
             windParticles.StandardUpdate(gameTime);
+            windParticles.SetParticlesVelocity(-windManager.WindDirection);
         }
 
         public void Draw(SpriteBatch sb)
@@ -172,35 +173,40 @@ namespace IdleCollector
         private void LoadWind()
         {
             windManager = new WindManager();
-            
+
             ParticleSystemStats stats = new ParticleSystemStats();
-            stats.ActingForce = () => windManager.WindDirection;
-            stats.ParticleSize = new float[]{ 20 };
-            stats.EmitRate = new float[] { .1f };
-            stats.ParticleStartColor = new Color[] { new Color(250, 204, 158), new Color(230, 184, 138) };
-            stats.ParticleEndColor = new Color[] { new Color(250, 204, 158), new Color(230, 184, 138) };
-            stats.MaxParticleCount = 1000;
+            stats.ParticleSize = new float[] { 1, 3 };
+            stats.ParticleSpeed = new float[] { 1, 2.5f };
+            stats.EmitRate = new float[] { 0 };
+            stats.EmitCount = new int[] { 5, 10 };
+            stats.ParticleStartColor = new Color[] { new Color(230, 184, 138), new Color(210, 164, 118) };
+            stats.ParticleEndColor = new Color[] { new Color(230, 184, 138), new Color(210, 164, 118) };
+            stats.MaxParticleCount = 50;
             stats.ParticleColorDecayRate += (float t) => t;
-            stats.ParticleSizeDecayRate += (float t) => 1;
-            stats.ParticleDespawnDistance = 300;
+            stats.ParticleSizeDecayRate += (float t) => 1 - t;
+            stats.ParticleDespawnDistance = 500;
             stats.TrackLayerDepth += () => .995f;
-            stats.ParticleTextureKey = "square";
+            stats.ParticleTextureKeys = new string[] { "dust1", "dust2", "dust3", "dust4", "dust5", "dust6", "dust6", "dust6", "dust6", "dust6", "dust7"};
 
             Point renderSize = Renderer.RenderSize;
-            int width = 20;
-            int height = 20;
+            int width = 100;
+            int height = 100;
+            int xOffset = renderSize.X / 2;
+            int yOffset = renderSize.Y / 2;
 
-            Rectangle[] bounds = new Rectangle[]
+            Rectangle[][] bounds = new Rectangle[][]
             {
-                new Rectangle(-width, -height, width, renderSize.Y + height),
-                new Rectangle(0, -height, renderSize.X, height),
-                new Rectangle(renderSize.X, -height, width, renderSize.Y + height),
-                new Rectangle(0, renderSize.Y, renderSize.X, height)
+                new Rectangle[] { new Rectangle(-width - xOffset, -yOffset , width, renderSize.Y) },
+                new Rectangle[] {new Rectangle(-xOffset, -height - yOffset , renderSize.X, height) },
+                new Rectangle[] {new Rectangle(renderSize.X - xOffset, -yOffset , width, renderSize.Y) },
+                new Rectangle[] {new Rectangle(-xOffset, renderSize.Y - yOffset , renderSize.X, height) }
             };
+
             stats.SpawnBounds = bounds;
-            stats.ParticleRotation = new float[] { 0,5 };
-            stats.ParticleRotationSpeed = new float[] { 0 };
-            stats.ParticleSpeed = new float[] { .001f };
+            stats.UseRandomBounds = true;
+            stats.ParticleRotation = new float[] { 0, 5 };
+            stats.ParticleRotationSpeed = new float[] { 0.1f, .2f };
+            stats.ParticleLifeSpan = new float[] { 7.5f };
 
             windParticles = new ParticleSystem(stats);
         }

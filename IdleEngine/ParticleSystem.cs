@@ -16,7 +16,10 @@ namespace IdleEngine
     public struct ParticleSystemStats
     {
         public Vector2[] StartingVelocity;
-        public Rectangle[] SpawnBounds;
+        public Rectangle[][] SpawnBounds;
+        public int CurrentBounds;
+        public bool UseRandomBounds;
+        public float[] ParticleLifeSpan;
         public GetVector TrackPosition;
         public GetVector ActingForce;
         public float ParticleDespawnDistance;
@@ -24,12 +27,13 @@ namespace IdleEngine
         public int MaxParticleCount;
         public Color[] ParticleStartColor;
         public Color[] ParticleEndColor;
-        public string ParticleTextureKey;
+        public string[] ParticleTextureKeys;
         public float[] ParticleSpeed;
         public float[] ParticleRotationSpeed;
         public float[] ParticleRotation;
         public float[] ParticleSize;
         public float[] EmitRate;
+        public int[] EmitCount;
 
         public SpriteFont Font;
         public string ParticleText;
@@ -43,7 +47,7 @@ namespace IdleEngine
         private List<Particle> particles;
         private List<int> particleIndices;
         private ParticleSystemStats stats;
-        private Rectangle[] bounds;
+        private Rectangle[][] bounds;
         private float emitWaitTime;
 
         public ParticleSystem(ParticleSystemStats stats)
@@ -53,7 +57,16 @@ namespace IdleEngine
 
             this.stats = stats;
 
-            bounds = stats.SpawnBounds;
+            bounds = new Rectangle[stats.SpawnBounds.GetLength(0)][];
+
+            for (int i = 0; i < bounds.Length; i++)
+            {
+                bounds[i] = new Rectangle[stats.SpawnBounds[i].Length];
+                for (int j = 0; j < stats.SpawnBounds[i].Length; j++)
+                {
+                    bounds[i][j] = new Rectangle(stats.SpawnBounds[i][j].Location, stats.SpawnBounds[i][j].Size);
+                }
+            }
         }
 
         public float LayerDepth { get; set; }
@@ -110,7 +123,10 @@ namespace IdleEngine
 
             for(int i = 0; i < bounds.Length; i++)
             {
-                bounds[i].Location = stats.SpawnBounds[i].Location + stats.TrackPosition.Invoke().ToPoint();
+                for (int j = 0; j < bounds[i].Length; j++)
+                {
+                    bounds[i][j].Location = stats.SpawnBounds[i][j].Location + stats.TrackPosition.Invoke().ToPoint();
+                }
             }
         }
 
@@ -118,45 +134,64 @@ namespace IdleEngine
         {
             emitWaitTime = stats.EmitRate.Length == 1 ? stats.EmitRate[0] : RandomHelper.Instance.GetFloat(stats.EmitRate[0], stats.EmitRate[1]);
 
-            ParticleStats particleStats = new ParticleStats();
+            int count = stats.EmitCount.Length == 1 ? stats.EmitCount[0] : RandomHelper.Instance.GetInt(stats.EmitCount[0], stats.EmitCount[1]);
 
-            particleStats.ColorDecayRate = stats.ParticleColorDecayRate;
-            particleStats.SizeDecayRate = stats.ParticleSizeDecayRate;
-
-            particleStats.StartColor = stats.ParticleStartColor.Length == 1 ?
-                stats.ParticleStartColor[0] :
-                RandomHelper.Instance.GetColor(stats.ParticleStartColor[0], stats.ParticleStartColor[1]);
-
-            particleStats.EndColor = stats.ParticleEndColor.Length == 1 ?
-                stats.ParticleEndColor[0] :
-                RandomHelper.Instance.GetColor(stats.ParticleEndColor[0], stats.ParticleEndColor[1]);
-
-            particleStats.Position += () =>
+            for (int i = 0; i < count; i++)
             {
-                int ind = RandomHelper.Instance.GetIntExclusive(0, bounds.Length);
-                return RandomHelper.Instance.GetVector2(bounds[ind]);
-            };
+                ParticleStats particleStats = new ParticleStats();
 
-            particleStats.TextureKey = stats.ParticleTextureKey;
-            if (stats.ParticleSize != null)
-                particleStats.Size = stats.ParticleSize.Length == 1 ? stats.ParticleSize[0] : RandomHelper.Instance.GetFloat(stats.ParticleSize[0], stats.ParticleSize[1]);
-            if (stats.ParticleRotationSpeed != null)
-                particleStats.RotationSpeed = stats.ParticleRotationSpeed.Length == 1 ? stats.ParticleRotationSpeed[0] : RandomHelper.Instance.GetFloat(stats.ParticleRotationSpeed[0], stats.ParticleRotationSpeed[1]);
-            if (stats.StartingVelocity != null)
-                particleStats.StartingVelocity = stats.StartingVelocity.Length == 1 ? stats.StartingVelocity[0] : RandomHelper.Instance.GetVector2(stats.StartingVelocity[0], stats.StartingVelocity[1]);
-            particleStats.ActingForce = stats.ActingForce;
-            particleStats.Font = stats.Font;
-            particleStats.ParticleText = stats.ParticleText;
-            if (stats.ParticleRotation != null)
-                particleStats.Rotation = stats.ParticleRotation.Length == 1 ? stats.ParticleRotation[0] : RandomHelper.Instance.GetFloat(stats.ParticleRotation[0], stats.ParticleRotation[1]);
-            if (stats.ParticleSpeed != null)
-                particleStats.Speed = stats.ParticleSpeed.Length == 1 ? stats.ParticleSpeed[0] : RandomHelper.Instance.GetFloat(stats.ParticleSpeed[0], stats.ParticleSpeed[1]);
+                particleStats.ColorDecayRate = stats.ParticleColorDecayRate;
+                particleStats.SizeDecayRate = stats.ParticleSizeDecayRate;
 
-            particleStats.ColorDecayRate = stats.ParticleColorDecayRate;
-            particleStats.SizeDecayRate = stats.ParticleSizeDecayRate;
+                particleStats.StartColor = stats.ParticleStartColor.Length == 1 ?
+                    stats.ParticleStartColor[0] :
+                    RandomHelper.Instance.GetColor(stats.ParticleStartColor[0], stats.ParticleStartColor[1]);
 
-            Particle particle = new Particle(particleStats);
-            particles.Add(particle);
+                particleStats.EndColor = stats.ParticleEndColor.Length == 1 ?
+                    stats.ParticleEndColor[0] :
+                    RandomHelper.Instance.GetColor(stats.ParticleEndColor[0], stats.ParticleEndColor[1]);
+
+                particleStats.Position += () =>
+                {
+                    int ind = stats.CurrentBounds;
+                    int ind2 = 0;
+
+                    if (stats.UseRandomBounds)
+                        ind = RandomHelper.Instance.GetIntExclusive(0, bounds.Length);
+
+                    if (bounds[ind].Length != 0)
+                        ind2 = RandomHelper.Instance.GetIntExclusive(0, bounds[ind].Length);
+
+                    return RandomHelper.Instance.GetVector2(bounds[ind][ind2]);
+                };
+
+                if (stats.ParticleTextureKeys != null)
+                    particleStats.TextureKey = stats.ParticleTextureKeys[RandomHelper.Instance.GetIntExclusive(0, stats.ParticleTextureKeys.Length)];
+                if (stats.ParticleSize != null)
+                    particleStats.Size = stats.ParticleSize.Length == 1 ? stats.ParticleSize[0] : RandomHelper.Instance.GetFloat(stats.ParticleSize[0], stats.ParticleSize[1]);
+                if (stats.ParticleRotationSpeed != null)
+                    particleStats.RotationSpeed = stats.ParticleRotationSpeed.Length == 1 ? stats.ParticleRotationSpeed[0] : RandomHelper.Instance.GetFloat(stats.ParticleRotationSpeed[0], stats.ParticleRotationSpeed[1]);
+                if (stats.StartingVelocity != null)
+                    particleStats.StartingVelocity = stats.StartingVelocity.Length == 1 ? stats.StartingVelocity[0] : RandomHelper.Instance.GetVector2(stats.StartingVelocity[0], stats.StartingVelocity[1]);
+                particleStats.ActingForce = stats.ActingForce;
+                particleStats.Font = stats.Font;
+                particleStats.ParticleText = stats.ParticleText;
+                if (stats.ParticleRotation != null)
+                    particleStats.Rotation = stats.ParticleRotation.Length == 1 ? stats.ParticleRotation[0] : RandomHelper.Instance.GetFloat(stats.ParticleRotation[0], stats.ParticleRotation[1]);
+                if (stats.ParticleSpeed != null)
+                    particleStats.Speed = stats.ParticleSpeed.Length == 1 ? stats.ParticleSpeed[0] : RandomHelper.Instance.GetFloat(stats.ParticleSpeed[0], stats.ParticleSpeed[1]);
+
+                particleStats.ColorDecayRate = stats.ParticleColorDecayRate;
+                particleStats.SizeDecayRate = stats.ParticleSizeDecayRate;
+
+                particleStats.Lifespan = stats.ParticleLifeSpan.Length == 1 ? stats.ParticleLifeSpan[0] : RandomHelper.Instance.GetFloat(stats.ParticleLifeSpan[0], stats.ParticleLifeSpan[1]);
+
+                if (stats.TrackLayerDepth != null)
+                    particleStats.LayerDepth = stats.TrackLayerDepth.Invoke();
+
+                Particle particle = new Particle(particleStats);
+                particles.Add(particle);
+            }
         }
 
         private void CullParticles()
@@ -173,6 +208,33 @@ namespace IdleEngine
         {
             stats.TrackPosition = position;
         }
+
+        public void SetCurrentSpawnBounds(int ind) => stats.CurrentBounds = ind;
+        public void SetStartingVelocity(Vector2[] vectors)
+        {
+            stats.StartingVelocity = vectors;
+            if (vectors.Length > 0)
+                SetParticlesStartingVelocity(RandomHelper.Instance.GetVector2(vectors[0], vectors[1]));
+            else
+                SetParticlesStartingVelocity(vectors[0]);
+        }
+        public void SetParticlesVelocity(Vector2 vector)
+        {
+            foreach (Particle particle in particles)
+            {
+                particle.SetVelocity(vector);
+            }
+        }
+
+        public void SetParticlesStartingVelocity(Vector2 vector)
+        {
+            foreach (Particle particle in particles)
+            {
+                particle.SetStartingVelocity(vector);
+            }
+        }
+
+        public Rectangle[] GetCurrentSpawnBounds() => bounds[stats.CurrentBounds];
 
         /// <summary>
         /// Resets particle list

@@ -41,6 +41,19 @@ namespace IdleEngine
             sb.Draw(pixel, point, null, color, angle, Vector2.Zero, new Vector2(length, thickness), SpriteEffects.None, 0);
         }
 
+        public static void DrawRect(this SpriteBatch sb, Rectangle rect, float thickness, Color color)
+        {
+            Vector2 topLeft = rect.Location.ToVector2();
+            Vector2 topRight = (rect.Location + new Point(rect.Width, 0)).ToVector2();
+            Vector2 bottomRight = (rect.Location + rect.Size).ToVector2();
+            Vector2 bottomLeft = (rect.Location + new Point(0, rect.Height)).ToVector2();
+
+            DrawLine(sb, topLeft, topRight, thickness, color);
+            DrawLine(sb, topRight, bottomRight, thickness, color);
+            DrawLine(sb, bottomRight, bottomLeft, thickness, color);
+            DrawLine(sb, bottomLeft, topLeft, thickness, color);
+        }
+
         #endregion
     }
 }
