@@ -112,7 +112,14 @@ namespace IdleCollector
             {
                 followPlayer = true;
                 camera.SetTranslation(player.Position.ToPoint());
-                player.WorldBounds = worldManager.WorldBounds;
+
+                Rectangle adjustedWorldBounds = worldManager.WorldBounds;
+                adjustedWorldBounds.X += 32;
+                adjustedWorldBounds.Y += 32;
+                adjustedWorldBounds.Width -= 64;
+                adjustedWorldBounds.Height -= 64;
+
+                player.WorldBounds = adjustedWorldBounds;
             });
             Updater.AddToSceneExit(GameScene, () =>
             {
@@ -177,7 +184,14 @@ namespace IdleCollector
             SceneManager.AddToScene(GameScene, worldManager);
             Updater.AddToSceneEnter(GameScene, () =>
             {
-                Renderer.CurrentCamera.SetBounds(worldManager.WorldBounds);
+                Rectangle adjustedWorldBounds = worldManager.WorldBounds;
+                int offset = 4;
+                adjustedWorldBounds.X += offset;
+                adjustedWorldBounds.Y += offset;
+                adjustedWorldBounds.Width -= offset * 2;
+                adjustedWorldBounds.Height -= offset * 2;
+
+                Renderer.CurrentCamera.SetBounds(adjustedWorldBounds);
                 Renderer.CurrentCamera.UseBounds = true;
             });
             Updater.AddToSceneExit(GameScene, () =>

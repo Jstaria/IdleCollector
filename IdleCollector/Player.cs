@@ -57,7 +57,7 @@ namespace IdleCollector
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(spriteSheet, new Rectangle(Position.ToPoint(), Bounds.Size), new Rectangle(64 * CurrentFrame.X, 64 * CurrentFrame.Y, 64, 64), Color.White, 0, Origin, SpriteEffects.None, LayerDepth);
-            sb.Draw(shadow, new Rectangle(Position.ToPoint(), Bounds.Size), null, Color.White, 0, Origin, SpriteEffects.None, LayerDepth - .05f);
+            sb.Draw(shadow, new Rectangle(Position.ToPoint(), Bounds.Size), null, Color.White, 0, Origin, SpriteEffects.None, LayerDepth - .0005f);
 
             if (currentWalkBounds == null) return;
             //foreach (Rectangle rect in walkParticles.GetCurrentSpawnBounds())
@@ -117,7 +117,7 @@ namespace IdleCollector
                 offset = Vector2.Zero;
 
             if (velocity.Length() > 0)
-                walkParticles.SetStartingVelocity(new Vector2[] { -direction + offset, -direction * 2 + offset * 2 });
+                walkParticles.SetStartingVelocity(new Vector2[] { -direction / 2 + offset, -direction + offset * 2 });
 
             velocity = direction * speed;
 
@@ -189,15 +189,15 @@ namespace IdleCollector
             stats.ActingForce = () => new Vector2(0,.1f);
             stats.ParticleSize = new float[] { 1f, 2f };
             stats.ParticleSpeed = new float[] { .5f, 1 };
-            stats.EmitRate = new float[] { .1f };
+            stats.EmitRate = new float[] { .2f };
             stats.EmitCount = new int[] { 1 };
-            stats.ParticleStartColor = new Color[] { new Color(200, 154, 108), new Color(180, 134, 88) };
-            stats.ParticleEndColor = new Color[] { new Color(200, 154, 108), new Color(180, 134, 88) };
+            stats.ParticleStartColor = new Color[] { new Color(71, 44, 22), new Color(89, 58, 33) };
+            stats.ParticleEndColor = new Color[] { new Color(71, 44, 22), new Color(89, 58, 33) };
             stats.MaxParticleCount = 10;
             stats.ParticleColorDecayRate += (float t) => t;
             stats.ParticleSizeDecayRate += (float t) => 1 - t;
             stats.ParticleDespawnDistance = 5000;
-            stats.TrackLayerDepth += () => LayerDepth - .01f;
+            stats.TrackLayerDepth += () => LayerDepth - .0005f;
             stats.TrackPosition += () => Position - Origin;
             stats.ParticleTextureKeys = new string[] { "dust1", "dust2", "dust3", "dust4", "dust5", "dust6", "dust7" };
 

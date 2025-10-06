@@ -21,7 +21,7 @@ namespace IdleEngine
         public float Speed;
 
         public float Lifespan;
-        public float LayerDepth;
+        public GetFloat LayerDepth;
         public string TextureKey;
 
         public Color StartColor;
@@ -81,13 +81,13 @@ namespace IdleEngine
 
         private void DrawString(SpriteBatch sb)
         {
-            sb.DrawString(stats.Font, stats.ParticleText, position, Color.Black * LifeSpan, 0, stats.Font.MeasureString(stats.ParticleText) / 2, size, SpriteEffects.None, stats.LayerDepth);
+            sb.DrawString(stats.Font, stats.ParticleText, position, Color.Black * LifeSpan, 0, stats.Font.MeasureString(stats.ParticleText) / 2, size, SpriteEffects.None, stats.LayerDepth.Invoke());
         }
 
         private void DrawAsset(SpriteBatch sb)
         {
             
-            sb.Draw(texture, position, null, Color.Lerp(stats.StartColor, stats.EndColor, colorDecay), rotationAngle, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), size, SpriteEffects.None, stats.LayerDepth);
+            sb.Draw(texture, position, null, Color.Lerp(stats.StartColor, stats.EndColor, colorDecay), rotationAngle, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), size, SpriteEffects.None, stats.LayerDepth.Invoke());
         }
 
         public void ControlledUpdate(GameTime gameTime)

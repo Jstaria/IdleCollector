@@ -74,7 +74,7 @@ namespace IdleCollector
                 WaveColor = new Color(Color.ToVector3() + new Vector3(value));
             }
             float noiseValue = noise.GetNoise(Position.X + windScroll.X, Position.Y + windScroll.Y);
-            rotSpring.Nudge(noiseValue * .5f);
+            rotSpring.Nudge(noiseValue);
 
             DrawColor = Color.Lerp(WaveColor, Color, ((noiseValue + 1) / 2));
         }

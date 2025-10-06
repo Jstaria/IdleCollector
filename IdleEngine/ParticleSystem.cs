@@ -187,7 +187,7 @@ namespace IdleEngine
                 particleStats.Lifespan = stats.ParticleLifeSpan.Length == 1 ? stats.ParticleLifeSpan[0] : RandomHelper.Instance.GetFloat(stats.ParticleLifeSpan[0], stats.ParticleLifeSpan[1]);
 
                 if (stats.TrackLayerDepth != null)
-                    particleStats.LayerDepth = stats.TrackLayerDepth.Invoke();
+                    particleStats.LayerDepth = stats.TrackLayerDepth;
 
                 Particle particle = new Particle(particleStats);
                 particles.Add(particle);

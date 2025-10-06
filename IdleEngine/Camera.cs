@@ -17,26 +17,10 @@ namespace IdleEngine
             Spring
         }
 
-        public Camera(int ViewWidth, int ViewHeight, float angularFrequency, float dampingRatio)
-        {
-            viewportSize = new Point(ViewWidth, ViewHeight);
-            movementSprings = new[] { 
-                new Spring(angularFrequency, dampingRatio, 0), 
-                new Spring(angularFrequency, dampingRatio, 0) };
-            movementType = MovementType.Spring;
-            Zoom = 1;
-        }
-        public Camera(int ViewWidth, int ViewHeight, float lerpSpeed)
-        {
-            viewportSize = new Point(ViewWidth, ViewHeight);
-            this.lerpSpeed = lerpSpeed;
-            movementType = MovementType.Lerp;
-            Zoom = 1;
-        }
-
         private Point viewportSize;
         private Matrix transform;
         private Spring[] movementSprings;
+        private Spring[] shakeSprings;
         private Point targetPoint = Point.Zero;
         private float lerpSpeed;
         private MovementType movementType;
@@ -54,6 +38,26 @@ namespace IdleEngine
 
         public UpdateType Type { get; set; }
 
+        public Camera(int ViewWidth, int ViewHeight, float angularFrequency, float dampingRatio)
+        {
+            viewportSize = new Point(ViewWidth, ViewHeight);
+            movementSprings = new[] {
+                new Spring(angularFrequency, dampingRatio, 0),
+                new Spring(angularFrequency, dampingRatio, 0) };
+            shakeSprings = new[] {
+                new Spring(angularFrequency, dampingRatio, 0),
+                new Spring(angularFrequency, dampingRatio, 0) };
+            movementType = MovementType.Spring;
+            Zoom = 1;
+        }
+        public Camera(int ViewWidth, int ViewHeight, float lerpSpeed)
+        {
+            viewportSize = new Point(ViewWidth, ViewHeight);
+            this.lerpSpeed = lerpSpeed;
+            movementType = MovementType.Lerp;
+            Zoom = 1;
+        }
+
         public void SetBounds(Rectangle bounds) => Bounds = bounds; 
         private void SetPosition(Point target) => SetPosition(target.X, target.Y);
         private void SetPosition(Vector2 target) => SetPosition((int)target.X, (int)target.Y);
@@ -61,7 +65,7 @@ namespace IdleEngine
         private void SetPosition(int x, int y)
         {
             Matrix position = Matrix.CreateTranslation(-x, -y, 0);
-            Matrix offset = Matrix.CreateTranslation(viewportSize.X / 2 / Zoom, viewportSize.Y / 2 / Zoom, 0);
+            Matrix offset = Matrix.CreateTranslation(viewportSize.X / 2 / Zoom - shakeSprings[0].Position, viewportSize.Y / 2 / Zoom - shakeSprings[1].Position, 0);
             Matrix zoom = Matrix.CreateScale(Zoom);
 
             Position = new Point(-x + viewportSize.X / 2, -y + viewportSize.Y / 2);
@@ -108,6 +112,9 @@ namespace IdleEngine
         {
             Vector2 position = Vector2.Zero;
 
+            foreach (Spring spring in shakeSprings)
+                spring.Update();
+
             switch (movementType)
             {
                 case MovementType.Lerp:
@@ -148,6 +155,15 @@ namespace IdleEngine
         void IUpdatable.SlowUpdate(GameTime gameTime)
         {
 
+        }
+        
+        public void ShakeCamera(float angularFrequency, float dampingRatio, Vector2 nudge)
+        {
+            foreach (Spring spring in shakeSprings)
+                spring.SetValues(angularFrequency, dampingRatio);
+
+            shakeSprings[0].Nudge(nudge.X);
+            shakeSprings[1].Nudge(nudge.Y);
         }
     }
 }

@@ -28,6 +28,7 @@ namespace IdleCollector
         private TilePiece[,] worldFloor;
         private static Rectangle worldBounds;
 
+        private List<Fence> fences;
         private CollisionTree<TilePiece> tileTree;
         private List<TilePiece> activeTiles;
         public Rectangle WorldBounds { get { return worldBounds; } }
@@ -111,6 +112,11 @@ namespace IdleCollector
 
             windParticles.Draw(sb);
 
+            foreach (Fence fence in fences)
+            {
+                sb.Draw(ResourceAtlas.TilemapAtlas, fence.position, fence.sourceRect, Color.White, 0, Vector2.Zero, SpriteEffects.None, fence.LayerDepth);
+            }
+
             //if (tileTree != null)
             //{
             //    tileTree.DrawActiveBounds(sb);
@@ -143,6 +149,7 @@ namespace IdleCollector
             //Debug.WriteLine("{0} spawned flora in a radius of {1} with an area of {2} at ({3})", collider, collider.Radius, MathF.PI * collider.Radius * collider.Radius, collider.Position);
 
             List<TilePiece> tilePieces = tileTree.GetCollidedWith(entity, CollisionCheck.CircleRect);
+            int grownTiles = 0;
 
             for (int i = 0; i < tilePieces.Count; i++)
             {
@@ -150,8 +157,11 @@ namespace IdleCollector
 
                 if (!CollisionHelper.CheckForCollision(entity, tp, CollisionCheck.CircleRect)) continue;
 
-                tp.SpawnFlora(entity, worldBounds);
+                grownTiles += tp.SpawnFlora(entity, worldBounds) ? 1 : 0;
             }
+
+            if (grownTiles > 0)
+                Renderer.CurrentCamera.ShakeCamera(40, .5f, Vector2.Normalize(RandomHelper.Instance.GetVector2(Vector2.One, -Vector2.One))*200);
         }
 
         private void LoadWorldData(string name, string folder)
@@ -243,6 +253,44 @@ namespace IdleCollector
                     worldFloor[i, j].LayerDepth = 0.0f;
                     tileTree.AddChild(worldFloor[i, j], bounds.Location);
                 }
+
+            fences = new();
+
+            for (int i = 0; i < WorldSizeX; i++)
+                for (int j = 0; j < WorldSizeY; j++)
+                {
+                    Fence fence = new Fence();
+                    string accessKey = "";
+                    Vector2 fenceOffset = Vector2.Zero;
+
+                    if (i == 0)
+                        accessKey = "verFence";
+                    if (i == WorldSizeX - 1)
+                        accessKey = "verFence";
+                    if (j == 0)
+                        accessKey = "horFence";
+                    if (j == WorldSizeY - 1)
+                        accessKey = "horFence";
+                    if (i == 0 && j == 0)
+                        accessKey = "TLFence";
+                    if (i == WorldSizeX - 1 && j == 0)
+                        accessKey = "TRFence";
+                    if (i == 0 && j == WorldSizeY - 1)
+                        accessKey = "BLFence";
+                    if (i == WorldSizeX - 1 && j == WorldSizeY - 1)
+                        accessKey = "BRFence";
+
+                    if (accessKey == "") continue;
+
+                    fence.sourceRect = ResourceAtlas.GetRandomTileRect(accessKey);
+                    fence.position = new Rectangle(
+                        (int)(i * TileSize - worldHalfX) + offset.X,
+                        (int)(j * TileSize - worldHalfY) + offset.Y,
+                        TileSize, TileSize);
+                    fence.LayerDepth = j == 0 ? GetLayerDepth(fence.position.Center.Y + fence.position.Height * 1.5f) : .85f;
+
+                    fences.Add(fence);
+                }
         }
 
         public void ChangePlayerLayerDepth(Player player)
@@ -261,4 +309,12 @@ namespace IdleCollector
             return (yPos - worldBounds.Y + 100) / ((float)worldBounds.Height * 4) + float.Epsilon;
         }
     }
+
+    public struct Fence
+    {
+        public Rectangle position;
+        public Rectangle sourceRect;
+        public float LayerDepth;
+    }
 }
+

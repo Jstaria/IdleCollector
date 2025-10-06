@@ -53,7 +53,7 @@ namespace IdleEngine
             return textureCache[name];
         }
 
-        public static void LoadTilemap(ContentManager Content, string tilemapPath, string tilemapKeysPath, Point tilemapResolution)
+        public static void LoadTilemap(ContentManager Content, string tilemapPath, string tilemapKeysPath)
         {
             tilemapAtlasKeys = new Dictionary<string, Dictionary<string, Rectangle>>();
             tilemapAtlas = Content.Load<Texture2D>(tilemapPath);

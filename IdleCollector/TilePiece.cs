@@ -71,11 +71,15 @@ namespace IdleCollector
             }
         }
 
-        public void SpawnFlora(Entity entity, Rectangle worldBounds)
+        public bool SpawnFlora(Entity entity, Rectangle worldBounds)
         {
+            bool affectedTile = false;
+
             foreach (KeyValuePair<EmptyCollider, List<Interactable>> pairs in interactables)
             {
                 if (pairs.Value.Count > 0) continue;
+
+                affectedTile = true;
                 //if (!CollisionHelper.CheckForCollision(collider, pairs.Key)) continue;
 
                 RandomHelper random = RandomHelper.Instance;
@@ -124,6 +128,8 @@ namespace IdleCollector
                     interactables[pairs.Key].Add(grass);
                 }
             }
+
+            return affectedTile;
         }
 
         public void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
