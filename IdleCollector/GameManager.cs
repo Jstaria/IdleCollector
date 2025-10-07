@@ -101,7 +101,8 @@ namespace IdleCollector
                 ResourceAtlas.GetTexture("fox_outline"),
                 screenHalf,
                 new Rectangle(0, 0, 64, 64),
-                new Point(4, 8));
+                new Point(7, 8),
+                8f);
 
             camera = new Camera(screenWidth, screenHeight, 20, 1.25f);
             Renderer.CurrentCamera = camera;

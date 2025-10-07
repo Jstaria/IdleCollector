@@ -19,9 +19,11 @@ namespace IdleCollector
         protected float spawnFrequency;
         protected int prevSpawnTime;
         protected Vector2 velocity;
+        protected float frameSpeed;
 
         public Point FrameCount { get; set; }
         public Point CurrentFrame { get; set; }
+        public Vector2 InBetweenFrame { get; set; }
         public bool IsPlaying { get; set; }
         public UpdateType Type { get; set; }
         public Vector2 Position { get; set; }
@@ -34,6 +36,7 @@ namespace IdleCollector
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
         public Vector2 Origin { get; set; }
+        public float FrameSpeed { get => frameSpeed / 60.0f; set => frameSpeed = value; }
 
         public delegate void EntityWalk(Entity entity);
         public event EntityWalk OnSpawn;

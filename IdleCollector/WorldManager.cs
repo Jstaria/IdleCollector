@@ -189,8 +189,8 @@ namespace IdleCollector
             stats.ParticleSpeed = new float[] { 1, 2.5f };
             stats.EmitRate = new float[] { 0 };
             stats.EmitCount = new int[] { 5, 10 };
-            stats.ParticleStartColor = new Color[] { new Color(230, 184, 138), new Color(210, 164, 118) };
-            stats.ParticleEndColor = new Color[] { new Color(230, 184, 138), new Color(210, 164, 118) };
+            stats.ParticleStartColor = new Color[] { new Color(230, 184, 138) * .5f, new Color(210, 164, 118) * .5f };
+            stats.ParticleEndColor = new Color[] { new Color(230, 184, 138) * .5f, new Color(210, 164, 118) * .5f };
             stats.MaxParticleCount = 50;
             stats.ParticleColorDecayRate += (float t) => t;
             stats.ParticleSizeDecayRate += (float t) => 1 - t;

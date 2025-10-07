@@ -53,7 +53,7 @@ namespace IdleEngine
         public ParticleSystem(ParticleSystemStats stats)
         {
             particleIndices = new List<int>();
-            particles = new List<Particle>();   
+            particles = new List<Particle>();
 
             this.stats = stats;
 
@@ -74,9 +74,16 @@ namespace IdleEngine
 
         public void ControlledUpdate(GameTime gameTime)
         {
-            foreach (Particle particle in particles)
+            for (int i = 0; i < particles.Count; i++)
             {
+                Particle particle = particles[i];
                 particle.ControlledUpdate(gameTime);
+                if (particle.LifeSpan <= 0 ||
+                    Vector2.Distance(particle.position, stats.TrackPosition.Invoke()) > stats.ParticleDespawnDistance)
+                {
+                    particles.Remove(particle);
+                    i--;
+                }
             }
 
             if (particles.Count < stats.MaxParticleCount && emitWaitTime <= 0)
@@ -89,7 +96,7 @@ namespace IdleEngine
 
         public void SlowUpdate(GameTime gameTime)
         {
-            foreach(Particle particle in particles)
+            foreach (Particle particle in particles)
                 particle.SlowUpdate(gameTime);
         }
 
@@ -99,16 +106,9 @@ namespace IdleEngine
             {
                 Particle particle = particles[i];
                 particle.StandardUpdate(gameTime);
-
-                if (particle.LifeSpan <= 0)
-                    particleIndices.Add(i);
-                
-                if (Vector2.Distance(particle.position, stats.TrackPosition.Invoke()) > stats.ParticleDespawnDistance)
-                    particleIndices.Add(i);
             }
 
             UpdateBounds();
-            CullParticles();
         }
 
         public void Draw(SpriteBatch sb)
@@ -121,7 +121,7 @@ namespace IdleEngine
         {
             if (stats.TrackPosition == null) return;
 
-            for(int i = 0; i < bounds.Length; i++)
+            for (int i = 0; i < bounds.Length; i++)
             {
                 for (int j = 0; j < bounds[i].Length; j++)
                 {
@@ -196,12 +196,23 @@ namespace IdleEngine
 
         private void CullParticles()
         {
-            for (int i = 0; i < particleIndices.Count; i++)
-            {
-                particles[particleIndices[i]].Reset();
-            }
+            if (emitWaitTime > 0 || particleIndices.Count == 0 || particles.Count == 0) return;
 
-            particleIndices.Clear();
+            emitWaitTime = stats.EmitRate.Length == 1 ? stats.EmitRate[0] : RandomHelper.Instance.GetFloat(stats.EmitRate[0], stats.EmitRate[1]);
+
+            int count = stats.EmitCount.Length == 1 ? stats.EmitCount[0] : RandomHelper.Instance.GetInt(stats.EmitCount[0], stats.EmitCount[1]);
+            bool greater = count > particleIndices.Count;
+            int emitCount = greater ? particleIndices.Count : count;
+
+            for (int i = 0; i < emitCount; i++)
+            {
+                Particle particle = particles[particleIndices[i]];
+
+                particle.Reset();
+
+                emitCount--;
+                i--;
+            }
         }
 
         public void SwapTrackPosition(GetVector position)

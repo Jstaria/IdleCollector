@@ -20,8 +20,10 @@ namespace IdleCollector
         private Dictionary<Vector2, KeyValuePair<int, Rectangle[]>> playerWalkBounds;
         private Rectangle[] currentWalkBounds;
         private Texture2D shadow;
+        private bool wasWalking;
+        private int lastWalkingFrameY;
 
-        public Player(Texture2D spriteSheet, Point position, Rectangle bounds, Point frameCount)
+        public Player(Texture2D spriteSheet, Point position, Rectangle bounds, Point frameCount, float frameSpeed)
         {
             this.spriteSheet = spriteSheet;
             this.Position = position.ToVector2();
@@ -30,6 +32,7 @@ namespace IdleCollector
             this.Type = UpdateType.Controlled;
             this.CollisionType = CollisionType.Circle;
             this.Origin = new Vector2(bounds.Width / 2, bounds.Height * .65f);
+            this.frameSpeed = frameSpeed;
             LoadPlayerData("PlayerData", "SaveData");
             shadow = ResourceAtlas.GetTexture("shadow");
         }
@@ -45,8 +48,8 @@ namespace IdleCollector
         }
 
         public override void StandardUpdate(GameTime gameTime)
-        { 
-            walkParticles.StandardUpdate(gameTime); 
+        {
+            walkParticles.StandardUpdate(gameTime);
         }
 
         public override void SlowUpdate(GameTime gameTime)
@@ -73,7 +76,7 @@ namespace IdleCollector
             prevSpawnTime++;
 
             if (prevSpawnTime < spawnFrequency * 60) return;
-            
+
             prevSpawnTime = 0;
             InvokeOnSpawn(this);
         }
@@ -126,30 +129,50 @@ namespace IdleCollector
 
         private void SetSpriteDirection(bool[] bools)
         {
-            if (bools[0])
+
+            wasWalking = bools.Contains(true);
+
+            if (wasWalking)
             {
-                SetFrame(CurrentFrame.X, 2);
-                if (bools[1]) SetFrame(CurrentFrame.X, 4);
-                if (bools[3]) SetFrame(CurrentFrame.X, 5);
+                Vector2 betweenFrame = this.InBetweenFrame;
+                betweenFrame.X += FrameSpeed;
+                InBetweenFrame = betweenFrame;
+
+                float CurrentFrameX = 1 + ((betweenFrame.X % (FrameCount.X - 1)));
+
+                Debug.WriteLine((int)CurrentFrameX);
+
+                if (bools[0])
+                {
+                    SetFrame((int)CurrentFrameX, 2);
+                    if (bools[1]) SetFrame((int)CurrentFrameX, 4);
+                    if (bools[3]) SetFrame((int)CurrentFrameX, 5);
+                }
+                if (bools[2])
+                {
+                    SetFrame((int)CurrentFrameX, 3);
+                    if (bools[1]) SetFrame((int)CurrentFrameX, 6);
+                    if (bools[3]) SetFrame((int)CurrentFrameX, 7);
+                }
+                if (bools[1])
+                {
+                    SetFrame((int)CurrentFrameX, 0);
+                    if (bools[0]) SetFrame((int)CurrentFrameX, 4);
+                    if (bools[2]) SetFrame((int)CurrentFrameX, 6);
+                }
+                if (bools[3])
+                {
+                    SetFrame((int)CurrentFrameX, 1);
+                    if (bools[0]) SetFrame((int)CurrentFrameX, 5);
+                    if (bools[2]) SetFrame((int)CurrentFrameX, 7);
+                }
             }
-            else if (bools[2])
+            else
             {
-                SetFrame(CurrentFrame.X, 3);
-                if (bools[1]) SetFrame(CurrentFrame.X, 6);
-                if (bools[3]) SetFrame(CurrentFrame.X, 7);
+                SetFrame(0, lastWalkingFrameY);
             }
-            else if (bools[1])
-            {
-                SetFrame(CurrentFrame.X, 0);
-                if (bools[0]) SetFrame(CurrentFrame.X, 4);
-                if (bools[2]) SetFrame(CurrentFrame.X, 6);
-            }
-            else if (bools[3])
-            {
-                SetFrame(CurrentFrame.X, 1);
-                if (bools[0]) SetFrame(CurrentFrame.X, 5);
-                if (bools[2]) SetFrame(CurrentFrame.X, 7);
-            }
+            
+            lastWalkingFrameY = (int)CurrentFrame.Y;
         }
 
         private void LoadPlayerData(string name, string folder)
@@ -170,32 +193,32 @@ namespace IdleCollector
             Rectangle[] horizontal = new Rectangle[] { new Rectangle(21, 42, 22, 6) };
             Rectangle[] diagonalTL = new Rectangle[] { new Rectangle(24, 35, 13, 5), new Rectangle(32, 43, 13, 5) };
 
-            playerWalkBounds.Add(Vector2.UnitY, new KeyValuePair<int, Rectangle[]>(0,vertical));
-            playerWalkBounds.Add(Vector2.UnitX, new KeyValuePair<int, Rectangle[]>(1,horizontal));
-            playerWalkBounds.Add(-Vector2.UnitY, new KeyValuePair<int, Rectangle[]>(2,vertical));
-            playerWalkBounds.Add(-Vector2.UnitX, new KeyValuePair<int, Rectangle[]>(3,horizontal));
-            playerWalkBounds.Add(Vector2.One, new KeyValuePair<int, Rectangle[]>(4,diagonalTL));
-            playerWalkBounds.Add(new Vector2(1, -1), new KeyValuePair<int, Rectangle[]>(5,diagonalTR));
-            playerWalkBounds.Add(-Vector2.One, new KeyValuePair<int, Rectangle[]>(6,diagonalTL));
+            playerWalkBounds.Add(Vector2.UnitY, new KeyValuePair<int, Rectangle[]>(0, vertical));
+            playerWalkBounds.Add(Vector2.UnitX, new KeyValuePair<int, Rectangle[]>(1, horizontal));
+            playerWalkBounds.Add(-Vector2.UnitY, new KeyValuePair<int, Rectangle[]>(2, vertical));
+            playerWalkBounds.Add(-Vector2.UnitX, new KeyValuePair<int, Rectangle[]>(3, horizontal));
+            playerWalkBounds.Add(Vector2.One, new KeyValuePair<int, Rectangle[]>(4, diagonalTL));
+            playerWalkBounds.Add(new Vector2(1, -1), new KeyValuePair<int, Rectangle[]>(5, diagonalTR));
+            playerWalkBounds.Add(-Vector2.One, new KeyValuePair<int, Rectangle[]>(6, diagonalTL));
             playerWalkBounds.Add(-new Vector2(1, -1), new KeyValuePair<int, Rectangle[]>(7, diagonalTR));
-            playerWalkBounds.Add(new Vector2(0, 0), new KeyValuePair<int, Rectangle[]>(8 ,new Rectangle[] { new Rectangle(4000, 0, 10, 10) }));
+            playerWalkBounds.Add(new Vector2(0, 0), new KeyValuePair<int, Rectangle[]>(8, new Rectangle[] { new Rectangle(4000, 0, 10, 10) }));
         }
 
         private void InitializeParticles()
         {
             ParticleSystemStats stats = new ParticleSystemStats();
 
-            stats.StartingVelocity = new Vector2[] { -velocity + new Vector2(0,-1f)};
-            stats.ActingForce = () => new Vector2(0,.1f);
+            stats.StartingVelocity = new Vector2[] { new Vector2(0, -1f) };
+            stats.ActingForce = () => new Vector2(0, .1f);
             stats.ParticleSize = new float[] { 1f, 2f };
             stats.ParticleSpeed = new float[] { .5f, 1 };
-            stats.EmitRate = new float[] { .2f };
+            stats.EmitRate = new float[] { FrameSpeed * 2 };
             stats.EmitCount = new int[] { 1 };
-            stats.ParticleStartColor = new Color[] { new Color(71, 44, 22), new Color(89, 58, 33) };
-            stats.ParticleEndColor = new Color[] { new Color(71, 44, 22), new Color(89, 58, 33) };
+            stats.ParticleStartColor = new Color[] { new Color(71, 44, 22, 255), new Color(89, 58, 33, 255) };
+            stats.ParticleEndColor = new Color[] { new Color(71, 44, 22) * 0f, new Color(89, 58, 33) * 0f };
             stats.MaxParticleCount = 10;
-            stats.ParticleColorDecayRate += (float t) => t;
-            stats.ParticleSizeDecayRate += (float t) => 1 - t;
+            stats.ParticleColorDecayRate += (float t) => MathF.Pow(t, .5f);
+            stats.ParticleSizeDecayRate += (float t) => 1;
             stats.ParticleDespawnDistance = 5000;
             stats.TrackLayerDepth += () => LayerDepth - .0005f;
             stats.TrackPosition += () => Position - Origin;
