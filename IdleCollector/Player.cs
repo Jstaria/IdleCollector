@@ -16,6 +16,8 @@ namespace IdleCollector
 {
     internal class Player : Entity
     {
+        private Trail playerTrail;
+
         private ParticleSystem walkParticles;
         private Dictionary<Vector2, KeyValuePair<int, Rectangle[]>> playerWalkBounds;
         private Rectangle[] currentWalkBounds;
@@ -45,6 +47,7 @@ namespace IdleCollector
             InvokeOnMove(this);
 
             walkParticles.ControlledUpdate(gameTime);
+            playerTrail.ControlledUpdate(gameTime);
         }
 
         public override void StandardUpdate(GameTime gameTime)
@@ -68,6 +71,7 @@ namespace IdleCollector
             //    sb.DrawRect(rect, 2, Color.Red);
             //}
 
+            playerTrail.Draw(sb);
             walkParticles.Draw(sb);
         }
 
@@ -140,8 +144,6 @@ namespace IdleCollector
 
                 float CurrentFrameX = 1 + ((betweenFrame.X % (FrameCount.X - 1)));
 
-                Debug.WriteLine((int)CurrentFrameX);
-
                 if (bools[0])
                 {
                     SetFrame((int)CurrentFrameX, 2);
@@ -206,6 +208,14 @@ namespace IdleCollector
 
         private void InitializeParticles()
         {
+            TrailInfo info = new TrailInfo();
+            info.TrackPosition = () => Position;
+            info.TrackLayerDepth = () => LayerDepth - .005f;
+            info.NumberOfSegments = 100;
+            info.SegmentSpawnTime = .005f;
+
+            playerTrail = new Trail(info);
+
             ParticleSystemStats stats = new ParticleSystemStats();
 
             stats.StartingVelocity = new Vector2[] { new Vector2(0, -1f) };

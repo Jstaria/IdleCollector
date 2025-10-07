@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
-    public delegate float Curve(float t);
-
     public struct ParticleStats
     {
         public GetVector Position;

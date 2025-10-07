@@ -10,9 +10,6 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
-    public delegate Vector2 GetVector();
-    public delegate float GetFloat();
-
     public struct ParticleSystemStats
     {
         public Vector2[] StartingVelocity;

@@ -12,42 +12,78 @@ namespace IdleEngine
     {
         public int TipWidth;
         public int EndWidth;
-        public float TailLength;
+        public float SegmentSpawnTime;
         public int NumberOfSegments;
         public GetVector TrackPosition;
+        public Curve<Color> SegmentColor;
+        public GetFloat TrackLayerDepth;
 
-        public class Trail : IUpdatable, IRenderable
+        public TrailInfo()
         {
-            private Stack<Vector2> tailPoints;
-            private TrailInfo info;
+            NumberOfSegments = 20;
+            TipWidth = 10;
+            EndWidth = 1;
+            SegmentSpawnTime = .1f;
+            TrackPosition = () => { return Vector2.Zero; };
+            SegmentColor = (t) => { return Color.White * (t*t); };
+            TrackLayerDepth = () => { return 0; };
+        }
+    }
 
-            public float LayerDepth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-            public Color Color { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public class Trail : IUpdatable, IRenderable
+    {
+        private Queue<Vector2> trailPoints;
+        private TrailInfo info;
+        private float spawnTime;
 
-            public Trail(TrailInfo info)
+        public float LayerDepth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Color Color { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public Trail(TrailInfo info)
+        {
+            this.info = info;
+            trailPoints = new Queue<Vector2>();
+        }
+
+        public void ControlledUpdate(GameTime gameTime)
+        {
+            spawnTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (spawnTime < 0)
             {
-                this.info = info;
-            }
+                if (trailPoints.Count == info.NumberOfSegments)
+                    trailPoints.Dequeue();
 
-            public void ControlledUpdate(GameTime gameTime)
+                trailPoints.Enqueue(info.TrackPosition());
+                spawnTime = info.SegmentSpawnTime;
+            }
+        }
+
+        public void Draw(SpriteBatch sb)
+        {
+            Vector2[] points = trailPoints.ToArray();
+
+            for (int i = 0; i < points.Length; i++)
             {
+                int i2 = (i + 1) % points.Length;
+                if (i2 == 0) continue;
 
+                float t = i / (float)points.Length;
+                float thickness = MathHelper.Clamp(t * info.TipWidth, info.EndWidth, info.TipWidth);
+                sb.DrawCircle(points[i], thickness / 2, 10, info.SegmentColor(t), info.TrackLayerDepth());
+
+                sb.DrawLineCentered(points[i], points[i2], thickness, info.SegmentColor(t), info.TrackLayerDepth());
             }
+        }
 
-            public void Draw(SpriteBatch sb)
-            {
+        public void SlowUpdate(GameTime gameTime)
+        {
 
-            }
+        }
 
-            public void SlowUpdate(GameTime gameTime)
-            {
+        public void StandardUpdate(GameTime gameTime)
+        {
 
-            }
-
-            public void StandardUpdate(GameTime gameTime)
-            {
-
-            }
         }
     }
 }
