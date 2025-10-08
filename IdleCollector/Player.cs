@@ -144,30 +144,34 @@ namespace IdleCollector
 
                 float CurrentFrameX = 1 + ((betweenFrame.X % (FrameCount.X - 1)));
 
-                if (bools[0])
-                {
-                    SetFrame((int)CurrentFrameX, 2);
-                    if (bools[1]) SetFrame((int)CurrentFrameX, 4);
-                    if (bools[3]) SetFrame((int)CurrentFrameX, 5);
-                }
-                if (bools[2])
-                {
-                    SetFrame((int)CurrentFrameX, 3);
-                    if (bools[1]) SetFrame((int)CurrentFrameX, 6);
-                    if (bools[3]) SetFrame((int)CurrentFrameX, 7);
-                }
-                if (bools[1])
-                {
-                    SetFrame((int)CurrentFrameX, 0);
-                    if (bools[0]) SetFrame((int)CurrentFrameX, 4);
-                    if (bools[2]) SetFrame((int)CurrentFrameX, 6);
-                }
-                if (bools[3])
-                {
-                    SetFrame((int)CurrentFrameX, 1);
-                    if (bools[0]) SetFrame((int)CurrentFrameX, 5);
-                    if (bools[2]) SetFrame((int)CurrentFrameX, 7);
-                }
+                bool up = bools[0];
+                bool left = bools[1];
+                bool down = bools[2];
+                bool right = bools[3];
+
+                // Resolve opposing inputs
+                bool verticalUp = up && !down;
+                bool verticalDown = down && !up;
+                bool horizontalLeft = left && !right;
+                bool horizontalRight = right && !left;
+
+                // 8-direction logic
+                if (verticalUp && horizontalLeft)
+                    SetFrame((int)CurrentFrameX, 4);      // Up-Left
+                else if (verticalUp && horizontalRight)
+                    SetFrame((int)CurrentFrameX, 5);      // Up-Right
+                else if (verticalDown && horizontalLeft)
+                    SetFrame((int)CurrentFrameX, 6);      // Down-Left
+                else if (verticalDown && horizontalRight)
+                    SetFrame((int)CurrentFrameX, 7);      // Down-Right
+                else if (verticalUp)
+                    SetFrame((int)CurrentFrameX, 2);      // Up
+                else if (verticalDown)
+                    SetFrame((int)CurrentFrameX, 3);      // Down
+                else if (horizontalLeft)
+                    SetFrame((int)CurrentFrameX, 0);      // Left
+                else if (horizontalRight)
+                    SetFrame((int)CurrentFrameX, 1);      // Right
             }
             else
             {
@@ -209,10 +213,15 @@ namespace IdleCollector
         private void InitializeParticles()
         {
             TrailInfo info = new TrailInfo();
-            info.TrackPosition = () => Position;
+            info.TrackPosition = () => Input.GetMousePos().ToVector2();
             info.TrackLayerDepth = () => LayerDepth - .005f;
-            info.NumberOfSegments = 100;
-            info.SegmentSpawnTime = .005f;
+            info.NumberOfSegments = 500;
+            info.TrailLength = 400;
+            info.SegmentsPerSecond = (float)info.NumberOfSegments * .5f;
+            info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .95f;
+            info.SegmentColor = (t) => { return Color.White; };
+            info.TipWidth = 10;
+            info.EndWidth = 0;
 
             playerTrail = new Trail(info);
 

@@ -12,18 +12,22 @@ namespace IdleEngine
     {
         public int TipWidth;
         public int EndWidth;
-        public float SegmentSpawnTime;
+        public float TrailLength;
         public int NumberOfSegments;
         public GetVector TrackPosition;
         public Curve<Color> SegmentColor;
         public GetFloat TrackLayerDepth;
+        public float SegmentsPerSecond;
+        public float SegmentsRemovedPerSecond;
 
         public TrailInfo()
         {
             NumberOfSegments = 20;
+            SegmentsPerSecond = 12;
+            SegmentsRemovedPerSecond = 10;
             TipWidth = 10;
             EndWidth = 1;
-            SegmentSpawnTime = .1f;
+            TrailLength = 100f;
             TrackPosition = () => { return Vector2.Zero; };
             SegmentColor = (t) => { return Color.White * (t*t); };
             TrackLayerDepth = () => { return 0; };
@@ -34,7 +38,8 @@ namespace IdleEngine
     {
         private Queue<Vector2> trailPoints;
         private TrailInfo info;
-        private float spawnTime;
+        private float removeCount;
+        private float addCount;
 
         public float LayerDepth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color Color { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -47,16 +52,62 @@ namespace IdleEngine
 
         public void ControlledUpdate(GameTime gameTime)
         {
-            spawnTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (spawnTime < 0)
-            {
-                if (trailPoints.Count == info.NumberOfSegments)
-                    trailPoints.Dequeue();
-
+            if (trailPoints.Count == 0)
                 trailPoints.Enqueue(info.TrackPosition());
-                spawnTime = info.SegmentSpawnTime;
+            else
+            {
+                Vector2[] points = trailPoints.ToArray();
+
+                if (points.Length > 0 && points[0] != info.TrackPosition())
+                {
+                    while (addCount >= 1f)
+                    {
+                        addCount--;
+                        trailPoints.Enqueue(info.TrackPosition());
+                    }
+
+                    addCount += info.SegmentsPerSecond * dt;
+                    addCount = MathF.Min(addCount, info.SegmentsPerSecond);
+                }
+
+                float distance = 0;
+
+                if (points.Length <= 1) return;
+
+                int dequeueAmt = 0;
+
+                for (int i = 0; i < points.Length; i++)
+                {
+                    if ((i + 1) % points.Length == 0) break;
+
+                    distance += Vector2.Distance(points[i], points[i + 1]);
+                    if (distance > info.TrailLength)
+                    {
+                        dequeueAmt = points.Length - i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < dequeueAmt; i++)
+                {
+                    trailPoints.Dequeue();
+                }
             }
+
+            while (removeCount >= 1f && trailPoints.Count > 0)
+            {
+                removeCount--;
+                trailPoints.Dequeue();
+            }
+
+            if (trailPoints.Count > 0)
+            {
+                removeCount += info.SegmentsRemovedPerSecond * dt;
+                removeCount = MathF.Min(removeCount, info.SegmentsRemovedPerSecond);
+            }
+            
         }
 
         public void Draw(SpriteBatch sb)
@@ -66,12 +117,13 @@ namespace IdleEngine
             for (int i = 0; i < points.Length; i++)
             {
                 int i2 = (i + 1) % points.Length;
-                if (i2 == 0) continue;
 
                 float t = i / (float)points.Length;
                 float thickness = MathHelper.Clamp(t * info.TipWidth, info.EndWidth, info.TipWidth);
-                sb.DrawCircle(points[i], thickness / 2, 10, info.SegmentColor(t), info.TrackLayerDepth());
-
+                sb.DrawCircle(points[i], thickness / 2, info.SegmentColor(t), info.TrackLayerDepth());
+                
+                if (i2 == 0) continue;
+                
                 sb.DrawLineCentered(points[i], points[i2], thickness, info.SegmentColor(t), info.TrackLayerDepth());
             }
         }

@@ -13,10 +13,14 @@ namespace IdleEngine
     {
         private static Texture2D pixel;
 
+        private static Texture2D cachedCircle;
+
         public static void Initialize(SpriteBatch sb)
         {
             pixel = new Texture2D(sb.GraphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
+
+            cachedCircle = CreateCircleTexture(sb.GraphicsDevice, 100);
         }
 
         #region Line
@@ -66,6 +70,48 @@ namespace IdleEngine
                 edgePos = new Vector2(MathF.Cos(angle) * radius, MathF.Sin(angle) * radius) + centerPoint;
             }
         }
+
+        public static void DrawCircle(this SpriteBatch sb, Vector2 centerPoint, float radius, Color color, float layerDepth = 0)
+        {
+            //if (!cachedCircles.ContainsKey(radius))
+            //    cachedCircles.Add(radius, CreateCircleTexture(sb.GraphicsDevice, radius));
+            float texRadius = cachedCircle.Width / 2f; 
+            float scale = radius / texRadius;          
+
+            Vector2 origin = new Vector2(texRadius);   
+            Vector2 drawPos = centerPoint;             
+
+            sb.Draw(cachedCircle, drawPos, null, color, 0f, origin, scale, SpriteEffects.None, layerDepth);
+        }
+
+        private static Texture2D CreateCircleTexture(GraphicsDevice graphicsDevice, int radius)
+        {
+            int diameter = radius * 2;
+            Texture2D texture = new Texture2D(graphicsDevice, diameter, diameter);
+
+            Color[] data = new Color[diameter * diameter];
+            Vector2 center = new Vector2(radius, radius);
+            float radiusSquared = radius * radius;
+
+            for (int y = 0; y < diameter; y++)
+            {
+                for (int x = 0; x < diameter; x++)
+                {
+                    int index = y * diameter + x;
+                    Vector2 pos = new Vector2(x, y);
+                    float distSq = Vector2.DistanceSquared(pos, center);
+
+                    if (distSq <= radiusSquared)
+                        data[index] = Color.White;
+                    else
+                        data[index] = Color.Transparent;
+                }
+            }
+
+            texture.SetData(data);
+            return texture;
+        }
+
 
         public static void DrawRect(this SpriteBatch sb, Rectangle rect, float thickness, Color color)
         {
