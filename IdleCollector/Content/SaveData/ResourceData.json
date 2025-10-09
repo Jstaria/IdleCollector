@@ -1,0 +1,41 @@
+{
+  "resources": {
+    "cactus": {
+      "Count": 3017,
+      "Name": "cactus",
+      "IsUnlocked": true,
+      "IconTextureKey": "cactusIcon",
+      "ResourceColor": {
+        "B": 0,
+        "G": 255,
+        "R": 0,
+        "A": 255
+      }
+    },
+    "flower": {
+      "Count": 0,
+      "Name": "flower",
+      "IsUnlocked": true,
+      "IconTextureKey": "flowerIcon",
+      "ResourceColor": {
+        "B": 255,
+        "G": 0,
+        "R": 255,
+        "A": 255
+      }
+    },
+    "tree": {
+      "Count": 0,
+      "Name": "tree",
+      "IsUnlocked": true,
+      "IconTextureKey": "treeIcon",
+      "ResourceColor": {
+        "B": 143,
+        "G": 212,
+        "R": 255,
+        "A": 255
+      }
+    }
+  },
+  "Position": "20, 1060"
+}

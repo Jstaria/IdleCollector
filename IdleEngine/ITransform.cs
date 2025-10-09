@@ -12,6 +12,6 @@ namespace IdleEngine
         public Vector2 Position { get; protected set; }
         
         public void Move(Vector2 direction);
-        public void MoveTo(Point position);
+        public void MoveTo(Vector2 position);
     }
 }

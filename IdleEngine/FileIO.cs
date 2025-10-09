@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Nodes;
+using Newtonsoft.Json;
 
 // FileIO class that allows the saving to and freading from documents created in or out of project
 
@@ -104,6 +107,27 @@ namespace IdleCollector
             return ReadFrom(stream);
         }
 
+        public static string ReadFromFile(string name, string folder, string fileType)
+        {
+            string stream = String.Format("../../../Content/{0}/{1}.{2}", folder, name, fileType);
+            return ReadFromFile(stream);
+        }
+
+        public static string ReadFromFile(string path)
+        {
+            string stream = path;
+            string data = "";
+
+            StreamReader fileReader = new StreamReader(stream);
+
+            data = fileReader.ReadToEnd();
+
+            if (fileReader != null)
+                fileReader.Close();
+
+            return data;
+        }
+
         /// <summary>
         /// Returns a list of string information from document 
         /// </summary>
@@ -175,6 +199,20 @@ namespace IdleCollector
                 }
                 catch { }
             }
+        }
+
+        public static void ReadJsonInto<T>(T instance, string jsonPath)
+        {
+            string jsonString = File.ReadAllText(jsonPath);
+
+            JsonConvert.PopulateObject(jsonString, instance);
+        }
+
+        public static void WriteJsonTo<T>(T instance, string path, Formatting format)
+        {
+            string json = JsonConvert.SerializeObject(instance, format);
+
+            File.WriteAllText(path, json);
         }
     }
 }

@@ -51,7 +51,7 @@ namespace IdleCollector
         public abstract void Draw(SpriteBatch sb);
 
         public virtual void Move(Vector2 direction) => Position += direction;
-        public virtual void MoveTo(Point position) => Position = position.ToVector2();
+        public virtual void MoveTo(Vector2 position) => Position = position;
         public virtual void NextFrame() => CurrentFrame = new Point((CurrentFrame.X + 1) % FrameCount.X, CurrentFrame.Y);
         public virtual void PrevFrame() => CurrentFrame = new Point((CurrentFrame.X - 1) % FrameCount.X, CurrentFrame.Y);
         public virtual void Pause() => IsPlaying = false;

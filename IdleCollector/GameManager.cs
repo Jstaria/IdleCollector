@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -47,8 +48,17 @@ namespace IdleCollector
         #endregion
 
         private WorldManager worldManager;
-
+        private ResourceManager resourceManager;
         private Trail trail;
+
+        protected delegate void SaveData();
+        protected delegate void ResetData();
+
+        protected event SaveData Save;
+        protected event ResetData Reset;
+
+        private float saveDelay = 30;
+        private float saveTimer;
 
         public GameManager()
         {
@@ -56,6 +66,7 @@ namespace IdleCollector
 
             SetupGameScene(GameScene);
             SetupWorld();
+            SetupResources();
             SetupPlayer();
             SetupPause();
         }
@@ -74,6 +85,8 @@ namespace IdleCollector
                 Updater.ControlledUpdateCount--;
 
             camera.Zoom -= Input.GetMouseScrollDelta() * .1f;
+
+            SaveHeartbeat(gameTime);
         }
 
         public void SlowUpdate(GameTime gameTime)
@@ -89,13 +102,13 @@ namespace IdleCollector
         private void SetupGameScene(string sceneName)
         {
             SceneManager.AddScene(sceneName);
-            SceneManager.AddToScene(sceneName, this);
+            SceneManager.AddToIndependent(this);
 
             SpriteFont font = ResourceAtlas.GetFont("DePixelHalbfett");
-            string msg = "Hey Everyone!";
+            string msg = "Hey Everyone! 32165";
             Vector2 offset = font.MeasureString(msg) / 2;
 
-            Renderer.AddToSceneUIDraw((sb) => { sb.DrawString(font, msg, new Vector2(100, 100) + offset, Color.Black, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f); });
+            Renderer.AddToSceneUIDraw((sb) => { sb.DrawString(font, msg, new Vector2(100, 100) + offset, Color.Black, 0, Vector2.Zero, .75f, SpriteEffects.None, .95f); });
         }
 
         private void SetupPlayer()
@@ -204,6 +217,15 @@ namespace IdleCollector
 
         }
 
+        private void SetupResources()
+        {
+            resourceManager = new();
+            AddToSaveable(resourceManager);
+
+            Updater.AddToSceneEnter(GameScene, () => resourceManager.MoveTo(new Vector2(20, Renderer.UIBounds.Height - 20)));
+            Renderer.AddToSceneUIDraw(GameScene, resourceManager);
+        }
+
         private void SetupWorld()
         {
             worldManager = new WorldManager();
@@ -224,6 +246,22 @@ namespace IdleCollector
             {
                 Renderer.CurrentCamera.UseBounds = false;
             });
+        }
+
+        private void AddToSaveable(ISaveable saveable)
+        {
+            Save += saveable.Save;
+            Reset += saveable.Reset;
+        }
+
+        private void SaveHeartbeat(GameTime gameTime)
+        {
+            saveTimer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (saveTimer > 0) return;
+
+            saveTimer = saveDelay;
+            Save?.Invoke();
         }
     }
 }
