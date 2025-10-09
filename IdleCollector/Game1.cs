@@ -45,9 +45,9 @@ namespace IdleCollector
 
         protected override void LoadContent()
         {
-            ResourceAtlas.LoadTilemap(Content, "Textures/atlas", "../../../Content/Textures/atlasKeys.txt");
+            ResourceAtlas.LoadTilemap(Content, "../../../Content/Textures/atlasKeys.txt", "Textures/atlas");
             ResourceAtlas.LoadTextures(Content, "../../../Content/Textures/", "Textures");
-
+            ResourceAtlas.LoadFonts(Content, "../../../Content/Fonts/", "Fonts");
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
@@ -65,7 +65,7 @@ namespace IdleCollector
         protected void LoadButtons()
         {
             ButtonConfig config = new ButtonConfig();
-            config.bounds = new Rectangle(10, 50, 192, 64);
+            config.bounds = new Rectangle(10 * Renderer.UIScaler.X, 50 * Renderer.UIScaler.Y, 192 * Renderer.UIScaler.X, 64 * Renderer.UIScaler.Y);
             config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
 
             button = new Button(config);

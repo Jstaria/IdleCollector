@@ -56,6 +56,8 @@ namespace IdleEngine
                 return new Rectangle(ScaledTopLeftCorner, scaledSize); 
             } 
         }
+        public static Rectangle UIBounds => new Rectangle(0, 0, 1920, 1080);
+        public static Point UIScaler => new Point(UIBounds.Width / RenderSize.X, UIBounds.Height / RenderSize.Y);
 
         public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {
@@ -70,7 +72,8 @@ namespace IdleEngine
                 new Point(_graphics.GraphicsDevice.DisplayMode.Width, _graphics.GraphicsDevice.DisplayMode.Height) :
                 new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             renderTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
-            uiTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
+
+            uiTexture = new RenderTarget2D(_graphics.GraphicsDevice, UIBounds.Width, UIBounds.Height);
             renderTexConfig = new BatchConfig(
                 SpriteSortMode.FrontToBack,
                 BlendState.AlphaBlend,
@@ -298,12 +301,10 @@ namespace IdleEngine
         public static Texture2D GetLastRender()
         {
             Texture2D tempTexture = new Texture2D(_graphics.GraphicsDevice, renderTexture.Width, renderTexture.Height);
+            RenderTarget2D target = finalTexture != null ? finalTexture : renderTexture;
 
-            if (uiTexture != null)
-            {
-                uiTexture.GetData(colorData);
-                tempTexture.SetData(colorData);
-            }
+            target.GetData(colorData);
+            tempTexture.SetData(colorData);
 
             return tempTexture;
         }

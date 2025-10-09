@@ -55,12 +55,17 @@ namespace IdleEngine
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (trailPoints.Count == 0)
+            {
+                addCount = 0;
                 trailPoints.Enqueue(info.TrackPosition());
+            }
             else
             {
                 Vector2[] points = trailPoints.ToArray();
 
-                if (points.Length > 0 && points[0] != info.TrackPosition())
+                float segmentPosition = info.TrailLength / info.NumberOfSegments;
+
+                if (points.Length > 0 && points[0] != info.TrackPosition() && Vector2.Distance(points[0], info.TrackPosition()) >= segmentPosition)
                 {
                     while (addCount >= 1f)
                     {
@@ -102,10 +107,14 @@ namespace IdleEngine
                 trailPoints.Dequeue();
             }
 
-            if (trailPoints.Count > 0)
+            if (trailPoints.Count > 1)
             {
                 removeCount += info.SegmentsRemovedPerSecond * dt;
                 removeCount = MathF.Min(removeCount, info.SegmentsRemovedPerSecond);
+            }
+            else
+            {
+                removeCount = 0;
             }
             
         }

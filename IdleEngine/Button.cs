@@ -73,7 +73,7 @@ namespace IdleCollector
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
 
-            if (!bounds.Contains(Input.GetMousePos())) return;
+            if (!bounds.Contains(Input.GetMousePos() * Renderer.UIScaler)) return;
             
             sound?.Play();
 

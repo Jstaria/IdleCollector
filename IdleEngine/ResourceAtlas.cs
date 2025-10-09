@@ -27,6 +27,9 @@ namespace IdleEngine
         private static Dictionary<string, SoundEffect> soundEffects;
         private static Dictionary<string, Song> songs;
 
+        // Fonts
+        private static Dictionary<string, SpriteFont> fonts;
+
         public static Dictionary<string, Dictionary<string, Rectangle>> TilemapAtlasKeys { get => tilemapAtlasKeys; }
         public static Texture2D TilemapAtlas { get => tilemapAtlas; }
         public static Rectangle GetTileRect(string accessKey, string tileName)
@@ -48,12 +51,19 @@ namespace IdleEngine
         }
         public static Texture2D GetTexture(string name)
         {
-            if (!textureCache.ContainsKey(name)) throw new Exception(string.Format("Texture cache does not contain: {0}", name));
+            if (!textureCache.ContainsKey(name)) throw new Exception(string.Format("Resource atlas does not contain texture!: {0}", name));
 
             return textureCache[name];
         }
 
-        public static void LoadTilemap(ContentManager Content, string tilemapPath, string tilemapKeysPath)
+        public static SpriteFont GetFont(string name)
+        {
+            if (!fonts.ContainsKey(name)) throw new Exception(string.Format("Font: {0} not found in resource atlas!", name));
+
+            return fonts[name];
+        }
+
+        public static void LoadTilemap(ContentManager Content, string tilemapKeysPath, string tilemapPath)
         {
             tilemapAtlasKeys = new Dictionary<string, Dictionary<string, Rectangle>>();
             tilemapAtlas = Content.Load<Texture2D>(tilemapPath);
@@ -159,6 +169,24 @@ namespace IdleEngine
                 SoundEffect media = Content.Load<SoundEffect>(folder + "/" + name);
 
                 soundEffects.Add(name, media);
+            }
+        }
+
+        public static void LoadFonts(ContentManager Content, string fullFilePath, string folder)
+        {
+            fonts = new Dictionary<string, SpriteFont>();
+
+            DirectoryInfo di = new DirectoryInfo(fullFilePath);
+            FileInfo[] files = di.GetFiles("*.spritefont");
+
+            int filesLength = files.Length;
+
+            for (int i = 0; i < filesLength; i++)
+            {
+                string name = files[i].Name.Remove(files[i].Name.Length - 11, 11);
+                SpriteFont media = Content.Load<SpriteFont>(folder + "/" + name);
+
+                fonts.Add(name, media);
             }
         }
     }

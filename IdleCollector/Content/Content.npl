@@ -43,6 +43,14 @@
 			"action": "build",
 			"importer": "EffectImporter",
 			"processor": "EffectProcessor"
+		},
+
+		"fonts": {
+			"path": "Fonts/*.spritefont",
+			"recursive": "True",
+			"action": "build",
+			"importer": "FontDescriptionImporter",
+			"processor": "FontDescriptionProcessor"
 		}
 	}
 }

@@ -48,6 +48,8 @@ namespace IdleCollector
 
         private WorldManager worldManager;
 
+        private Trail trail;
+
         public GameManager()
         {
             Type = UpdateType.Standard;
@@ -88,6 +90,12 @@ namespace IdleCollector
         {
             SceneManager.AddScene(sceneName);
             SceneManager.AddToScene(sceneName, this);
+
+            SpriteFont font = ResourceAtlas.GetFont("DePixelHalbfett");
+            string msg = "Hey Everyone!";
+            Vector2 offset = font.MeasureString(msg) / 2;
+
+            Renderer.AddToSceneUIDraw((sb) => { sb.DrawString(font, msg, new Vector2(100, 100) + offset, Color.Black, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f); });
         }
 
         private void SetupPlayer()
@@ -143,7 +151,24 @@ namespace IdleCollector
 
         private void SetupPause()
         {
+            TrailInfo info = new TrailInfo();
+            info.TrackPosition = () => (Input.GetMousePos() * Renderer.UIScaler).ToVector2();
+            info.TrackLayerDepth = () => 1;
+            info.NumberOfSegments = 200;
+            info.TrailLength = 400;
+            info.SegmentsPerSecond = (float)info.NumberOfSegments * .5f;
+            info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .75f;
+            info.SegmentColor = (t) => { return Color.White; };
+            info.TipWidth = 20;
+            info.EndWidth = 0;
+
+            trail = new Trail(info);
+
             SceneManager.AddScene(PauseScene);
+
+            Updater.AddToSceneUpdate(PauseScene, trail);
+            Renderer.AddToSceneUIDraw(PauseScene, trail);
+
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
             {
                 if (Input.IsButtonDownOnce(Keys.Escape) && SceneManager.CurrentSceneName != Game1.MainScene)
@@ -161,15 +186,15 @@ namespace IdleCollector
                 }
             });
             Updater.AddToSceneEnter(PauseScene, () => { prevTexture = Renderer.GetLastRender(); });
-            Renderer.AddToSceneDraw(PauseScene, (sb) => { sb.Draw(prevTexture, prevTexture.Bounds, Color.White); });
+            Renderer.AddToSceneDraw(PauseScene, (sb) => { sb.Draw(prevTexture, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White); });
             Renderer.AddToSceneUIDraw(PauseScene, (sb) =>
             {
-                sb.Draw(ResourceAtlas.GetTexture("tempPause"), new Rectangle(0, 0, 480, 270), Color.White);
+                sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White);
             });
 
             ButtonConfig config = new ButtonConfig();
             config.textures = new[] { ResourceAtlas.GetTexture("tempMenu"), ResourceAtlas.GetTexture("tempMenuH") };
-            config.bounds = new Rectangle(14, 14, 127, 52);
+            config.bounds = new Rectangle(14 * Renderer.UIScaler.X, 14 * Renderer.UIScaler.Y, 127 * Renderer.UIScaler.X, 52 * Renderer.UIScaler.Y);
 
             menuButton = new Button(config);
             menuButton.OnClick += () => { SceneManager.SwapScene(Game1.MainScene); isPaused = false; };
