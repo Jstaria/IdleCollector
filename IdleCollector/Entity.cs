@@ -28,7 +28,7 @@ namespace IdleCollector
         public UpdateType Type { get; set; }
         public Vector2 Position { get; set; }
         public CollisionType CollisionType { get; set; }
-        public int Radius { get => spawnRange; set => spawnRange = value; }
+        public float Radius { get => spawnRange; set => spawnRange = (int)value; }
         public int InteractRange { get => interactRange; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }

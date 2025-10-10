@@ -103,12 +103,6 @@ namespace IdleCollector
         {
             SceneManager.AddScene(sceneName);
             SceneManager.AddToIndependent(this);
-
-            SpriteFont font = ResourceAtlas.GetFont("DePixelHalbfett");
-            string msg = "Hey Everyone! 32165";
-            Vector2 offset = font.MeasureString(msg) / 2;
-
-            Renderer.AddToSceneUIDraw((sb) => { sb.DrawString(font, msg, new Vector2(100, 100) + offset, Color.Black, 0, Vector2.Zero, .75f, SpriteEffects.None, .95f); });
         }
 
         private void SetupPlayer()
@@ -223,6 +217,7 @@ namespace IdleCollector
             AddToSaveable(resourceManager);
 
             Updater.AddToSceneEnter(GameScene, () => resourceManager.MoveTo(new Vector2(20, Renderer.UIBounds.Height - 20)));
+            Updater.AddToSceneUpdate(GameScene, resourceManager);
             Renderer.AddToSceneUIDraw(GameScene, resourceManager);
         }
 

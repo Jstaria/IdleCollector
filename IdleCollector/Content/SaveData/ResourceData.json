@@ -1,9 +1,23 @@
 {
   "resources": {
-    "cactus": {
-      "Count": 3187,
-      "Name": "cactus",
+    "Grass": {
+      "Count": 12670,
+      "Multiplier": 1,
+      "Name": "Grass",
       "IsUnlocked": true,
+      "IconTextureKey": "grassIcon",
+      "ResourceColor": {
+        "B": 98,
+        "G": 160,
+        "R": 166,
+        "A": 255
+      }
+    },
+    "Cactus": {
+      "Count": 3385,
+      "Multiplier": 1,
+      "Name": "Cactus",
+      "IsUnlocked": false,
       "IconTextureKey": "cactusIcon",
       "ResourceColor": {
         "B": 0,
@@ -12,10 +26,11 @@
         "A": 255
       }
     },
-    "flower": {
+    "Flower": {
       "Count": 0,
-      "Name": "flower",
-      "IsUnlocked": true,
+      "Multiplier": 1,
+      "Name": "Flower",
+      "IsUnlocked": false,
       "IconTextureKey": "flowerIcon",
       "ResourceColor": {
         "B": 255,
@@ -24,10 +39,11 @@
         "A": 255
       }
     },
-    "tree": {
+    "Tree": {
       "Count": 0,
-      "Name": "tree",
-      "IsUnlocked": true,
+      "Multiplier": 1,
+      "Name": "Tree",
+      "IsUnlocked": false,
       "IconTextureKey": "treeIcon",
       "ResourceColor": {
         "B": 143,
@@ -36,6 +52,5 @@
         "A": 255
       }
     }
-  },
-  "Position": "20, 1060"
+  }
 }

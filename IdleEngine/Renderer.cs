@@ -190,7 +190,11 @@ namespace IdleEngine
             sb.GraphicsDevice.SetRenderTarget(null);
         }
 
-        public static Vector2 GetScreenPosition(Vector2 worldPosition) => worldPosition - CurrentCamera.Position.ToVector2();
+        public static Vector2 GetScreenPosition(Vector2 worldPosition)
+        {
+            Vector2 renderPos = Vector2.Transform(worldPosition, CurrentCamera.Transform);
+            return renderPos * UIScaler.ToVector2();
+        }
         public static Vector2 GetWorldPosition(Vector2 screenPosition)
         {
             float scaleX = RenderSize.X / (float)ScreenSize.X;

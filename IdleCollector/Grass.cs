@@ -13,6 +13,8 @@ namespace IdleCollector
     {
         private Color WaveColor;
         private Color InvWaveColor;
+        private Color[] touched = new Color[] { new Color(166, 160, 98), new Color(166, 160, 98) };
+        private float coolDown = 1;
 
         public override Vector2 Origin { get => new Vector2(Bounds.Width / 2, Bounds.Height / 2); }
 
@@ -31,6 +33,9 @@ namespace IdleCollector
 
         public override void StandardUpdate(GameTime gameTime)
         {
+            if (coolDown > 0)
+                coolDown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             posSpring.Update();
             rotSpring.Update();
 
@@ -59,6 +64,10 @@ namespace IdleCollector
         {
             SetRotation(collider, 25, .5f, true);
         }
+        public override void SecondaryInteractWith(Entity collider)
+        {
+            Color = RandomHelper.Instance.GetColor(touched[0], touched[1]);
+        }
 
         public override void Nudge(float strength)
         {
@@ -68,11 +77,9 @@ namespace IdleCollector
 
         public override void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
         {
-            if (WaveColor == Color.Transparent)
-            {
-                float value = .1f;
-                WaveColor = new Color(Color.ToVector3() + new Vector3(value));
-            }
+            float value = .1f;
+            WaveColor = new Color(Color.ToVector3() + new Vector3(value));
+
             float noiseValue = noise.GetNoise(Position.X + windScroll.X, Position.Y + windScroll.Y);
             rotSpring.Nudge(noiseValue * .75f);
 

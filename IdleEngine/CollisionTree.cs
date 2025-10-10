@@ -13,7 +13,7 @@ namespace IdleEngine
     {
         public CollisionType CollisionType { get; set; }
         public Vector2 Position { get; set; }
-        public int Radius { get; set; }
+        public float Radius { get; set; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
         public float LayerDepth { get; set; }

@@ -118,11 +118,6 @@ namespace IdleCollector
 
             Color color = DrawColor;
 
-            if (collider.InteractRange > distance)
-            {
-                DrawColor = Color.Red;
-            }
-
             SetRotation(collider, 20, .2f, false);
         }
 

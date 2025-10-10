@@ -26,7 +26,7 @@ namespace IdleCollector
         public UpdateType Type { get; set; }
         public CollisionType CollisionType { get; set; }
         public Vector2 Position { get; set; }
-        public int Radius { get; set; }
+        public float Radius { get; set; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
         public float LayerDepth { get; set; }
@@ -67,6 +67,7 @@ namespace IdleCollector
         }
 
         public abstract void InteractWith(Entity entity);
+        public virtual void SecondaryInteractWith(Entity enity) { }
         public abstract void Nudge(float strength);
         public abstract void ApplyWind(Vector2 windScroll, FastNoiseLite noise);
     }

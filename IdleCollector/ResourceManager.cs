@@ -16,6 +16,7 @@ namespace IdleCollector
     internal class ResourceInfo
     {
         public int Count;
+        public int Multiplier;
         public string Name;
         public bool IsUnlocked;
         public string IconTextureKey;
@@ -27,6 +28,7 @@ namespace IdleCollector
             Name = name;
             IsUnlocked = false;
             IconTextureKey = name + "Icon";
+            Multiplier = 1;
         }
 
         public void Reset()
@@ -35,11 +37,8 @@ namespace IdleCollector
             IsUnlocked = false;
         }
     }
-    internal class Resource
-    {
-        public string Name;
-    }
-    internal class ResourceManager : ISaveable, IRenderable, ITransform
+
+    internal class ResourceManager : ISaveable, IRenderable, IUpdatable, ITransform
     {
         private static ResourceManager instance;
         public static ResourceManager Instance
@@ -55,6 +54,7 @@ namespace IdleCollector
         public float LayerDepth { get; set; }
         [JsonIgnore]
         public Color Color { get; set; }
+        [JsonIgnore]
         public Vector2 Position { get; set; }
 
         private string resourceUIKey = "resourceBar";
@@ -62,6 +62,7 @@ namespace IdleCollector
 
         [JsonProperty]
         private Dictionary<string, ResourceInfo> resources;
+        private List<ResourceUIObject> resourceObjs;
 
         private string jsonPath = "../../../Content/SaveData/ResourceData.json";
 
@@ -76,8 +77,34 @@ namespace IdleCollector
         {
             LayerDepth = .75f;
             Color = Color.White;
+            resourceObjs = new();
 
             Load();
+        }
+
+        public void AddPointsTo(string name, int count)
+        {
+            ResourceInfo accessedResource = resources[name];
+            accessedResource.Count += count * accessedResource.Multiplier;
+        }
+
+        private void DespawnResourceUIObj(ResourceUIObject obj)
+        {
+            AddPointsTo(obj.ResourceInfo.Name, obj.ResourceInfo.Count);
+            resourceObjs.Remove(obj);
+        }
+
+        public void SpawnResourceUIObj(Vector2 worldPosition, ResourceInfo info)
+        {
+            ResourceUIObject obj = new ResourceUIObject(
+                .75f, 
+                info, 
+                Renderer.GetScreenPosition(worldPosition), 
+                new Vector2(0, 0), 
+                LayerDepth, 
+                DespawnResourceUIObj);
+
+            resourceObjs.Add(obj);
         }
 
         public void Load()
@@ -87,7 +114,6 @@ namespace IdleCollector
 
         public void Save()
         {
-            resources["cactus"].Count++;
             FileIO.WriteJsonTo(this, jsonPath, Formatting.Indented);
         }
 
@@ -116,9 +142,16 @@ namespace IdleCollector
                 Vector2 offset = new Vector2(0, (i * tex.Height) + (i * -4) + tex.Height);
                 Vector2 textDim = font.MeasureString(text);
 
-                sb.Draw(tex, Position, null, Color, 0, offset, 1, SpriteEffects.None, LayerDepth);
-                sb.Draw(icon, Position, null, resources[i].ResourceColor, 0, offset, 1, SpriteEffects.None, LayerDepth);
-                sb.DrawString(font, text, Position, resources[i].ResourceColor, 0, offset - new Vector2(tex.Width - textDim.X - 8, textDim.Y / 2), 1, SpriteEffects.None, LayerDepth);
+                float depth = LayerDepth -= i * .005f;
+
+                sb.Draw(tex, Position, null, Color, 0, offset, 1, SpriteEffects.None, depth);
+                sb.Draw(icon, Position, null, resources[i].ResourceColor, 0, offset, 1, SpriteEffects.None, depth);
+                sb.DrawString(font, text, Position, resources[i].ResourceColor, 0, offset - new Vector2(tex.Width - textDim.X - 8, textDim.Y / 2), 1, SpriteEffects.None, depth);
+            }
+
+            for (int i = 0; i < resourceObjs.Count; i++)
+            {
+                resourceObjs[i].Draw(sb);
             }
         }
 
@@ -130,6 +163,24 @@ namespace IdleCollector
         public void MoveTo(Vector2 position)
         {
             Position = position;
+        }
+
+        public void ControlledUpdate(GameTime gameTime)
+        {
+            for (int i = 0; i < resourceObjs.Count; i++)
+            {
+                resourceObjs[i].Update(gameTime);
+            }
+        }
+
+        public void StandardUpdate(GameTime gameTime)
+        {
+
+        }
+
+        public void SlowUpdate(GameTime gameTime)
+        {
+
         }
     }
 }

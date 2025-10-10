@@ -15,8 +15,6 @@ namespace IdleCollector
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Texture2D onlineIMG;
-
         private Button button;
         private GameManager _gameManager;
         public static string MainScene = "Main Scene";
@@ -59,8 +57,6 @@ namespace IdleCollector
             });
 
             _gameManager = new GameManager();
-
-            onlineIMG = await WebHelper.RetrieveImage(GraphicsDevice, "https://i.imgur.com/pJBb1fG.png");
 
             LoadButtons();
             //LoadEffects();
@@ -117,13 +113,6 @@ namespace IdleCollector
         protected override void Draw(GameTime gameTime)
         {
             Renderer.Draw(_spriteBatch);
-
-            if (onlineIMG != null)
-            {
-                _spriteBatch.Begin();
-                _spriteBatch.Draw(onlineIMG, Vector2.Zero, Color.White);
-                _spriteBatch.End();
-            }
 
             base.Draw(gameTime);
         }

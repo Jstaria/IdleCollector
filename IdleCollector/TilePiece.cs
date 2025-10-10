@@ -16,7 +16,7 @@ namespace IdleCollector
         private string tileType;
         private Rectangle bounds;
         private Color color;
-        private Dictionary<EmptyCollider, List<Interactable>> interactables;
+        private List<InnerTile> innerTiles;
         private List<Interactable> producingInteractables;
         private float layerDepth;
 
@@ -26,7 +26,7 @@ namespace IdleCollector
         public Rectangle Bounds { get => bounds; set => bounds = value; }
         public CollisionType CollisionType { get; set; }
         public Vector2 Position { get; set; }
-        public int Radius { get; set; }
+        public float Radius { get; set; }
         public bool IsCollidable { get; set; }
         public Point TilePosition { get; set; }
         public Color Color { get => color; set => color = value; }
@@ -50,7 +50,7 @@ namespace IdleCollector
 
         private void SetupInnerBounds()
         {
-            interactables = new();
+            innerTiles = new();
             producingInteractables = new();
             int childWidth = Bounds.Width / 2;
             int childHeight = Bounds.Height / 2;
@@ -65,8 +65,9 @@ namespace IdleCollector
                     tempCollider.Bounds = bounds;
                     tempCollider.Position = bounds.Location.ToVector2();
                     tempCollider.CollisionType = CollisionType.Rectangle;
+                    tempCollider.Radius = 0;
 
-                    interactables.Add(tempCollider, new());
+                    innerTiles.Add(new InnerTile(tempCollider));
                 }
             }
         }
@@ -75,15 +76,16 @@ namespace IdleCollector
         {
             bool affectedTile = false;
 
-            foreach (KeyValuePair<EmptyCollider, List<Interactable>> pairs in interactables)
+            for (int j = 0; j < innerTiles.Count; j++)
             {
-                if (pairs.Value.Count > 0) continue;
+                InnerTile tile = innerTiles[j];
+
+                if (tile.InteractableCount > 0) continue;
 
                 affectedTile = true;
-                //if (!CollisionHelper.CheckForCollision(collider, pairs.Key)) continue;
 
                 RandomHelper random = RandomHelper.Instance;
-                Rectangle keyBounds = pairs.Key.Bounds;
+                Rectangle keyBounds = tile.Collider.Bounds;
 
                 List<Type> types = SpawnManager.Instance.GetSpawnedTypes();
 
@@ -125,7 +127,7 @@ namespace IdleCollector
                     if (Vector2.Distance(position, entity.Position) > 35)
                         grass.Nudge(random.GetFloat(-50, 50));
 
-                    interactables[pairs.Key].Add(grass);
+                    innerTiles[j].Add(grass);
                 }
             }
 
@@ -134,14 +136,9 @@ namespace IdleCollector
 
         public void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
         {
-            for (int i = 0; i < interactables.Count; i++)
+            for (int i = 0; i < innerTiles.Count; i++)
             {
-                EmptyCollider key = interactables.Keys.ToList()[i];
-
-                for (int j = 0; j < interactables[key].Count; j++)
-                {
-                    interactables[key][j].ApplyWind(windScroll, noise);
-                }
+                innerTiles[i].ApplyWind(windScroll, noise);
             }
 
             foreach (Interactable interactable in producingInteractables) 
@@ -150,11 +147,18 @@ namespace IdleCollector
 
         public void CheckInteractables(Entity entity)
         {
-            foreach (List<Interactable> interactables in interactables.Values)
-                foreach (Interactable interactable in interactables)
-                {
-                    interactable.InteractWith(entity);
-                }
+            foreach (InnerTile tile in innerTiles)
+            {
+                EmptyCollider interactCol = new EmptyCollider();
+                interactCol.Position = entity.Position;
+                interactCol.Radius = entity.InteractRange;
+                interactCol.CollisionType = CollisionType.Circle;
+
+                if (!CollisionHelper.CheckForCollision(interactCol, tile.Collider, CollisionCheck.CircleRect)) continue;
+
+                tile.InteractWith(entity);
+            }
+
             foreach (Interactable interactable in producingInteractables)
                 interactable.InteractWith(entity);
         }
@@ -166,22 +170,24 @@ namespace IdleCollector
             foreach (Interactable interactable in producingInteractables)
                 interactable.Draw(sb);
 
-            foreach (List<Interactable> interactables in interactables.Values)
-                foreach (Interactable interactable in interactables)
-                    interactable.Draw(sb);
+            foreach (InnerTile tile in innerTiles)
+                tile.Draw(sb);
         }
 
         public void ControlledUpdate(GameTime gameTime)
         {
+            foreach (InnerTile tile in innerTiles)
+                tile.ControlledUpdate(gameTime);
+
             foreach (Interactable interactable in producingInteractables)
                 interactable.ControlledUpdate(gameTime);
+
         }
 
         public void StandardUpdate(GameTime gameTime)
         {
-            foreach (List<Interactable> interactables in interactables.Values)
-                foreach (Interactable interactable in interactables)
-                    interactable.StandardUpdate(gameTime);
+            foreach (InnerTile tile in innerTiles)
+                tile.StandardUpdate(gameTime);
 
             foreach (Interactable interactable in producingInteractables)
                 interactable.StandardUpdate(gameTime);
@@ -189,6 +195,9 @@ namespace IdleCollector
 
         public void SlowUpdate(GameTime gameTime)
         {
+            foreach (InnerTile tile in innerTiles)
+                tile.SlowUpdate(gameTime);
+
             foreach (Interactable interactable in producingInteractables)
                 interactable.SlowUpdate(gameTime);
         }
