@@ -24,6 +24,8 @@ namespace IdleCollector
         public delegate void Despawn(ResourceUIObject obj);
         private Despawn OnDespawn;
 
+        public float T { get => t; }
+
         public ResourceUIObject(float timeToUI, ResourceInfo resInfo, Vector2 pos, Vector2 endPos, float layerDepth, Despawn despawn)
         {
             ResourceInfo = resInfo;
@@ -33,7 +35,6 @@ namespace IdleCollector
             position = pos;
             this.LayerDepth = layerDepth;
             CreatePath(pos, endPos);
-            CreateTrail(resInfo);
         }
 
         public float LayerDepth { get; set; }
@@ -43,9 +44,10 @@ namespace IdleCollector
         {
             float tMax = .999f;
             t = MathHelper.Clamp(timer / totalTime, 0, tMax);
+            if (objectTrail == null) OnDespawn(this);
 
-            position = path.GetPointAlongCurve(t);
-            objectTrail.ControlledUpdate(gameTime);
+                position = path.GetPointAlongCurve(t);
+            objectTrail?.ControlledUpdate(gameTime);
 
             if (t == tMax)
             {
@@ -58,7 +60,7 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
-            objectTrail.Draw(sb);
+            objectTrail?.Draw(sb);
         }
 
         private void CreatePath(Vector2 pos, Vector2 endPos)
@@ -66,7 +68,7 @@ namespace IdleCollector
             path = new BezierCurve();
 
             Vector2 randomDirection = Vector2.Normalize(RandomHelper.Instance.GetVector2(-Vector2.One, Vector2.One));
-            Vector2 randomPosition = pos + randomDirection * 500;
+            Vector2 randomPosition = pos + randomDirection * RandomHelper.Instance.GetFloat(250, 750);
 
             path.AddPoints(
                 pos,
@@ -75,20 +77,9 @@ namespace IdleCollector
                 );
         }
 
-        private void CreateTrail(ResourceInfo resInfo)
+        public void CreateTrail(TrailInfo info)
         {
-            TrailInfo info = new TrailInfo();
-
-            info.SegmentColor = (t) => Color.Lerp(Color.Yellow * t * t, Color.Red * t * t, this.t);
-            info.TrackLayerDepth = () => LayerDepth;
             info.TrackPosition = () => position;
-            info.NumberOfSegments = 100;
-            info.TrailLength = 500;
-            info.TipWidth = 16;
-            info.EndWidth = 0;
-            info.SegmentsPerSecond = (float)info.NumberOfSegments * .5f;
-            info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .5f;
-
             objectTrail = new Trail(info);
         }
     }

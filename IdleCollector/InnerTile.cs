@@ -25,6 +25,7 @@ namespace IdleCollector
         public InnerTile(EmptyCollider collider)
         {
             Collider = collider;
+            collider.Origin = (collider.Bounds.Size).ToVector2() / 2;
             interactables = new();
             grassResource = new ResourceInfo("Grass");
             grassResource.Count = 1;
@@ -82,7 +83,7 @@ namespace IdleCollector
             if (!(Cooldown <= 0 && !alreadyInteractedWith)) return;
 
             alreadyInteractedWith = true;
-            ResourceManager.Instance.SpawnResourceUIObj(Collider.Position, grassResource);
+            ResourceManager.Instance.SpawnResourceUIObj(entity.Position/*Collider.Position + Collider.Origin*/, grassResource);
 
             foreach (Interactable interactable in interactables)
                 interactable.SecondaryInteractWith(entity);

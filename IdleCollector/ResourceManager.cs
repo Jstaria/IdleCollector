@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Microsoft.Xna.Framework;
 using IdleEngine;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace IdleCollector
 {
@@ -19,8 +20,12 @@ namespace IdleCollector
         public int Multiplier;
         public string Name;
         public bool IsUnlocked;
+        public bool HasTrail;
         public string IconTextureKey;
         public Color ResourceColor;
+        
+        [JsonIgnore]
+        public TrailInfo trailInfo;
 
         public ResourceInfo(string name)
         {
@@ -80,6 +85,7 @@ namespace IdleCollector
             resourceObjs = new();
 
             Load();
+            LoadTrailInfo();
         }
 
         public void AddPointsTo(string name, int count)
@@ -100,11 +106,38 @@ namespace IdleCollector
                 .75f, 
                 info, 
                 Renderer.GetScreenPosition(worldPosition), 
-                new Vector2(0, 0), 
+                new Vector2(50, 1030), 
                 LayerDepth, 
                 DespawnResourceUIObj);
 
+            if (resources[info.Name].HasTrail)
+            {
+                TrailInfo trailInfo = resources[info.Name].trailInfo;
+                trailInfo.SegmentColor = (t) => Color.Lerp(Color.White, resources[info.Name].ResourceColor, MathF.Pow(obj.T, .25f));
+
+                obj.CreateTrail(trailInfo);
+            }
+
             resourceObjs.Add(obj);
+        }
+
+        public void LoadTrailInfo()
+        {
+            TrailInfo info = new TrailInfo();
+            info.SegmentColor = (t) => Color.White;
+            info.TrackLayerDepth = () => LayerDepth;
+            info.TrackPosition = () => new Vector2(1000, 0);
+            info.NumberOfSegments = 100;
+            info.TrailLength = 250;
+            info.TipWidth = 8;
+            info.EndWidth = 0;
+            info.SegmentsPerSecond = (float)info.NumberOfSegments * .5f;
+            info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .5f;
+            info.HasOutline = true;
+            info.OutlineThickness = 4;
+            info.OutlineColor = Color.White * .25f;
+
+            resources["Grass"].trailInfo = info;
         }
 
         public void Load()
@@ -145,8 +178,8 @@ namespace IdleCollector
                 float depth = LayerDepth -= i * .005f;
 
                 sb.Draw(tex, Position, null, Color, 0, offset, 1, SpriteEffects.None, depth);
-                sb.Draw(icon, Position, null, resources[i].ResourceColor, 0, offset, 1, SpriteEffects.None, depth);
-                sb.DrawString(font, text, Position, resources[i].ResourceColor, 0, offset - new Vector2(tex.Width - textDim.X - 8, textDim.Y / 2), 1, SpriteEffects.None, depth);
+                sb.Draw(icon, Position, null, resources[i].ResourceColor, 0, offset, 1, SpriteEffects.None, depth + .001f);
+                sb.DrawString(font, text, Position, resources[i].ResourceColor, 0, offset - new Vector2(tex.Width - textDim.X - 8, textDim.Y / 2), 1, SpriteEffects.None, depth + .001f);
             }
 
             for (int i = 0; i < resourceObjs.Count; i++)

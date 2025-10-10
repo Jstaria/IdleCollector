@@ -19,6 +19,9 @@ namespace IdleEngine
         public GetFloat TrackLayerDepth;
         public float SegmentsPerSecond;
         public float SegmentsRemovedPerSecond;
+        public bool HasOutline;
+        public Color OutlineColor;
+        public float OutlineThickness;
 
         public TrailInfo()
         {
@@ -31,6 +34,9 @@ namespace IdleEngine
             TrackPosition = () => { return Vector2.Zero; };
             SegmentColor = (t) => { return Color.White * (t*t); };
             TrackLayerDepth = () => { return 0; };
+            HasOutline = false;
+            OutlineColor = Color.White;
+            OutlineThickness = 1;
         }
     }
 
@@ -43,7 +49,6 @@ namespace IdleEngine
 
         public float LayerDepth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color Color { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         public Trail(TrailInfo info)
         {
             this.info = info;
@@ -129,10 +134,19 @@ namespace IdleEngine
 
                 float t = i / (float)points.Length;
                 float thickness = MathHelper.Clamp(t * info.TipWidth, info.EndWidth, info.TipWidth);
+
+                if (info.HasOutline)
+                    sb.DrawCircle(points[i], (thickness + info.OutlineThickness) / 2, info.OutlineColor, info.TrackLayerDepth() - .0001f);
+
                 sb.DrawCircle(points[i], thickness / 2, info.SegmentColor(t), info.TrackLayerDepth());
                 
                 if (i2 == 0) continue;
                 
+                if (info.HasOutline)
+                {
+                    sb.DrawLineCentered(points[i], points[i2], thickness + info.OutlineThickness, info.OutlineColor, info.TrackLayerDepth() - .0001f);
+                }
+
                 sb.DrawLineCentered(points[i], points[i2], thickness, info.SegmentColor(t), info.TrackLayerDepth());
             }
         }
