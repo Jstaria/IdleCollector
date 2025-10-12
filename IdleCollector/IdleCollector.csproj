@@ -12,6 +12,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Content.mgcb" />
     <None Remove="Content\Fonts\Medodica.spritefont" />
     <None Remove="Content\Fonts\MedodicaRegular.otf" />
     <None Remove="Icon.ico" />
@@ -45,6 +46,9 @@
     <Folder Include="Content\Audio\" />
     <Folder Include="Content\SoundEffects\" />
     <Folder Include="Content\Textures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="Content\Content.mgcb" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IdleEngine">

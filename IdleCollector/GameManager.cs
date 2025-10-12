@@ -96,7 +96,7 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
-            player.Draw(sb);
+            
         }
 
         private void SetupGameScene(string sceneName)
@@ -158,23 +158,7 @@ namespace IdleCollector
 
         private void SetupPause()
         {
-            TrailInfo info = new TrailInfo();
-            info.TrackPosition = () => (Input.GetMousePos() * Renderer.UIScaler).ToVector2();
-            info.TrackLayerDepth = () => 1;
-            info.NumberOfSegments = 200;
-            info.TrailLength = 400;
-            info.SegmentsPerSecond = (float)info.NumberOfSegments * .5f;
-            info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .75f;
-            info.SegmentColor = (t) => { return Color.White; };
-            info.TipWidth = 20;
-            info.EndWidth = 0;
-
-            trail = new Trail(info);
-
             SceneManager.AddScene(PauseScene);
-
-            Updater.AddToSceneUpdate(PauseScene, trail);
-            Renderer.AddToSceneUIDraw(PauseScene, trail);
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
             {

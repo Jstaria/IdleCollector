@@ -69,7 +69,7 @@ namespace IdleCollector
         private Dictionary<string, ResourceInfo> resources;
         private List<ResourceUIObject> resourceObjs;
 
-        private string jsonPath = "../../../Content/SaveData/ResourceData.json";
+        private string jsonPath = "Content/SaveData/ResourceData.json";
 
         public ResourceManager()
         {
@@ -175,7 +175,7 @@ namespace IdleCollector
                 Vector2 offset = new Vector2(0, (i * tex.Height) + (i * -4) + tex.Height);
                 Vector2 textDim = font.MeasureString(text);
 
-                float depth = LayerDepth -= i * .005f;
+                float depth = LayerDepth - i * .005f;
 
                 sb.Draw(tex, Position, null, Color, 0, offset, 1, SpriteEffects.None, depth);
                 sb.Draw(icon, Position, null, resources[i].ResourceColor, 0, offset, 1, SpriteEffects.None, depth + .001f);

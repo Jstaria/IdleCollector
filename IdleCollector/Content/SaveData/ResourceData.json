@@ -1,11 +1,11 @@
 {
   "resources": {
     "Grass": {
-      "Count": 21866,
+      "Count": 23367,
       "Multiplier": 1,
       "Name": "Grass",
       "IsUnlocked": true,
-      "HasTrail": false,
+      "HasTrail": true,
       "IconTextureKey": "grassIcon",
       "ResourceColor": {
         "B": 98,
@@ -18,7 +18,7 @@
       "Count": 3385,
       "Multiplier": 1,
       "Name": "Cactus",
-      "IsUnlocked": false,
+      "IsUnlocked": true,
       "HasTrail": false,
       "IconTextureKey": "cactusIcon",
       "ResourceColor": {
@@ -32,7 +32,7 @@
       "Count": 0,
       "Multiplier": 1,
       "Name": "Flower",
-      "IsUnlocked": false,
+      "IsUnlocked": true,
       "HasTrail": false,
       "IconTextureKey": "flowerIcon",
       "ResourceColor": {
@@ -46,7 +46,7 @@
       "Count": 0,
       "Multiplier": 1,
       "Name": "Tree",
-      "IsUnlocked": false,
+      "IsUnlocked": true,
       "HasTrail": false,
       "IconTextureKey": "treeIcon",
       "ResourceColor": {

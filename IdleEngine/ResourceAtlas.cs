@@ -109,7 +109,7 @@ namespace IdleEngine
             textureCache = new Dictionary<string, Texture2D>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
-            FileInfo[] files = di.GetFiles("*.png");
+            FileInfo[] files = di.GetFiles("*.xnb");
 
             int filesLength = files.Length;
 
@@ -177,13 +177,13 @@ namespace IdleEngine
             fonts = new Dictionary<string, SpriteFont>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
-            FileInfo[] files = di.GetFiles("*.spritefont");
+            FileInfo[] files = di.GetFiles("*.xnb");
 
             int filesLength = files.Length;
 
             for (int i = 0; i < filesLength; i++)
             {
-                string name = files[i].Name.Remove(files[i].Name.Length - 11, 11);
+                string name = files[i].Name.Remove(files[i].Name.Length - 4, 4);
                 SpriteFont media = Content.Load<SpriteFont>(folder + "/" + name);
 
                 fonts.Add(name, media);

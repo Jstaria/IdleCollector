@@ -45,9 +45,9 @@ namespace IdleCollector
 
         protected override async void LoadContent()
         {
-            ResourceAtlas.LoadTilemap(Content, "../../../Content/Textures/atlasKeys.txt", "Textures/atlas");
-            ResourceAtlas.LoadTextures(Content, "../../../Content/Textures/", "Textures");
-            ResourceAtlas.LoadFonts(Content, "../../../Content/Fonts/", "Fonts");
+            ResourceAtlas.LoadTilemap(Content, "Content/SaveData/atlasKeys.txt", "Textures/atlas");
+            ResourceAtlas.LoadTextures(Content, "Content/Textures/", "Textures");
+            ResourceAtlas.LoadFonts(Content, "Content/Fonts/", "Fonts");
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
@@ -79,25 +79,25 @@ namespace IdleCollector
 
         protected void LoadEffects()
         {
-            Effect pixel = Content.Load<Effect>("Effects/Pixel");
-            EffectValues[] effectValues = new EffectValues[1];
-            effectValues[0].ints = new KeyValuePair<string, int>[] {
-                new KeyValuePair<string, int>("pixelsX",1920),
-                new KeyValuePair<string, int>("pixelsY", 1080),
-                new KeyValuePair<string, int>("pixelation", 16)
-            };
+            //Effect pixel = Content.Load<Effect>("Effects/Pixel");
+            //EffectValues[] effectValues = new EffectValues[1];
+            //effectValues[0].ints = new KeyValuePair<string, int>[] {
+            //    new KeyValuePair<string, int>("pixelsX",1920),
+            //    new KeyValuePair<string, int>("pixelsY", 1080),
+            //    new KeyValuePair<string, int>("pixelation", 16)
+            //};
 
-            BatchConfig pixelConfig = new BatchConfig(
-                SpriteSortMode.Deferred,
-                null,
-                SamplerState.PointClamp,
-                null, null,
-                pixel,
-                effectValues,
-                Matrix.Identity
-            );
+            //BatchConfig pixelConfig = new BatchConfig(
+            //    SpriteSortMode.Deferred,
+            //    null,
+            //    SamplerState.PointClamp,
+            //    null, null,
+            //    pixel,
+            //    effectValues,
+            //    Matrix.Identity
+            //);
 
-            Renderer.AddEffectPass(pixelConfig);
+            //Renderer.AddEffectPass(pixelConfig);
         }
 
         #endregion
@@ -113,6 +113,10 @@ namespace IdleCollector
         protected override void Draw(GameTime gameTime)
         {
             Renderer.Draw(_spriteBatch);
+
+            _spriteBatch.Begin();
+
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

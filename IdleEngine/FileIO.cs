@@ -22,7 +22,7 @@ namespace IdleCollector
         /// <param name="name">Name of document</param>
         public static void CreateTxtFile(string name, string folder)
         {
-            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+            string stream = String.Format("Content/{0}/{1}.txt", folder, name);
 
             StreamWriter fileWriter = new StreamWriter(stream);
 
@@ -36,7 +36,7 @@ namespace IdleCollector
         /// <param name="data">List of strings</param>
         public static void WriteTo(string name, string folder, List<string> data)
         {
-            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+            string stream = String.Format("Content/{0}/{1}.txt", folder, name);
 
             try
             {
@@ -64,7 +64,7 @@ namespace IdleCollector
         /// <param name="data">Data being written to document</param>
         public static void AppendTo(string name, string folder, List<string> data)
         {
-            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+            string stream = String.Format("Content/{0}/{1}.txt", folder, name);
 
             StreamWriter fileWriter = new StreamWriter(stream, true);
 
@@ -83,7 +83,7 @@ namespace IdleCollector
         /// <param name="data">Float Data being written to document</param>
         public static void WriteTo(string name, string folder, List<float> data)
         {
-            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+            string stream = String.Format("Content/{0}/{1}.txt", folder, name);
 
             StreamWriter fileWriter = new StreamWriter(stream);
 
@@ -102,14 +102,14 @@ namespace IdleCollector
         /// <returns></returns>
         public static List<string> ReadFrom(string name, string folder)
         {
-            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+            string stream = String.Format("Content/{0}/{1}.txt", folder, name);
 
             return ReadFrom(stream);
         }
 
         public static string ReadFromFile(string name, string folder, string fileType)
         {
-            string stream = String.Format("../../../Content/{0}/{1}.{2}", folder, name, fileType);
+            string stream = String.Format("Content/{0}/{1}.{2}", folder, name, fileType);
             return ReadFromFile(stream);
         }
 
@@ -163,7 +163,7 @@ namespace IdleCollector
         public static List<float> NumReadFrom(string name, string folder)
         {
             List<float> data = new List<float>();
-            string stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+            string stream = String.Format("Content/{0}/{1}.txt", folder, name);
 
             StreamReader fileReader = new StreamReader(stream);
 

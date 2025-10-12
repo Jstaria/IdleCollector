@@ -51,6 +51,16 @@
 			"action": "build",
 			"importer": "FontDescriptionImporter",
 			"processor": "FontDescriptionProcessor"
+		},
+
+		"text": {
+			"path": "SaveData/*.txt",
+			"action": "copy"
+		},
+		"json": {
+			"path": "SaveData/*.json",
+			"action": "copy"
 		}
+
 	}
 }

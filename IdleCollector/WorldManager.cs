@@ -1,10 +1,12 @@
 ﻿using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +26,10 @@ namespace IdleCollector
         private RandomHelper random;
         private WindManager windManager;
         private ParticleSystem windParticles;
+        private ParticleSystem floraParticles;
+
+        private float floraParticleLayerDepth;
+        private Vector2 floraParticleSpawnPosition;
 
         private TilePiece[,] worldFloor;
         private static Rectangle worldBounds;
@@ -62,6 +68,7 @@ namespace IdleCollector
                 piece.ControlledUpdate(gameTime);
             }
 
+            floraParticles.ControlledUpdate(gameTime);
             windParticles.ControlledUpdate(gameTime);
         }
 
@@ -69,6 +76,7 @@ namespace IdleCollector
         {
             windManager.SlowUpdate(gameTime);
             windParticles.SlowUpdate(gameTime);
+            floraParticles.SlowUpdate(gameTime);
 
             if (activeTiles == null) return;
 
@@ -93,8 +101,10 @@ namespace IdleCollector
                 piece.StandardUpdate(gameTime);
             }
 
+            floraParticles.StandardUpdate(gameTime);
             windParticles.StandardUpdate(gameTime);
             windParticles.SetParticlesVelocity(-windManager.WindDirection);
+
         }
 
         public void Draw(SpriteBatch sb)
@@ -111,6 +121,7 @@ namespace IdleCollector
             }
 
             windParticles.Draw(sb);
+            floraParticles.Draw(sb);
 
             foreach (Fence fence in fences)
             {
@@ -129,6 +140,7 @@ namespace IdleCollector
             LoadNoise();
             CreateWorld();
             LoadWind();
+            LoadFloraParticles();
         }
 
         public void InteractWithFlora(Entity entity)
@@ -157,7 +169,16 @@ namespace IdleCollector
 
                 if (!CollisionHelper.CheckForCollision(entity, tp, CollisionCheck.CircleRect)) continue;
 
-                grownTiles += tp.SpawnFlora(entity, worldBounds) ? 1 : 0;
+                bool spawned = tp.SpawnFlora(entity, worldBounds);
+
+                grownTiles += spawned ? 1 : 0;
+
+                if (spawned)
+                {
+                    floraParticleSpawnPosition = tp.Position;
+                    floraParticleLayerDepth = GetLayerDepth(tp.Position.Y + RandomHelper.Instance.GetInt(0, TileSize));
+                    floraParticles.EmitParticles();
+                }
             }
 
             if (grownTiles > 0)
@@ -195,7 +216,7 @@ namespace IdleCollector
             stats.ParticleColorDecayRate += (float t) => t;
             stats.ParticleSizeDecayRate += (float t) => 1 - t;
             stats.ParticleDespawnDistance = 500;
-            stats.TrackLayerDepth += () => .995f;
+            stats.TrackLayerDepth = () => .995f;
             stats.ParticleTextureKeys = new string[] { "dust1", "dust2", "dust3", "dust4", "dust5", "dust6", "dust6", "dust6", "dust6", "dust6", "dust7"};
 
             Point renderSize = Renderer.RenderSize;
@@ -215,10 +236,46 @@ namespace IdleCollector
             stats.SpawnBounds = bounds;
             stats.UseRandomBounds = true;
             stats.ParticleRotation = new float[] { 0, 5 };
-            stats.ParticleRotationSpeed = new float[] { 0.1f, .2f };
+            float rot = RandomHelper.Instance.GetFloat(0.1f, .2f);
+            stats.ParticleRotationSpeed = (t) => rot;
             stats.ParticleLifeSpan = new float[] { 7.5f };
 
             windParticles = new ParticleSystem(stats);
+        }
+
+        private void LoadFloraParticles()
+        {
+            ParticleSystemStats stats = new ParticleSystemStats();
+            stats.ParticleSize = new float[] { 1 };
+            stats.ParticleSpeed = new float[] { .5f, 4f };
+            stats.EmitRate = new float[] { 0 };
+            stats.EmitCount = new int[] { 5, 10 };
+            stats.ParticleStartColor = new Color[] { new Color(230, 184, 138), new Color(210, 164, 118) };
+            stats.ParticleEndColor = new Color[] { new Color(230, 184, 138) * 0f, new Color(210, 164, 118) * 0f };
+            stats.MaxParticleCount = 300;
+            stats.ParticleColorDecayRate += (float t) => t;
+            stats.ParticleSizeDecayRate += (float t) => 1 - t;
+            stats.ParticleDespawnDistance = 500;
+            stats.TrackLayerDepth = () => floraParticleLayerDepth;
+            stats.TrackPosition = () => floraParticleSpawnPosition;
+            stats.ParticleTextureKeys = new string[] { "grass1", "grass2", "grass3", "grass4", "grass5" };
+
+            Rectangle[][] bounds = new Rectangle[][]
+            {
+                new Rectangle[] { new Rectangle(0, 0, TileSize, TileSize) },
+            };
+
+            stats.SpawnBounds = bounds;
+            stats.UseRandomBounds = false;
+            stats.ParticleRotation = new float[] { 0 };
+            stats.ParticleRotationSpeed = (t) => MathF.Sin(t * 10) * .05f;
+            stats.ParticleLifeSpan = new float[] { 1.5f, 2.5f };
+            stats.ResetParticlesAfterDeath = false;
+
+            stats.StartingVelocity = new Vector2[] { new Vector2(-.1f, -1), new Vector2(.1f, -1) };
+            stats.ActingForce = (t) => (Vector2.UnitY * .02f - windManager.WindDirection * .01f);
+
+            floraParticles = new ParticleSystem(stats);
         }
 
         public void CreateWorld()

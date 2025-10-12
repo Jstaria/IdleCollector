@@ -18,7 +18,7 @@ namespace IdleEngine
         public bool UseRandomBounds;
         public float[] ParticleLifeSpan;
         public GetVector TrackPosition;
-        public GetVector ActingForce;
+        public Curve<Vector2> ActingForce;
         public float ParticleDespawnDistance;
         public GetFloat TrackLayerDepth;
         public int MaxParticleCount;
@@ -26,11 +26,12 @@ namespace IdleEngine
         public Color[] ParticleEndColor;
         public string[] ParticleTextureKeys;
         public float[] ParticleSpeed;
-        public float[] ParticleRotationSpeed;
+        public Curve<float> ParticleRotationSpeed;
         public float[] ParticleRotation;
         public float[] ParticleSize;
         public float[] EmitRate;
         public int[] EmitCount;
+        public bool ResetParticlesAfterDeath;
 
         public SpriteFont Font;
         public string ParticleText;
@@ -82,6 +83,8 @@ namespace IdleEngine
                     i--;
                 }
             }
+
+            if (!stats.ResetParticlesAfterDeath) return;
 
             if (particles.Count < stats.MaxParticleCount && emitWaitTime <= 0)
             {
@@ -167,7 +170,7 @@ namespace IdleEngine
                 if (stats.ParticleSize != null)
                     particleStats.Size = stats.ParticleSize.Length == 1 ? stats.ParticleSize[0] : RandomHelper.Instance.GetFloat(stats.ParticleSize[0], stats.ParticleSize[1]);
                 if (stats.ParticleRotationSpeed != null)
-                    particleStats.RotationSpeed = stats.ParticleRotationSpeed.Length == 1 ? stats.ParticleRotationSpeed[0] : RandomHelper.Instance.GetFloat(stats.ParticleRotationSpeed[0], stats.ParticleRotationSpeed[1]);
+                    particleStats.RotationSpeed = stats.ParticleRotationSpeed;
                 if (stats.StartingVelocity != null)
                     particleStats.StartingVelocity = stats.StartingVelocity.Length == 1 ? stats.StartingVelocity[0] : RandomHelper.Instance.GetVector2(stats.StartingVelocity[0], stats.StartingVelocity[1]);
                 particleStats.ActingForce = stats.ActingForce;
@@ -216,6 +219,8 @@ namespace IdleEngine
         {
             stats.TrackPosition = position;
         }
+
+        public void EmitParticles() { UpdateBounds();  EmitParticle(); }
 
         public void SetCurrentSpawnBounds(int ind) => stats.CurrentBounds = ind;
         public void SetStartingVelocity(Vector2[] vectors)

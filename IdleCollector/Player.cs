@@ -211,7 +211,7 @@ namespace IdleCollector
             ParticleSystemStats stats = new ParticleSystemStats();
 
             stats.StartingVelocity = new Vector2[] { new Vector2(0, -1f) };
-            stats.ActingForce = () => new Vector2(0, .1f);
+            stats.ActingForce = (t) => new Vector2(0, .1f);
             stats.ParticleSize = new float[] { 1f, 2f };
             stats.ParticleSpeed = new float[] { .5f, 1 };
             stats.EmitRate = new float[] { FrameSpeed * 2 };
@@ -243,7 +243,8 @@ namespace IdleCollector
                 .Select(pair => pair.Value.Select(r => new Rectangle(r.Location, r.Size)).ToArray())
                 .ToArray();
             stats.ParticleRotation = new float[] { 0, 5 };
-            stats.ParticleRotationSpeed = new float[] { 0.1f, .2f };
+            float rot = RandomHelper.Instance.GetFloat(0.1f, .2f);
+            stats.ParticleRotationSpeed = (t) => rot;
             stats.ParticleLifeSpan = new float[] { .5f };
 
             walkParticles = new ParticleSystem(stats);

@@ -15,7 +15,7 @@ namespace IdleEngine
     {
         public GetVector Position;
         public Vector2 StartingVelocity;
-        public GetVector ActingForce;
+        public Curve<Vector2> ActingForce;
         public float Speed;
 
         public float Lifespan;
@@ -30,7 +30,7 @@ namespace IdleEngine
         public Curve SizeDecayRate;
 
         public float Rotation;
-        public float RotationSpeed;
+        public Curve<float> RotationSpeed;
 
         public string ParticleText;
         public SpriteFont Font;
@@ -92,8 +92,10 @@ namespace IdleEngine
         {
             lifeSpan -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            float t = lifeSpan / stats.Lifespan;
+
             if (stats.ActingForce != null)
-                velocity += stats.ActingForce.Invoke();
+                velocity += stats.ActingForce.Invoke(t);
 
             position += velocity * stats.Speed;
         }
@@ -106,7 +108,7 @@ namespace IdleEngine
 
             colorDecay = stats.ColorDecayRate(t);
 
-            rotationAngle += stats.RotationSpeed;
+            rotationAngle += stats.RotationSpeed(t);
         }
 
         public void SlowUpdate(GameTime gameTime)

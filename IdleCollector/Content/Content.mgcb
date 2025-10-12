@@ -18,10 +18,53 @@
 /processor:EffectProcessor
 /build:Effects/Pixel.fx
 
+#begin Fonts/DePixelHalbfett.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelHalbfett.spritefont
+
+#begin Fonts/DePixelKlein.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelKlein.spritefont
+
 #begin Fonts/Medodica.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /build:Fonts/Medodica.spritefont
+
+#begin SaveData/PlayerData.txt
+/copy:SaveData/PlayerData.txt
+
+#begin SaveData/SpawnData.txt
+/copy:SaveData/SpawnData.txt
+
+#begin SaveData/WorldData.txt
+/copy:SaveData/WorldData.txt
+
+#begin Textures/atlas.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/atlas.png
+
+#begin Textures/atlas1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/atlas1.png
 
 #begin Textures/atlas2.png
 /importer:TextureImporter
@@ -46,6 +89,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/atlas3.png
+
+#begin Textures/cactusIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/cactusIcon.png
 
 #begin Textures/charSheet.png
 /importer:TextureImporter
@@ -179,6 +234,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/dust9.png
 
+#begin Textures/flowerIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/flowerIcon.png
+
 #begin Textures/fox_outline.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -227,6 +294,18 @@
 /processorParam:TextureFormat=Color
 /build:Textures/grass.png
 
+#begin Textures/grassIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/grassIcon.png
+
 #begin Textures/newGame.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -250,6 +329,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/newGameH.png
+
+#begin Textures/resourceBar.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/resourceBar.png
 
 #begin Textures/screen.png
 /importer:TextureImporter
@@ -323,52 +414,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/tempPause.png
 
-#begin Fonts/DePixelHalbfett.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/build:Fonts/DePixelHalbfett.spritefont
-
-#begin Fonts/DePixelKlein.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/build:Fonts/DePixelKlein.spritefont
-
-#begin Textures/resourceBar.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/resourceBar.png
-
-#begin Textures/cactusIcon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/cactusIcon.png
-
-#begin Textures/flowerIcon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/flowerIcon.png
-
 #begin Textures/treeIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -381,31 +426,13 @@
 /processorParam:TextureFormat=Color
 /build:Textures/treeIcon.png
 
-#begin Textures/grassIcon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/grassIcon.png
+#begin SaveData/atlasKeys.txt
+/copy:SaveData/atlasKeys.txt
 
-#begin Textures/atlas1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/atlas1.png
+#begin SaveData/ResourceData.json
+/copy:SaveData/ResourceData.json
 
-#begin Textures/atlas.png
+#begin Textures/grass1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -415,4 +442,52 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/atlas.png
+/build:Textures/grass1.png
+
+#begin Textures/grass2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/grass2.png
+
+#begin Textures/grass3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/grass3.png
+
+#begin Textures/grass4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/grass4.png
+
+#begin Textures/grass5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/grass5.png
