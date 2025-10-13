@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using IdleEngine;
+using System.Windows;
 using System.Collections.Generic;
 using System;
 using System.Diagnostics;
@@ -24,8 +25,8 @@ namespace IdleCollector
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.SynchronizeWithVerticalRetrace = true;
-            _graphics.HardwareModeSwitch = false;
             _graphics.IsFullScreen = false;
+            _graphics.HardwareModeSwitch = false;
             _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -38,6 +39,8 @@ namespace IdleCollector
             SceneManager.Initialize(MainScene, _graphics, new Point(240 * 2, 135 * 2));
             Drawing.Initialize(_spriteBatch);
 
+            FileIO.InDebug = true;
+
             base.Initialize();
         }
 
@@ -48,6 +51,7 @@ namespace IdleCollector
             ResourceAtlas.LoadTilemap(Content, "Content/SaveData/atlasKeys.txt", "Textures/atlas");
             ResourceAtlas.LoadTextures(Content, "Content/Textures/", "Textures");
             ResourceAtlas.LoadFonts(Content, "Content/Fonts/", "Fonts");
+            ResourceAtlas.LoadSongs(Content, "Content/Audio/", "Audio");
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>

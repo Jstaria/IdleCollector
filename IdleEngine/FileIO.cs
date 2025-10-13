@@ -16,6 +16,8 @@ namespace IdleCollector
 {
     public static class FileIO
     {
+        public static bool InDebug {  get; set; }
+
         /// <summary>
         /// Initializes file path for writing, useful for created save files
         /// </summary>
@@ -55,6 +57,29 @@ namespace IdleCollector
                 // too-fast of reading and writing and then opening before it can close, I haven't experienced any loss of save data since
                 // implementing this, so I see it as a win
             }
+
+            if (InDebug)
+            {
+                stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+
+                try
+                {
+                    StreamWriter fileWriter = new StreamWriter(stream, false);
+
+                    foreach (string item in data)
+                    {
+                        fileWriter.WriteLine(item);
+                    }
+
+                    fileWriter.Close();
+                }
+                catch
+                {
+                    // This catch is specifically for the problem that I kept having with it not closing a document from what I assume is
+                    // too-fast of reading and writing and then opening before it can close, I haven't experienced any loss of save data since
+                    // implementing this, so I see it as a win
+                }
+            }
         }
 
         /// <summary>
@@ -74,6 +99,20 @@ namespace IdleCollector
             }
 
             fileWriter.Close();
+
+            if (InDebug)
+            {
+                stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+
+                fileWriter = new StreamWriter(stream, true);
+
+                foreach (string item in data)
+                {
+                    fileWriter.WriteLine(item);
+                }
+
+                fileWriter.Close();
+            }
         }
 
         /// <summary>
@@ -93,6 +132,20 @@ namespace IdleCollector
             }
 
             fileWriter.Close();
+
+            if (InDebug)
+            {
+                stream = String.Format("../../../Content/{0}/{1}.txt", folder, name);
+
+                fileWriter = new StreamWriter(stream);
+
+                foreach (float item in data)
+                {
+                    fileWriter.WriteLine(item);
+                }
+
+                fileWriter.Close();
+            }
         }
 
         /// <summary>
@@ -213,6 +266,11 @@ namespace IdleCollector
             string json = JsonConvert.SerializeObject(instance, format);
 
             File.WriteAllText(path, json);
+
+            if (InDebug)
+            {
+                File.WriteAllText("../../../" + path, json);
+            }
         }
     }
 }

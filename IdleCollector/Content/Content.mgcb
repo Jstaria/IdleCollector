@@ -491,3 +491,26 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/grass5.png
+
+#begin SaveData/VolumeData.json
+/copy:SaveData/VolumeData.json
+
+#begin Audio/imagefilm-043-by-sascha-ende-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/build:Audio/imagefilm-043-by-sascha-ende-from-filmmusic-io.mp3
+
+#begin Audio/story-of-a-fairy-by-sascha-ende-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/build:Audio/story-of-a-fairy-by-sascha-ende-from-filmmusic-io.mp3
+
+#begin Audio/story-of-a-sunflower-by-sascha-ende-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/build:Audio/story-of-a-sunflower-by-sascha-ende-from-filmmusic-io.mp3
+
+#begin Audio/stranded-by-sascha-ende-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/build:Audio/stranded-by-sascha-ende-from-filmmusic-io.mp3

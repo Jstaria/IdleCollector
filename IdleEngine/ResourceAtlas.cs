@@ -129,12 +129,12 @@ namespace IdleEngine
         /// <param name="fullFilePath">Full directory file path</param>
         /// <param name="folder">Folder path</param>
         /// <param name="fileType">Ending suffix only (Ex. mp3)</param>
-        public static void LoadSongs(ContentManager Content, string fullFilePath, string folder, string fileType)
+        public static void LoadSongs(ContentManager Content, string fullFilePath, string folder)
         {
             songs = new Dictionary<string, Song>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
-            FileInfo[] files = di.GetFiles("*." + fileType);
+            FileInfo[] files = di.GetFiles("*.xnb");
 
             int filesLength = files.Length;
 
@@ -189,5 +189,8 @@ namespace IdleEngine
                 fonts.Add(name, media);
             }
         }
+
+        public static Dictionary<string, Song> GetSongs() => songs;
+        public static Dictionary<string, SoundEffect> GetSoundEffects() => soundEffects;
     }
 }

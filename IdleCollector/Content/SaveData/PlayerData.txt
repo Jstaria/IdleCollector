@@ -1,4 +1,4 @@
 ﻿speed: 2
-spawnRange: 50
+spawnRange: 20
 interactRange: 10
-spawnFrequency: .5
+spawnFrequency: 1
