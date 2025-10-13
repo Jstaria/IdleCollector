@@ -79,7 +79,7 @@ namespace IdleCollector
 
             int index = (queueIndex + 1);
 
-            if (index < queue.Count && !Loop) return;
+            if (index > queue.Count && !Loop) return;
 
             queueIndex = index % queue.Count;
             playingSong = queue[queueIndex];
@@ -100,7 +100,7 @@ namespace IdleCollector
                 {
                     currentSong = album.ElementAt(RandomHelper.Instance.GetIntExclusive(0, album.Count)).Value;
                 }
-                while (lastsong != currentSong);
+                while (lastsong == currentSong);
 
                 queue.Add(currentSong);
                 lastsong = currentSong;
