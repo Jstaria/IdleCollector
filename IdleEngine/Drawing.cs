@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -14,13 +15,17 @@ namespace IdleEngine
         private static Texture2D pixel;
 
         private static Texture2D cachedCircle;
+        private static Dictionary<KeyValuePair<float, float>, Texture2D> cachedCircleOutlines;
+        private static Dictionary<KeyValuePair<float, float>, Texture2D> cachedCircles;
 
         public static void Initialize(SpriteBatch sb)
         {
             pixel = new Texture2D(sb.GraphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
 
-            cachedCircle = CreateCircleTexture(sb.GraphicsDevice, 100);
+            cachedCircle = CreateCircleTexture(sb.GraphicsDevice, 0, 100);
+            cachedCircleOutlines = new();
+            cachedCircles = new();
         }
 
         #region Line
@@ -73,8 +78,6 @@ namespace IdleEngine
 
         public static void DrawCircle(this SpriteBatch sb, Vector2 centerPoint, float radius, Color color, float layerDepth = 0)
         {
-            //if (!cachedCircles.ContainsKey(radius))
-            //    cachedCircles.Add(radius, CreateCircleTexture(sb.GraphicsDevice, radius));
             float texRadius = cachedCircle.Width / 2f; 
             float scale = radius / texRadius;          
 
@@ -84,14 +87,61 @@ namespace IdleEngine
             sb.Draw(cachedCircle, drawPos, null, color, 0f, origin, scale, SpriteEffects.None, layerDepth);
         }
 
-        private static Texture2D CreateCircleTexture(GraphicsDevice graphicsDevice, int radius)
+        public static void DrawCircleCompletion(this SpriteBatch sb, Vector2 centerPoint, float radius, float completionAngle, Color color, float layerDepth = 0)
         {
-            int diameter = radius * 2;
+            KeyValuePair<float, float> pair = new KeyValuePair<float, float>(radius, completionAngle);
+            if (!cachedCircles.ContainsKey(pair))
+            {
+                cachedCircles.Add(pair, CreateCircleTexture(sb.GraphicsDevice, 0, radius, completionAngle));
+            }
+
+            Vector2 origin = new Vector2(radius);
+            Vector2 drawPos = centerPoint;
+
+            sb.Draw(cachedCircles[pair], drawPos, null, color, 0f, origin, 1, SpriteEffects.None, layerDepth);
+        }
+
+        public static void DrawCircleOutline(this SpriteBatch sb, Vector2 centerPoint, float minRadius, float maxRadius, Color color, float layerDepth = 0)
+        {
+            KeyValuePair<float, float> pair = new KeyValuePair<float, float>(maxRadius, 1);
+            if (!cachedCircleOutlines.ContainsKey(pair))
+            {
+                cachedCircleOutlines.Add(pair, CreateCircleTexture(sb.GraphicsDevice, minRadius, maxRadius));
+            }
+
+            Vector2 origin = new Vector2(maxRadius);
+            Vector2 drawPos = centerPoint;
+
+            sb.Draw(cachedCircleOutlines[pair], drawPos, null, color, 0f, origin, 1, SpriteEffects.None, layerDepth);
+        }
+        public static void DrawCircleOutlineCompletion(this SpriteBatch sb, Vector2 centerPoint, float minRadius, float maxRadius, float completionAngle, Color color, float layerDepth = 0)
+        {
+            KeyValuePair<float, float> pair = new KeyValuePair<float, float>(maxRadius, completionAngle);
+            if (!cachedCircleOutlines.ContainsKey(pair))
+            {
+                cachedCircleOutlines.Add(pair, CreateCircleTexture(sb.GraphicsDevice, minRadius, maxRadius, completionAngle));
+            }
+
+            Vector2 origin = new Vector2(maxRadius);
+            Vector2 drawPos = centerPoint;
+
+            sb.Draw(cachedCircleOutlines[pair], drawPos, null, color, 0f, origin, 1, SpriteEffects.None, layerDepth);
+        }
+
+        private static Texture2D CreateCircleTexture(GraphicsDevice graphicsDevice, float minRadius, float maxRadius, float completionAngle = 1)
+        {
+            int diameter = (int)maxRadius * 2;
             Texture2D texture = new Texture2D(graphicsDevice, diameter, diameter);
 
             Color[] data = new Color[diameter * diameter];
-            Vector2 center = new Vector2(radius, radius);
-            float radiusSquared = radius * radius;
+            Vector2 center = new Vector2(maxRadius, maxRadius);
+
+            float maxRadiusSquared = maxRadius * maxRadius;
+            float minRadiusSquared = minRadius * minRadius;
+
+            completionAngle = MathHelper.ToRadians(completionAngle * 360); 
+
+            float startAngle = 3 * MathF.PI / 2;
 
             for (int y = 0; y < diameter; y++)
             {
@@ -99,9 +149,19 @@ namespace IdleEngine
                 {
                     int index = y * diameter + x;
                     Vector2 pos = new Vector2(x, y);
-                    float distSq = Vector2.DistanceSquared(pos, center);
+                    Vector2 dir = pos - center;
+                    float distSq = dir.LengthSquared();
 
-                    if (distSq <= radiusSquared)
+                    float angle = (float)Math.Atan2(dir.Y, dir.X);
+
+                    if (angle < 0)
+                        angle += MathHelper.TwoPi;
+
+                    float relativeAngle = angle - startAngle;
+                    if (relativeAngle < 0)
+                        relativeAngle += MathHelper.TwoPi;
+
+                    if (distSq <= maxRadiusSquared && distSq >= minRadiusSquared && relativeAngle <= completionAngle)
                         data[index] = Color.White;
                     else
                         data[index] = Color.Transparent;

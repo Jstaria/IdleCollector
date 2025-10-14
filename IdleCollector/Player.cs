@@ -59,6 +59,9 @@ namespace IdleCollector
 
         public override void Draw(SpriteBatch sb)
         {
+            sb.DrawCircleOutline(Position, spawnRange - 1, spawnRange, Color.White * .15f, .95f);
+            sb.DrawCircleCompletion(Position + Vector2.UnitY * 15, 5, prevSpawnTime / (spawnFrequency * 60.0f), Color.White * .5f, .95f);
+
             sb.Draw(spriteSheet, new Rectangle(Position.ToPoint(), Bounds.Size), new Rectangle(64 * CurrentFrame.X, 64 * CurrentFrame.Y, 64, 64), Color.White, 0, Origin, SpriteEffects.None, LayerDepth);
             sb.Draw(shadow, new Rectangle(Position.ToPoint(), Bounds.Size), null, Color.White, 0, Origin, SpriteEffects.None, LayerDepth - .0005f);
 
