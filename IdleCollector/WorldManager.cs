@@ -218,6 +218,7 @@ namespace IdleCollector
             stats.ParticleDespawnDistance = 500;
             stats.TrackLayerDepth = () => .995f;
             stats.ParticleTextureKeys = new string[] { "dust1", "dust2", "dust3", "dust4", "dust5", "dust6", "dust6", "dust6", "dust6", "dust6", "dust7"};
+            stats.ResetParticlesAfterDeath = true;
 
             Point renderSize = Renderer.RenderSize;
             int width = 100;
@@ -272,7 +273,7 @@ namespace IdleCollector
             stats.ParticleLifeSpan = new float[] { 1.5f, 2.5f };
             stats.ResetParticlesAfterDeath = false;
 
-            stats.StartingVelocity = new Vector2[] { new Vector2(-.1f, -1), new Vector2(.1f, -1) };
+            stats.StartingVelocity = new Vector2[] { new Vector2(-.1f, -.5f), new Vector2(.1f, -1f) };
             stats.ActingForce = (t) => (Vector2.UnitY * .02f - windManager.WindDirection * .01f);
 
             floraParticles = new ParticleSystem(stats);

@@ -22,8 +22,8 @@ namespace IdleCollector
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.PreferredBackBufferWidth = 1440;
+            _graphics.PreferredBackBufferHeight = 810;
             _graphics.SynchronizeWithVerticalRetrace = true;
             _graphics.IsFullScreen = false;
             _graphics.HardwareModeSwitch = false;
