@@ -52,6 +52,7 @@ namespace IdleCollector
             ResourceAtlas.LoadTextures(Content, "Content/Textures/", "Textures");
             ResourceAtlas.LoadFonts(Content, "Content/Fonts/", "Fonts");
             ResourceAtlas.LoadSongs(Content, "Content/Audio/", "Audio");
+            ResourceAtlas.LoadSoundEffects(Content, "Content/SoundEffects/", "SoundEffects");
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>

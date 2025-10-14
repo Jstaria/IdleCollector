@@ -11,49 +11,59 @@ using System.Threading.Tasks;
 
 namespace IdleCollector
 {
-    public class MusicController: IUpdatable
+    public class AudioController: IUpdatable
     {
-        private static MusicController instance;
-        public static MusicController Instance
+        private static AudioController instance;
+        public static AudioController Instance
         {
             get
             {
                 if (instance == null)
-                    instance = new MusicController();
+                    instance = new AudioController();
                 return instance;
             }
         }
 
-        public MusicController() { Initialize(); }
+        public AudioController() { Initialize(); }
 
         private Dictionary<string, Song> album;
+        private Dictionary<string, SoundEffect> soundEffects;
         private List<Song> queue;
         private Song playingSong;
 
-        private float volume;
+        private float musicVolume;
+        private float soundEffectVolume;
         private float masterVolume;
         private int queueIndex;
 
-        public bool Loop { get; set; }
+        private List<SoundEffectInstance> soundEffectInstances;
+
+        public bool LoopMusic { get; set; }
 
         public void Initialize()
         {
+            soundEffects = ResourceAtlas.GetSoundEffects();
+            soundEffectInstances = new();
+
             album = ResourceAtlas.GetSongs();
-            volume = VolumeController.Instance.MusicVolume;
+            musicVolume = VolumeController.Instance.MusicVolume;
+            soundEffectVolume = VolumeController.Instance.SoundEffectVolume;
             masterVolume = VolumeController.Instance.MasterVolume;
 
-            VolumeController.Instance.MusicVolumeEvent += ChangeVolume;
+            VolumeController.Instance.MusicVolumeEvent += ChangeMusic;
             VolumeController.Instance.MasterVolumeEvent += ChangeMaster;
+            VolumeController.Instance.SoundEffectVolumeEvent += ChangeSoundEffect;
 
             MakeQueue();
 
             playingSong = queue[0];
             MediaPlayer.Play(playingSong);
-            MediaPlayer.Volume = volume * masterVolume;
+            MediaPlayer.Volume = musicVolume * masterVolume;
         }
 
-        public void ChangeVolume(float volume) => this.volume = volume; 
+        public void ChangeMusic(float volume) => musicVolume = volume; 
         public void ChangeMaster(float volume) => masterVolume = volume;
+        public void ChangeSoundEffect(float volume) => soundEffectVolume = volume;
 
         public void ControlledUpdate(GameTime gameTime)
         {
@@ -70,16 +80,19 @@ namespace IdleCollector
         {
             PlayNextSong();
 
-            MediaPlayer.Volume = volume * masterVolume;
+            MediaPlayer.Volume = musicVolume * masterVolume;
+
+            CleanSoundInstances();
         }
 
+        #region Music
         private void PlayNextSong()
         {
             if (MediaPlayer.State == MediaState.Playing) return;
 
             int index = (queueIndex + 1);
 
-            if (index > queue.Count && !Loop) return;
+            if (index > queue.Count && !LoopMusic) return;
 
             queueIndex = index % queue.Count;
             playingSong = queue[queueIndex];
@@ -106,5 +119,24 @@ namespace IdleCollector
                 lastsong = currentSong;
             }
         }
+        #endregion
+        #region Sound Effect
+        public void PlaySoundEffect(string name, float pitch)
+        {
+            SoundEffectInstance effectInstance = soundEffects[name].CreateInstance();
+
+            effectInstance.Volume = masterVolume * soundEffectVolume;
+            effectInstance.Pitch = pitch;
+            
+            effectInstance.Play();
+
+            soundEffectInstances.Add(effectInstance);
+        }
+
+        private void CleanSoundInstances()
+        {
+            soundEffectInstances = soundEffectInstances.Where((w) => (w.State == SoundState.Playing)).ToList();
+        }
+        #endregion
     }
 }

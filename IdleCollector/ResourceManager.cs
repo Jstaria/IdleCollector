@@ -98,6 +98,8 @@ namespace IdleCollector
         {
             AddPointsTo(obj.ResourceInfo.Name, obj.ResourceInfo.Count);
             resourceObjs.Remove(obj);
+
+            AudioController.Instance.PlaySoundEffect("pop", RandomHelper.Instance.GetFloat(0,1));
         }
 
         public void SpawnResourceUIObj(Vector2 worldPosition, ResourceInfo info)

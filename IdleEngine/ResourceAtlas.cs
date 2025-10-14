@@ -154,12 +154,12 @@ namespace IdleEngine
         /// <param name="fullFilePath">Full directory file path</param>
         /// <param name="folder">Folder path</param>
         /// <param name="fileType">Ending suffix only (Ex. mp3)</param>
-        public static void LoadSoundEffects(ContentManager Content, string fullFilePath, string folder, string fileType)
+        public static void LoadSoundEffects(ContentManager Content, string fullFilePath, string folder)
         {
             soundEffects = new Dictionary<string, SoundEffect>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
-            FileInfo[] files = di.GetFiles("*." + fileType);
+            FileInfo[] files = di.GetFiles("*.xnb");
 
             int filesLength = files.Length;
 

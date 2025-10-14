@@ -182,7 +182,11 @@ namespace IdleCollector
             }
 
             if (grownTiles > 0)
+            {
+                AudioController.Instance.PlaySoundEffect("pop", -1);
                 Renderer.CurrentCamera.ShakeCamera(40, .5f, Vector2.Normalize(RandomHelper.Instance.GetVector2(Vector2.One, -Vector2.One))*200);
+            }
+                
         }
 
         private void LoadWorldData(string name, string folder)

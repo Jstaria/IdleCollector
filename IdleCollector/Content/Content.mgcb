@@ -514,3 +514,8 @@
 /importer:Mp3Importer
 /processor:SongProcessor
 /build:Audio/stranded-by-sascha-ende-from-filmmusic-io.mp3
+
+#begin SoundEffects/pop.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/pop.mp3

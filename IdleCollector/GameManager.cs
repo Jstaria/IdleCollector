@@ -60,13 +60,13 @@ namespace IdleCollector
         private float saveDelay = 30;
         private float saveTimer;
 
-        private MusicController musicCon;
+        private AudioController musicCon;
 
         public GameManager()
         {
             Type = UpdateType.Standard;
 
-            musicCon = MusicController.Instance;
+            musicCon = AudioController.Instance;
             Updater.AddToUpdate(musicCon);
 
             SetupGameScene(GameScene);
