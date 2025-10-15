@@ -225,10 +225,13 @@ namespace IdleCollector
 
                 Renderer.CurrentCamera.SetBounds(adjustedWorldBounds);
                 Renderer.CurrentCamera.UseBounds = true;
+
+                AmbienceController.Instance.PlayContAmbience();
             });
             Updater.AddToSceneExit(GameScene, () =>
             {
                 Renderer.CurrentCamera.UseBounds = false;
+                AmbienceController.Instance.KillAmbience();
             });
         }
 

@@ -519,3 +519,38 @@
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /build:SoundEffects/pop.mp3
+
+#begin SoundEffects/placeGrass.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/placeGrass.mp3
+
+#begin SoundEffects/resourceCollect.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/resourceCollect.mp3
+
+#begin SoundEffects/grassPlace2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grassPlace2.mp3
+
+#begin SoundEffects/grassPlace1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grassPlace1.mp3
+
+#begin SoundEffects/resourceCollect2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/resourceCollect2.mp3
+
+#begin SoundEffects/wind.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/wind.mp3
+
+#begin SoundEffects/footstep.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/footstep.mp3

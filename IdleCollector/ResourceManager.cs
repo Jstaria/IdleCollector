@@ -99,7 +99,7 @@ namespace IdleCollector
             AddPointsTo(obj.ResourceInfo.Name, obj.ResourceInfo.Count);
             resourceObjs.Remove(obj);
 
-            AudioController.Instance.PlaySoundEffect("pop", RandomHelper.Instance.GetFloat(0,1));
+            AudioController.Instance.PlaySoundEffect("resourceCollect2", RandomHelper.Instance.GetFloat(0,1));
         }
 
         public void SpawnResourceUIObj(Vector2 worldPosition, ResourceInfo info)
@@ -110,7 +110,8 @@ namespace IdleCollector
                 Renderer.GetScreenPosition(worldPosition), 
                 new Vector2(50, 1030), 
                 LayerDepth, 
-                DespawnResourceUIObj);
+                DespawnResourceUIObj,
+                RandomHelper.Instance.GetFloat(.75f, 1.25f));
 
             if (resources[info.Name].HasTrail)
             {

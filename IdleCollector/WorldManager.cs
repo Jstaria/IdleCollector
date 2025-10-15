@@ -46,6 +46,10 @@ namespace IdleCollector
         {
             Initialize();
 
+            AmbienceController.Instance.AddContAmbience("wind");
+
+            //AmbienceController.Instance.AddRandAmbience("");
+
             Type = UpdateType.Controlled;
         }
 
@@ -183,7 +187,8 @@ namespace IdleCollector
 
             if (grownTiles > 0)
             {
-                AudioController.Instance.PlaySoundEffect("pop", -1);
+                AudioController.Instance.PlaySoundEffect("grassPlace1", 0f);
+                AudioController.Instance.PlaySoundEffect("placeGrass", RandomHelper.Instance.GetFloat(-1,0));
                 Renderer.CurrentCamera.ShakeCamera(40, .5f, Vector2.Normalize(RandomHelper.Instance.GetVector2(Vector2.One, -Vector2.One))*200);
             }
                 

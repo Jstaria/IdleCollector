@@ -1,7 +1,7 @@
 {
-  "MasterVolume": 0.5,
+  "MasterVolume": 1.0,
   "SoundEffectVolume": 0.5,
-  "MusicVolume": 0.0,
+  "MusicVolume": 0.25,
   "CharacterVolume": 0.5,
   "AmbientVolume": 0.5
 }
