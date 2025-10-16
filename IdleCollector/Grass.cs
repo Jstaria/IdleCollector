@@ -15,7 +15,8 @@ namespace IdleCollector
         private Color InvWaveColor;
         private Color[] touched = new Color[] { new Color(166, 160, 98), new Color(166, 160, 98) };
         private float coolDown = 1;
-
+        private bool playGrass;
+        private bool prevGrass;
         public override Vector2 Origin { get => new Vector2(Bounds.Width / 2, Bounds.Height / 2); }
 
         public Grass() : base()
@@ -63,6 +64,16 @@ namespace IdleCollector
         public override void InteractWith(Entity collider)
         {
             SetRotation(collider, 25, .5f, true);
+
+            playGrass = Vector2.DistanceSquared(collider.Position, Position) < 25;
+
+            if (playGrass && !prevGrass)
+            {
+                AudioController.Instance.PlaySoundEffect("grass" + RandomHelper.Instance.GetInt(8, 11), "soundEffectVolume", RandomHelper.Instance.GetFloat(-.5f, .5f));
+                AudioController.Instance.PlaySoundEffect("grass" + RandomHelper.Instance.GetInt(1, 7), "soundEffectVolume",RandomHelper.Instance.GetFloat(-.5f, .5f));
+            }
+        
+            prevGrass = playGrass;
         }
         public override void SecondaryInteractWith(Entity collider)
         {

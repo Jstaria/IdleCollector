@@ -144,7 +144,7 @@ namespace IdleCollector
                 float CurrentFrameX = 1 + ((betweenFrame.X % (FrameCount.X - 1)));
 
                 if (CurrentFrame.X % 3 == 0)
-                    AudioController.Instance.PlaySoundEffect("footstep", RandomHelper.Instance.GetFloat(-.5f, .5f));
+                    AudioController.Instance.PlaySoundEffect("footstep", "characterVolume", RandomHelper.Instance.GetFloat(-.5f, .5f));
 
                 bool up = bools[0];
                 bool left = bools[1];

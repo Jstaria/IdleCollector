@@ -554,3 +554,58 @@
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /build:SoundEffects/footstep.mp3
+
+#begin SoundEffects/grass1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass1.mp3
+
+#begin SoundEffects/grass2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass2.mp3
+
+#begin SoundEffects/grass3.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass3.mp3
+
+#begin SoundEffects/grass4.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass4.mp3
+
+#begin SoundEffects/grass5.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass5.mp3
+
+#begin SoundEffects/grass6.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass6.mp3
+
+#begin SoundEffects/grass7.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass7.mp3
+
+#begin SoundEffects/grass8.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass8.mp3
+
+#begin SoundEffects/grass9.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass9.mp3
+
+#begin SoundEffects/grass10.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass10.mp3
+
+#begin SoundEffects/grass11.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass11.mp3

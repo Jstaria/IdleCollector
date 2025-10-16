@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,6 +35,7 @@ namespace IdleCollector
         private float musicVolume;
         private float soundEffectVolume;
         private float masterVolume;
+        private float characterVolume;
         private int queueIndex;
 
         private List<SoundEffectInstance> soundEffectInstances;
@@ -48,11 +50,13 @@ namespace IdleCollector
             album = ResourceAtlas.GetSongs();
             musicVolume = VolumeController.Instance.MusicVolume;
             soundEffectVolume = VolumeController.Instance.SoundEffectVolume;
+            characterVolume = VolumeController.Instance.CharacterVolume;
             masterVolume = VolumeController.Instance.MasterVolume;
 
             VolumeController.Instance.MusicVolumeEvent += ChangeMusic;
             VolumeController.Instance.MasterVolumeEvent += ChangeMaster;
             VolumeController.Instance.SoundEffectVolumeEvent += ChangeSoundEffect;
+            VolumeController.Instance.CharacterVolumeEvent += ChangeCharacter;
 
             MakeQueue();
 
@@ -64,6 +68,7 @@ namespace IdleCollector
         public void ChangeMusic(float volume) => musicVolume = volume; 
         public void ChangeMaster(float volume) => masterVolume = volume;
         public void ChangeSoundEffect(float volume) => soundEffectVolume = volume;
+        public void ChangeCharacter(float volume) => characterVolume = volume;
 
         public void ControlledUpdate(GameTime gameTime)
         {
@@ -121,11 +126,12 @@ namespace IdleCollector
         }
         #endregion
         #region Sound Effect
-        public void PlaySoundEffect(string name, float pitch)
+        public void PlaySoundEffect(string name, string volumeType, float pitch)
         {
             SoundEffectInstance effectInstance = soundEffects[name].CreateInstance();
+            float volume = (float)typeof(AudioController).GetField(volumeType, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(instance);
 
-            effectInstance.Volume = masterVolume * soundEffectVolume;
+            effectInstance.Volume = masterVolume * volume;
             effectInstance.Pitch = pitch;
             
             effectInstance.Play();

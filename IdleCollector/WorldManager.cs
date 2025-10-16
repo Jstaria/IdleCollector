@@ -136,6 +136,11 @@ namespace IdleCollector
             //{
             //    tileTree.DrawActiveBounds(sb);
             //}
+
+            if (Game1.online != null)
+            {
+                sb.Draw(Game1.online, new Rectangle(500, 100, 50, 90), null, Color.White, 0, new Vector2(25, 45), SpriteEffects.None, GetLayerDepth(190+20));
+            }
         }
 
         private void Initialize()
@@ -187,8 +192,8 @@ namespace IdleCollector
 
             if (grownTiles > 0)
             {
-                AudioController.Instance.PlaySoundEffect("grassPlace1", 0f);
-                AudioController.Instance.PlaySoundEffect("placeGrass", RandomHelper.Instance.GetFloat(-1,0));
+                AudioController.Instance.PlaySoundEffect("grassPlace1", "soundEffectVolume", 0f);
+                AudioController.Instance.PlaySoundEffect("placeGrass", "soundEffectVolume", RandomHelper.Instance.GetFloat(-1,0));
                 Renderer.CurrentCamera.ShakeCamera(40, .5f, Vector2.Normalize(RandomHelper.Instance.GetVector2(Vector2.One, -Vector2.One))*200);
             }
                 

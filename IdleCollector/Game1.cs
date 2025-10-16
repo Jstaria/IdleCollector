@@ -16,6 +16,8 @@ namespace IdleCollector
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        public static Texture2D online;
+
         private Button button;
         private GameManager _gameManager;
         public static string MainScene = "Main Scene";
@@ -62,6 +64,8 @@ namespace IdleCollector
             });
 
             _gameManager = new GameManager();
+
+            online = await WebHelper.RetrieveImage(_spriteBatch.GraphicsDevice, "https://static.wikia.nocookie.net/benverse/images/5/5e/DripGoku.png/revision/latest?cb=20230518040538");
 
             LoadButtons();
             //LoadEffects();
@@ -120,6 +124,9 @@ namespace IdleCollector
             Renderer.Draw(_spriteBatch);
 
             _spriteBatch.Begin();
+
+            //if (online != null)
+                //_spriteBatch.Draw(online, new Vector2(500, 100), Color.White);
 
             _spriteBatch.End();
 

@@ -99,7 +99,7 @@ namespace IdleCollector
             AddPointsTo(obj.ResourceInfo.Name, obj.ResourceInfo.Count);
             resourceObjs.Remove(obj);
 
-            AudioController.Instance.PlaySoundEffect("resourceCollect2", RandomHelper.Instance.GetFloat(0,1));
+            AudioController.Instance.PlaySoundEffect("resourceCollect2", "soundEffectVolume",RandomHelper.Instance.GetFloat(0,1));
         }
 
         public void SpawnResourceUIObj(Vector2 worldPosition, ResourceInfo info)

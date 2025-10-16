@@ -69,9 +69,9 @@ namespace IdleCollector
             if (randNum < Stats.RareSpawnChance)
             {
                 rect = ResourceAtlas.GetRandomTileRect("rareCactus");
-                if (rect.Height == 112)
+                if (rect.Height == 96)
                 {
-                    origin = new Vector2(rect.Width / 2, rect.Height * .625f);
+                    origin = new Vector2(rect.Width / 2, rect.Height * .725f);
                     rotationAmt = MathHelper.ToRadians(5f);
                 }
             }
