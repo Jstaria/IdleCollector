@@ -36,9 +36,6 @@
 #begin SaveData/PlayerData.txt
 /copy:SaveData/PlayerData.txt
 
-#begin SaveData/SpawnData.txt
-/copy:SaveData/SpawnData.txt
-
 #begin SaveData/WorldData.txt
 /copy:SaveData/WorldData.txt
 
@@ -609,3 +606,6 @@
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /build:SoundEffects/grass11.mp3
+
+#begin SaveData/SpawnData.json
+/copy:SaveData/SpawnData.json

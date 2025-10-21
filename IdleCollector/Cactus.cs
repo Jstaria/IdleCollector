@@ -32,10 +32,13 @@ namespace IdleCollector
         private Spring rotSpringLeft;
         private Spring rotSpringRight;
 
+        private List<Resource> spawnedResources;
+
         public Cactus()
         {
             RandomHelper random = RandomHelper.Instance;
 
+            spawnedResources = new List<Resource>();
             MultiStructure = random.GetBool();
             rotationAmt = MathHelper.ToRadians(7.5f);
             xOffsetAmt = Vector2.UnitX;

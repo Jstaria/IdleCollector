@@ -8,6 +8,7 @@ namespace IdleCollector
 {
     public struct InteractableStats
     {
+        public string ClassName;
         public float SpawnChance;
         public float ProductionRate;
         public float RareSpawnChance;

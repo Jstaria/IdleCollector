@@ -1,13 +1,14 @@
 ﻿using IdleEngine;
-using Microsoft.VisualBasic.FileIO;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
+
+using System.Reflection;
 
 namespace IdleCollector
 {
@@ -61,33 +62,22 @@ namespace IdleCollector
         private void CreateDict()
         {
             floraStats = new();
+            FileIO.ReadJsonInto(floraStats, "Content/SaveData/SpawnData.json");
+        }
 
-            List<string> data = FileIO.ReadFrom("SpawnData", "SaveData");
+        private void UpdateDict()
+        {
+            floraStats = new();
 
-            foreach (string key in data)
-            {
-                string[] dataLine = key.Split("|");
+            InteractableStats stats = new();
+            stats.RareSpawnChance = 0.01f;
+            stats.SpawnChance = 0.005f;
+            stats.ProductionRate = .25f;
+            stats.ClassName = "Cactus";
 
-                Object stats = new InteractableStats();
+            floraStats.Add("Cactus", stats);
 
-                Type type = typeof(InteractableStats);
-
-                string[] statsData = dataLine[1].Split(",");
-
-                foreach (string property in statsData)
-                {
-                    string[] splitLine = property.Split(":");
-
-                    FieldInfo field = type.GetField(splitLine[0].Trim(), BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                    
-                    if (field != null)
-                    {
-                        field.SetValue(stats, Convert.ChangeType(splitLine[1].Trim(), field.FieldType));
-                    }
-                }
-
-                floraStats.Add(dataLine[0], (InteractableStats)stats);
-            }
+            FileIO.WriteJsonTo(floraStats, "Content/SaveData/SpawnData.json", Formatting.Indented);
         }
     }
 }

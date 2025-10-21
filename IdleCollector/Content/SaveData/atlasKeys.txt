@@ -4,3 +4,4 @@
 64x96 rareCactus:mc1,mc2,mc3,mc4
 32x32 horFence:fence1,fence2,fence3,fence4,fence5 BLFence:fence1 TRFence:fence1 TLFence:fence1 BRFence:fence1
 32x32 verFence:fence1,fence2,fence3,fence4,fence5
+96x8 cactusFlower1:flower cactusFlower2:flower cactusFlower3:flower

@@ -16,6 +16,10 @@ namespace IdleCollector
 
         private Dictionary<string, SoundEffect> sounds;
         private Dictionary<string, SoundEffectInstance> continuousAmbiences;
+        private Dictionary<string, SoundEffectInstance> randomAmbiences;
+
+        private float masterVolume;
+        private float ambientVolume;
 
         private static AmbienceController instance;
         public static AmbienceController Instance
@@ -33,8 +37,34 @@ namespace IdleCollector
             continuousAmbience = new List<string>();
             continuousAmbiences = new();
             randomAmbience = new List<string>();
+            randomAmbiences = new();
+
+            ambientVolume = VolumeController.Instance.AmbientVolume;
+            masterVolume = VolumeController.Instance.MasterVolume;
+
+            VolumeController.Instance.AmbientVolumeEvent += AmbientVolume;
+            VolumeController.Instance.MasterVolumeEvent += MasterVolume;
 
             sounds = ResourceAtlas.GetSoundEffects();
+        }
+
+        public void MasterVolume(float volume)
+        {
+            masterVolume = volume;
+            AdjustVolume();
+        }
+        public void AmbientVolume(float volume)
+        {
+            ambientVolume = volume;
+            AdjustVolume();
+        }
+
+        public void AdjustVolume()
+        {
+            foreach (SoundEffectInstance inst in continuousAmbiences.Values)
+                inst.Volume = masterVolume * ambientVolume;
+            foreach (SoundEffectInstance inst in randomAmbiences.Values)
+                inst.Volume = masterVolume * ambientVolume;
         }
 
         public void ControlledUpdate(GameTime gameTime)
@@ -74,6 +104,7 @@ namespace IdleCollector
             foreach (string cont in continuousAmbience)
             {
                 SoundEffectInstance instance = sounds[cont].CreateInstance();
+                instance.Volume = ambientVolume * masterVolume;
                 instance.IsLooped = true;
                 instance.Play();
 

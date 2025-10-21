@@ -37,6 +37,7 @@ namespace IdleCollector
         private List<Fence> fences;
         private CollisionTree<TilePiece> tileTree;
         private List<TilePiece> activeTiles;
+
         public Rectangle WorldBounds { get { return worldBounds; } }
         public UpdateType Type { get; set; }
         public float LayerDepth { get; set; }
@@ -108,7 +109,6 @@ namespace IdleCollector
             floraParticles.StandardUpdate(gameTime);
             windParticles.StandardUpdate(gameTime);
             windParticles.SetParticlesVelocity(-windManager.WindDirection);
-
         }
 
         public void Draw(SpriteBatch sb)
