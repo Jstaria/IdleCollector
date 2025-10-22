@@ -20,6 +20,12 @@ namespace IdleCollector
         protected float rotationAmt;
         protected Spring posSpring;
         protected Spring rotSpring;
+        protected List<Resource> spawnedResources;
+        protected List<Resource> toRemove;
+        protected ResourceInfo spawnedResourceInfo;
+        protected float spawnAmt;
+        protected float productionRate;
+        protected float passedTime;
 
         protected Interactable() { }
 
@@ -38,12 +44,38 @@ namespace IdleCollector
         public int WorldHeight { get; internal set; }
         public InteractableStats Stats { get; set; }
 
-        public abstract void ControlledUpdate(GameTime gameTime);
-        public abstract void StandardUpdate(GameTime gameTime);
-        public abstract void SlowUpdate(GameTime gameTime);
+        public virtual void ControlledUpdate(GameTime gameTime)
+        {
+            if (spawnedResources == null) return;
+
+            foreach (Resource resource in spawnedResources)
+                resource.ControlledUpdate(gameTime);
+        }
+        public virtual void StandardUpdate(GameTime gameTime)
+        {
+            if (spawnedResources == null) return;
+
+            foreach (Resource resource in spawnedResources)
+                resource.StandardUpdate(gameTime);
+
+            foreach (Resource resource in toRemove)
+                spawnedResources.Remove(resource);
+
+            toRemove.Clear();
+        }
+        public virtual void SlowUpdate(GameTime gameTime)
+        {
+            if (spawnedResources == null) return;
+
+            foreach (Resource resource in spawnedResources)
+                resource.SlowUpdate(gameTime);
+        }
         public virtual void Draw(SpriteBatch sb)
         {
-            sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, textureSourceRect, Color, Rotation, Origin, SpriteEffects.None, LayerDepth);
+            if (spawnedResources == null) return;
+
+            foreach (Resource resource in spawnedResources)
+                resource.Draw(sb);
         }
         public virtual void SetRotation(Entity collider, float amt, float offsetModifier, bool rotate)
         {
@@ -66,9 +98,35 @@ namespace IdleCollector
             rotSpring.RestPosition = lerp;
         }
 
-        public abstract void InteractWith(Entity entity);
+        public virtual void InteractWith(Entity entity)
+        {
+            if (spawnedResources == null) return;
+            
+            foreach (Resource resource in spawnedResources)
+                resource.OnPlayerWalk(entity);
+        }
         public virtual void SecondaryInteractWith(Entity enity) { }
         public abstract void Nudge(float strength);
         public abstract void ApplyWind(Vector2 windScroll, FastNoiseLite noise);
+
+        protected virtual void SpawnResource(string name, int fps, Point frameCount, ResourceInfo info, GameTime gameTime)
+        {
+            passedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (passedTime < 1) return;
+
+            passedTime = 0;
+            spawnAmt += productionRate;
+
+            if (spawnAmt >= 1)
+            {
+                spawnAmt--;
+
+                Resource resource = new Resource(info, name, fps, frameCount, Position);
+                resource.Despawn = Despawn;
+                spawnedResources.Add(resource);
+            }
+        }
+        protected virtual void Despawn(Resource r) => toRemove.Add(r);
     }
 }

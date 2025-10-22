@@ -14,7 +14,7 @@ using System.Diagnostics;
 
 namespace IdleCollector
 {
-    internal class ResourceInfo
+    public class ResourceInfo
     {
         public int Count;
         public int Multiplier;
@@ -43,7 +43,7 @@ namespace IdleCollector
         }
     }
 
-    internal class ResourceManager : ISaveable, IRenderable, IUpdatable, ITransform
+    public class ResourceManager : ISaveable, IRenderable, IUpdatable, ITransform
     {
         private static ResourceManager instance;
         public static ResourceManager Instance

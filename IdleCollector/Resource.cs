@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IdleCollector
 {
-    internal class Resource : Entity
+    public class Resource : Entity
     {
         private ResourceInfo info;
         private Rectangle textureRect;
@@ -19,6 +19,9 @@ namespace IdleCollector
         private Spring2D posSpring;
         private bool isSpringActive;
         private GetVector followPos;
+
+        public delegate void OnDespawn(Resource r);
+        public OnDespawn Despawn;
 
         public Resource(ResourceInfo info, string cactusFlower, int fps, Point frameCount, Vector2 position)
         {
@@ -36,14 +39,11 @@ namespace IdleCollector
         {
             if (!isSpringActive) return;
 
-            posSpring.RestPosition = followPos.Invoke();
             posSpring.Update();
         }
 
         public override void SlowUpdate(GameTime gameTime)
         {
-            if (Vector2.DistanceSquared(posSpring.Position, followPos.Invoke()) > 400) return;
-
 
         }
 
@@ -66,7 +66,18 @@ namespace IdleCollector
 
         public void OnPlayerWalk(Entity entity)
         {
-            throw new Exception("Resource not implemented");
+            float distance = Vector2.DistanceSquared(entity.Position, Position);
+
+            if (distance > entity.PickupRange * entity.PickupRange) return;
+
+            isSpringActive = true;
+            posSpring.RestPosition = entity.Position;
+
+            if (distance > 100) return;
+
+            ResourceManager.Instance.SpawnResourceUIObj(entity.Position, info);
+
+            Despawn?.Invoke(this);
         }
 
         public void ToggleSpring() => isSpringActive = !isSpringActive;

@@ -32,13 +32,12 @@ namespace IdleCollector
         private Spring rotSpringLeft;
         private Spring rotSpringRight;
 
-        private List<Resource> spawnedResources;
-
         public Cactus()
         {
             RandomHelper random = RandomHelper.Instance;
 
             spawnedResources = new List<Resource>();
+            toRemove = new();
             MultiStructure = random.GetBool();
             rotationAmt = MathHelper.ToRadians(7.5f);
             xOffsetAmt = Vector2.UnitX;
@@ -51,6 +50,8 @@ namespace IdleCollector
             rotSpringRight = new Spring(/*Angular Frequency*/10, /*Damping Ratio*/.2f, /*Resting Position*/0);
 
             Stats = SpawnManager.Instance.GetStats("Cactus");
+            productionRate = Stats.ProductionRate;
+            spawnedResourceInfo = new ResourceInfo("Cactus");
 
             switch (MultiStructure)
             {
@@ -117,6 +118,8 @@ namespace IdleCollector
 
         public override void InteractWith(Entity collider)
         {
+            base.InteractWith(collider);
+
             float distance = CollisionHelper.GetDistance(this, collider);
 
             Color color = DrawColor;
@@ -132,6 +135,7 @@ namespace IdleCollector
 
         public override void StandardUpdate(GameTime gameTime)
         {
+            base.StandardUpdate(gameTime);
             posSpring.Update();
             rotSpring.Update();
             Rotation = rotSpring.Position * rotationAmt;
@@ -145,6 +149,8 @@ namespace IdleCollector
         }
         public override void Draw(SpriteBatch sb)
         {
+            base.Draw(sb);
+
             Vector2 offset = xOffsetAmt * posSpring.Position;
             Rectangle rect = new Rectangle(Bounds.Location + offset.ToPoint(), Bounds.Size);
 
@@ -160,12 +166,13 @@ namespace IdleCollector
 
         public override void ControlledUpdate(GameTime gameTime)
         {
-
+            base.ControlledUpdate(gameTime);
+            SpawnResource("cactusFlower1", 12, new Point(12, 1), spawnedResourceInfo, gameTime);
         }
 
         public override void SlowUpdate(GameTime gameTime)
         {
-
+            base.SlowUpdate(gameTime);
         }
     }
 }

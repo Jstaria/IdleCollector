@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,13 +88,14 @@ namespace IdleCollector
                 RandomHelper random = RandomHelper.Instance;
                 Rectangle keyBounds = tile.Collider.Bounds;
 
-                List<Type> types = SpawnManager.Instance.GetSpawnedTypes();
+                var assembly = Assembly.GetExecutingAssembly();
+                List<InteractableStats> types = SpawnManager.Instance.GetSpawnedTypes();
 
                 for (int i = 0; i < types.Count; i++)
                 {
                     Vector2 position = random.GetVector2(Bounds);
 
-                    object interactable = Activator.CreateInstance(types[i]);
+                    object interactable = Activator.CreateInstance(assembly.GetType("IdleCollector." + types[i].ClassName));
 
                     {
                         Interactable plant = (Interactable)interactable;

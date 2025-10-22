@@ -16,6 +16,7 @@ namespace IdleCollector
         protected int speed;
         protected int spawnRange;
         protected int interactRange;
+        protected int pickupRange;
         protected float spawnFrequency;
         protected int prevSpawnTime;
         protected Vector2 velocity;
@@ -30,6 +31,7 @@ namespace IdleCollector
         public CollisionType CollisionType { get; set; }
         public float Radius { get => spawnRange; set => spawnRange = (int)value; }
         public int InteractRange { get => interactRange; }
+        public int PickupRange { get => pickupRange; }
         public Rectangle Bounds { get; set; }
         public bool IsCollidable { get; set; }
         public Rectangle WorldBounds { get; set; }

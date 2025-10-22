@@ -34,9 +34,9 @@ namespace IdleCollector
         
         public InteractableStats GetStats(string name) => floraStats[name];
 
-        public List<Type> GetSpawnedTypes()
+        public List<InteractableStats> GetSpawnedTypes()
         {
-            List<Type> types = new List<Type>();
+            List<InteractableStats> types = new();
 
             for (int i = 0; i < floraStats.Count; i++)
             {
@@ -46,8 +46,7 @@ namespace IdleCollector
 
                 if (randomNum < floraStats[keys[i]].SpawnChance)
                 {
-                    var assembly = Assembly.GetExecutingAssembly();
-                    types.Add(assembly.GetType("IdleCollector." + keys[i]));
+                    types.Add(floraStats[keys[i]]);
                 }
             }
 
