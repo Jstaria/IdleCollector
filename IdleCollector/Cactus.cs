@@ -51,7 +51,8 @@ namespace IdleCollector
 
             Stats = SpawnManager.Instance.GetStats("Cactus");
             productionRate = Stats.ProductionRate;
-            spawnedResourceInfo = new ResourceInfo("Cactus");
+            spawnedResourceInfo = new ResourceInfo("Flower");
+            spawnedResourceInfo.Count = 1;
 
             switch (MultiStructure)
             {

@@ -105,7 +105,7 @@ namespace IdleCollector
         public void SpawnResourceUIObj(Vector2 worldPosition, ResourceInfo info)
         {
             ResourceUIObject obj = new ResourceUIObject(
-                .75f, 
+                .75f,
                 info, 
                 Renderer.GetScreenPosition(worldPosition), 
                 new Vector2(50, 1030), 
@@ -141,6 +141,22 @@ namespace IdleCollector
             info.OutlineColor = Color.White * .25f;
 
             resources["Grass"].trailInfo = info;
+
+            info = new TrailInfo();
+            info.SegmentColor = (t) => Color.White;
+            info.TrackLayerDepth = () => LayerDepth;
+            info.TrackPosition = () => new Vector2(1000, 0);
+            info.NumberOfSegments = 100;
+            info.TrailLength = 250;
+            info.TipWidth = 12;
+            info.EndWidth = 0;
+            info.SegmentsPerSecond = (float)info.NumberOfSegments * .5f;
+            info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .5f;
+            info.HasOutline = true;
+            info.OutlineThickness = 8;
+            info.OutlineColor = Color.White * .25f;
+
+            resources["Flower"].trailInfo = info;
         }
 
         public void Load()

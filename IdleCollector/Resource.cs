@@ -32,7 +32,7 @@ namespace IdleCollector
             this.FrameCount = frameCount;
             this.Position = position;
             this.drawRect = new Rectangle(textureRect.Location, frameSize);
-            this.posSpring = new Spring2D(20, .25f, position);
+            this.posSpring = new Spring2D(20, 2f, position);
         }
 
         public override void ControlledUpdate(GameTime gameTime)
@@ -40,6 +40,7 @@ namespace IdleCollector
             if (!isSpringActive) return;
 
             posSpring.Update();
+            Position = posSpring.Position;
         }
 
         public override void SlowUpdate(GameTime gameTime)
