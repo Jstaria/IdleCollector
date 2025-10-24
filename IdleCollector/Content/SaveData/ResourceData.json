@@ -1,7 +1,7 @@
 {
   "resources": {
     "Grass": {
-      "Count": 1432,
+      "Count": 3429,
       "Multiplier": 1,
       "Name": "Grass",
       "IsUnlocked": true,
@@ -29,11 +29,11 @@
       }
     },
     "Flower": {
-      "Count": 226,
+      "Count": 1574,
       "Multiplier": 1,
       "Name": "Flower",
       "IsUnlocked": true,
-      "HasTrail": true  ,
+      "HasTrail": true,
       "IconTextureKey": "flowerIcon",
       "ResourceColor": {
         "B": 255,
