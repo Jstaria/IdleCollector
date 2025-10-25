@@ -11,6 +11,7 @@ namespace IdleCollector
         public string ClassName;
         public float SpawnChance;
         public float ProductionRate;
+        public int ProductionLimit;
         public float RareSpawnChance;
     }
 }

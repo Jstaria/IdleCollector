@@ -99,7 +99,8 @@ namespace IdleCollector
             AddPointsTo(obj.ResourceInfo.Name, obj.ResourceInfo.Count);
             resourceObjs.Remove(obj);
 
-            AudioController.Instance.PlaySoundEffect("resourceCollect2", "soundEffectVolume",RandomHelper.Instance.GetFloat(0,1));
+            if (resources[obj.ResourceInfo.Name].HasTrail)
+                AudioController.Instance.PlaySoundEffect("resourceCollect2", "soundEffectVolume",RandomHelper.Instance.GetFloat(0,1));
         }
 
         public void SpawnResourceUIObj(Vector2 worldPosition, ResourceInfo info)
@@ -116,7 +117,7 @@ namespace IdleCollector
             if (resources[info.Name].HasTrail)
             {
                 TrailInfo trailInfo = resources[info.Name].trailInfo;
-                trailInfo.SegmentColor = (t) => Color.Lerp(Color.White, resources[info.Name].ResourceColor, MathF.Pow(obj.T, .25f));
+                trailInfo.SegmentColor = (t) => Color.Lerp(Color.White, resources[info.Name].ResourceColor, MathF.Pow(obj.T, 4));
 
                 obj.CreateTrail(trailInfo);
             }
@@ -148,13 +149,13 @@ namespace IdleCollector
             info.TrackPosition = () => new Vector2(1000, 0);
             info.NumberOfSegments = 100;
             info.TrailLength = 250;
-            info.TipWidth = 12;
+            info.TipWidth = 6;
             info.EndWidth = 0;
             info.SegmentsPerSecond = (float)info.NumberOfSegments * .5f;
             info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .5f;
             info.HasOutline = true;
-            info.OutlineThickness = 8;
-            info.OutlineColor = Color.White * .25f;
+            info.OutlineThickness = 4;
+            info.OutlineColor = Color.White * .51f;
 
             resources["Flower"].trailInfo = info;
         }

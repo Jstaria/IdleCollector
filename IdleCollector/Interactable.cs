@@ -25,6 +25,7 @@ namespace IdleCollector
         protected ResourceInfo spawnedResourceInfo;
         protected float spawnAmt;
         protected float productionRate;
+        protected int productionLimit = 99;
         protected float passedTime;
 
         protected Interactable() { }
@@ -111,6 +112,7 @@ namespace IdleCollector
 
         protected virtual void SpawnResource(string name, int fps, Point frameCount, ResourceInfo info, GameTime gameTime)
         {
+            if (spawnedResources.Count > productionLimit) return;
             passedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (passedTime < 1) return;
@@ -118,11 +120,11 @@ namespace IdleCollector
             passedTime = 0;
             spawnAmt += productionRate;
 
-            if (spawnAmt >= 1)
+            while (spawnAmt >= 1)
             {
                 spawnAmt--;
 
-                Resource resource = new Resource(info, name, fps, frameCount, Position);
+                Resource resource = new Resource(info, name, fps, frameCount, Position - Vector2.UnitY * 16);
                 resource.Despawn = Despawn;
                 spawnedResources.Add(resource);
             }

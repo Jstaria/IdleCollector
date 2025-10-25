@@ -2,7 +2,8 @@
   "Cactus": {
     "ClassName": "Cactus",
     "SpawnChance": 0.005,
-    "ProductionRate": 0.125,
+    "ProductionRate": 1,
+    "ProductionLimit":  20,
     "RareSpawnChance": 0.01
   }
 }

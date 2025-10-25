@@ -128,6 +128,8 @@ namespace IdleCollector
         #region Sound Effect
         public void PlaySoundEffect(string name, string volumeType, float pitch)
         {
+            if (soundEffectInstances.Count > 128) return;
+
             SoundEffectInstance effectInstance = soundEffects[name].CreateInstance();
             float volume = (float)typeof(AudioController).GetField(volumeType, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(instance);
 

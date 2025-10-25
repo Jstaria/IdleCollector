@@ -51,6 +51,7 @@ namespace IdleCollector
 
             Stats = SpawnManager.Instance.GetStats("Cactus");
             productionRate = Stats.ProductionRate;
+            productionLimit = Stats.ProductionLimit;
             spawnedResourceInfo = new ResourceInfo("Flower");
             spawnedResourceInfo.Count = 1;
 
