@@ -18,6 +18,8 @@ namespace IdleCollector
 
         public static Texture2D online;
 
+        CustomText mainText;
+        int count = 0;
         private Button button;
         private GameManager _gameManager;
         public static string MainScene = "Main Scene";
@@ -37,11 +39,14 @@ namespace IdleCollector
         protected override void Initialize()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Services.AddService(_spriteBatch);
 
             SceneManager.Initialize(MainScene, _graphics, new Point(240 * 2, 135 * 2));
             Drawing.Initialize(_spriteBatch);
 
             FileIO.InDebug = true;
+            mainText = new CustomText(this, "Fonts/DePixelKlein", "", new Vector2(200, 100), new Vector2(2000, 50), color:Color.White, shadowColor:(Color.Black) * .5f, shadowOffset:new Vector2(-10,10));
+            mainText.Refresh();
 
             base.Initialize();
         }
@@ -116,6 +121,8 @@ namespace IdleCollector
         {
             Updater.Update(gameTime);
 
+            mainText.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+
             base.Update(gameTime);
         }
 
@@ -126,7 +133,16 @@ namespace IdleCollector
             _spriteBatch.Begin();
 
             //if (online != null)
-                //_spriteBatch.Draw(online, new Vector2(500, 100), Color.White);
+            //_spriteBatch.Draw(online, new Vector2(500, 100), Color.White);
+            if (Input.IsMiddleButtonDownOnce())
+            {
+                count++;
+                mainText.Text = string.Format("<fx {0},1,0,0>Hello World!</fx>", count);
+                mainText.Refresh();
+            }
+                
+            mainText.Draw();
+ 
 
             _spriteBatch.End();
 

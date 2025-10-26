@@ -1,19 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using IdleEngine;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
-using System.Security.AccessControl;
-using System.IO;
-using Newtonsoft.Json;
-using Microsoft.Xna.Framework;
-using IdleEngine;
-using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace IdleCollector
 {
+    #region // Extra Classes
+    internal class UIObj
+    {
+        public Vector2 offset;
+        public Spring xSpring;
+        public Texture2D backing;
+        public Texture2D icon;
+        public SpriteFont font;
+        public string text;
+        public float layerDepth;
+        public Color color;
+
+        public UIObj(string textureBack, string icon, string font, Color color, Vector2 offset, float layerDepth = .85f)
+        {
+            xSpring = new Spring(/*AngularFrequency*/20, /*DampingRatio*/1, 0);
+            backing = ResourceAtlas.GetTexture(textureBack);
+            this.icon = ResourceAtlas.GetTexture(icon);
+            this.font = ResourceAtlas.GetFont(font);
+            this.color = color;
+            this.offset = offset;
+            this.layerDepth = layerDepth;
+        }
+
+        public void SetText(string text) => this.text = text;
+
+        public void Update() => xSpring.Update();
+        public void Nudge(float x) => xSpring.Nudge(x);
+
+        public void Draw(SpriteBatch sb, Vector2 position)
+        {
+            Vector2 textDim = font.MeasureString(text);
+
+            Vector2 Position = position + Vector2.UnitX * xSpring.Position;
+
+            sb.Draw(backing, Position, null, Color.White, 0, offset, 1, SpriteEffects.None, layerDepth);
+            sb.Draw(icon, Position, null, color, 0, offset, 1, SpriteEffects.None, layerDepth + .001f);
+            sb.DrawString(font, text, Position, color, 0, offset - new Vector2(backing.Width - textDim.X - 8, textDim.Y / 2), 1, SpriteEffects.None, layerDepth + .001f);
+        }
+    }
     public class ResourceInfo
     {
         public int Count;
@@ -23,7 +63,7 @@ namespace IdleCollector
         public bool HasTrail;
         public string IconTextureKey;
         public Color ResourceColor;
-        
+
         [JsonIgnore]
         public TrailInfo trailInfo;
 
@@ -42,6 +82,7 @@ namespace IdleCollector
             IsUnlocked = false;
         }
     }
+    #endregion
 
     public class ResourceManager : ISaveable, IRenderable, IUpdatable, ITransform
     {
@@ -51,7 +92,7 @@ namespace IdleCollector
             get
             {
                 if (instance == null) instance = new();
-                
+
                 return instance;
             }
         }
@@ -68,6 +109,7 @@ namespace IdleCollector
         [JsonProperty]
         private Dictionary<string, ResourceInfo> resources;
         private List<ResourceUIObject> resourceObjs;
+        private Dictionary<string, UIObj> uiObjs;
 
         private string jsonPath = "Content/SaveData/ResourceData.json";
 
@@ -86,6 +128,7 @@ namespace IdleCollector
 
             Load();
             LoadTrailInfo();
+            LoadUIObjs();
         }
 
         public void AddPointsTo(string name, int count)
@@ -99,18 +142,20 @@ namespace IdleCollector
             AddPointsTo(obj.ResourceInfo.Name, obj.ResourceInfo.Count);
             resourceObjs.Remove(obj);
 
+            uiObjs[obj.ResourceInfo.Name].Nudge(-150);
+
             if (resources[obj.ResourceInfo.Name].HasTrail)
-                AudioController.Instance.PlaySoundEffect("resourceCollect2", "soundEffectVolume",RandomHelper.Instance.GetFloat(0,1));
+                AudioController.Instance.PlaySoundEffect("resourceCollect2", "soundEffectVolume", RandomHelper.Instance.GetFloat(0, 1));
         }
 
         public void SpawnResourceUIObj(Vector2 worldPosition, ResourceInfo info)
         {
             ResourceUIObject obj = new ResourceUIObject(
                 .75f,
-                info, 
-                Renderer.GetScreenPosition(worldPosition), 
-                new Vector2(50, 1030), 
-                LayerDepth, 
+                info,
+                Renderer.GetScreenPosition(worldPosition),
+                Position - uiObjs[info.Name].offset + 32 * Vector2.One,
+                LayerDepth,
                 DespawnResourceUIObj,
                 RandomHelper.Instance.GetFloat(.75f, 1.25f));
 
@@ -124,7 +169,7 @@ namespace IdleCollector
 
             resourceObjs.Add(obj);
         }
-
+        #region // Load
         public void LoadTrailInfo()
         {
             TrailInfo info = new TrailInfo();
@@ -159,7 +204,19 @@ namespace IdleCollector
 
             resources["Flower"].trailInfo = info;
         }
-
+        public void LoadUIObjs()
+        {
+            uiObjs = new();
+            for (int i = 0; i < resources.Values.Count; i++)
+            {
+                ResourceInfo info = resources.Values.ToList()[i];
+                Texture2D tex = ResourceAtlas.GetTexture(resourceUIKey);
+                Vector2 offset = new Vector2(0, (i * tex.Height) + (i * -4) + tex.Height);
+                UIObj obj = new UIObj(resourceUIKey, info.IconTextureKey, UIFontKey, info.ResourceColor, offset);
+                uiObjs.Add(info.Name, obj);
+            }
+        }
+        #endregion
         public void Load()
         {
             FileIO.ReadJsonInto(this, jsonPath);
@@ -183,23 +240,17 @@ namespace IdleCollector
         public void Draw(SpriteBatch sb)
         {
             List<ResourceInfo> resources = this.resources.Values.Where(w => w.IsUnlocked).ToList();
+            List<UIObj> objs = this.uiObjs
+                .Where(w => resources.Contains(this.resources[w.Key]))
+                .Select(w => w.Value)
+                .ToList();
 
-            for (int i = 0; i < resources.Count; i++)
+            for (int i = 0; i < uiObjs.Count; i++)
             {
                 string text = resources[i].Count.ToString();
 
-                Texture2D tex = ResourceAtlas.GetTexture(resourceUIKey);
-                Texture2D icon = ResourceAtlas.GetTexture(resources[i].IconTextureKey);
-                SpriteFont font = ResourceAtlas.GetFont(UIFontKey);
-                
-                Vector2 offset = new Vector2(0, (i * tex.Height) + (i * -4) + tex.Height);
-                Vector2 textDim = font.MeasureString(text);
-
-                float depth = LayerDepth - i * .005f;
-
-                sb.Draw(tex, Position, null, Color, 0, offset, 1, SpriteEffects.None, depth);
-                sb.Draw(icon, Position, null, resources[i].ResourceColor, 0, offset, 1, SpriteEffects.None, depth + .001f);
-                sb.DrawString(font, text, Position, resources[i].ResourceColor, 0, offset - new Vector2(tex.Width - textDim.X - 8, textDim.Y / 2), 1, SpriteEffects.None, depth + .001f);
+                objs[i].SetText(text);
+                objs[i].Draw(sb, Position);
             }
 
             for (int i = 0; i < resourceObjs.Count; i++)
@@ -228,7 +279,10 @@ namespace IdleCollector
 
         public void StandardUpdate(GameTime gameTime)
         {
-
+            foreach (UIObj obj in uiObjs.Values)
+            {
+                obj.Update();
+            }
         }
 
         public void SlowUpdate(GameTime gameTime)
