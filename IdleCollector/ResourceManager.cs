@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,6 +103,12 @@ namespace IdleCollector
         public Color Color { get; set; }
         [JsonIgnore]
         public Vector2 Position { get; set; }
+        
+        [JsonIgnore]
+        private ParticleSystem resourceCollectParticles;
+        [JsonIgnore]
+        private Vector2 particleSpawnPos;
+        private Color particleColor;
 
         private string resourceUIKey = "resourceBar";
         private string UIFontKey = "DePixelHalbfett";
@@ -161,8 +168,15 @@ namespace IdleCollector
 
             if (resources[info.Name].HasTrail)
             {
+                particleSpawnPos = Renderer.GetScreenPosition(worldPosition);
+                particleColor = Color.White;//resources[info.Name].ResourceColor;
+                ParticleSystemStats stats = resourceCollectParticles.Stats;
+                stats.ParticleStartColor = new Color[] { particleColor };
+                resourceCollectParticles.Stats = stats;
+                resourceCollectParticles.EmitParticles();
+
                 TrailInfo trailInfo = resources[info.Name].trailInfo;
-                trailInfo.SegmentColor = (t) => Color.Lerp(Color.White, resources[info.Name].ResourceColor, MathF.Pow(obj.T, 4));
+                trailInfo.SegmentColor = (t) => Color.Lerp(Color.White, resources[info.Name].ResourceColor, MathF.Pow(obj.T, 2));
 
                 obj.CreateTrail(trailInfo);
             }
@@ -206,6 +220,37 @@ namespace IdleCollector
         }
         public void LoadUIObjs()
         {
+            ParticleSystemStats stats = new ParticleSystemStats();
+            stats.ParticleSize = new float[] { 2 };
+            stats.ParticleSpeed = new float[] { .5f, 4f };
+            stats.EmitRate = new float[] { 0 };
+            stats.EmitCount = new int[] { 2, 5 };
+            stats.ParticleStartColor = new Color[] { Color.White };
+            stats.ParticleEndColor = new Color[] { Color.Transparent };
+            stats.MaxParticleCount = 300;
+            stats.ParticleColorDecayRate += (float t) => t;
+            stats.ParticleSizeDecayRate += (float t) => 1 - t;
+            stats.ParticleDespawnDistance = 500;
+            stats.TrackLayerDepth = () => .95f;
+            stats.TrackPosition = () => particleSpawnPos;
+            stats.ParticleTextureKeys = new string[] { "sparkle1", "sparkle2", "sparkle3" };
+
+            Rectangle[][] bounds = new Rectangle[][]
+            {
+                new Rectangle[] { new Rectangle(0, 0, 1, 1)},
+            };
+
+            stats.SpawnBounds = bounds;
+            stats.UseRandomBounds = false;
+            stats.ParticleRotation = new float[] { 0 };
+            stats.ParticleRotationSpeed = (t) => 0;
+            stats.ParticleLifeSpan = new float[] { .5f, .75f };
+            stats.ResetParticlesAfterDeath = false;
+
+            stats.StartingVelocity = new Vector2[] { Vector2.One, -Vector2.One };
+
+            resourceCollectParticles = new ParticleSystem(stats);
+
             uiObjs = new();
             for (int i = 0; i < resources.Values.Count; i++)
             {
@@ -257,6 +302,8 @@ namespace IdleCollector
             {
                 resourceObjs[i].Draw(sb);
             }
+
+            resourceCollectParticles.Draw(sb);
         }
 
         public void Move(Vector2 direction)
@@ -275,6 +322,7 @@ namespace IdleCollector
             {
                 resourceObjs[i].Update(gameTime);
             }
+            resourceCollectParticles.ControlledUpdate(gameTime);
         }
 
         public void StandardUpdate(GameTime gameTime)
@@ -283,11 +331,13 @@ namespace IdleCollector
             {
                 obj.Update();
             }
+
+            resourceCollectParticles.StandardUpdate(gameTime);
         }
 
         public void SlowUpdate(GameTime gameTime)
         {
-
+            resourceCollectParticles.SlowUpdate(gameTime);
         }
     }
 }

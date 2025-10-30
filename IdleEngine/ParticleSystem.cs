@@ -48,6 +48,8 @@ namespace IdleEngine
         private Rectangle[][] bounds;
         private float emitWaitTime;
 
+        public ParticleSystemStats Stats { get => stats; set => stats = value; }
+
         public ParticleSystem(ParticleSystemStats stats)
         {
             particleIndices = new List<int>();
@@ -220,7 +222,7 @@ namespace IdleEngine
             stats.TrackPosition = position;
         }
 
-        public void EmitParticles() { UpdateBounds();  EmitParticle(); }
+        public void EmitParticles() { UpdateBounds(); EmitParticle(); }
 
         public void SetCurrentSpawnBounds(int ind) => stats.CurrentBounds = ind;
         public void SetStartingVelocity(Vector2[] vectors)

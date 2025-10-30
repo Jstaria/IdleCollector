@@ -84,8 +84,8 @@ namespace IdleEngine
 
         private void DrawAsset(SpriteBatch sb)
         {
-            
-            sb.Draw(texture, position, null, Color.Lerp(stats.StartColor, stats.EndColor, colorDecay), rotationAngle, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), size, SpriteEffects.None, stats.LayerDepth.Invoke());
+            Color color = Color.Lerp(stats.StartColor, stats.EndColor, colorDecay);
+            sb.Draw(texture, position, null, color, rotationAngle, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), size, SpriteEffects.None, stats.LayerDepth.Invoke());
         }
 
         public void ControlledUpdate(GameTime gameTime)

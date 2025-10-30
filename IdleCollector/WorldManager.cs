@@ -136,11 +136,6 @@ namespace IdleCollector
             //{
             //    tileTree.DrawActiveBounds(sb);
             //}
-
-            if (Game1.online != null)
-            {
-                sb.Draw(Game1.online, new Rectangle(500, 100, 50, 90), null, Color.White, 0, new Vector2(25, 45), SpriteEffects.None, GetLayerDepth(190+20));
-            }
         }
 
         private void Initialize()
