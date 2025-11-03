@@ -91,8 +91,9 @@ namespace IdleCollector
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(ResourceAtlas.TilemapAtlas, Position + offset, drawRect, Color.White, 0, frameSize.ToVector2() / 2, size, SpriteEffects.None, LayerDepth);
-            sb.Draw(shadow, new Rectangle(Position.ToPoint(), new Point(32,32)), null, Color.White, 0, new Vector2(32, 32), SpriteEffects.None, LayerDepth);
+            int size = (int)(32 * (((offset.Y + floatDistance) / MathF.Pow(floatDistance, 2.25f))));
+            sb.Draw(ResourceAtlas.TilemapAtlas, Position + offset, drawRect, Color.White, 0, frameSize.ToVector2() / 2, this.size, SpriteEffects.None, LayerDepth);
+            sb.Draw(shadow, new Rectangle(Position.ToPoint() + (Vector2.UnitY * floatDistance * 2).ToPoint(), new Point(size,size)), null, Color.White, 0, new Vector2(32, 32), SpriteEffects.None, LayerDepth);
         }
 
         public void OnPlayerWalk(Entity entity)

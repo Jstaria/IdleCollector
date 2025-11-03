@@ -118,7 +118,7 @@ namespace IdleCollector
         private List<ResourceUIObject> resourceObjs;
         private Dictionary<string, UIObj> uiObjs;
 
-        private string jsonPath = "Content/SaveData/ResourceData.json";
+        private string jsonPath = "Content/SaveData/ResourceData";
 
         public ResourceManager()
         {

@@ -18,9 +18,9 @@ namespace IdleEngine
         private static Dictionary<string, OnDraw> DrawEvents;
         private static Dictionary<string, OnDraw> UIDrawEvents;
         private static event OnDraw DrawEvent;
-        private static event OnDraw IndependentDrawEvent;
         private static event OnDraw UIDrawEvent;
-
+        private static event OnDraw IndependentDrawEvent;
+        private static event OnDraw IndependentUIDrawEvent;
         private static RenderTarget2D renderTexture;
         private static RenderTarget2D uiTexture;
         private static RenderTarget2D finalTexture;

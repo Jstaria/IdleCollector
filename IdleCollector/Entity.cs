@@ -1,7 +1,7 @@
 ﻿using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,32 +13,33 @@ namespace IdleCollector
     public abstract class Entity: IAnimatable, IScene, ITransform, ICollidable
     {
         protected Texture2D spriteSheet;
-        protected int speed;
-        protected int spawnRange;
-        protected int interactRange;
-        protected int pickupRange;
-        protected float spawnFrequency;
+        
+        [JsonProperty] protected int speed;
+        [JsonProperty] protected int spawnRange;
+        [JsonProperty] protected int interactRange;
+        [JsonProperty] protected int pickupRange;
+        [JsonProperty] protected float spawnFrequency;
         protected int prevSpawnTime;
         protected Vector2 velocity;
         protected float frameSpeed;
 
-        public Point FrameCount { get; set; }
-        public Point CurrentFrame { get; set; }
-        public Vector2 InBetweenFrame { get; set; }
-        public bool IsPlaying { get; set; }
-        public UpdateType Type { get; set; }
-        public Vector2 Position { get; set; }
-        public CollisionType CollisionType { get; set; }
-        public float Radius { get => spawnRange; set => spawnRange = (int)value; }
-        public int InteractRange { get => interactRange; }
-        public int PickupRange { get => pickupRange; }
-        public Rectangle Bounds { get; set; }
-        public bool IsCollidable { get; set; }
-        public Rectangle WorldBounds { get; set; }
-        public float LayerDepth { get; set; }
-        public Color Color { get; set; }
-        public Vector2 Origin { get; set; }
-        public float FrameSpeed { get => frameSpeed / 60.0f; set => frameSpeed = value; }
+        [JsonIgnore] public Point FrameCount { get; set; }
+        [JsonIgnore] public Point CurrentFrame { get; set; }
+        [JsonIgnore] public Vector2 InBetweenFrame { get; set; }
+        [JsonIgnore] public bool IsPlaying { get; set; }
+        [JsonIgnore] public UpdateType Type { get; set; }
+        [JsonIgnore] public Vector2 Position { get; set; }
+        [JsonIgnore] public CollisionType CollisionType { get; set; }
+        [JsonIgnore] public float Radius { get => spawnRange; set => spawnRange = (int)value; }
+        [JsonIgnore] public int InteractRange { get => interactRange; }
+        [JsonIgnore] public int PickupRange { get => pickupRange; }
+        [JsonIgnore] public Rectangle Bounds { get; set; }
+        [JsonIgnore] public bool IsCollidable { get; set; }
+        [JsonIgnore] public Rectangle WorldBounds { get; set; }
+        [JsonIgnore] public float LayerDepth { get; set; }
+        [JsonIgnore] public Color Color { get; set; }
+        [JsonIgnore] public Vector2 Origin { get; set; }
+        [JsonIgnore] public float FrameSpeed { get => frameSpeed / 60.0f; set => frameSpeed = value; }
 
         public delegate void EntityWalk(Entity entity);
         public event EntityWalk OnSpawn;

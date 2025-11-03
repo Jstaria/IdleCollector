@@ -61,7 +61,7 @@ namespace IdleCollector
         private void CreateDict()
         {
             floraStats = new();
-            FileIO.ReadJsonInto(floraStats, "Content/SaveData/SpawnData.json");
+            FileIO.ReadJsonInto(floraStats, "Content/SaveData/SpawnData");
         }
 
         private void UpdateDict()

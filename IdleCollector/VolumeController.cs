@@ -40,12 +40,12 @@ namespace IdleCollector
 
         public void Initialize()
         {
-            FileIO.ReadJsonInto(this, "Content/SaveData/VolumeData.json");
+            FileIO.ReadJsonInto(this, "Content/SaveData/VolumeData");
         }
 
         public void Save()
         {
-            FileIO.WriteJsonTo(this, "Content/SaveData/VolumeData.json", Newtonsoft.Json.Formatting.Indented);
+            FileIO.WriteJsonTo(this, "Content/SaveData/VolumeData", Newtonsoft.Json.Formatting.Indented);
         }
 
         public void ChangeVolume(string volumeName, float volume)

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ namespace IdleCollector
         #endregion
 
         #region // Pause
-        private string PauseScene = "Pause Scene";
+        [JsonRequired] private string PauseScene = "Pause Scene";
         private Texture2D prevTexture;
         private Button menuButton;
         private bool isPaused;
@@ -30,11 +31,12 @@ namespace IdleCollector
         #region // GameManager Instance
         private static GameManager instance;
         private GameTime gameTime;
-        private string GameScene = "Game Scene";
+        [JsonRequired] private string GameScene = "Game Scene";
+        [JsonRequired] private string GardenScene = "Garden Scene";
 
-        public float LayerDepth { get; set; }
-        public UpdateType Type { get; set; }
-        public Color Color { get; set; }
+        [JsonIgnore] public float LayerDepth { get; set; }
+        [JsonIgnore] public UpdateType Type { get; set; }
+        [JsonIgnore] public Color Color { get; set; }
 
         public static GameManager Instance
         {
@@ -57,10 +59,23 @@ namespace IdleCollector
         protected event SaveData Save;
         protected event ResetData Reset;
 
-        private float saveDelay = 30;
+        [JsonRequired] private float saveDelay = 30;
         private float saveTimer;
 
         private AudioController musicCon;
+
+        private CustomText DebugText;
+
+        private void SetupDebug()
+        {
+            DebugText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfett", player.Position.ToString(), new Vector2(0, 0), new Vector2(1000, 100), padding: new Vector2(30, 30), shadowColor: Color.Black);
+            DebugText.Refresh();
+
+            Renderer.AddToSceneUIDraw(GameScene, (sb) => {
+                DebugText.Text = player.Position.ToString();
+                DebugText.Refresh();
+                DebugText.Draw(); });
+        }
 
         public GameManager()
         {
@@ -69,11 +84,7 @@ namespace IdleCollector
             musicCon = AudioController.Instance;
             Updater.AddToUpdate(musicCon);
 
-            SetupGameScene(GameScene);
-            SetupWorld();
-            SetupResources();
-            SetupPlayer();
-            SetupPause();
+            Setup();
         }
 
         public void ControlledUpdate(GameTime gameTime)
@@ -89,7 +100,7 @@ namespace IdleCollector
             if (Input.AreButtonsDownOnce(Keys.OemMinus))
                 Updater.ControlledUpdateCount--;
 
-            camera.Zoom -= Input.GetMouseScrollDelta() * .1f;
+            // camera.Zoom -= Input.GetMouseScrollDelta() * .1f;
 
             SaveHeartbeat(gameTime);
         }
@@ -104,8 +115,21 @@ namespace IdleCollector
             
         }
 
+        private void Setup()
+        {
+            SetupGameScene(GameScene);
+            SetupWorld();
+            SetupResources();
+            SetupPlayer();
+            SetupPause();
+
+            SetupDebug();
+        }
+
         private void SetupGameScene(string sceneName)
         {
+            FileIO.WriteJsonTo(this, "Content/SaveData/GameData", Formatting.Indented);
+
             SceneManager.AddScene(sceneName);
             SceneManager.AddToIndependent(this);
         }
@@ -172,18 +196,18 @@ namespace IdleCollector
                     if (isPaused)
                     {
                         isPaused = false;
-                        SceneManager.SwapPrevScene();
+                        Updater.UnPauseScene();
                     }
                     else
                     {
                         isPaused = true;
-                        SceneManager.SwapScene(PauseScene);
+                        Updater.PauseScene();
                     }
                 }
             });
             Updater.AddToSceneEnter(PauseScene, () => { prevTexture = Renderer.GetLastRender(); });
-            Renderer.AddToSceneDraw(PauseScene, (sb) => { sb.Draw(prevTexture, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White); });
-            Renderer.AddToSceneUIDraw(PauseScene, (sb) =>
+            Renderer.AddToUIDraw((sb) => { if (isPaused) sb.Draw(prevTexture, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White); });
+            Renderer.AddToUIDraw(PauseScene, (sb) =>
             {
                 sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White);
             });
@@ -249,6 +273,16 @@ namespace IdleCollector
 
             saveTimer = saveDelay;
             Save?.Invoke();
+        }
+
+        public void ResetWorld()
+        {
+            worldManager.CreateWorld();
+            int screenWidth = Renderer.RenderSize.X;
+            int screenHeight = Renderer.RenderSize.Y;
+
+            Point screenHalf = new Point(screenWidth / 2, screenHeight / 2);
+            player.Position = screenHalf.ToVector2();
         }
     }
 }

@@ -16,7 +16,8 @@ namespace IdleCollector
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        CustomText mainText;
+        public static Game Instance;
+
         int count = 0;
         private Button button;
         private GameManager _gameManager;
@@ -39,12 +40,12 @@ namespace IdleCollector
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Services.AddService(_spriteBatch);
 
+            Instance = this;
+
             SceneManager.Initialize(MainScene, _graphics, new Point(240 * 2, 135 * 2));
             Drawing.Initialize(_spriteBatch);
 
             FileIO.InDebug = true;
-            mainText = new CustomText(this, "Fonts/DePixelKlein", "", new Vector2(200, 100), new Vector2(2000, 50), color:Color.White, shadowColor:(Color.Black) * .5f, shadowOffset:new Vector2(-10,10));
-            mainText.Refresh();
 
             base.Initialize();
         }
@@ -79,7 +80,10 @@ namespace IdleCollector
             config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
 
             button = new Button(config);
-            button.OnClick += () => { SceneManager.SwapScene("Game Scene"); };
+            button.OnClick += () => { SceneManager.SwapScene("Game Scene");
+                // Resets any current data in worldManager when entering the scene
+                _gameManager.ResetWorld();
+            };
 
             Updater.AddToSceneUpdate(button);
             Renderer.AddToSceneUIDraw(button);
@@ -117,8 +121,6 @@ namespace IdleCollector
         {
             Updater.Update(gameTime);
 
-            mainText.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-
             base.Update(gameTime);
         }
 
@@ -130,15 +132,6 @@ namespace IdleCollector
 
             //if (online != null)
             //_spriteBatch.Draw(online, new Vector2(500, 100), Color.White);
-            if (Input.IsMiddleButtonDownOnce())
-            {
-                count++;
-                mainText.Text = string.Format("<fx {0},1,0,0>Hello World!</fx>", count);
-                mainText.Refresh();
-            }
-                
-            mainText.Draw();
- 
 
             _spriteBatch.End();
 

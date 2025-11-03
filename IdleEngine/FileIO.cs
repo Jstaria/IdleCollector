@@ -256,7 +256,7 @@ namespace IdleCollector
 
         public static void ReadJsonInto<T>(T instance, string jsonPath)
         {
-            string jsonString = File.ReadAllText(jsonPath);
+            string jsonString = File.ReadAllText(jsonPath + ".json");
 
             JsonConvert.PopulateObject(jsonString, instance);
         }
@@ -265,11 +265,11 @@ namespace IdleCollector
         {
             string json = JsonConvert.SerializeObject(instance, format);
 
-            File.WriteAllText(path, json);
+            File.WriteAllText(path + ".json", json);
 
             if (InDebug)
             {
-                File.WriteAllText("../../../" + path, json);
+                File.WriteAllText("../../../" + path + ".json", json);
             }
         }
     }

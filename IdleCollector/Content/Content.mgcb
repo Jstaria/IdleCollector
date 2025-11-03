@@ -33,9 +33,6 @@
 /processor:FontDescriptionProcessor
 /build:Fonts/Medodica.spritefont
 
-#begin SaveData/PlayerData.txt
-/copy:SaveData/PlayerData.txt
-
 #begin SaveData/WorldData.txt
 /copy:SaveData/WorldData.txt
 
@@ -645,3 +642,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/sparkle3.png
+
+#begin SaveData/PlayerData.json
+/copy:SaveData/PlayerData.json
+
+#begin SaveData/GameData.json
+/copy:SaveData/GameData.json

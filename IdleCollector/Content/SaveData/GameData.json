@@ -1,0 +1,6 @@
+{
+  "PauseScene": "Pause Scene",
+  "GameScene": "Game Scene",
+  "GardenScene": "Garden Scene",
+  "saveDelay": 30.0
+}

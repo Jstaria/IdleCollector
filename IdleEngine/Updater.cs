@@ -19,12 +19,14 @@ namespace IdleEngine
     {
         public delegate void OnUpdate(GameTime gameTime);
         public delegate void OnSwap();
-        private static Dictionary<string, Dictionary<UpdateType,OnUpdate>> UpdateEvents;
+        private static Dictionary<string, Dictionary<UpdateType, OnUpdate>> UpdateEvents;
         private static Dictionary<string, OnSwap> OnEnterEvents;
         private static Dictionary<string, OnSwap> OnExitEvents;
         private static Dictionary<UpdateType, OnUpdate> UpdateEvent;
         private static Dictionary<UpdateType, OnUpdate> IndependentUpdateEvent;
         private static OnUpdate LateUpdate;
+
+        private static List<string> PausedScenes;
 
         private readonly static int slowFrameSkip = 3;
         private static int frameCount = 0;
@@ -37,7 +39,7 @@ namespace IdleEngine
             OnEnterEvents = new();
             OnExitEvents = new();
             UpdateEvents = new();
-            
+
             UpdateEvent = new();
             UpdateEvent.Add(UpdateType.Controlled, (GameTime gameTime) => { });
             UpdateEvent.Add(UpdateType.Standard, (GameTime gameTime) => { });
@@ -62,13 +64,15 @@ namespace IdleEngine
         {
             for (int i = 0; i < ControlledUpdateCount; i++)
             {
-                UpdateEvent[UpdateType.Controlled]?.Invoke(gameTime);
+                if (!PausedScenes.Contains(SceneManager.CurrentSceneName))
+                    UpdateEvent[UpdateType.Controlled]?.Invoke(gameTime);
                 IndependentUpdateEvent[UpdateType.Controlled]?.Invoke(gameTime);
             }
         }
         private static void StandardUpdate(GameTime gameTime)
         {
-            UpdateEvent[UpdateType.Standard]?.Invoke(gameTime);
+            if (!PausedScenes.Contains(SceneManager.CurrentSceneName))
+                UpdateEvent[UpdateType.Standard]?.Invoke(gameTime);
             IndependentUpdateEvent[UpdateType.Standard]?.Invoke(gameTime);
         }
 
@@ -76,7 +80,8 @@ namespace IdleEngine
         {
             if ((frameCount = ++frameCount % 60) % slowFrameSkip == 0)
             {
-                UpdateEvent[UpdateType.Slow]?.Invoke(gameTime);
+                if (!PausedScenes.Contains(SceneManager.CurrentSceneName))
+                    UpdateEvent[UpdateType.Slow]?.Invoke(gameTime);
                 IndependentUpdateEvent[UpdateType.Slow]?.Invoke(gameTime);
             }
         }
@@ -156,5 +161,16 @@ namespace IdleEngine
         /// Add to event that is invoked after all other updates
         /// </summary>
         public static void AddToLateUpdate(OnUpdate func) => LateUpdate += func;
+
+        public static void PauseScene()
+        {
+            if (!PausedScenes.Contains(SceneManager.CurrentSceneName))
+                PausedScenes.Add(SceneManager.CurrentSceneName);
+        }
+        public static void UnPauseScene()
+        {
+            if (PausedScenes.Contains(SceneManager.CurrentSceneName))
+                PausedScenes.Remove(SceneManager.CurrentSceneName);
+        }
     }
 }

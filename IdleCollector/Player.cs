@@ -84,6 +84,7 @@ namespace IdleCollector
             InvokeOnSpawn(this);
         }
 
+        #region // Input
         private void ClampPosition()
         {
             Vector2 position = Vector2.Zero;
@@ -182,15 +183,19 @@ namespace IdleCollector
             
             lastWalkingFrameY = (int)CurrentFrame.Y;
         }
+        #endregion
 
+        #region // Load
         private void LoadPlayerData(string name, string folder)
         {
-            List<string> data = FileIO.ReadFrom(name, folder);
-            FileIO.LoadDataInto(this, data);
+            FileIO.ReadJsonInto(this, "Content/SaveData/PlayerData");
 
             // This could be loaded in using relfection but that can be done later
             LoadWalkingBounds();
             InitializeParticles();
+
+            
+
         }
 
         private void LoadWalkingBounds()
@@ -255,5 +260,6 @@ namespace IdleCollector
 
             walkParticles = new ParticleSystem(stats);
         }
+        #endregion
     }
 }

@@ -290,6 +290,8 @@ namespace IdleCollector
 
         public void CreateWorld()
         {
+            floraParticles?.Reset();
+
             int worldHalfX = (WorldSizeX * TileSize) / 2;
             int worldHalfY = (WorldSizeY * TileSize) / 2;
             Point offset = (Renderer.RenderSize.ToVector2() / 2).ToPoint();
