@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IdleEngine">
-      <HintPath>..\IdleEngine\bin\Release\net8.0\IdleEngine.dll</HintPath>
+      <HintPath>..\IdleEngine\obj\Release\net8.0\IdleEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

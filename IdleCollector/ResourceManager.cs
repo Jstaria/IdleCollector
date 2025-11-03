@@ -44,15 +44,15 @@ namespace IdleCollector
         public void Update() => xSpring.Update();
         public void Nudge(float x) => xSpring.Nudge(x);
 
-        public void Draw(SpriteBatch sb, Vector2 position)
+        public void Draw(SpriteBatch sb, Vector2 position, float fade)
         {
             Vector2 textDim = font.MeasureString(text);
 
             Vector2 Position = position + Vector2.UnitX * xSpring.Position;
 
-            sb.Draw(backing, Position, null, Color.White, 0, offset, 1, SpriteEffects.None, layerDepth);
-            sb.Draw(icon, Position, null, color, 0, offset, 1, SpriteEffects.None, layerDepth + .001f);
-            sb.DrawString(font, text, Position, color, 0, offset - new Vector2(backing.Width - textDim.X - 8, textDim.Y / 2), 1, SpriteEffects.None, layerDepth + .001f);
+            sb.Draw(backing, Position, null, Color.White * fade, 0, offset, 1, SpriteEffects.None, layerDepth);
+            sb.Draw(icon, Position, null, color * fade, 0, offset, 1, SpriteEffects.None, layerDepth + .001f);
+            sb.DrawString(font, text, Position, color * fade, 0, offset - new Vector2(backing.Width - textDim.X - 8, textDim.Y / 2), 1, SpriteEffects.None, layerDepth + .001f);
         }
     }
     public class ResourceInfo
@@ -109,6 +109,9 @@ namespace IdleCollector
         [JsonIgnore]
         private Vector2 particleSpawnPos;
         private Color particleColor;
+
+        private float colorFade = 1;
+        private float targetFade = 1;
 
         private string resourceUIKey = "resourceBar";
         private string UIFontKey = "DePixelHalbfett";
@@ -295,7 +298,7 @@ namespace IdleCollector
                 string text = resources[i].Count.ToString();
 
                 objs[i].SetText(text);
-                objs[i].Draw(sb, Position);
+                objs[i].Draw(sb, Position, colorFade);
             }
 
             for (int i = 0; i < resourceObjs.Count; i++)
@@ -338,6 +341,16 @@ namespace IdleCollector
         public void SlowUpdate(GameTime gameTime)
         {
             resourceCollectParticles.SlowUpdate(gameTime);
+        }
+
+        public void LateUpdate(GameTime gameTime)
+        {
+            colorFade = MathHelper.Lerp(colorFade, targetFade, .25f);
+        }
+
+        public void OnIsPaused(bool paused)
+        {
+            targetFade = paused ? 0 : 1;
         }
     }
 }

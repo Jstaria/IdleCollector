@@ -10,6 +10,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static IdleCollector.GameManager;
 
 namespace IdleCollector
 {
@@ -26,6 +27,9 @@ namespace IdleCollector
         private Texture2D prevTexture;
         private Button menuButton;
         private bool isPaused;
+
+        public delegate void IsPaused(bool isPaused);
+        public event IsPaused OnIsPaused;
         #endregion
 
         #region // GameManager Instance
@@ -68,12 +72,11 @@ namespace IdleCollector
 
         private void SetupDebug()
         {
-            DebugText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfett", player.Position.ToString(), new Vector2(0, 0), new Vector2(1000, 100), padding: new Vector2(30, 30), shadowColor: Color.Black);
+            DebugText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfett", "<fx 0,2,0,0>Paused</fx>", new Vector2(1920/2, 1080-200), new Vector2(1000, 100), offset:-Vector2.UnitX * ResourceAtlas.GetFont("DePixelHalbfett").MeasureString("Paused"), padding: new Vector2(30, 30), shadowColor: Color.Black);
             DebugText.Refresh();
 
             Renderer.AddToSceneUIDraw(GameScene, (sb) => {
-                DebugText.Text = player.Position.ToString();
-                DebugText.Refresh();
+                DebugText.Update(1/60.0f);
                 DebugText.Draw(); });
         }
 
@@ -203,14 +206,16 @@ namespace IdleCollector
                         isPaused = true;
                         Updater.PauseScene();
                     }
+
+                    OnIsPaused?.Invoke(isPaused);
                 }
             });
             Updater.AddToSceneEnter(PauseScene, () => { prevTexture = Renderer.GetLastRender(); });
-            Renderer.AddToUIDraw((sb) => { if (isPaused) sb.Draw(prevTexture, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White); });
-            Renderer.AddToUIDraw(PauseScene, (sb) =>
-            {
-                sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White);
-            });
+            //Renderer.AddToUIDraw((sb) => { if (isPaused) sb.Draw(prevTexture, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White); });
+            //Renderer.AddToUIDraw(PauseScene, (sb) =>
+            //{
+            //    sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White);
+            //});
 
             ButtonConfig config = new ButtonConfig();
             config.textures = new[] { ResourceAtlas.GetTexture("tempMenu"), ResourceAtlas.GetTexture("tempMenuH") };
@@ -231,7 +236,10 @@ namespace IdleCollector
 
             Updater.AddToSceneEnter(GameScene, () => resourceManager.MoveTo(new Vector2(20, Renderer.UIBounds.Height - 20)));
             Updater.AddToSceneUpdate(GameScene, resourceManager);
+            Updater.AddToLateUpdate(resourceManager.LateUpdate);
             Renderer.AddToSceneUIDraw(GameScene, resourceManager);
+
+            OnIsPaused += resourceManager.OnIsPaused;
         }
 
         private void SetupWorld()

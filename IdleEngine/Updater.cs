@@ -39,6 +39,7 @@ namespace IdleEngine
             OnEnterEvents = new();
             OnExitEvents = new();
             UpdateEvents = new();
+            PausedScenes = new();
 
             UpdateEvent = new();
             UpdateEvent.Add(UpdateType.Controlled, (GameTime gameTime) => { });

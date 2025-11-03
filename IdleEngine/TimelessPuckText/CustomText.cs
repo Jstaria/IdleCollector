@@ -401,7 +401,8 @@ public class CustomText
         private readonly static Dictionary<int, Tuple<float, float>> WaveProfils = new()
         {
             // Wave Frequency, Wave Amplitude
-            [1] = new(8f, 8f)
+            [1] = new(8f, 8f),
+            [2] = new(4f, 2f)
         };
 
         /// <summary>
