@@ -130,7 +130,7 @@ namespace IdleEngine
             Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
             sb.Draw(finalTexture == null ? renderTexture : finalTexture, destinationRect, Color.White);
             UIDrawEvent?.Invoke(sb);
-
+            IndependentUIDrawEvent?.Invoke(sb);
             sb.End();
             sb.GraphicsDevice.SetRenderTarget(null);
         }

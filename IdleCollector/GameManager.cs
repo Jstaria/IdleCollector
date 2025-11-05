@@ -68,16 +68,11 @@ namespace IdleCollector
 
         private AudioController musicCon;
 
-        private CustomText DebugText;
+        private CustomText PauseText;
 
         private void SetupDebug()
         {
-            DebugText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfett", "<fx 0,2,0,0>Paused</fx>", new Vector2(1920/2, 1080-200), new Vector2(1000, 100), offset:-Vector2.UnitX * ResourceAtlas.GetFont("DePixelHalbfett").MeasureString("Paused"), padding: new Vector2(30, 30), shadowColor: Color.Black);
-            DebugText.Refresh();
 
-            Renderer.AddToSceneUIDraw(GameScene, (sb) => {
-                DebugText.Update(1/60.0f);
-                DebugText.Draw(); });
         }
 
         public GameManager()
@@ -190,6 +185,14 @@ namespace IdleCollector
 
         private void SetupPause()
         {
+            PauseText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfett", "<fx 0,2,0,0>Paused</fx>", new Vector2((1920 - ResourceAtlas.GetFont("DePixelHalbfett").MeasureString("Paused...").X) / 2, 1080 - 200), new Vector2(1000, 100), padding: new Vector2(30, 30), shadowColor: Color.Black);
+            PauseText.Refresh();
+
+            Renderer.AddToSceneUIDraw(GameScene, (sb) => {
+                PauseText.Update(1 / 60.0f);
+                if (isPaused) PauseText.Draw();
+            });
+
             SceneManager.AddScene(PauseScene);
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
@@ -211,11 +214,11 @@ namespace IdleCollector
                 }
             });
             Updater.AddToSceneEnter(PauseScene, () => { prevTexture = Renderer.GetLastRender(); });
-            //Renderer.AddToUIDraw((sb) => { if (isPaused) sb.Draw(prevTexture, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White); });
-            //Renderer.AddToUIDraw(PauseScene, (sb) =>
-            //{
-            //    sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White);
-            //});
+            Renderer.AddToSceneUIDraw((sb) => { if (isPaused) sb.Draw(prevTexture, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White); });
+            Renderer.AddToSceneUIDraw(PauseScene, (sb) =>
+            {
+                sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White);
+            });
 
             ButtonConfig config = new ButtonConfig();
             config.textures = new[] { ResourceAtlas.GetTexture("tempMenu"), ResourceAtlas.GetTexture("tempMenuH") };

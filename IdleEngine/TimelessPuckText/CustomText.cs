@@ -243,7 +243,7 @@ public class CustomText
         if (ShadowColor != Color.Transparent)
             _spriteBatch.DrawString(Font, text, position + ShadowOffset, Color.Blue * .25f, rotation, origin, 1f, SpriteEffects.None, 0f);
 
-        _spriteBatch.DrawString(Font, text, position, color, rotation, origin, 1f, SpriteEffects.None, 0f);
+        _spriteBatch.DrawString(Font, text, position, color, rotation, origin, 1f, SpriteEffects.None, 0.01f);
     }
 
     public void Draw()
