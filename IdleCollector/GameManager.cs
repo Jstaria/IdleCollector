@@ -185,7 +185,7 @@ namespace IdleCollector
 
         private void SetupPause()
         {
-            PauseText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfett", "<fx 0,2,0,0>Paused</fx>", new Vector2((1920 - ResourceAtlas.GetFont("DePixelHalbfett").MeasureString("Paused...").X) / 2, 1080 - 200), new Vector2(1000, 100), padding: new Vector2(30, 30), shadowColor: Color.Black);
+            PauseText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfettTitle", "<fx 0,2,0,0>Paused</fx>", new Vector2((1920 - ResourceAtlas.GetFont("DePixelHalbfettTitle").MeasureString("Paused...").X) / 2, 1080 - 300), new Vector2(1000, 100), padding: new Vector2(30, 30), shadowColor: Color.Black);
             PauseText.Refresh();
 
             Renderer.AddToSceneUIDraw(GameScene, (sb) => {
@@ -224,7 +224,7 @@ namespace IdleCollector
             config.textures = new[] { ResourceAtlas.GetTexture("tempMenu"), ResourceAtlas.GetTexture("tempMenuH") };
             config.bounds = new Rectangle(14 * Renderer.UIScaler.X, 14 * Renderer.UIScaler.Y, 127 * Renderer.UIScaler.X, 52 * Renderer.UIScaler.Y);
 
-            menuButton = new Button(config);
+            menuButton = new Button(Game1.Instance, config);
             menuButton.OnClick += () => { SceneManager.SwapScene(Game1.MainScene); isPaused = false; };
             Renderer.AddToSceneUIDraw(PauseScene, menuButton);
             Updater.AddToSceneUpdate(PauseScene, menuButton);

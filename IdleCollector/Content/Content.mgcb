@@ -648,3 +648,8 @@
 
 #begin SaveData/GameData.json
 /copy:SaveData/GameData.json
+
+#begin Fonts/DePixelHalbfettTitle.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelHalbfettTitle.spritefont

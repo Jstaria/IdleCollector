@@ -100,7 +100,7 @@ public class CustomText
                     nextFxCharPos = new(nextFxCharPos.X + origin.X, nextFxCharPos.Y);
                 }
 
-                Color shadowColor = color == Color ? ShadowColor : new(color.ToVector4() * 0.45f + Vector4.UnitW * 255f * color.A);
+                Color shadowColor = color == Color ? ShadowColor : new(color.ToVector4() * 0.65f + Vector4.UnitW * 255f * color.A);
                 DrawString(c.ToString(), nextFxCharPos, color, rotation, origin, shadowColor);
 
                 lineLength++;

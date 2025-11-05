@@ -79,7 +79,7 @@ namespace IdleCollector
             config.bounds = new Rectangle(10 * Renderer.UIScaler.X, 50 * Renderer.UIScaler.Y, 192 * Renderer.UIScaler.X, 64 * Renderer.UIScaler.Y);
             config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
 
-            button = new Button(config);
+            button = new Button(Game1.Instance, config);
             button.OnClick += () => { SceneManager.SwapScene("Game Scene");
                 // Resets any current data in worldManager when entering the scene
                 _gameManager.ResetWorld();

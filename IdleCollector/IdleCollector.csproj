@@ -30,6 +30,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Fonts\DePixelHalbfettTitle.spritefont">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Fonts\DePixelKlein.spritefont">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

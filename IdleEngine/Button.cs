@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace IdleCollector
 {
@@ -18,22 +19,22 @@ namespace IdleCollector
     {
         public SoundEffect sound;
         public Texture2D[] textures;
-        public SpriteFont font;
+        public string font;
         public Rectangle bounds;
-        public string text;
+        public string[] texts;
         public string textParticle;
         public Color fontColor;
     }
 
-    public class Button: IUpdatable, IRenderable
+    public class Button : IUpdatable, IRenderable
     {
         private SoundEffect sound;
         private Texture2D[] textures;
         private SpriteFont font;
         private Rectangle bounds;
-        private string text;
+        private CustomText[] customTexts;
         private string textParticle;
-        private Vector2 textPosition;
+        private Vector2[] textPositions;
         private Color fontColor;
         private float timer = .05f;
         private float timeOfLastPress;
@@ -48,24 +49,41 @@ namespace IdleCollector
         /// <summary>
         /// Button Class
         /// </summary>
-        public Button(ButtonConfig config) : this(config.textures, config.bounds, config.text, config.textParticle, config.font, config.fontColor, config.sound) { }
-        public Button(Texture2D[] textures, Rectangle bounds, string text, string textParticle, SpriteFont font, Color fontColor, SoundEffect sound)
+        public Button(Game gameInstance, ButtonConfig config) : this(gameInstance, config.textures, config.bounds, config.texts, config.textParticle, config.font, config.fontColor, config.sound) { }
+        public Button(Game gameInstance, Texture2D[] textures, Rectangle bounds, string[] texts, string textParticle, string fontName, Color fontColor, SoundEffect sound)
         {
             this.textures = textures;
-            this.text = text;
+            if (fontName != null)
+            {
+                this.font = ResourceAtlas.GetFont(fontName);
+
+                Vector2 textLength = font.MeasureString(texts[0]);
+                textPositions = new Vector2[2];
+                textPositions[0] = new Vector2(
+                    bounds.X + bounds.Width / 2 - textLength.X / 2,
+                    bounds.Y + bounds.Height / 2 - textLength.Y / 2
+                );
+                textLength = texts.Length == 1 ? textLength : font.MeasureString(texts[1]);
+                textPositions[1] = new Vector2(
+                    bounds.X + bounds.Width / 2 - textLength.X / 2,
+                    bounds.Y + bounds.Height / 2 - textLength.Y / 2
+                );
+
+                this.customTexts = new CustomText[2];
+                this.customTexts[0] = new CustomText(gameInstance, fontName, texts[0], textPositions[0], bounds.Size.ToVector2(), color: fontColor, shadowColor: Color.Black);
+                customTexts[0].Refresh();
+                this.customTexts[1] = new CustomText(gameInstance, fontName, texts[1], textPositions[1], bounds.Size.ToVector2(), color: fontColor, shadowColor: Color.Black);
+                customTexts[1].Refresh();
+            }
+
             this.textParticle = textParticle;
-            this.font = font;
             this.fontColor = fontColor;
             this.bounds = bounds;
             this.sound = sound;
 
             if (font == null) return;
 
-            Vector2 textLength = font.MeasureString(text);
-            textPosition = new Vector2(
-                bounds.X + bounds.Width / 2 - textLength.X / 2,
-                bounds.Y + bounds.Height / 2 - textLength.Y / 2
-            );
+
         }
 
         public void ControlledUpdate(GameTime gameTime)
@@ -74,7 +92,7 @@ namespace IdleCollector
             active = false;
 
             if (!bounds.Contains(Input.GetMousePos() * Renderer.UIScaler)) return;
-            
+
             sound?.Play();
 
             if (timeDelta < timer) return;
@@ -96,12 +114,19 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
-            Texture2D texture = !active ? textures[0] : textures[1];
+            if (textures != null)
+            {
+                Texture2D texture = !active ? textures[0] : textures[1];
+                sb.Draw(texture, bounds, Color.White);
+            }
 
-            sb.Draw(texture, bounds, Color.White);
+            if (font != null) 
+            {
+                CustomText text = !active ? customTexts[0] : customTexts[1];
+                text.Update(1/60);
+                text.Draw();
+            }
             
-            if (font == null) return;
-            sb.DrawString(font, text, textPosition, fontColor);
         }
 
         void IUpdatable.StandardUpdate(GameTime gameTime)
