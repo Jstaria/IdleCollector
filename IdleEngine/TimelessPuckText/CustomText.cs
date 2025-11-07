@@ -121,7 +121,8 @@ public class CustomText
         return new Vector2()
         {
             X = nextCharPos.X +
-                (fxText.Shake ? MathF.Sin(fxText.Rand.Next()) * fxText.ShakeStrength : 0f),
+                (fxText.Shake ? MathF.Sin(fxText.Rand.Next()) * fxText.ShakeStrength : 0f) +
+                (fxText.SideStep ? MathF.Sin(_time * fxText.SideStepFrequency + lineLength) * fxText.SideStepAmplitude : 0f),
 
             Y = nextCharPos.Y +
                 (fxText.Shake ? MathF.Sin(fxText.Rand.Next()) * fxText.ShakeStrength : 0f) +
@@ -169,17 +170,18 @@ public class CustomText
             string innerText = m.Groups[2].Value;
 
             int startIdx = m.Index - ignoredCharCount;
-            int colorProfil = 0, waveProfil = 0, shakeProfil = 0, hangProfil = 0;
+            int colorProfile = 0, waveProfile = 0, shakeProfile = 0, hangProfile = 0, sideStepProfile = 0;
 
-            if (values.Length == 4)
+            if (values.Length == 5)
             {
-                _ = int.TryParse(values[0], out colorProfil);
-                _ = int.TryParse(values[1], out waveProfil);
-                _ = int.TryParse(values[2], out shakeProfil);
-                _ = int.TryParse(values[3], out hangProfil);
+                _ = int.TryParse(values[0], out colorProfile);
+                _ = int.TryParse(values[1], out waveProfile);
+                _ = int.TryParse(values[2], out shakeProfile);
+                _ = int.TryParse(values[3], out hangProfile);
+                _ = int.TryParse(values[4], out sideStepProfile);
             }
 
-            _fxTexts[i] = new(startIdx, innerText.Length, colorProfil, waveProfil, shakeProfil, hangProfil);
+            _fxTexts[i] = new(startIdx, innerText.Length, colorProfile, waveProfile, shakeProfile, hangProfile, sideStepProfile);
 
             ignoredCharCount += m.Length - innerText.Length;
         }
@@ -398,7 +400,7 @@ public class CustomText
         /// <summary>
         /// The different wave profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        private readonly static Dictionary<int, Tuple<float, float>> WaveProfils = new()
+        private readonly static Dictionary<int, Tuple<float, float>> WaveProfiles = new()
         {
             // Wave Frequency, Wave Amplitude
             [1] = new(8f, 8f),
@@ -406,9 +408,20 @@ public class CustomText
         };
 
         /// <summary>
+        /// The different side step profiles. Add as many as you want by following the syntax below.
+        /// </summary>
+        private readonly static Dictionary<int, Tuple<float, float>> SideStepProfiles = new()
+        {
+            // Wave Frequency, Wave Amplitude
+            [1] = new(8f, 8f),
+            [2] = new(-8f, -8f),
+            [3] = new(4f, 2f)
+        };
+
+        /// <summary>
         /// The different shake profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        public static Dictionary<int, Tuple<float, float>> ShakeProfils = new()
+        public static Dictionary<int, Tuple<float, float>> ShakeProfiles = new()
         {
             // Shake Interval, Shake Strength
             [1] = new(0.06f, 3f),
@@ -417,7 +430,7 @@ public class CustomText
         /// <summary>
         /// The different hang profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        public static Dictionary<int, Tuple<float, float>> HangProfils = new()
+        public static Dictionary<int, Tuple<float, float>> HangProfiles = new()
         {
             // Hang Frequency, Hang Amplitude
             [1] = new(6f, 12f)
@@ -440,6 +453,12 @@ public class CustomText
         public float WaveFrequency { get; }
 
         public float WaveAmplitude { get; }
+       
+        public bool SideStep { get; }
+        
+        public float SideStepFrequency { get; }
+
+        public float SideStepAmplitude { get; }
 
         public bool Hang { get; }
 
@@ -458,21 +477,27 @@ public class CustomText
         public int EndIdx => StartIdx + Length - 1;
 
 
-        public FxText(int startIdx, int length, int colorProfil, int waveProfil, int shakeProfil, int hangProfil)
+        public FxText(int startIdx, int length, int colorProfile, int waveProfile, int shakeProfile, int hangProfile, int sideStepProfile)
         {
             Length = length;
             StartIdx = startIdx;
 
-            if (ColorProfiles.TryGetValue(colorProfil, out Tuple<ColorPalette, float> colorValues))
+            if (ColorProfiles.TryGetValue(colorProfile, out Tuple<ColorPalette, float> colorValues))
                 PaletteRotator = new(colorValues.Item1, colorValues.Item2);
 
-            if (WaveProfils.TryGetValue(waveProfil, out Tuple<float, float> waveValues))
+            if (WaveProfiles.TryGetValue(waveProfile, out Tuple<float, float> waveValues))
             {
                 (WaveFrequency, WaveAmplitude) = waveValues;
                 Wave = true;
             }
 
-            if (ShakeProfils.TryGetValue(shakeProfil, out Tuple<float, float> shakeValues))
+            if (WaveProfiles.TryGetValue(sideStepProfile, out Tuple<float, float> sideStepValues))
+            {
+                (SideStepFrequency, SideStepAmplitude) = sideStepValues;
+                SideStep = true;
+            }
+
+            if (ShakeProfiles.TryGetValue(shakeProfile, out Tuple<float, float> shakeValues))
             {
                 (ShakeInterval, ShakeStrength) = shakeValues;
                 _randSeed = (int)DateTime.Now.Ticks;
@@ -480,7 +505,7 @@ public class CustomText
                 Shake = true;
             }
 
-            if (HangProfils.TryGetValue(hangProfil, out Tuple<float, float> hangValues))
+            if (HangProfiles.TryGetValue(hangProfile, out Tuple<float, float> hangValues))
             {
                 (HangFrequency, HangAmplitude) = hangValues;
                 Hang = true;

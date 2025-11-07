@@ -70,9 +70,9 @@ namespace IdleCollector
                 );
 
                 this.customTexts = new CustomText[2];
-                this.customTexts[0] = new CustomText(gameInstance, fontName, texts[0], textPositions[0], bounds.Size.ToVector2(), color: fontColor, shadowColor: Color.Black);
+                this.customTexts[0] = new CustomText(gameInstance, "Fonts/" + fontName, texts[0], textPositions[0], bounds.Size.ToVector2(), color: fontColor, shadowColor: Color.Black);
                 customTexts[0].Refresh();
-                this.customTexts[1] = new CustomText(gameInstance, fontName, texts[1], textPositions[1], bounds.Size.ToVector2(), color: fontColor, shadowColor: Color.Black);
+                this.customTexts[1] = new CustomText(gameInstance, "Fonts/" + fontName, texts[1], textPositions[1], bounds.Size.ToVector2(), color: fontColor, shadowColor: Color.Black);
                 customTexts[1].Refresh();
             }
 
@@ -87,6 +87,28 @@ namespace IdleCollector
         }
 
         public void ControlledUpdate(GameTime gameTime)
+        {
+            
+        }
+
+        public void Draw(SpriteBatch sb)
+        {
+            if (textures != null)
+            {
+                Texture2D texture = !active ? textures[0] : textures[1];
+                sb.Draw(texture, bounds, Color.White);
+            }
+
+            if (customTexts != null) 
+            {
+                CustomText text = !active ? customTexts[0] : customTexts[1];
+                text.Update(1/60);
+                text.Draw();
+            }
+            
+        }
+
+        public void StandardUpdate(GameTime gameTime)
         {
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
@@ -110,28 +132,6 @@ namespace IdleCollector
                 OnClick?.Invoke();
                 OnClickString?.Invoke(textParticle);
             }
-        }
-
-        public void Draw(SpriteBatch sb)
-        {
-            if (textures != null)
-            {
-                Texture2D texture = !active ? textures[0] : textures[1];
-                sb.Draw(texture, bounds, Color.White);
-            }
-
-            if (font != null) 
-            {
-                CustomText text = !active ? customTexts[0] : customTexts[1];
-                text.Update(1/60);
-                text.Draw();
-            }
-            
-        }
-
-        void IUpdatable.StandardUpdate(GameTime gameTime)
-        {
-
         }
 
         void IUpdatable.SlowUpdate(GameTime gameTime)
