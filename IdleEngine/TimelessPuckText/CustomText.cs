@@ -404,17 +404,17 @@ public class CustomText
         {
             // Wave Frequency, Wave Amplitude
             [1] = new(8f, 8f),
-            [2] = new(4f, 2f)
+            [2] = new(4f, 2f),
         };
 
         /// <summary>
         /// The different side step profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        private readonly static Dictionary<int, Tuple<float, float>> SideStepProfiles = new()
+        public readonly static Dictionary<int, Tuple<float, float>> SideStepProfiles = new()
         {
             // Wave Frequency, Wave Amplitude
             [1] = new(8f, 8f),
-            [2] = new(-8f, -8f),
+            [2] = new(8f, -8f),
             [3] = new(4f, 2f)
         };
 
@@ -491,7 +491,7 @@ public class CustomText
                 Wave = true;
             }
 
-            if (WaveProfiles.TryGetValue(sideStepProfile, out Tuple<float, float> sideStepValues))
+            if (SideStepProfiles.TryGetValue(sideStepProfile, out Tuple<float, float> sideStepValues))
             {
                 (SideStepFrequency, SideStepAmplitude) = sideStepValues;
                 SideStep = true;

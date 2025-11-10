@@ -27,6 +27,7 @@ namespace IdleCollector
         private Texture2D prevTexture;
         private Button menuButton;
         private Button optionsButton;
+        private Button resumeButton;
         private bool isPaused;
 
         public delegate void IsPaused(bool isPaused);
@@ -191,13 +192,13 @@ namespace IdleCollector
 
         private void SetupPause()
         {
-            int posY = 1080 - 300;
+            int posY = 1080 - 400;
             int posX = 1920 / 2;
 
             PauseText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfettTitle", "<fx 0,2,0,0,0>Paused</fx>", new Vector2(posX - (ResourceAtlas.GetFont("DePixelHalbfettTitle").MeasureString("Paused...").X) / 2, posY), new Vector2(1000, 100), padding: new Vector2(30, 30), shadowColor: Color.Black);
             PauseText.Refresh();
 
-            posY += 100;
+            posY += 150;
             ButtonConfig menuConfig = new ButtonConfig();
             menuConfig.bounds = new Rectangle(posX - 150, posY, 300, 10 * Renderer.UIScaler.Y);
             menuConfig.texts = new string[] { "Main Menu", "<fx 0,0,0,0,1>></fx> Main Menu <fx 0,0,0,0,2><</fx>" };
@@ -210,13 +211,24 @@ namespace IdleCollector
             posY += 50;
             ButtonConfig optionsConfig = new ButtonConfig();
             optionsConfig.bounds = new Rectangle(posX - 150, posY, 300, 10 * Renderer.UIScaler.Y);
-            optionsConfig.texts = new string[] { "Options", "> Options <" };
+            optionsConfig.texts = new string[] { "Options", "<fx 0,0,0,0,1>></fx> Options <fx 0,0,0,0,2><</fx>" };
             optionsConfig.font = "DePixelHalbfett";
             optionsConfig.fontColor = Color.White;
 
             optionsButton = new Button(Game1.Instance, optionsConfig);
             optionsButton.OnClick += () => { Debug.WriteLine("Options button clicked"); };
 
+            posY += 50;
+            ButtonConfig resumeConfig = new ButtonConfig();
+            resumeConfig.bounds = new Rectangle(posX - 150, posY, 300, 10 * Renderer.UIScaler.Y);
+            resumeConfig.texts = new string[] { "Resume", "<fx 0,0,0,0,1>></fx> Resume <fx 0,0,0,0,2><</fx>" };
+            resumeConfig.font = "DePixelHalbfett";
+            resumeConfig.fontColor = Color.White;
+
+            resumeButton = new Button(Game1.Instance, resumeConfig);
+            resumeButton.OnClick += () => { isPaused = false; Updater.UnPauseScene(); OnIsPaused?.Invoke(isPaused); };
+
+            Updater.AddToLateUpdate((gt) => { if (isPaused) resumeButton.StandardUpdate(gt); });
             Updater.AddToLateUpdate((gt) => { if (isPaused) optionsButton.StandardUpdate(gt); });
             Updater.AddToLateUpdate((gt) => { if (isPaused) menuButton.StandardUpdate(gt); });
 
@@ -228,6 +240,7 @@ namespace IdleCollector
                     PauseText.Draw();
                     optionsButton.Draw(sb);
                     menuButton.Draw(sb);
+                    resumeButton.Draw(sb);
                 }
             });
 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -55,15 +56,21 @@ namespace IdleCollector
             this.textures = textures;
             if (fontName != null)
             {
+                string[] tempTexts = new string[texts.Length]; 
+
+                Regex regex = new(@"<fx\b[^>]*>(.*?)</fx>", RegexOptions.Singleline);
+                tempTexts[0] = regex.Replace(texts[0], m => m.Groups[0].Value);
+                tempTexts[1] = regex.Replace(texts[1], m => m.Groups[1].Value);
+
                 this.font = ResourceAtlas.GetFont(fontName);
 
-                Vector2 textLength = font.MeasureString(texts[0]);
+                Vector2 textLength = font.MeasureString(tempTexts[0]);
                 textPositions = new Vector2[2];
                 textPositions[0] = new Vector2(
                     bounds.X + bounds.Width / 2 - textLength.X / 2,
                     bounds.Y + bounds.Height / 2 - textLength.Y / 2
                 );
-                textLength = texts.Length == 1 ? textLength : font.MeasureString(texts[1]);
+                textLength = texts.Length == 1 ? textLength : font.MeasureString(tempTexts[1]);
                 textPositions[1] = new Vector2(
                     bounds.X + bounds.Width / 2 - textLength.X / 2,
                     bounds.Y + bounds.Height / 2 - textLength.Y / 2
@@ -102,7 +109,7 @@ namespace IdleCollector
             if (customTexts != null) 
             {
                 CustomText text = !active ? customTexts[0] : customTexts[1];
-                text.Update(1/60);
+                text.Update(1/60.0f);
                 text.Draw();
             }
             
