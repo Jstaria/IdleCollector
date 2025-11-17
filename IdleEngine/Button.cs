@@ -25,6 +25,7 @@ namespace IdleCollector
         public string[] texts;
         public string textParticle;
         public Color fontColor;
+        public Color shadowColor;
     }
 
     public class Button : IUpdatable, IRenderable
@@ -50,8 +51,8 @@ namespace IdleCollector
         /// <summary>
         /// Button Class
         /// </summary>
-        public Button(Game gameInstance, ButtonConfig config) : this(gameInstance, config.textures, config.bounds, config.texts, config.textParticle, config.font, config.fontColor, config.sound) { }
-        public Button(Game gameInstance, Texture2D[] textures, Rectangle bounds, string[] texts, string textParticle, string fontName, Color fontColor, SoundEffect sound)
+        public Button(Game gameInstance, ButtonConfig config) : this(gameInstance, config.textures, config.bounds, config.texts, config.textParticle, config.font, config.fontColor, config.shadowColor, config.sound) { }
+        public Button(Game gameInstance, Texture2D[] textures, Rectangle bounds, string[] texts, string textParticle, string fontName, Color fontColor, Color shadowColor, SoundEffect sound)
         {
             this.textures = textures;
             if (fontName != null)
@@ -77,9 +78,9 @@ namespace IdleCollector
                 );
 
                 this.customTexts = new CustomText[2];
-                this.customTexts[0] = new CustomText(gameInstance, "Fonts/" + fontName, texts[0], textPositions[0], bounds.Size.ToVector2(), color: fontColor, shadowColor: Color.Black);
+                this.customTexts[0] = new CustomText(gameInstance, "Fonts/" + fontName, texts[0], textPositions[0], bounds.Size.ToVector2(), color: fontColor, shadowColor: shadowColor);
                 customTexts[0].Refresh();
-                this.customTexts[1] = new CustomText(gameInstance, "Fonts/" + fontName, texts[1], textPositions[1], bounds.Size.ToVector2(), color: fontColor, shadowColor: Color.Black);
+                this.customTexts[1] = new CustomText(gameInstance, "Fonts/" + fontName, texts[1], textPositions[1], bounds.Size.ToVector2(), color: fontColor, shadowColor: shadowColor);
                 customTexts[1].Refresh();
             }
 

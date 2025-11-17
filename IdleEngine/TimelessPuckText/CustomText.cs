@@ -1,8 +1,9 @@
 ﻿/* * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *  Author: Timeless Puck (2025)                       *
- *  This code is open and free to use for any purpose. *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+*  Author: Timeless Puck (2025)                       *
+*  This code is open and free to use for any purpose. *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -17,10 +18,15 @@ public class CustomText
     private readonly SpriteBatch _spriteBatch;
     private readonly float _lineHeight;
 
+    private string[][] _noFxTexts;
     private FxText[] _fxTexts;
-    private string[][] _noFxTextsParts;
     private float _time;
+    private int _lineCapacity;
+    private int _currentLineIdx;
+    private bool _allowOverflow;
+    private int _startingLineIdx;
 
+    #region Properties
 
     public SpriteFont Font { get; set; }
 
@@ -46,17 +52,59 @@ public class CustomText
     /// <summary>
     /// The scale of the dimension, the font size and the padding aren't affected.
     /// </summary>
-    /// <remarks> To change the font size, you need to edit your spritefont file.</remarks>
+    /// <remarks>
+    /// To change the font size, you need to edit your spritefont file.
+    /// </remarks>
     public Vector2 Scale { get; set; }
 
+    public bool AllowOverflow
+    {
+        get => _allowOverflow;
+        set { _allowOverflow = value; StartingLineIdx = 0; }
+    }
 
-    public CustomText(Game game, string fontName, string text, Vector2 position, Vector2 dimension, Vector2 offset = default,
-        Vector2 padding = default, Vector2? scale = null, Color? color = null, Color? shadowColor = null, Vector2? shadowOffset = null)
+    public int LineCount { get; private set; }
+
+    /// <summary>
+    /// Index of the first drawn line.<br></br>
+    /// If <see cref="AllowOverflow"/> is disabled, then the value is always 0.
+    /// </summary>
+    public int StartingLineIdx
+    {
+        get => _startingLineIdx;
+        set { _startingLineIdx = AllowOverflow ? 0 : Math.Clamp(value, 0, Math.Max(0, LineCount - 1)); }
+    }
+
+    public bool HasNextLine => StartingLineIdx < LineCount - 1;
+
+    public bool HasPreviousLine => StartingLineIdx > 0;
+
+    public int PageCount => _lineCapacity == 0 ? 0 : LineCount / _lineCapacity;
+
+    /// <summary>
+    /// Index of the current drawn page.<br></br>
+    /// If <see cref="AllowOverflow"/> is disabled, then the value is always 0.
+    /// </summary>
+    public int CurrentPageIdx
+    {
+        get => _lineCapacity == 0 ? 0 : StartingLineIdx / _lineCapacity;
+        set => StartingLineIdx = value * _lineCapacity;
+    }
+
+    public bool HasNextPage => CurrentPageIdx < PageCount - 1;
+
+    public bool HasPreviousPage => CurrentPageIdx > 0;
+
+    #endregion
+
+    public CustomText(Game game, string fontName, string text, Vector2 position, Vector2 dimension, Vector2 offset = default, Vector2 padding = default,
+        Vector2? scale = null, Color? color = null, Color? shadowColor = null, Vector2? shadowOffset = null, bool allowOverflow = false)
     {
         Font = game.Content.Load<SpriteFont>(fontName);
         ShadowColor = shadowColor ?? Color.Transparent;
         ShadowOffset = shadowOffset ?? new(-4f, 4f);
         Color = color ?? Color.White;
+        AllowOverflow = allowOverflow;
         Dimension = dimension;
         Position = position;
         Padding = padding;
@@ -68,66 +116,53 @@ public class CustomText
         _spriteBatch = game.Services.GetService<SpriteBatch>();
     }
 
-    private Vector2 DrawFxText(FxText fxText, Vector2 nextCharPos)
+    #region Private methods
+    #region Output building related
+
+    private string BuildOutput(List<string> words, List<int> subwordIdxsExcludingFirst, out List<int> addedChars)
     {
-        float charWidth;
-        int lineLength = 0;
-        Vector2 nextFxCharPos = GetNextFxCharPosition(lineLength, nextCharPos, fxText);
+        StringBuilder line = new();
+        StringBuilder output = new();
+        addedChars = []; // Used to adjust the indexes of fx texts.
 
-        if (fxText.Shake) fxText.ResetRand();
-
-        for (int i = 0; i < fxText.InnerText.Length; i++)
+        for (int i = 0; i < words.Count; i++)
         {
-            char c = fxText.InnerText[i];
+            string testLine = line.Length == 0 ? words[i] : line + " " + words[i];
 
-            if (c == '\n')
+            if (Font.MeasureString(testLine).X > Dimension.X * Scale.X - 2f * Padding.X)
             {
-                nextCharPos = new(Position.X + Padding.X, nextCharPos.Y + _lineHeight);
+                if (i > 0) line.Append('\n');
 
-                lineLength = 0;
-                charWidth = 0f;
+                output.Append(line);
+
+                // A new line was inserted between two parts of the same long word,
+                // which increases the output length, unlike a regular new line that
+                // simply replaces a space between two separate words.
+                if (subwordIdxsExcludingFirst.Contains(i))
+                    addedChars.Add(output.Length - 1);
+
+                line.Clear();
+
+                // A word can be empty if it's from consecutives spaces, in this case we add a space to the output.
+                if (words[i] == string.Empty)
+                {
+                    line.Append(' ');
+                    addedChars.Add(output.Length);
+                }
+                else line.Append(words[i]);
             }
             else
             {
-                Color color = fxText.PaletteRotator?.NextColor ?? Color;
-                Vector2 origin = Vector2.Zero;
-                float rotation = 0f;
+                // Add a space between words unless the current word start the line.
+                if (line.Length > 0) line.Append(' ');
 
-                if (fxText.Hang)
-                {
-                    origin = new(Font.MeasureString(c.ToString()).X / 2f, 0f);
-                    rotation = MathHelper.ToRadians(MathF.Sin(_time * fxText.HangFrequency + i) * fxText.HangAmplitude);
-                    nextFxCharPos = new(nextFxCharPos.X + origin.X, nextFxCharPos.Y);
-                }
-
-                Color shadowColor = color == Color ? ShadowColor : new(color.ToVector4() * 0.65f + Vector4.UnitW * 255f * color.A);
-                DrawString(c.ToString(), nextFxCharPos, color, rotation, origin, shadowColor);
-
-                lineLength++;
-                charWidth = Font.MeasureString(c.ToString()).X;
+                line.Append(words[i]);
             }
-
-            nextCharPos = new(nextCharPos.X + charWidth, nextCharPos.Y);
-            nextFxCharPos = GetNextFxCharPosition(lineLength, nextCharPos, fxText);
         }
 
-        fxText.PaletteRotator?.RestartRotation();
+        if (line.Length > 0) output.Append(line);
 
-        return nextCharPos;
-    }
-
-    private Vector2 GetNextFxCharPosition(int lineLength, Vector2 nextCharPos, FxText fxText)
-    {
-        return new Vector2()
-        {
-            X = nextCharPos.X +
-                (fxText.Shake ? MathF.Sin(fxText.Rand.Next()) * fxText.ShakeStrength : 0f) +
-                (fxText.SideStep ? MathF.Sin(_time * fxText.SideStepFrequency + lineLength) * fxText.SideStepAmplitude : 0f),
-
-            Y = nextCharPos.Y +
-                (fxText.Shake ? MathF.Sin(fxText.Rand.Next()) * fxText.ShakeStrength : 0f) +
-                (fxText.Wave ? MathF.Sin(_time * fxText.WaveFrequency + lineLength) * fxText.WaveAmplitude : 0f)
-        };
+        return output.ToString();
     }
 
     private List<string> SliceLongWord(string longWord)
@@ -153,7 +188,36 @@ public class CustomText
         return words;
     }
 
-    private string ProcessFxTexts(string text)
+    private List<string> ProcessRawWords(string[] rawWords, out List<int> subwordIdxsExcludingFirst)
+    {
+        List<string> processedWords = [];
+        subwordIdxsExcludingFirst = [];
+
+        foreach (string word in rawWords)
+        {
+            float wordWidth = Font.MeasureString(word).X;
+
+            // Slice words that are longer than a line.
+            if (wordWidth > Dimension.X * Scale.X - 2f * Padding.X)
+            {
+                List<string> longWordsParts = SliceLongWord(word);
+                for (int i = 0; i < longWordsParts.Count; i++)
+                {
+                    string part = longWordsParts[i];
+
+                    // Don't add the idx of the first subword.
+                    if (i != 0) subwordIdxsExcludingFirst.Add(processedWords.Count);
+
+                    processedWords.Add(part);
+                }
+            }
+            else processedWords.Add(word);
+        }
+
+        return processedWords;
+    }
+
+    private string BuildFxTexts(string text)
     {
         Regex regex = new(@"<fx\s+([0-9,]+)>(.*?)</fx>", RegexOptions.Singleline);
         var matches = regex.Matches(text);
@@ -170,63 +234,24 @@ public class CustomText
             string innerText = m.Groups[2].Value;
 
             int startIdx = m.Index - ignoredCharCount;
-            int colorProfile = 0, waveProfile = 0, shakeProfile = 0, hangProfile = 0, sideStepProfile = 0;
+            int colorProfil = 0, waveProfil = 0, shakeProfil = 0, hangProfil = 0, sideStepProfil = 0;
 
             if (values.Length == 5)
             {
-                _ = int.TryParse(values[0], out colorProfile);
-                _ = int.TryParse(values[1], out waveProfile);
-                _ = int.TryParse(values[2], out shakeProfile);
-                _ = int.TryParse(values[3], out hangProfile);
-                _ = int.TryParse(values[4], out sideStepProfile);
+                _ = int.TryParse(values[0], out colorProfil);
+                _ = int.TryParse(values[1], out waveProfil);
+                _ = int.TryParse(values[2], out shakeProfil);
+                _ = int.TryParse(values[3], out hangProfil);
+                _ = int.TryParse(values[4], out sideStepProfil);
             }
 
-            _fxTexts[i] = new(startIdx, innerText.Length, colorProfile, waveProfile, shakeProfile, hangProfile, sideStepProfile);
+            _fxTexts[i] = new(startIdx, innerText.Length, colorProfil, waveProfil, shakeProfil, hangProfil, sideStepProfil);
 
             ignoredCharCount += m.Length - innerText.Length;
         }
 
         // Return the text without fx tags.
-        regex = new(@"<fx\b[^>]*>(.*?)</fx>", RegexOptions.Singleline);
-        return regex.Replace(text, m => m.Groups[1].Value);
-    }
-
-    private void AdjustFxTextsIndexes(List<int> addedChars)
-    {
-        if (addedChars.Count == 0) return;
-
-        foreach (FxText fxText in _fxTexts)
-        {
-            foreach (int pos in addedChars)
-            {
-                // A char was added in the inner text so we update the fx text's length.
-                if (pos >= fxText.StartIdx && pos <= fxText.EndIdx)
-                    fxText.Length++;
-
-                // A char was added before the start of the fx text: we increase the start index.
-                else if (pos < fxText.StartIdx)
-                    fxText.StartIdx++;
-            }
-        }
-    }
-
-    private void GenerateNoFxTextsParts(string output)
-    {
-        int startIdx = 0;
-
-        _noFxTextsParts = new string[_fxTexts.Length + 1][];
-
-        for (int i = 0; i < _fxTexts.Length; i++)
-        {
-            int length = _fxTexts[i].StartIdx - startIdx;
-            string noFxPart = length > 0 ? output.Substring(startIdx, length) : string.Empty;
-
-            _noFxTextsParts[i] = noFxPart.Split('\n');
-
-            startIdx = _fxTexts[i].EndIdx + 1;
-        }
-
-        _noFxTextsParts[^1] = output.Substring(startIdx).Split('\n');
+        return regex.Replace(text, m => m.Groups[2].Value);
     }
 
     private string FilterUnsupportedChars(string text)
@@ -239,49 +264,209 @@ public class CustomText
         return sb.ToString();
     }
 
+    #endregion
+    #region Output post-building related
+
+    private void AdjustFxTextsIndexes(List<int> addedChars)
+    {
+        if (addedChars.Count == 0) return;
+
+        foreach (FxText fxText in _fxTexts)
+        {
+            foreach (int pos in addedChars)
+            {
+                // A char was added in the fx text, so we update the fx text's length.
+                if (pos >= fxText.StartIdx && pos <= fxText.EndIdx)
+                    fxText.Length++;
+
+                // A char was added before the start of the fx text, so we increase the start index.
+                else if (pos < fxText.StartIdx)
+                    fxText.StartIdx++;
+            }
+        }
+    }
+
+    private void BuildNoFxTexts(string output)
+    {
+        int startIdx = 0;
+
+        _noFxTexts = new string[_fxTexts.Length + 1][];
+
+        // All no-fx texts are separated by an fx text. example: [Hello stranger, are you ]{good}[ ?]
+        for (int i = 0; i < _fxTexts.Length; i++)
+        {
+            int length = _fxTexts[i].StartIdx - startIdx;
+            string noFxPart = length > 0 ? output.Substring(startIdx, length) : string.Empty;
+
+            // Split into lines.
+            _noFxTexts[i] = noFxPart.Split('\n');
+
+            startIdx = _fxTexts[i].EndIdx + 1;
+        }
+
+        // Don't forget to add the last one. (in the example it's: [ ?])
+        _noFxTexts[^1] = output.Substring(startIdx).Split('\n');
+    }
+
+    public void CountLines()
+    {
+        LineCount = 1;
+
+        Vector2 nextCharPos = Position + Padding;
+
+        for (int i = 0; i < _noFxTexts.Length; i++)
+        {
+            nextCharPos = CountPartLines(_noFxTexts[i], nextCharPos);
+
+            if (_fxTexts.Length > 0 && i < _fxTexts.Length)
+                nextCharPos = CountPartLines(_fxTexts[i].Lines, nextCharPos);
+        }
+    }
+
+    private Vector2 CountPartLines(string[] lines, Vector2 nextCharPos)
+    {
+        float initialLineStartX = nextCharPos.X;
+
+        for (int j = 1; j < lines.Length; j++)
+        {
+            nextCharPos = new(Position.X + Padding.X, nextCharPos.Y + _lineHeight);
+            LineCount++;
+        }
+
+        if (lines[^1] != string.Empty)
+        {
+            float lastLineStartX = (lines.Length == 1) ? initialLineStartX : Position.X + Padding.X;
+            nextCharPos = new(lastLineStartX + Font.MeasureString(lines[^1]).X, nextCharPos.Y);
+        }
+
+        return nextCharPos;
+    }
+
+    #endregion
+    #region Draw related
+
+    private Vector2 GetNextFxCharPosition(int lineLength, Vector2 nextCharPos, FxText fxText)
+    {
+        return new Vector2()
+        {
+            X = nextCharPos.X +
+                (fxText.Shake ? MathF.Sin(fxText.Rand.Next()) * fxText.ShakeStrength : 0f) +
+                (fxText.SideStep ? MathF.Sin(_time * fxText.SideStepFrequency + lineLength) * fxText.SideStepAmplitude : 0f),
+
+            Y = nextCharPos.Y +
+                (fxText.Shake ? MathF.Sin(fxText.Rand.Next()) * fxText.ShakeStrength : 0f) +
+                (fxText.Wave ? MathF.Sin(_time * fxText.WaveFrequency + lineLength) * fxText.WaveAmplitude : 0f)
+        };
+    }
+
+    private void DrawFxTextLine(FxText fxText, int lineIdx, Vector2 nextCharPos)
+    {
+        float charWidth;
+        int lineLength = 0;
+        Vector2 nextFxCharPos = GetNextFxCharPosition(lineLength, nextCharPos, fxText);
+
+        if (fxText.Shake) fxText.ResetRand();
+
+        for (int i = 0; i < fxText.Lines[lineIdx].Length; i++)
+        {
+            char c = fxText.Lines[lineIdx][i];
+            Color color = fxText.PaletteRotator?.NextColor ?? Color;
+            Vector2 origin = Vector2.Zero;
+            float rotation = 0f;
+
+            if (fxText.Hang)
+            {
+                origin = new(Font.MeasureString(c.ToString()).X / 2f, 0f);
+                rotation = MathHelper.ToRadians(MathF.Sin(_time * fxText.HangFrequency + i) * fxText.HangAmplitude);
+                nextFxCharPos = new(nextFxCharPos.X + origin.X, nextFxCharPos.Y);
+            }
+
+            Color shadowColor = color == Color ? ShadowColor : new(color.ToVector4() * 0.65f + Vector4.UnitW * 255f * color.A);
+            DrawString(c.ToString(), nextFxCharPos, color, rotation, origin, shadowColor);
+
+            lineLength++;
+            charWidth = Font.MeasureString(c.ToString()).X;
+
+            nextCharPos = new(nextCharPos.X + charWidth, nextCharPos.Y);
+            nextFxCharPos = GetNextFxCharPosition(lineLength, nextCharPos, fxText);
+        }
+
+        fxText.PaletteRotator?.RestartRotation();
+    }
+
     private void DrawString(string text, Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Color? shadowColor = null)
     {
         // Draw text shadow.
         if (ShadowColor != Color.Transparent)
-            _spriteBatch.DrawString(Font, text, position + ShadowOffset, Color.Blue * .25f, rotation, origin, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(Font, text, position + ShadowOffset, shadowColor ?? ShadowColor, rotation, origin, 1f, SpriteEffects.None, 0f);
 
         _spriteBatch.DrawString(Font, text, position, color, rotation, origin, 1f, SpriteEffects.None, 0.01f);
     }
 
+    private Vector2 DrawLines(string[] lines, Vector2 nextCharPos, FxText fxText = null)
+    {
+        float initialLineStartX = nextCharPos.X;
+
+        // Draw the first line at the given nextCharPos.
+        if (IsLineDrawable(_currentLineIdx) && lines[0] != string.Empty)
+        {
+            Vector2 v = new(nextCharPos.X, Position.Y + Padding.Y + _lineHeight * (_currentLineIdx - StartingLineIdx));
+
+            if (fxText != null)
+                DrawFxTextLine(fxText, 0, v);
+            else
+                DrawString(lines[0], v, Color);
+        }
+
+        // Then, draw the subsequent lines at their respective positions.
+        for (int j = 1; j < lines.Length; j++)
+        {
+            nextCharPos = new(Position.X + Padding.X, nextCharPos.Y + _lineHeight);
+            _currentLineIdx++;
+
+            if (IsLineDrawable(_currentLineIdx) && lines[j] != string.Empty)
+            {
+                Vector2 v = new(nextCharPos.X, Position.Y + Padding.Y + _lineHeight * (_currentLineIdx - StartingLineIdx));
+
+                if (fxText != null)
+                    DrawFxTextLine(fxText, j, v);
+                else
+                    DrawString(lines[j], v, Color);
+            }
+        }
+
+        // Finally, determine the start X of the last drawn line to get the next char position:
+        // if there's only one line, it started at initialLineStartX, otherwise, it started at the beginning of a line.
+        if (lines[^1] != string.Empty)
+        {
+            float lastLineStartX = (lines.Length == 1) ? initialLineStartX : Position.X + Padding.X;
+            nextCharPos = new(lastLineStartX + Font.MeasureString(lines[^1]).X, nextCharPos.Y);
+        }
+
+        return nextCharPos;
+    }
+
+    private bool IsLineDrawable(int lineIdx) => AllowOverflow || ((lineIdx >= StartingLineIdx) && (lineIdx < StartingLineIdx + _lineCapacity));
+
+    #endregion
+    #endregion
+    #region Public methods
+
     public void Draw()
     {
+        _currentLineIdx = 0;
+
         Vector2 nextCharPos = Position + Padding;
 
-        // Each no-fx text parts follow an fx text.
-        for (int i = 0; i < _noFxTextsParts.Length; i++)
+        // All no-fx texts are separated by an fx text.
+        for (int i = 0; i < _noFxTexts.Length; i++)
         {
-            string[] noTextPart = _noFxTextsParts[i];
+            // Draw no-fx lines.
+            nextCharPos = DrawLines(_noFxTexts[i], nextCharPos);
 
-            float initialLineStartX = nextCharPos.X;
-
-            // Draw no-fx text first line (may be empty)
-            if (noTextPart[0] != string.Empty)
-                DrawString(noTextPart[0], nextCharPos, Color);
-
-            // Draw no-fx text subsequent lines (each starts at Position.X)
-            for (int j = 1; j < noTextPart.Length; j++)
-            {
-                nextCharPos = new(Position.X + Padding.X, nextCharPos.Y + _lineHeight);
-
-                if (noTextPart[j] != string.Empty)
-                    DrawString(noTextPart[j], nextCharPos, Color);
-            }
-
-            // Determine the start X of the last drawn line:
-            // if there's only one line, it started at initialLineStartX, otherwise, it started at Position.X.
-            float lastLineStartX = (noTextPart.Length == 1) ? initialLineStartX : Position.X + Padding.X;
-
-            if (noTextPart[^1] != string.Empty)
-                nextCharPos = new(lastLineStartX + Font.MeasureString(noTextPart[^1]).X, nextCharPos.Y);
-
-            // Then draw the fx text, if any.
+            // Then draw fx lines, if any.
             if (_fxTexts.Length > 0 && i < _fxTexts.Length)
-                nextCharPos = DrawFxText(_fxTexts[i], nextCharPos);
+                nextCharPos = DrawLines(_fxTexts[i].Lines, nextCharPos, _fxTexts[i]);
         }
     }
 
@@ -290,96 +475,61 @@ public class CustomText
         foreach (var fxText in _fxTexts)
             fxText.Update(deltaTime);
 
-        _time += deltaTime;
+        _time = (_time + deltaTime) % 3600f;
     }
 
     public void Refresh()
     {
-        string cleanedText = ProcessFxTexts(FilterUnsupportedChars(Text));
-        string[] rawWords = cleanedText.Split(' ');
-        StringBuilder line = new();
-        StringBuilder output = new();
-        List<int> addedChars = []; // Useful to adjust the indexes of fx texts set just before.
-        List<int> longWordsPartsPos = [];
-        List<string> words = [];
+        string filteredText = FilterUnsupportedChars(Text);
+        string noTagsText = BuildFxTexts(filteredText);
+        string[] rawWords = noTagsText.Split(' ');
 
-        // Slice words that are longer than a line.
-        foreach (string word in rawWords)
-        {
-            float wordWidth = Font.MeasureString(word).X;
-
-            if (wordWidth > Dimension.X * Scale.X - 2f * Padding.X)
-            {
-                List<string> longWordsParts = SliceLongWord(word);
-                for (int i = 0; i < longWordsParts.Count; i++)
-                {
-                    string part = longWordsParts[i];
-
-                    // Don't add the pos of the first part of the long word.
-                    if (i != 0) longWordsPartsPos.Add(words.Count);
-
-                    words.Add(part);
-                }
-            }
-            else words.Add(word);
-        }
+        // Raw words can be longer than a line, that's why we process them.
+        List<string> words = ProcessRawWords(rawWords, out List<int> subwordIdxsExcludingFirst);
 
         // Build output by placing the words within the set dimension.
-        for (int i = 0; i < words.Count; i++)
-        {
-            string testLine = line.Length == 0 ? words[i] : line + " " + words[i];
-
-            if (Font.MeasureString(testLine).X > Dimension.X * Scale.X - 2f * Padding.X)
-            {
-                if (i > 0) line.Append('\n');
-
-                output.Append(line);
-
-                // A new line was inserted between two parts of the same long word,
-                // which increases the output length, unlike a regular new line that
-                // simply replaces a space between two separate words.
-                if (longWordsPartsPos.Contains(i))
-                    addedChars.Add(output.Length - 1);
-
-                line.Clear();
-
-                // A word can be empty if it's from consecutives spaces, in this case we add a space to the output.
-                if (words[i] == string.Empty)
-                {
-                    line.Append(' ');
-                    addedChars.Add(output.Length);
-                }
-                else line.Append(words[i]);
-            }
-            else
-            {
-                // Add a space between words unless the current word start the line.
-                if (line.Length > 0) line.Append(' ');
-
-                line.Append(words[i]);
-            }
-        }
-
-        if (line.Length > 0) output.Append(line);
-
-        string strOutput = output.ToString();
+        string output = BuildOutput(words, subwordIdxsExcludingFirst, out List<int> addedChars);
 
         // Adjust the indexes of fx texts based on the added chars that increase the output's length.
         AdjustFxTextsIndexes(addedChars);
 
-        // Generate the inner text of fx texts according to their indexes.
+        // Build the lines of fx texts according to their indexes.
         foreach (FxText fxText in _fxTexts)
-            fxText.InnerText = strOutput.Substring(fxText.StartIdx, fxText.Length);
+            fxText.Lines = output.Substring(fxText.StartIdx, fxText.Length).Split('\n');
 
-        GenerateNoFxTextsParts(strOutput);
+        BuildNoFxTexts(output);
+
+        CountLines();
+        StartingLineIdx = 0;
+        _lineCapacity = (int)(Dimension.Y * Scale.Y / _lineHeight);
     }
 
+    public void NextStartingLine()
+    {
+        StartingLineIdx = AllowOverflow ? 0 : Math.Min(StartingLineIdx + 1, LineCount - 1);
+    }
+
+    public void PreviousStartingLine()
+    {
+        StartingLineIdx = AllowOverflow ? 0 : Math.Max(0, StartingLineIdx - 1);
+    }
+
+    public void NextPage()
+    {
+        int maxLineIdx = Math.Max(0, LineCount - _lineCapacity);
+        StartingLineIdx = AllowOverflow ? 0 : Math.Min(StartingLineIdx + _lineCapacity, maxLineIdx);
+    }
+
+    public void PreviousPage()
+    {
+        StartingLineIdx = AllowOverflow ? 0 : Math.Max(0, StartingLineIdx - _lineCapacity);
+    }
+
+    #endregion
+
     /// <summary>
-    /// Nested class that defines a configuration on an fx text.
+    /// Nested class that defines an fx text.
     /// </summary>
-    /// <remarks>
-    /// This class is nested because it's only useful for a custom text.
-    /// </remarks>
     private class FxText
     {
         /// <summary>
@@ -400,28 +550,16 @@ public class CustomText
         /// <summary>
         /// The different wave profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        private readonly static Dictionary<int, Tuple<float, float>> WaveProfiles = new()
+        private readonly static Dictionary<int, Tuple<float, float>> WaveProfils = new()
         {
             // Wave Frequency, Wave Amplitude
-            [1] = new(8f, 8f),
-            [2] = new(4f, 2f),
-        };
-
-        /// <summary>
-        /// The different side step profiles. Add as many as you want by following the syntax below.
-        /// </summary>
-        public readonly static Dictionary<int, Tuple<float, float>> SideStepProfiles = new()
-        {
-            // Wave Frequency, Wave Amplitude
-            [1] = new(8f, 8f),
-            [2] = new(8f, -8f),
-            [3] = new(4f, 2f)
+            [1] = new(8f, 8f)
         };
 
         /// <summary>
         /// The different shake profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        public static Dictionary<int, Tuple<float, float>> ShakeProfiles = new()
+        public static Dictionary<int, Tuple<float, float>> ShakeProfils = new()
         {
             // Shake Interval, Shake Strength
             [1] = new(0.06f, 3f),
@@ -430,11 +568,22 @@ public class CustomText
         /// <summary>
         /// The different hang profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        public static Dictionary<int, Tuple<float, float>> HangProfiles = new()
+        public static Dictionary<int, Tuple<float, float>> HangProfils = new()
         {
             // Hang Frequency, Hang Amplitude
             [1] = new(6f, 12f)
         };
+
+        /// <summary>
+        /// The different side step profiles. Add as many as you want by following the syntax below.
+        /// </summary>
+        public static Dictionary<int, Tuple<float, float>> SideStepProfils = new()
+        {
+            // Side Step Frequency, Side Step Amplitude
+            [1] = new(6f, 8f),
+            [2] = new(6f, -8f)
+        };
+
 
         private float _shakeTime;
         private int _randSeed;
@@ -444,7 +593,7 @@ public class CustomText
 
         public int StartIdx { get; set; }
 
-        public string InnerText { get; set; }
+        public string[] Lines { get; set; }
 
         public PaletteRotator PaletteRotator { get; }
 
@@ -453,12 +602,6 @@ public class CustomText
         public float WaveFrequency { get; }
 
         public float WaveAmplitude { get; }
-       
-        public bool SideStep { get; }
-        
-        public float SideStepFrequency { get; }
-
-        public float SideStepAmplitude { get; }
 
         public bool Hang { get; }
 
@@ -472,32 +615,32 @@ public class CustomText
 
         public float ShakeStrength { get; }
 
+        public bool SideStep { get; }
+
+        public float SideStepFrequency { get; }
+
+        public float SideStepAmplitude { get; }
+
         public Random Rand { get; private set; }
 
         public int EndIdx => StartIdx + Length - 1;
 
 
-        public FxText(int startIdx, int length, int colorProfile, int waveProfile, int shakeProfile, int hangProfile, int sideStepProfile)
+        public FxText(int startIdx, int length, int colorProfil, int waveProfil, int shakeProfil, int hangProfil, int sideStepProfil)
         {
             Length = length;
             StartIdx = startIdx;
 
-            if (ColorProfiles.TryGetValue(colorProfile, out Tuple<ColorPalette, float> colorValues))
+            if (ColorProfiles.TryGetValue(colorProfil, out Tuple<ColorPalette, float> colorValues))
                 PaletteRotator = new(colorValues.Item1, colorValues.Item2);
 
-            if (WaveProfiles.TryGetValue(waveProfile, out Tuple<float, float> waveValues))
+            if (WaveProfils.TryGetValue(waveProfil, out Tuple<float, float> waveValues))
             {
                 (WaveFrequency, WaveAmplitude) = waveValues;
                 Wave = true;
             }
 
-            if (SideStepProfiles.TryGetValue(sideStepProfile, out Tuple<float, float> sideStepValues))
-            {
-                (SideStepFrequency, SideStepAmplitude) = sideStepValues;
-                SideStep = true;
-            }
-
-            if (ShakeProfiles.TryGetValue(shakeProfile, out Tuple<float, float> shakeValues))
+            if (ShakeProfils.TryGetValue(shakeProfil, out Tuple<float, float> shakeValues))
             {
                 (ShakeInterval, ShakeStrength) = shakeValues;
                 _randSeed = (int)DateTime.Now.Ticks;
@@ -505,10 +648,16 @@ public class CustomText
                 Shake = true;
             }
 
-            if (HangProfiles.TryGetValue(hangProfile, out Tuple<float, float> hangValues))
+            if (HangProfils.TryGetValue(hangProfil, out Tuple<float, float> hangValues))
             {
                 (HangFrequency, HangAmplitude) = hangValues;
                 Hang = true;
+            }
+
+            if (SideStepProfils.TryGetValue(sideStepProfil, out Tuple<float, float> sideStepValues))
+            {
+                (SideStepFrequency, SideStepAmplitude) = sideStepValues;
+                SideStep = true;
             }
         }
 
@@ -529,5 +678,5 @@ public class CustomText
         }
 
         public void ResetRand() => Rand = new Random(_randSeed);
-    };
+    }
 }

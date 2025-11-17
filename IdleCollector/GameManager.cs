@@ -197,7 +197,7 @@ namespace IdleCollector
         {
             SceneManager.AddScene(OptionsScene);
             Updater.AddToSceneEnter(OptionsScene, () => { prevTexture = Renderer.GetLastRender(); });
-            Renderer.AddToSceneUIDraw((sb) => { if (isPaused) sb.Draw(prevTexture, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White); });
+            Renderer.AddToSceneUIDraw(OptionsScene, (sb) => { sb.Draw(prevTexture, Renderer.UIBounds, Color.White); });
             Renderer.AddToSceneUIDraw(OptionsScene, (sb) =>
             {
                 sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White);
@@ -208,7 +208,9 @@ namespace IdleCollector
             int posY = 1080 - 400;
             int posX = 1920 / 2;
 
-            PauseText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfettTitle", "<fx 0,2,0,0,0>Paused</fx>", new Vector2(posX - (ResourceAtlas.GetFont("DePixelHalbfettTitle").MeasureString("Paused...").X) / 2, posY), new Vector2(1000, 100), padding: new Vector2(30, 30), shadowColor: Color.Black);
+            Color shadColor = Color.Black * .65f;
+            Color fColor = Color.White;
+            PauseText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfettTitle", "<fx 0,2,0,0,0>Paused</fx>", new Vector2(posX - (ResourceAtlas.GetFont("DePixelHalbfettTitle").MeasureString("Paused...").X) / 2, posY), new Vector2(1000, 100), color: fColor, padding: new Vector2(30, 30), shadowColor: shadColor);
             PauseText.Refresh();
 
             posY += 150;
@@ -216,7 +218,8 @@ namespace IdleCollector
             menuConfig.bounds = new Rectangle(posX - 150, posY, 300, 10 * Renderer.UIScaler.Y);
             menuConfig.texts = new string[] { "Main Menu", "<fx 0,0,0,0,1>></fx> Main Menu <fx 0,0,0,0,2><</fx>" };
             menuConfig.font = "DePixelHalbfett";
-            menuConfig.fontColor = Color.White;
+            menuConfig.shadowColor = shadColor;
+            menuConfig.fontColor = fColor;
 
             menuButton = new Button(Game1.Instance, menuConfig);
             menuButton.OnClick += () => { SceneManager.SwapScene(Game1.MainScene); isPaused = false; };
@@ -226,7 +229,8 @@ namespace IdleCollector
             optionsConfig.bounds = new Rectangle(posX - 150, posY, 300, 10 * Renderer.UIScaler.Y);
             optionsConfig.texts = new string[] { "Options", "<fx 0,0,0,0,1>></fx> Options <fx 0,0,0,0,2><</fx>" };
             optionsConfig.font = "DePixelHalbfett";
-            optionsConfig.fontColor = Color.White;
+            optionsConfig.fontColor = fColor;
+            optionsConfig.shadowColor = shadColor;
 
             optionsButton = new Button(Game1.Instance, optionsConfig);
             optionsButton.OnClick += () => { SceneManager.SwapScene(OptionsScene); };
@@ -236,7 +240,8 @@ namespace IdleCollector
             resumeConfig.bounds = new Rectangle(posX - 150, posY, 300, 10 * Renderer.UIScaler.Y);
             resumeConfig.texts = new string[] { "Resume", "<fx 0,0,0,0,1>></fx> Resume <fx 0,0,0,0,2><</fx>" };
             resumeConfig.font = "DePixelHalbfett";
-            resumeConfig.fontColor = Color.White;
+            resumeConfig.fontColor = fColor;
+            resumeConfig.shadowColor = shadColor;
 
             resumeButton = new Button(Game1.Instance, resumeConfig);
             resumeButton.OnClick += () => { isPaused = false; Updater.UnPauseScene(); OnIsPaused?.Invoke(isPaused); };
