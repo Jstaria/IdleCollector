@@ -550,16 +550,17 @@ public class CustomText
         /// <summary>
         /// The different wave profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        private readonly static Dictionary<int, Tuple<float, float>> WaveProfils = new()
+        private readonly static Dictionary<int, Tuple<float, float>> WaveProfiles = new()
         {
             // Wave Frequency, Wave Amplitude
-            [1] = new(8f, 8f)
+            [1] = new(8f, 8f),
+            [2] = new(4f, 4f)
         };
 
         /// <summary>
         /// The different shake profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        public static Dictionary<int, Tuple<float, float>> ShakeProfils = new()
+        public static Dictionary<int, Tuple<float, float>> ShakeProfiles = new()
         {
             // Shake Interval, Shake Strength
             [1] = new(0.06f, 3f),
@@ -568,7 +569,7 @@ public class CustomText
         /// <summary>
         /// The different hang profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        public static Dictionary<int, Tuple<float, float>> HangProfils = new()
+        public static Dictionary<int, Tuple<float, float>> HangProfiles = new()
         {
             // Hang Frequency, Hang Amplitude
             [1] = new(6f, 12f)
@@ -577,7 +578,7 @@ public class CustomText
         /// <summary>
         /// The different side step profiles. Add as many as you want by following the syntax below.
         /// </summary>
-        public static Dictionary<int, Tuple<float, float>> SideStepProfils = new()
+        public static Dictionary<int, Tuple<float, float>> SideStepProfiles = new()
         {
             // Side Step Frequency, Side Step Amplitude
             [1] = new(6f, 8f),
@@ -634,13 +635,13 @@ public class CustomText
             if (ColorProfiles.TryGetValue(colorProfil, out Tuple<ColorPalette, float> colorValues))
                 PaletteRotator = new(colorValues.Item1, colorValues.Item2);
 
-            if (WaveProfils.TryGetValue(waveProfil, out Tuple<float, float> waveValues))
+            if (WaveProfiles.TryGetValue(waveProfil, out Tuple<float, float> waveValues))
             {
                 (WaveFrequency, WaveAmplitude) = waveValues;
                 Wave = true;
             }
 
-            if (ShakeProfils.TryGetValue(shakeProfil, out Tuple<float, float> shakeValues))
+            if (ShakeProfiles.TryGetValue(shakeProfil, out Tuple<float, float> shakeValues))
             {
                 (ShakeInterval, ShakeStrength) = shakeValues;
                 _randSeed = (int)DateTime.Now.Ticks;
@@ -648,13 +649,13 @@ public class CustomText
                 Shake = true;
             }
 
-            if (HangProfils.TryGetValue(hangProfil, out Tuple<float, float> hangValues))
+            if (HangProfiles.TryGetValue(hangProfil, out Tuple<float, float> hangValues))
             {
                 (HangFrequency, HangAmplitude) = hangValues;
                 Hang = true;
             }
 
-            if (SideStepProfils.TryGetValue(sideStepProfil, out Tuple<float, float> sideStepValues))
+            if (SideStepProfiles.TryGetValue(sideStepProfil, out Tuple<float, float> sideStepValues))
             {
                 (SideStepFrequency, SideStepAmplitude) = sideStepValues;
                 SideStep = true;

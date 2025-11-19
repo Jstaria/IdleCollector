@@ -90,7 +90,7 @@ namespace IdleCollector
 
         public void ControlledUpdate(GameTime gameTime)
         {
-            
+
         }
 
 
@@ -113,7 +113,7 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
-            
+
         }
         #endregion
 
@@ -136,6 +136,10 @@ namespace IdleCollector
             SceneManager.AddScene(sceneName);
             SceneManager.AddToIndependent(this);
             Updater.AddToSceneExit(GameScene, () =>
+            {
+
+            });
+            Updater.AddToSceneEnter(Game1.MainScene, () =>
             {
                 isPaused = false;
                 Updater.UnPauseScene();
@@ -195,12 +199,53 @@ namespace IdleCollector
 
         private void SetupOptions()
         {
+            float colorF = 0;
+
             SceneManager.AddScene(OptionsScene);
-            Updater.AddToSceneEnter(OptionsScene, () => { prevTexture = Renderer.GetLastRender(); });
+            Updater.AddToSceneEnter(OptionsScene, async () =>
+            {
+                prevTexture = Renderer.GetLastRender();
+                for (int i = 0; i < 50; i++)
+                {
+                    colorF = MathHelper.Lerp(colorF, 1, i / 50.0f);
+                    await Task.Delay(5);
+                }
+            });
+
+            Updater.AddToSceneUpdate(OptionsScene, UpdateType.Standard, async (gameTime) =>
+            {
+                if (Input.IsButtonDownOnce(Keys.Escape) && SceneManager.CurrentSceneName != Game1.MainScene)
+                {
+                    for (int i = 0; i < 50; i++)
+                    {
+                        colorF = MathHelper.Lerp(colorF, 0, i / 50.0f);
+                        await Task.Delay(5);
+                    }
+
+                    if (SceneManager.CurrentSceneName != GameScene)
+                    {
+                        SceneManager.SwapScene(GameScene);
+                    }
+
+                    if (isPaused)
+                    {
+                        isPaused = false;
+                        Updater.UnPauseScene();
+                    }
+                    else
+                    {
+                        isPaused = true;
+                        Updater.PauseScene();
+                    }
+
+                    OnIsPaused?.Invoke(isPaused);
+                }
+            });
+
             Renderer.AddToSceneUIDraw(OptionsScene, (sb) => { sb.Draw(prevTexture, Renderer.UIBounds, Color.White); });
             Renderer.AddToSceneUIDraw(OptionsScene, (sb) =>
             {
-                sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White);
+                sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White * colorF);
             });
         }
         private void SetupPause()
@@ -250,7 +295,8 @@ namespace IdleCollector
             Updater.AddToLateUpdate((gt) => { if (isPaused) optionsButton.StandardUpdate(gt); });
             Updater.AddToLateUpdate((gt) => { if (isPaused) menuButton.StandardUpdate(gt); });
 
-            Renderer.AddToSceneUIDraw(GameScene, (sb) => {
+            Renderer.AddToSceneUIDraw(GameScene, (sb) =>
+            {
                 PauseText.Update(1 / 60.0f);
 
                 if (isPaused)
@@ -266,7 +312,7 @@ namespace IdleCollector
             {
                 if (Input.IsButtonDownOnce(Keys.Escape) && SceneManager.CurrentSceneName != Game1.MainScene)
                 {
-                    if (SceneManager.CurrentSceneName != GameScene)
+                    if (SceneManager.CurrentSceneName != GameScene && SceneManager.CurrentSceneName != OptionsScene)
                     {
                         SceneManager.SwapScene(GameScene);
                     }

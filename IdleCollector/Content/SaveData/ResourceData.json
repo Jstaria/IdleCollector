@@ -1,7 +1,7 @@
 {
   "resources": {
     "Grass": {
-      "Count": 21357,
+      "Count": 21365,
       "Multiplier": 1,
       "Name": "Grass",
       "IsUnlocked": true,
@@ -29,7 +29,7 @@
       }
     },
     "Flower": {
-      "Count": 91508,
+      "Count": 91605,
       "Multiplier": 1,
       "Name": "Flower",
       "IsUnlocked": true,
