@@ -1,13 +1,14 @@
-﻿using Microsoft.Xna.Framework;
+﻿using IdleEngine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
-using IdleEngine;
-using System.Windows;
-using System.Collections.Generic;
+using Particles;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 using System.Threading;
+using System.Windows;
 
 namespace IdleCollector
 {
@@ -80,7 +81,9 @@ namespace IdleCollector
             config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
 
             button = new Button(Game1.Instance, config);
-            button.OnClick += () => { SceneManager.SwapScene("Game Scene");
+            button.OnClick += () =>
+            {
+                SceneManager.SwapScene("Game Scene");
                 // Resets any current data in worldManager when entering the scene
                 _gameManager.ResetWorld();
             };
@@ -136,6 +139,39 @@ namespace IdleCollector
             _spriteBatch.End();
 
             base.Draw(gameTime);
+
+            Vector2 offset = Vector2.One * 500;
+            float scale = 100;
+            float rotAngle = (float)gameTime.TotalGameTime.TotalSeconds;
+            float normalScale = MathF.Sqrt(scale * scale + scale * scale);
+            Rectangle rect = new Rectangle(offset.ToPoint() - (Vector2.One * scale).ToPoint(), (Vector2.One * scale * 2).ToPoint());
+
+            Matrix rot =
+                Matrix.CreateTranslation(-rect.Center.X, -rect.Center.Y, 0) *
+                Matrix.CreateRotationZ(rotAngle) *
+                Matrix.CreateTranslation(rect.Center.X, rect.Center.Y, 0);
+
+            Vector2 tl = new Vector2(rect.Left, rect.Top);
+            Vector2 tr = new Vector2(rect.Right, rect.Top);
+            Vector2 br = new Vector2(rect.Right, rect.Bottom);
+            Vector2 bl = new Vector2(rect.Left, rect.Bottom);
+
+            tl = Vector2.Transform(tl, rot);
+            tr = Vector2.Transform(tr, rot);
+            br = Vector2.Transform(br, rot);
+            bl = Vector2.Transform(bl, rot);
+
+            bool collision = CollisionHelper.GetRotRectIntersect(rect, rotAngle, Input.GetMouseScreenPos().ToVector2());
+
+            Color color = collision ? Color.Green : Color.Red;
+
+            ShapeBatch.Begin(GraphicsDevice);
+            ShapeBatch.Line(tl, tr, color);
+            ShapeBatch.Line(tr, br, color);
+            ShapeBatch.Line(br, bl, color);
+            ShapeBatch.Line(bl, tl, color);
+            ShapeBatch.End();
+
         }
         #endregion
     }

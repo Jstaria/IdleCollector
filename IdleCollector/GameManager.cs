@@ -29,12 +29,12 @@ namespace IdleCollector
         private Button optionsButton;
         private Button resumeButton;
         private bool isPaused;
-        private float optionsFade = 0;
 
         public delegate void IsPaused(bool isPaused);
         public event IsPaused OnIsPaused;
-        public enum OptionsState { FadingIn, FadingOut }
-        private OptionsState optionsState;
+
+        private OptionsMenu optionsMenu;
+
         #endregion
 
         #region // GameManager Instance
@@ -202,58 +202,19 @@ namespace IdleCollector
 
         private void SetupOptions()
         {
-            SceneManager.AddScene(OptionsScene);
-            Updater.AddToSceneEnter(OptionsScene, async () =>
-            {
-                optionsState = OptionsState.FadingIn;
+            optionsMenu = new();
+            optionsMenu.Initialize(OptionsScene);
 
-                prevTexture = Renderer.GetLastRender();
-                for (int i = 0; i < 50; i++)
-                {
-                    if (optionsState == OptionsState.FadingOut) return;
-
-                    optionsFade = MathHelper.Lerp(optionsFade, 1, i / 50.0f);
-                    await Task.Delay(20);
-                }
-            });
-
-            Updater.AddToSceneUpdate(OptionsScene, UpdateType.Standard, async (gameTime) =>
-            {
-                if (Input.IsButtonDownOnce(Keys.Escape) && SceneManager.CurrentSceneName != Game1.MainScene)
-                {
-                    optionsState = OptionsState.FadingOut;
-
-                    for (int i = 0; i < 20; i++)
-                    {
-                        if (optionsState == OptionsState.FadingIn) return;
-
-                        optionsFade = MathHelper.Lerp(optionsFade, 0, i / 20.0f);
-
-                        await Task.Delay(20);
-                    }
-
-                    SceneManager.SwapScene(GameScene);
-                }
-            });
-
-            Updater.AddToSceneUpdate(OptionsScene, UpdateType.Standard, (gameTime) =>
-            {
-                    
-            });
-
-            Renderer.AddToSceneUIDraw(OptionsScene, (sb) => { sb.Draw(prevTexture, Renderer.UIBounds, Color.White); });
-            Renderer.AddToSceneUIDraw(OptionsScene, (sb) =>
-            {
-                sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White * optionsFade);
-            });
+            SceneManager.AddToScene(OptionsScene, optionsMenu);
         }
+
         private void SetupPause()
         {
             #region Buttons
             int posY = 1080 - 400;
             int posX = 1920 / 2;
 
-            Color shadColor = Color.Black * .65f;
+            Color shadColor = Color.Black * .45f;
             Color fColor = Color.White;
             PauseText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfettTitle", "<fx 0,2,0,0,0>Paused</fx>", new Vector2(posX - (ResourceAtlas.GetFont("DePixelHalbfettTitle").MeasureString("Paused...").X) / 2, posY), new Vector2(1000, 100), color: fColor, padding: new Vector2(30, 30), shadowColor: shadColor);
             PauseText.Refresh();
