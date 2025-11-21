@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace IdleCollector
         public string textParticle;
         public Color fontColor;
         public Color shadowColor;
+        public float rotationRadians;
     }
 
     public class Button : IUpdatable, IRenderable
@@ -38,6 +40,7 @@ namespace IdleCollector
         private string textParticle;
         private Vector2[] textPositions;
         private Color fontColor;
+        private float rotationRadians;
         private float timer = .05f;
         private float timeOfLastPress;
         private bool active;
@@ -51,9 +54,10 @@ namespace IdleCollector
         /// <summary>
         /// Button Class
         /// </summary>
-        public Button(Game gameInstance, ButtonConfig config) : this(gameInstance, config.textures, config.bounds, config.texts, config.textParticle, config.font, config.fontColor, config.shadowColor, config.sound) { }
-        public Button(Game gameInstance, Texture2D[] textures, Rectangle bounds, string[] texts, string textParticle, string fontName, Color fontColor, Color shadowColor, SoundEffect sound)
+        public Button(Game gameInstance, ButtonConfig config) : this(gameInstance, config.textures, config.bounds, config.texts, config.textParticle, config.font, config.fontColor, config.shadowColor, config.sound, config.rotationRadians) { }
+        public Button(Game gameInstance, Texture2D[] textures, Rectangle bounds, string[] texts, string textParticle, string fontName, Color fontColor, Color shadowColor, SoundEffect sound, float rotationRadians)
         {
+            this.rotationRadians = rotationRadians;
             this.textures = textures;
             if (fontName != null)
             {
@@ -101,6 +105,16 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
+            RenderTarget2D target = new RenderTarget2D(sb.GraphicsDevice, bounds.Size.X, bounds.Size.Y);
+
+            //if (rotationRadians > 0)
+            //{
+            //    sb.End();
+            //    sb.GraphicsDevice.SetRenderTarget(target);
+            //    sb.GraphicsDevice.Clear(Color.White);
+            //    Renderer.ResetBeginDraw(sb);
+            //}
+
             if (textures != null)
             {
                 Texture2D texture = !active ? textures[0] : textures[1];
@@ -113,7 +127,16 @@ namespace IdleCollector
                 text.Update(1/60.0f);
                 text.Draw();
             }
-            
+
+            //if (rotationRadians > 0)
+            //{
+            //    sb.End();
+            //    Renderer.ResetRenderTarget(sb);
+            //    sb.GraphicsDevice.Clear(Color.CornflowerBlue);
+            //    Renderer.ResetBeginDraw(sb);
+            //    sb.Draw(target, new Rectangle(new Point(100,-100), bounds.Size), null, Color.White, rotationRadians, -bounds.Center.ToVector2(), SpriteEffects.None, 0);
+            //    target.Dispose();
+            //}
         }
 
         public void StandardUpdate(GameTime gameTime)
@@ -121,9 +144,16 @@ namespace IdleCollector
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
 
-            if (!bounds.Contains(Input.GetMousePos() * Renderer.UIScaler)) return;
+            //if (rotationRadians > 0)
+            //{
+            //    if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, Input.GetMouseScreenPos().ToVector2())) return;
+            //}
+            //else
+            //{
+                if (!bounds.Contains(Input.GetMousePos() * Renderer.UIScaler)) return;
+            //}
 
-            sound?.Play();
+                sound?.Play();
 
             if (timeDelta < timer) return;
 

@@ -90,7 +90,17 @@ namespace IdleEngine
         }
 
         public static void AddEffectPass(BatchConfig process) => processes.Add(process);
-
+        public static void ResetRenderTargetUI(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(uiTexture);
+        public static void ResetRenderTarget(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(renderTexture);
+        public static void ResetBeginDraw(SpriteBatch sb) => sb.Begin(
+                renderTexConfig.sortMode,
+                blendState: renderTexConfig.blendState,
+                samplerState: renderTexConfig.samplerState,
+                depthStencilState: renderTexConfig.depthStencilState,
+                rasterizerState: renderTexConfig.rasterizerState,
+                effect: renderTexConfig.effect,
+                transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
+                );
         public static void DrawToTexture(SpriteBatch sb)
         {
             sb.GraphicsDevice.SetRenderTarget(renderTexture);

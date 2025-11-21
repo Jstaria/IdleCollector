@@ -79,6 +79,7 @@ namespace IdleCollector
             ButtonConfig config = new ButtonConfig();
             config.bounds = new Rectangle(10 * Renderer.UIScaler.X, 50 * Renderer.UIScaler.Y, 192 * Renderer.UIScaler.X, 64 * Renderer.UIScaler.Y);
             config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
+            config.rotationRadians = MathHelper.PiOver4;
 
             button = new Button(Game1.Instance, config);
             button.OnClick += () =>
@@ -139,39 +140,6 @@ namespace IdleCollector
             _spriteBatch.End();
 
             base.Draw(gameTime);
-
-            Vector2 offset = Vector2.One * 500;
-            float scale = 100;
-            float rotAngle = (float)gameTime.TotalGameTime.TotalSeconds;
-            float normalScale = MathF.Sqrt(scale * scale + scale * scale);
-            Rectangle rect = new Rectangle(offset.ToPoint() - (Vector2.One * scale).ToPoint(), (Vector2.One * scale * 2).ToPoint());
-
-            Matrix rot =
-                Matrix.CreateTranslation(-rect.Center.X, -rect.Center.Y, 0) *
-                Matrix.CreateRotationZ(rotAngle) *
-                Matrix.CreateTranslation(rect.Center.X, rect.Center.Y, 0);
-
-            Vector2 tl = new Vector2(rect.Left, rect.Top);
-            Vector2 tr = new Vector2(rect.Right, rect.Top);
-            Vector2 br = new Vector2(rect.Right, rect.Bottom);
-            Vector2 bl = new Vector2(rect.Left, rect.Bottom);
-
-            tl = Vector2.Transform(tl, rot);
-            tr = Vector2.Transform(tr, rot);
-            br = Vector2.Transform(br, rot);
-            bl = Vector2.Transform(bl, rot);
-
-            bool collision = CollisionHelper.GetRotRectIntersect(rect, rotAngle, Input.GetMouseScreenPos().ToVector2());
-
-            Color color = collision ? Color.Green : Color.Red;
-
-            ShapeBatch.Begin(GraphicsDevice);
-            ShapeBatch.Line(tl, tr, color);
-            ShapeBatch.Line(tr, br, color);
-            ShapeBatch.Line(br, bl, color);
-            ShapeBatch.Line(bl, tl, color);
-            ShapeBatch.End();
-
         }
         #endregion
     }
