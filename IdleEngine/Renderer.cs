@@ -17,6 +17,7 @@ namespace IdleEngine
         public delegate void OnDraw(SpriteBatch sb);
         private static Dictionary<string, OnDraw> DrawEvents;
         private static Dictionary<string, OnDraw> UIDrawEvents;
+        private static event OnDraw DrawRenderTargets;
         private static event OnDraw DrawEvent;
         private static event OnDraw UIDrawEvent;
         private static event OnDraw IndependentDrawEvent;
@@ -101,6 +102,12 @@ namespace IdleEngine
                 effect: renderTexConfig.effect,
                 transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
                 );
+
+        public static void DrawToRenderTargets(SpriteBatch sb)
+        {
+            DrawRenderTargets?.Invoke(sb);
+        }
+
         public static void DrawToTexture(SpriteBatch sb)
         {
             sb.GraphicsDevice.SetRenderTarget(renderTexture);
@@ -233,6 +240,7 @@ namespace IdleEngine
 
         public static void Draw(SpriteBatch sb)
         {
+            DrawToRenderTargets(sb);
             DrawToTexture(sb);
 
             Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
@@ -312,6 +320,7 @@ namespace IdleEngine
             UIDrawEvent += func;
             UIDrawEvents[SceneManager.CurrentSceneName] = UIDrawEvent;
         }
+        public static void AddToDrawRT(OnDraw func) => DrawRenderTargets += func;
         public static Texture2D GetLastRender()
         {
             Texture2D tempTexture = new Texture2D(_graphics.GraphicsDevice, renderTexture.Width, renderTexture.Height);

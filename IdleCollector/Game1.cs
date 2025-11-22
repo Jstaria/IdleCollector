@@ -79,7 +79,7 @@ namespace IdleCollector
             ButtonConfig config = new ButtonConfig();
             config.bounds = new Rectangle(10 * Renderer.UIScaler.X, 50 * Renderer.UIScaler.Y, 192 * Renderer.UIScaler.X, 64 * Renderer.UIScaler.Y);
             config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
-            config.rotationRadians = MathHelper.PiOver4;
+            config.rotationRadians = 0 ;//MathHelper.PiOver4;
 
             button = new Button(Game1.Instance, config);
             button.OnClick += () =>

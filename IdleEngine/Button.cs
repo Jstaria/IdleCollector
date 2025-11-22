@@ -44,7 +44,7 @@ namespace IdleCollector
         private float timer = .05f;
         private float timeOfLastPress;
         private bool active;
-
+        private RenderTarget2D[] targets;
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
 
@@ -61,7 +61,7 @@ namespace IdleCollector
             this.textures = textures;
             if (fontName != null)
             {
-                string[] tempTexts = new string[texts.Length]; 
+                string[] tempTexts = new string[texts.Length];
 
                 Regex regex = new(@"<fx\b[^>]*>(.*?)</fx>", RegexOptions.Singleline);
                 tempTexts[0] = regex.Replace(texts[0], m => m.Groups[0].Value);
@@ -93,50 +93,65 @@ namespace IdleCollector
             this.bounds = bounds;
             this.sound = sound;
 
-            if (font == null) return;
-
-
-        }
-
-        public void ControlledUpdate(GameTime gameTime)
-        {
-            
+            if (rotationRadians > 0)
+                Init(gameInstance);
         }
 
         public void Draw(SpriteBatch sb)
         {
-            RenderTarget2D target = new RenderTarget2D(sb.GraphicsDevice, bounds.Size.X, bounds.Size.Y);
+            if (rotationRadians > 0)
+            {
+                RenderTarget2D target = active ? targets[0] : targets[1];
 
-            //if (rotationRadians > 0)
-            //{
-            //    sb.End();
-            //    sb.GraphicsDevice.SetRenderTarget(target);
-            //    sb.GraphicsDevice.Clear(Color.White);
-            //    Renderer.ResetBeginDraw(sb);
-            //}
+                sb.Draw(target, bounds, null, Color.White, rotationRadians, Vector2.Zero, SpriteEffects.None, 0);
+            }
+            else
+            {
+                if (textures != null)
+                {
+                    Texture2D texture = !active ? textures[0] : textures[1];
+                    sb.Draw(texture, bounds, Color.White);
+                }
+
+                if (customTexts != null)
+                {
+                    CustomText text = !active ? customTexts[0] : customTexts[1];
+                    text.Update(1 / 60.0f);
+                    text.Draw();
+                }
+            }
+
+        }
+
+        public void DrawRotated(SpriteBatch sb)
+        {
+            RenderTarget2D target = active ? targets[0] : targets[1];
+            sb.GraphicsDevice.SetRenderTarget(target);
+            sb.GraphicsDevice.Clear(Color.Transparent);
+            Renderer.ResetBeginDraw(sb);
 
             if (textures != null)
             {
-                Texture2D texture = !active ? textures[0] : textures[1];
-                sb.Draw(texture, bounds, Color.White);
+                Texture2D texture = textures.Length == 1 ? textures[0] : !active ? textures[0] : textures[1];
+                sb.Draw(texture, new Rectangle(Point.Zero, bounds.Size), Color.White);
             }
 
-            if (customTexts != null) 
+            if (customTexts != null)
             {
-                CustomText text = !active ? customTexts[0] : customTexts[1];
-                text.Update(1/60.0f);
+                int i = customTexts.Length == 1 ? 0 : !active ? 0 : 1;
+
+                CustomText text = customTexts[i];
+                text.Update(1 / 60.0f);
+
+                Vector2 tempPosition = new Vector2(text.Position.X, text.Position.Y);
+
+                text.Position = textPositions[i] - bounds.Location.ToVector2();
                 text.Draw();
+                text.Position = tempPosition;
             }
 
-            //if (rotationRadians > 0)
-            //{
-            //    sb.End();
-            //    Renderer.ResetRenderTarget(sb);
-            //    sb.GraphicsDevice.Clear(Color.CornflowerBlue);
-            //    Renderer.ResetBeginDraw(sb);
-            //    sb.Draw(target, new Rectangle(new Point(100,-100), bounds.Size), null, Color.White, rotationRadians, -bounds.Center.ToVector2(), SpriteEffects.None, 0);
-            //    target.Dispose();
-            //}
+            sb.End();
+            sb.GraphicsDevice.SetRenderTarget(null);
         }
 
         public void StandardUpdate(GameTime gameTime)
@@ -144,16 +159,16 @@ namespace IdleCollector
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
 
-            //if (rotationRadians > 0)
-            //{
-            //    if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, Input.GetMouseScreenPos().ToVector2())) return;
-            //}
-            //else
-            //{
+            if (rotationRadians > 0)
+            {
+                if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, (Input.GetMousePos() * Renderer.UIScaler).ToVector2())) return;
+            }
+            else
+            {
                 if (!bounds.Contains(Input.GetMousePos() * Renderer.UIScaler)) return;
-            //}
+            }
 
-                sound?.Play();
+            sound?.Play();
 
             if (timeDelta < timer) return;
 
@@ -171,10 +186,24 @@ namespace IdleCollector
                 OnClickString?.Invoke(textParticle);
             }
         }
+        void IUpdatable.ControlledUpdate(GameTime gameTime)
+        {
+
+        }
 
         void IUpdatable.SlowUpdate(GameTime gameTime)
         {
 
+        }
+
+        private void Init(Game gameInst)
+        {
+            targets = [
+                new RenderTarget2D(gameInst.GraphicsDevice, bounds.Size.X, bounds.Size.Y),
+                new RenderTarget2D(gameInst.GraphicsDevice, bounds.Size.X, bounds.Size.Y) 
+            ];
+
+            Renderer.AddToDrawRT(DrawRotated);
         }
     }
 }

@@ -106,25 +106,13 @@ namespace IdleEngine
         public static bool GetRotRectIntersect(Rectangle rect, float angle, Vector2 point)
         {
             Matrix inv =
-                Matrix.CreateTranslation(-rect.Center.X, -rect.Center.Y, 0) *
+                Matrix.CreateTranslation(-rect.Location.X, -rect.Location.Y, 0) *
                 Matrix.CreateRotationZ(-angle) *
-                Matrix.CreateTranslation(rect.Center.X, rect.Center.Y, 0);
+                Matrix.CreateTranslation(rect.Location.X, rect.Location.Y, 0);
 
             Vector2 localPoint = Vector2.Transform(point, inv);
 
             return rect.Contains(localPoint);
-
-            //Vector2 topLeft = rect.Location.ToVector2();
-            //topLeft = Vector2.Transform(topLeft, rot);
-
-            //Vector2 topRight = rect.Location.ToVector2() + Vector2.UnitX * rect.Width;
-            //topRight = Vector2.Transform(topRight, rot);
-
-            //Vector2 bottomRight = rect.Location.ToVector2() + rect.Size.ToVector2();
-            //bottomRight = Vector2.Transform(bottomRight, rot);
-
-            //Vector2 bottomLeft = rect.Location.ToVector2() + Vector2.UnitY * rect.Height;
-            //bottomLeft = Vector2.Transform(bottomLeft, rot);
         }
     }
 }
