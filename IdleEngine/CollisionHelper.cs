@@ -103,16 +103,27 @@ namespace IdleEngine
             return direction;
         }
 
-        public static bool GetRotRectIntersect(Rectangle rect, float angle, Vector2 point)
+        public static bool GetRotRectIntersect(Rectangle rect, float angle, Vector2 point) => GetRotRectIntersect(rect, angle, point, Vector2.Zero);
+
+        public static bool GetRotRectIntersect(Rectangle rect, float angle, Vector2 point, Vector2 pivotOffset)
         {
+            Rectangle localRect = new Rectangle(
+                rect.X + (int)pivotOffset.X,
+                rect.Y + (int)pivotOffset.Y,
+                rect.Width,
+                rect.Height
+            );
+
+            Vector2 pivot = rect.Location.ToVector2();
+
             Matrix inv =
-                Matrix.CreateTranslation(-rect.Location.X, -rect.Location.Y, 0) *
+                Matrix.CreateTranslation(-pivot.X, -pivot.Y, 0) *
                 Matrix.CreateRotationZ(-angle) *
-                Matrix.CreateTranslation(rect.Location.X, rect.Location.Y, 0);
+                Matrix.CreateTranslation(pivot.X, pivot.Y, 0);
 
             Vector2 localPoint = Vector2.Transform(point, inv);
 
-            return rect.Contains(localPoint);
+            return localRect.Contains(localPoint);
         }
     }
 }

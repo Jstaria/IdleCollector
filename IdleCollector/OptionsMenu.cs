@@ -54,8 +54,19 @@ namespace IdleCollector
             TestConfig.textures = [ResourceAtlas.GetTexture("board1")];
             TestConfig.rotationRadians = MathHelper.Pi / 6;
 
-            buttons = new() {
-            ["test"] = new Button(Game1.Instance, TestConfig),
+            ButtonConfig TestConfig2 = new ButtonConfig();
+            TestConfig2.bounds = new Rectangle(StartingPostion.ToPoint(), new Point(150, 30) * Renderer.UIScaler);
+            TestConfig2.texts = new string[] { "Test Text", "<fx 0,0,0,0,1>></fx> Test Text <fx 0,0,0,0,2><</fx>" };
+            TestConfig2.font = "DePixelHalbfett";
+            TestConfig2.shadowColor = shadowColor;
+            TestConfig2.fontColor = fontColor;
+            TestConfig2.textures = [ResourceAtlas.GetTexture("board1")];
+            TestConfig2.rotationRadians = -MathHelper.Pi / 6;
+
+            buttons = new()
+            {
+                ["test"] = new Button(Game1.Instance, TestConfig),
+                ["test2"] = new Button(Game1.Instance, TestConfig2)
             }
             ;
         }

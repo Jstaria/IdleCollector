@@ -93,29 +93,33 @@ namespace IdleCollector
             this.bounds = bounds;
             this.sound = sound;
 
-            if (rotationRadians > 0)
+            if (rotationRadians != 0)
                 Init(gameInstance);
         }
 
         public void Draw(SpriteBatch sb)
         {
-            if (rotationRadians > 0)
+            
+
+            if (rotationRadians != 0)
             {
                 RenderTarget2D target = active ? targets[0] : targets[1];
 
-                sb.Draw(target, bounds, null, Color.White, rotationRadians, Vector2.Zero, SpriteEffects.None, 0);
+                sb.Draw(target, bounds, null, Color.White, rotationRadians, bounds.Size.ToVector2() / 2/*Vector2.Zero*/, SpriteEffects.None, 0);
             }
             else
             {
                 if (textures != null)
                 {
-                    Texture2D texture = !active ? textures[0] : textures[1];
+                    int i = textures.Length == 1 ? 0 : !active ? 0 : 1;
+                    Texture2D texture = textures[i];
                     sb.Draw(texture, bounds, Color.White);
                 }
 
                 if (customTexts != null)
                 {
-                    CustomText text = !active ? customTexts[0] : customTexts[1];
+                    int i = customTexts.Length == 1 ? 0 : !active ? 0 : 1;
+                    CustomText text = customTexts[i];
                     text.Update(1 / 60.0f);
                     text.Draw();
                 }
@@ -159,9 +163,9 @@ namespace IdleCollector
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
 
-            if (rotationRadians > 0)
+            if (rotationRadians != 0)
             {
-                if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, (Input.GetMousePos() * Renderer.UIScaler).ToVector2())) return;
+                if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, (Input.GetMousePos() * Renderer.UIScaler).ToVector2(), -bounds.Size.ToVector2() / 2)) return;
             }
             else
             {
