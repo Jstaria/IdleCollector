@@ -47,6 +47,7 @@ namespace IdleCollector
         private RenderTarget2D[] targets;
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
+        public Vector2 Position { get; set; }
 
         public event OnButtonClick OnClick;
         public event OnButtonClickString OnClickString;

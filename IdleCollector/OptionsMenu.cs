@@ -134,4 +134,30 @@ namespace IdleCollector
                 button.StandardUpdate(gameTime);
         }
     }
+
+    public class ButtonContainer
+    {
+        public Button button;
+        public Vector2 drawPosition;
+        public Spring2D positionSpring;
+
+        private Vector2 outOfScreen = new Vector2(Renderer.ScreenSize.X / 2, -200);
+
+        public ButtonContainer(ButtonConfig config)
+        {
+            button = new Button(Game1.Instance, config);
+            positionSpring = new Spring2D(20, .5f, outOfScreen);
+        }
+
+        public void DropIn()
+        {
+            positionSpring.RestPosition = button.Position;
+        }
+
+        public void Draw(SpriteBatch sb)
+        {
+            button.Draw(sb);
+        }
+    }
+
 }
