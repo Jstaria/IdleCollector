@@ -28,6 +28,8 @@ namespace IdleCollector
         public Color fontColor;
         public Color shadowColor;
         public float rotationRadians;
+        public OnButtonClick OnClick;
+        public OnButtonClickString OnClickString;
     }
 
     public class Button : IUpdatable, IRenderable
@@ -55,9 +57,12 @@ namespace IdleCollector
         /// <summary>
         /// Button Class
         /// </summary>
-        public Button(Game gameInstance, ButtonConfig config) : this(gameInstance, config.textures, config.bounds, config.texts, config.textParticle, config.font, config.fontColor, config.shadowColor, config.sound, config.rotationRadians) { }
-        public Button(Game gameInstance, Texture2D[] textures, Rectangle bounds, string[] texts, string textParticle, string fontName, Color fontColor, Color shadowColor, SoundEffect sound, float rotationRadians)
+        public Button(Game gameInstance, ButtonConfig config) : this(gameInstance, config.textures, config.bounds, config.texts, config.textParticle, config.font, config.fontColor, config.shadowColor, config.sound, config.rotationRadians, config) { }
+        public Button(Game gameInstance, Texture2D[] textures, Rectangle bounds, string[] texts, string textParticle, string fontName, Color fontColor, Color shadowColor, SoundEffect sound, float rotationRadians, ButtonConfig config)
         {
+            OnClick = config.OnClick;
+            OnClickString = config.OnClickString;
+
             this.rotationRadians = rotationRadians;
             this.textures = textures;
             if (fontName != null)

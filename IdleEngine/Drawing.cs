@@ -185,6 +185,11 @@ namespace IdleEngine
             DrawLine(sb, bottomRight, bottomLeft, thickness, color);
             DrawLine(sb, bottomLeft, topLeft, thickness, color);
         }
+
+        public static void DrawRect(this SpriteBatch sb, Rectangle rect, Color color)
+        {
+            sb.Draw(pixel, rect, color);
+        }
         #endregion
     }
 }
