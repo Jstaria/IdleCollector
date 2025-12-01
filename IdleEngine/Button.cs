@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace IdleCollector
@@ -38,6 +39,7 @@ namespace IdleCollector
         private Texture2D[] textures;
         private SpriteFont font;
         private Rectangle bounds;
+        private string[] texts;
         private CustomText[] customTexts;
         private string textParticle;
         private Vector2[] textPositions;
@@ -49,7 +51,12 @@ namespace IdleCollector
         private RenderTarget2D[] targets;
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
-        public Vector2 Position { get; set; }
+        public Vector2 Position { get => bounds.Location.ToVector2(); set
+            {
+                bounds.Location = value.ToPoint();
+                UpdateTextPositions(); 
+            }
+        }
 
         public event OnButtonClick OnClick;
         public event OnButtonClickString OnClickString;
@@ -67,21 +74,21 @@ namespace IdleCollector
             this.textures = textures;
             if (fontName != null)
             {
-                string[] tempTexts = new string[texts.Length];
+                this.texts = new string[texts.Length];
 
                 Regex regex = new(@"<fx\b[^>]*>(.*?)</fx>", RegexOptions.Singleline);
-                tempTexts[0] = regex.Replace(texts[0], m => m.Groups[0].Value);
-                tempTexts[1] = regex.Replace(texts[1], m => m.Groups[1].Value);
+                this.texts[0] = regex.Replace(texts[0], m => m.Groups[0].Value);
+                this.texts[1] = regex.Replace(texts[1], m => m.Groups[1].Value);
 
                 this.font = ResourceAtlas.GetFont(fontName);
 
-                Vector2 textLength = font.MeasureString(tempTexts[0]);
-                textPositions = new Vector2[2];
+                Vector2 textLength = font.MeasureString(this.texts[0]);
+                textPositions = new Vector2[2];         
                 textPositions[0] = new Vector2(
                     bounds.X + bounds.Width / 2 - textLength.X / 2,
                     bounds.Y + bounds.Height / 2 - textLength.Y / 2
                 );
-                textLength = texts.Length == 1 ? textLength : font.MeasureString(tempTexts[1]);
+                textLength = texts.Length == 1 ? textLength : font.MeasureString(this.texts[1]);
                 textPositions[1] = new Vector2(
                     bounds.X + bounds.Width / 2 - textLength.X / 2,
                     bounds.Y + bounds.Height / 2 - textLength.Y / 2
@@ -214,6 +221,21 @@ namespace IdleCollector
             ];
 
             Renderer.AddToDrawRT(DrawRotated);
+        }
+
+        private void UpdateTextPositions()
+        {
+            Vector2 textLength = font.MeasureString(this.texts[0]);
+            textPositions = new Vector2[2];
+            textPositions[0] = new Vector2(
+                bounds.X + bounds.Width / 2 - textLength.X / 2,
+                bounds.Y + bounds.Height / 2 - textLength.Y / 2
+            );
+            textLength = texts.Length == 1 ? textLength : font.MeasureString(this.texts[1]);
+            textPositions[1] = new Vector2(
+                bounds.X + bounds.Width / 2 - textLength.X / 2,
+                bounds.Y + bounds.Height / 2 - textLength.Y / 2
+            );
         }
     }
 }
