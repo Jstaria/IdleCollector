@@ -53,8 +53,8 @@ namespace IdleCollector
             {
                 ["Main"] = new()
                 {
-                    ["Audio"] = new ButtonContainer(GetButtonConfig("Audio", () => { CallMenu("Audio"); }, -1)),
-                    ["Display"] = new ButtonContainer(GetButtonConfig("Display", () => { CallMenu("Display"); }, 0)),
+                    ["Audio"] = new ButtonContainer(GetButtonConfig("Audio", () => CallMenu("Audio"), -1)),
+                    ["Display"] = new ButtonContainer(GetButtonConfig("Display", () => CallMenu("Display"), 0)),
                     ["Back"] = new ButtonContainer(GetButtonConfig("Back", RequestExit, 1)),
                 },
                 ["Audio"] = new()
@@ -150,17 +150,19 @@ namespace IdleCollector
         {
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (timer < .05f) return;
-
             foreach (ButtonContainer container in currentMenu.Values)
-                container.Update(gameTime);
+            {
+                if (timer < .1f) container.PrevUpdate(gameTime);
+                else container.Update(gameTime);
+            }
             if (prevMenu != null)
                 foreach (ButtonContainer container in prevMenu?.Values)
-                    container.Update(gameTime);
+                    container.PrevUpdate(gameTime);
         }
 
         private void CallMenu(string name)
         {
+            timer = 0;
             prevMenu = currentMenu;
             currentMenu = buttons[name];
 
@@ -206,7 +208,7 @@ namespace IdleCollector
             button = new Button(Game1.Instance, config);
             buttonPosition = config.bounds.Location.ToVector2();
             outOfScreen = new Vector2(buttonPosition.X, -200);
-            positionSpring = new Spring2D(20, .5f, outOfScreen);
+            positionSpring = new Spring2D(40, 1f, outOfScreen);
             button.Position = outOfScreen;
         }
 
@@ -221,6 +223,12 @@ namespace IdleCollector
         public void Update(GameTime gameTime)
         {
             button.StandardUpdate(gameTime);
+            positionSpring.Update();
+            drawPosition = positionSpring.Position;
+            button.Position = drawPosition;
+        }
+        public void PrevUpdate(GameTime gameTime)
+        {
             positionSpring.Update();
             drawPosition = positionSpring.Position;
             button.Position = drawPosition;
