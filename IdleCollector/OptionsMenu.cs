@@ -208,7 +208,7 @@ namespace IdleCollector
             button = new Button(Game1.Instance, config);
             buttonPosition = config.bounds.Location.ToVector2();
             outOfScreen = new Vector2(buttonPosition.X, -200);
-            positionSpring = new Spring2D(40, 1f, outOfScreen);
+            positionSpring = new Spring2D(20, .65f, outOfScreen);
             button.Position = outOfScreen;
         }
 

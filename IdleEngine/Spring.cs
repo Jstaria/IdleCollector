@@ -152,7 +152,7 @@ public class Spring
         tDampedSpringMotionParams param)
     {
         float oldPos = pPos - equilibriumPos;
-        float oldVel = pVel;
+        float oldVel = MathF.Abs(pVel) < .1f ? 0 : pVel;
 
         pPos = oldPos * param.M_posPosCoef + oldVel * param.M_posVelCoef + equilibriumPos;
         pVel = oldPos * param.M_velPosCoef + oldVel * param.M_velVelCoef;
