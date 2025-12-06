@@ -20,9 +20,9 @@ namespace IdleCollector
         private float optionsFade = 0;
         private Texture2D prevRender;
         private Vector2 StartingPostion = new Vector2(Renderer.UIBounds.Size.ToVector2().X / 2, Renderer.UIBounds.Size.ToVector2().Y / 2);
-        private Dictionary<string, Dictionary<string, ButtonContainer>> buttons;
-        private Dictionary<string, ButtonContainer> currentMenu;
-        private Dictionary<string, ButtonContainer> prevMenu;
+        private Dictionary<string, Dictionary<string, UIContainer>> buttons;
+        private Dictionary<string, UIContainer> currentMenu;
+        private Dictionary<string, UIContainer> prevMenu;
         private float timer;
 
         public float LayerDepth { get; set; }
@@ -53,19 +53,19 @@ namespace IdleCollector
             {
                 ["Main"] = new()
                 {
-                    ["Audio"] = new ButtonContainer(GetButtonConfig("Audio", () => CallMenu("Audio"), -1)),
-                    ["Display"] = new ButtonContainer(GetButtonConfig("Display", () => CallMenu("Display"), 0)),
-                    ["Back"] = new ButtonContainer(GetButtonConfig("Back", RequestExit, 1)),
+                    ["Audio"] = new MenuButton(GetButtonConfig("Audio", -1, () => CallMenu("Audio"))),
+                    ["Display"] = new MenuButton(GetButtonConfig("Display", 0, () => CallMenu("Display"))),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1, RequestExit)),
                 },
                 ["Audio"] = new()
                 {
-                    ["Test"] = new ButtonContainer(GetButtonConfig("Test", () => { Debug.WriteLine("Audio Test"); }, -.5f)),
-                    ["Back"] = new ButtonContainer(GetButtonConfig("Back", () => CallMenu("Main"), .5f)),
+                    ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Audio Test"); })),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => CallMenu("Main"))),
                 },
                 ["Display"] = new()
                 {
-                    ["Test"] = new ButtonContainer(GetButtonConfig("Test", () => { Debug.WriteLine("Display Test"); }, -.5f)),
-                    ["Back"] = new ButtonContainer(GetButtonConfig("Back", () => CallMenu("Main"), .5f)),
+                    ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Display Test"); })),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => CallMenu("Main"))),
                 },
             };
 
@@ -76,7 +76,7 @@ namespace IdleCollector
         {
             currentMenu = buttons["Main"];
 
-            foreach (ButtonContainer container in currentMenu.Values)
+            foreach (UIContainer container in currentMenu.Values)
                 container.DropIn();
 
             currentState = OptionsState.FadingIn;
@@ -102,7 +102,7 @@ namespace IdleCollector
         {
             currentState = OptionsState.FadingOut;
 
-            foreach (ButtonContainer container in currentMenu.Values)
+            foreach (UIContainer container in currentMenu.Values)
                 container.DropOut();
 
             for (int i = 0; i < 20; i++)
@@ -123,11 +123,11 @@ namespace IdleCollector
             sb.DrawRect(Renderer.UIBounds, Color.Black * .4f * optionsFade);
             //sb.Draw(ResourceAtlas.GetTexture("tempPause"), Renderer.UIBounds, Color.White * optionsFade);
 
-            foreach (ButtonContainer container in currentMenu.Values)
+            foreach (UIContainer container in currentMenu.Values)
                 container.Draw(sb);
 
             if (prevMenu != null)
-                foreach (ButtonContainer container in prevMenu.Values)
+                foreach (UIContainer container in prevMenu.Values)
                     container.Draw(sb);
         }
 
@@ -150,13 +150,13 @@ namespace IdleCollector
         {
             timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            foreach (ButtonContainer container in currentMenu.Values)
+            foreach (UIContainer container in currentMenu.Values)
             {
                 if (timer < .1f) container.PrevUpdate(gameTime);
                 else container.Update(gameTime);
             }
             if (prevMenu != null)
-                foreach (ButtonContainer container in prevMenu?.Values)
+                foreach (UIContainer container in prevMenu?.Values)
                     container.PrevUpdate(gameTime);
         }
 
@@ -166,14 +166,14 @@ namespace IdleCollector
             prevMenu = currentMenu;
             currentMenu = buttons[name];
 
-            foreach (ButtonContainer container in prevMenu?.Values)
+            foreach (UIContainer container in prevMenu?.Values)
                 container.DropOut();
 
-            foreach (ButtonContainer container in currentMenu.Values)
+            foreach (UIContainer container in currentMenu.Values)
                 container.DropIn();
         }
 
-        private ButtonConfig GetButtonConfig(string buttonText, OnButtonClick func, float i)
+        private ButtonConfig GetButtonConfig(string buttonText, float i, OnButtonClick func = null)
         {
             Color shadowColor = Color.Black * .4f;
             Color fontColor = Color.White;
@@ -194,40 +194,51 @@ namespace IdleCollector
         }
     }
 
-    public class ButtonContainer
+    public abstract class UIContainer
     {
-        public Button button;
         public Vector2 drawPosition;
         public Spring2D positionSpring;
 
-        private Vector2 buttonPosition;
-        private Vector2 outOfScreen = new Vector2(Renderer.ScreenSize.X / 2, -200);
+        protected List<IRenderable> renderables = new();
 
-        public ButtonContainer(ButtonConfig config)
+        protected Vector2 buttonPosition;
+        protected Vector2 outOfScreen = new Vector2(Renderer.ScreenSize.X / 2, -200);
+
+        public void DropIn() => positionSpring.RestPosition = buttonPosition;
+        public void DropOut() => positionSpring.RestPosition = outOfScreen;
+
+        public virtual void Draw(SpriteBatch sb) 
+        {
+            foreach (IRenderable ren in renderables)
+                ren.Draw(sb);
+        }
+        public abstract void Update(GameTime gameTime);
+        public abstract void PrevUpdate(GameTime gameTime);
+    }
+
+    public class MenuButton: UIContainer
+    {
+        public Button button;
+
+        public MenuButton(ButtonConfig config)
         {
             button = new Button(Game1.Instance, config);
             buttonPosition = config.bounds.Location.ToVector2();
             outOfScreen = new Vector2(buttonPosition.X, -200);
             positionSpring = new Spring2D(20, .65f, outOfScreen);
             button.Position = outOfScreen;
+
+            renderables.Add(button);
         }
 
-        public void DropIn() => positionSpring.RestPosition = buttonPosition;
-        public void DropOut() => positionSpring.RestPosition = outOfScreen;
-
-        public void Draw(SpriteBatch sb)
-        {
-            button.Draw(sb);
-        }
-
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             button.StandardUpdate(gameTime);
             positionSpring.Update();
             drawPosition = positionSpring.Position;
             button.Position = drawPosition;
         }
-        public void PrevUpdate(GameTime gameTime)
+        public override void PrevUpdate(GameTime gameTime)
         {
             positionSpring.Update();
             drawPosition = positionSpring.Position;
@@ -235,4 +246,51 @@ namespace IdleCollector
         }
     }
 
+    public class Slider: UIContainer
+    {
+        private int min = 0, max = 0, value = 0;
+        private int sensitivity = 20;
+        private Button button;
+        public delegate void OnSlide(int value);
+        public delegate int GetValue();
+        private OnSlide slide;
+        private GetValue getValue;
+
+        public Slider(ButtonConfig config, int min, int max, OnSlide slide, GetValue getValue)
+        {
+            config.OnClick = GetMouseInput;
+            button = new Button(Game1.Instance, config);
+            this.getValue = getValue;
+            this.slide = slide;
+        }
+
+        public override void PrevUpdate(GameTime gameTime)
+        {
+            
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            
+        }
+
+        private async void GetMouseInput()
+        {
+            int mouseX = Input.GetMouseScreenPos().X;
+
+            while (Input.IsLeftButtonDown())
+            {
+                int newX = Input.GetMouseScreenPos().X;
+                int delta = newX - mouseX;
+
+                if (MathF.Abs(delta) > sensitivity)
+                {
+                    slide?.Invoke(MathF.Sign(delta));
+                    mouseX = newX;
+                }
+
+                await Task.Delay(1);
+            }
+        }
+    }
 }
