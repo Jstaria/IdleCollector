@@ -51,10 +51,13 @@ namespace IdleCollector
         private RenderTarget2D[] targets;
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
-        public Vector2 Position { get => bounds.Location.ToVector2(); set
+        public Vector2 Position
+        {
+            get => bounds.Location.ToVector2(); set
             {
                 bounds.Location = value.ToPoint();
-                UpdateTextPositions(); 
+                if (texts != null)
+                    UpdateTextPositions();
             }
         }
 
@@ -83,7 +86,7 @@ namespace IdleCollector
                 this.font = ResourceAtlas.GetFont(fontName);
 
                 Vector2 textLength = font.MeasureString(this.texts[0]);
-                textPositions = new Vector2[2];         
+                textPositions = new Vector2[2];
                 textPositions[0] = new Vector2(
                     bounds.X + bounds.Width / 2 - textLength.X / 2,
                     bounds.Y + bounds.Height / 2 - textLength.Y / 2
@@ -112,8 +115,6 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
-            
-
             if (rotationRadians != 0)
             {
                 RenderTarget2D target = active ? targets[0] : targets[1];
@@ -217,7 +218,7 @@ namespace IdleCollector
         {
             targets = [
                 new RenderTarget2D(gameInst.GraphicsDevice, bounds.Size.X, bounds.Size.Y),
-                new RenderTarget2D(gameInst.GraphicsDevice, bounds.Size.X, bounds.Size.Y) 
+                new RenderTarget2D(gameInst.GraphicsDevice, bounds.Size.X, bounds.Size.Y)
             ];
 
             Renderer.AddToDrawRT(DrawRotated);

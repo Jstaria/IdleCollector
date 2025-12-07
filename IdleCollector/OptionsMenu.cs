@@ -13,6 +13,11 @@ using System.Threading.Tasks;
 namespace IdleCollector
 {
     public enum OptionsState { FadingIn, FadingOut }
+    
+    internal static class MenuData
+    {
+        public static int divisions = 20;
+    }
 
     internal class OptionsMenu : IScene
     {
@@ -59,6 +64,7 @@ namespace IdleCollector
                 },
                 ["Audio"] = new()
                 {
+                    ["Master Volume"] = new Slider(GetButtonConfig("Master Volume", -1.25f), (value) => { SetVolume(value, "MasterVolume"); }),
                     ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Audio Test"); })),
                     ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => CallMenu("Main"))),
                 },
@@ -173,6 +179,13 @@ namespace IdleCollector
                 container.DropIn();
         }
 
+        private void SetVolume(int value, string vName)
+        {
+            VolumeController vCon = VolumeController.Instance;
+            
+            vCon.IncrementVolume(vName, 1.0f / MenuData.divisions * value);
+        }
+
         private ButtonConfig GetButtonConfig(string buttonText, float i, OnButtonClick func = null)
         {
             Color shadowColor = Color.Black * .4f;
@@ -194,7 +207,7 @@ namespace IdleCollector
         }
     }
 
-    public abstract class UIContainer
+    public abstract class UIContainer 
     {
         public Vector2 drawPosition;
         public Spring2D positionSpring;
@@ -251,27 +264,64 @@ namespace IdleCollector
         private int min = 0, max = 0, value = 0;
         private int sensitivity = 20;
         private Button button;
+        private CustomText text;
         public delegate void OnSlide(int value);
         public delegate int GetValue();
         private OnSlide slide;
-        private GetValue getValue;
+        private ButtonConfig config;
 
-        public Slider(ButtonConfig config, int min, int max, OnSlide slide, GetValue getValue)
+        public Slider(ButtonConfig config, OnSlide slide)
         {
             config.OnClick = GetMouseInput;
-            button = new Button(Game1.Instance, config);
-            this.getValue = getValue;
+            config.bounds.Height = 20 * Renderer.UIScaler.X;
+
+            ButtonConfig config2 = config;
+            config2.texts = null;
+            config2.rotationRadians = 0.001f;
+            config2.textures = new[] { ResourceAtlas.GetTexture("board" + RandomHelper.Instance.GetInt(5, 8)) };
+            config2.font = null;
+            
             this.slide = slide;
+
+            text = new CustomText(
+                Game1.Instance,
+                "Fonts/" + config.font, 
+                config.texts[0], 
+                config.bounds.Location.ToVector2(), 
+                config.bounds.Size.ToVector2(), 
+                shadowColor: config.shadowColor, color: config.fontColor);
+            text.Refresh();
+
+            button = new Button(Game1.Instance, config2);
+            buttonPosition = config.bounds.Location.ToVector2();
+            outOfScreen = new Vector2(buttonPosition.X, -200);
+            positionSpring = new Spring2D(20, .65f, outOfScreen);
+            button.Position = outOfScreen;
+
+            renderables.Add(button);
         }
 
         public override void PrevUpdate(GameTime gameTime)
         {
-            
+            positionSpring.Update();
+            drawPosition = positionSpring.Position;
+            button.Position = drawPosition;
         }
 
         public override void Update(GameTime gameTime)
         {
-            
+            button.StandardUpdate(gameTime);
+            positionSpring.Update();
+            drawPosition = positionSpring.Position;
+            button.Position = drawPosition;
+        }
+
+        public override void Draw(SpriteBatch sb)
+        {
+            base.Draw(sb);
+
+            Vector2 pos = drawPosition - config.bounds.Size.ToVector2() / 2;
+
         }
 
         private async void GetMouseInput()
@@ -285,8 +335,7 @@ namespace IdleCollector
 
                 if (MathF.Abs(delta) > sensitivity)
                 {
-                    slide?.Invoke(MathF.Sign(delta));
-                    mouseX = newX;
+                    slide.Invoke(MathF.Sign(delta));
                 }
 
                 await Task.Delay(1);

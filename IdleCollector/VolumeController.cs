@@ -63,5 +63,22 @@ namespace IdleCollector
 
             Save();
         }
+
+        public void IncrementVolume(string volumeName, float amt)
+        {
+            Type type = typeof(VolumeController);
+            PropertyInfo property = type.GetProperty(volumeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            FieldInfo field = type.GetField(volumeName + "Event", BindingFlags.Instance | BindingFlags.NonPublic);
+            MulticastDelegate del = field?.GetValue(this) as MulticastDelegate;
+
+            float volumeLevel = (float)property.GetValue(this);
+            float volume = MathHelper.Clamp(volumeLevel + amt, 0, 1);
+
+            del?.DynamicInvoke(volume);
+            property.SetValue(this, volume);
+
+            Save();
+        }
     }
 }
