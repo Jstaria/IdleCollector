@@ -3,8 +3,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -79,6 +81,14 @@ namespace IdleCollector
             property.SetValue(this, volume);
 
             Save();
+        }
+
+        public float GetVolume(string volumeName)
+        {
+            Type type = typeof(VolumeController);
+            PropertyInfo property = type.GetProperty(volumeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            return (float)property.GetValue(this);
         }
     }
 }

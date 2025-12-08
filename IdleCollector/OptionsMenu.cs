@@ -8,12 +8,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IdleCollector
 {
     public enum OptionsState { FadingIn, FadingOut }
-    
+
     internal static class MenuData
     {
         public static int divisions = 20;
@@ -51,9 +52,6 @@ namespace IdleCollector
 
         private void CreateButtons()
         {
-            // I need a tree structure for the buttons here,
-            // at least a simple one where each button container holds another list of button containers
-            // To make the back button a lot easier
             buttons = new()
             {
                 ["Main"] = new()
@@ -64,9 +62,12 @@ namespace IdleCollector
                 },
                 ["Audio"] = new()
                 {
-                    ["Master Volume"] = new Slider(GetButtonConfig("Master Volume", -1.25f), (value) => { SetVolume(value, "MasterVolume"); }),
-                    ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Audio Test"); })),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => CallMenu("Main"))),
+                    ["Master Volume"] = new Slider(GetButtonConfig("Master", -2f), (value) => { return SetVolume(value, "MasterVolume"); }),
+                    ["Music Volume"] = new Slider(GetButtonConfig("Music", -1.5f), (value) => { return SetVolume(value, "MusicVolume"); }),
+                    ["Sound Effect Volume"] = new Slider(GetButtonConfig("Sound FX", -1f), (value) => { return SetVolume(value, "SoundEffectVolume"); }),
+                    ["Character Volume"] = new Slider(GetButtonConfig("Character", -.5f), (value) => { return SetVolume(value, "CharacterVolume"); }),
+                    ["Ambient Volume"] = new Slider(GetButtonConfig("Ambient", 0f), (value) => { return SetVolume(value, "AmbientVolume"); }),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1f, () => CallMenu("Main"))),
                 },
                 ["Display"] = new()
                 {
@@ -179,11 +180,15 @@ namespace IdleCollector
                 container.DropIn();
         }
 
-        private void SetVolume(int value, string vName)
+        private int SetVolume(int value, string vName)
         {
             VolumeController vCon = VolumeController.Instance;
-            
-            vCon.IncrementVolume(vName, 1.0f / MenuData.divisions * value);
+
+            vCon.IncrementVolume(vName, 1.0f / (float)MenuData.divisions * value);
+
+            float volume = vCon.GetVolume(vName);
+
+            return (int)(volume * MenuData.divisions);
         }
 
         private ButtonConfig GetButtonConfig(string buttonText, float i, OnButtonClick func = null)
@@ -207,7 +212,8 @@ namespace IdleCollector
         }
     }
 
-    public abstract class UIContainer 
+    #region UI Bits
+    public abstract class UIContainer
     {
         public Vector2 drawPosition;
         public Spring2D positionSpring;
@@ -220,7 +226,7 @@ namespace IdleCollector
         public void DropIn() => positionSpring.RestPosition = buttonPosition;
         public void DropOut() => positionSpring.RestPosition = outOfScreen;
 
-        public virtual void Draw(SpriteBatch sb) 
+        public virtual void Draw(SpriteBatch sb)
         {
             foreach (IRenderable ren in renderables)
                 ren.Draw(sb);
@@ -229,7 +235,7 @@ namespace IdleCollector
         public abstract void PrevUpdate(GameTime gameTime);
     }
 
-    public class MenuButton: UIContainer
+    public class MenuButton : UIContainer
     {
         public Button button;
 
@@ -259,39 +265,34 @@ namespace IdleCollector
         }
     }
 
-    public class Slider: UIContainer
+    public class Slider : UIContainer
     {
         private int min = 0, max = 0, value = 0;
-        private int sensitivity = 20;
+        private int sensitivity = 50;
         private Button button;
-        private CustomText text;
-        public delegate void OnSlide(int value);
+        public delegate int OnSlide(int value);
         public delegate int GetValue();
         private OnSlide slide;
         private ButtonConfig config;
+        private Vector2 textOffset;
+        private Texture2D barTex;
 
         public Slider(ButtonConfig config, OnSlide slide)
         {
+            barTex = ResourceAtlas.GetTexture("bar");
             config.OnClick = GetMouseInput;
             config.bounds.Height = 20 * Renderer.UIScaler.X;
 
             ButtonConfig config2 = config;
-            config2.texts = null;
+            textOffset = -new Vector2(config.bounds.Size.X / 4, 0);
+            config2.textOffset = textOffset;
             config2.rotationRadians = 0.001f;
             config2.textures = new[] { ResourceAtlas.GetTexture("board" + RandomHelper.Instance.GetInt(5, 8)) };
-            config2.font = null;
-            
+            //config2.font = null;
+
             this.slide = slide;
 
-            text = new CustomText(
-                Game1.Instance,
-                "Fonts/" + config.font, 
-                config.texts[0], 
-                config.bounds.Location.ToVector2(), 
-                config.bounds.Size.ToVector2(), 
-                shadowColor: config.shadowColor, color: config.fontColor);
-            text.Refresh();
-
+            this.config = config;
             button = new Button(Game1.Instance, config2);
             buttonPosition = config.bounds.Location.ToVector2();
             outOfScreen = new Vector2(buttonPosition.X, -200);
@@ -299,6 +300,8 @@ namespace IdleCollector
             button.Position = outOfScreen;
 
             renderables.Add(button);
+
+            value = slide.Invoke(0);
         }
 
         public override void PrevUpdate(GameTime gameTime)
@@ -320,8 +323,17 @@ namespace IdleCollector
         {
             base.Draw(sb);
 
-            Vector2 pos = drawPosition - config.bounds.Size.ToVector2() / 2;
+            Vector2 pos = drawPosition + new Vector2(0, -config.bounds.Height / 4);
+            int barWidth = 200 / MenuData.divisions;
+            sensitivity = (int)(barWidth * .75f);
 
+            for (int i = 0; i < MenuData.divisions; i++)
+            {
+                Color color = i > value ? new Color(30, 15, 15) : Color.White;
+                sb.Draw(barTex, new Rectangle((int)pos.X - 4, (int)pos.Y + 4, barWidth, barTex.Height * Renderer.UIScaler.Y), null, Color.Black * .25f, 0, Vector2.Zero, SpriteEffects.None, 0f);
+                sb.Draw(barTex, new Rectangle((int)pos.X, (int)pos.Y, barWidth, barTex.Height * Renderer.UIScaler.Y), null, color, 0, Vector2.Zero, SpriteEffects.None, .01f);
+                pos += Vector2.UnitX * (barWidth + 4);
+            }
         }
 
         private async void GetMouseInput()
@@ -335,11 +347,22 @@ namespace IdleCollector
 
                 if (MathF.Abs(delta) > sensitivity)
                 {
-                    slide.Invoke(MathF.Sign(delta));
+                    mouseX = newX;
+                    value = slide.Invoke(MathF.Sign(delta));
                 }
 
                 await Task.Delay(1);
             }
         }
     }
+
+    public class CheckBox
+    {
+        public delegate void UpdateBool(bool value);
+        public CheckBox(ButtonConfig config, UpdateBool func)
+        {
+
+        }
+    }
+    #endregion
 }

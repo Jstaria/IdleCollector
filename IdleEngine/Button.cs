@@ -24,6 +24,7 @@ namespace IdleCollector
         public Texture2D[] textures;
         public string font;
         public Rectangle bounds;
+        public Vector2 textOffset;
         public string[] texts;
         public string textParticle;
         public Color fontColor;
@@ -98,9 +99,9 @@ namespace IdleCollector
                 );
 
                 this.customTexts = new CustomText[2];
-                this.customTexts[0] = new CustomText(gameInstance, "Fonts/" + fontName, texts[0], textPositions[0], bounds.Size.ToVector2(), color: fontColor, shadowColor: shadowColor);
+                this.customTexts[0] = new CustomText(gameInstance, "Fonts/" + fontName, texts[0], textPositions[0], bounds.Size.ToVector2(), color: fontColor, shadowColor: shadowColor, offset: config.textOffset);
                 customTexts[0].Refresh();
-                this.customTexts[1] = new CustomText(gameInstance, "Fonts/" + fontName, texts[1], textPositions[1], bounds.Size.ToVector2(), color: fontColor, shadowColor: shadowColor);
+                this.customTexts[1] = new CustomText(gameInstance, "Fonts/" + fontName, texts[1], textPositions[1], bounds.Size.ToVector2(), color: fontColor, shadowColor: shadowColor, offset: config.textOffset);
                 customTexts[1].Refresh();
             }
 

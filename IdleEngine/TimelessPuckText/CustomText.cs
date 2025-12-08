@@ -398,9 +398,9 @@ public class CustomText
     {
         // Draw text shadow.
         if (ShadowColor != Color.Transparent)
-            _spriteBatch.DrawString(Font, text, position + ShadowOffset, shadowColor ?? ShadowColor, rotation, origin, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(Font, text, position + ShadowOffset + Offset, shadowColor ?? ShadowColor, rotation, origin, 1f, SpriteEffects.None, 0f);
 
-        _spriteBatch.DrawString(Font, text, position, color, rotation, origin, 1f, SpriteEffects.None, 0.01f);
+        _spriteBatch.DrawString(Font, text, position + Offset, color, rotation, origin, 1f, SpriteEffects.None, 0.01f);
     }
 
     private Vector2 DrawLines(string[] lines, Vector2 nextCharPos, FxText fxText = null)

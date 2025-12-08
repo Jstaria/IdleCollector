@@ -135,7 +135,6 @@ namespace IdleEngine
 
             sb.GraphicsDevice.SetRenderTarget(uiTexture);
             sb.Begin(
-                renderTexConfig.sortMode,
                 blendState: renderTexConfig.blendState,
                 samplerState: renderTexConfig.samplerState,
                 depthStencilState: renderTexConfig.depthStencilState,
