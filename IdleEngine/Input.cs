@@ -41,7 +41,7 @@ namespace IdleEngine
             prevMousePos = new Point(0, 0);
 
             // Initialize can be found in SceneManager.cs just after Updater Init
-            Updater.AddToUpdate(UpdateType.Standard, Update);
+            Updater.AddToLateUpdate(Update);
         }
 
         internal static void Update(GameTime gameTime)
@@ -56,12 +56,13 @@ namespace IdleEngine
             currentKBState = Keyboard.GetState();
             
             currentMousePos = currentMouseState.Position;
-            screenMousePos = currentMousePos;
+            screenMousePos = currentMousePos;            
             Point renderSize = Renderer.RenderSize;
             Point screenSize = Renderer.ScreenSize;
             Point transform = Renderer.CurrentCamera == null ? Point.Zero : Renderer.CurrentCamera.Position;
             currentMousePos.X = (int)(currentMousePos.X * ((float)renderSize.X / (float)screenSize.X));
             currentMousePos.Y = (int)(currentMousePos.Y * ((float)renderSize.Y / (float)screenSize.Y));
+            screenMousePos = currentMousePos;
             currentMousePos -= transform;
 
             currentScroll = currentMouseState.ScrollWheelValue;

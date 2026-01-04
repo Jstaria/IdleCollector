@@ -180,11 +180,11 @@ namespace IdleCollector
 
             if (rotationRadians != 0)
             {
-                if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, (Input.GetMousePos() * Renderer.UIScaler).ToVector2(), -bounds.Size.ToVector2() / 2)) return;
+                if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, (Input.GetMouseScreenPos() * Renderer.UIScaler).ToVector2(), -bounds.Size.ToVector2() / 2)) return;
             }
             else
             {
-                if (!bounds.Contains(Input.GetMousePos() * Renderer.UIScaler)) return;
+                if (!bounds.Contains(Input.GetMouseScreenPos() * Renderer.UIScaler)) return;
             }
 
             sound?.Play();

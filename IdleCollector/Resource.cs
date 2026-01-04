@@ -12,7 +12,8 @@ namespace IdleCollector
 {
     public class Resource : Entity
     {
-        private Texture2D shadow;
+        private Texture2D shadowTex;
+        private Texture2D beamTex;
         private ResourceInfo info;
         private Rectangle textureRect;
         private Rectangle drawRect;
@@ -28,6 +29,7 @@ namespace IdleCollector
         private float size;
         private float aliveTime;
         private float spawnTime = 1f;
+        private float positiveSin;
 
         public delegate void OnDespawn(Resource r);
         public OnDespawn Despawn;
@@ -44,7 +46,8 @@ namespace IdleCollector
             this.posSpring = new Spring2D(15, 1f, position);
             this.randomOffsetAmt = RandomHelper.Instance.GetFloat(0, 10);
             this.velocity = Vector2.Normalize(RandomHelper.Instance.GetVector2(-Vector2.One, Vector2.One)) * RandomHelper.Instance.GetFloat(1,1.5f);
-            this.shadow = ResourceAtlas.GetTexture("shadow");
+            this.shadowTex = ResourceAtlas.GetTexture("shadow");
+            this.beamTex = ResourceAtlas.GetTexture("loot_beam");
             this.sizeCurve = (t) =>
             {
                 float c4 = (2 * MathF.PI) / 3;
@@ -58,6 +61,8 @@ namespace IdleCollector
             aliveTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             float t = aliveTime / spawnTime;
             size = sizeCurve(t);
+            positiveSin = (MathF.Sin(t) + 1.25f) / 2;
+
             if (!isSpringActive)
             {
                 offset = Vector2.UnitY * MathF.Sin((float)gameTime.TotalGameTime.TotalSeconds * floatSpeed + randomOffsetAmt) * floatDistance;
@@ -92,8 +97,9 @@ namespace IdleCollector
         public override void Draw(SpriteBatch sb)
         {
             int size = (int)(32 * (((offset.Y + floatDistance) / MathF.Pow(floatDistance, 2.25f))));
+            sb.Draw(beamTex, new Rectangle((Position + offset).ToPoint(), new Point(8, (int)(50 /** (offset.Y + floatDistance) / 2*/))), null, info.ResourceColor * positiveSin, 0, new Vector2(4, 100), SpriteEffects.None, LayerDepth - .001f);
             sb.Draw(ResourceAtlas.TilemapAtlas, Position + offset, drawRect, Color.White, 0, frameSize.ToVector2() / 2, this.size, SpriteEffects.None, LayerDepth);
-            sb.Draw(shadow, new Rectangle(Position.ToPoint() + (Vector2.UnitY * floatDistance * 2).ToPoint(), new Point(size,size)), null, Color.White, 0, new Vector2(32, 32), SpriteEffects.None, LayerDepth);
+            sb.Draw(shadowTex, new Rectangle(Position.ToPoint() + (Vector2.UnitY * floatDistance * 2).ToPoint(), new Point(size,size)), null, Color.White, 0, new Vector2(32, 32), SpriteEffects.None, LayerDepth);
         }
 
         public void OnPlayerWalk(Entity entity)

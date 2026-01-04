@@ -82,6 +82,11 @@ namespace IdleCollector
             Count = 0;
             IsUnlocked = false;
         }
+
+        internal ResourceInfo Clone()
+        {
+            return MemberwiseClone() as ResourceInfo;
+        }
     }
     #endregion
 
@@ -186,6 +191,15 @@ namespace IdleCollector
 
             resourceObjs.Add(obj);
         }
+
+        public ResourceInfo GetCleanResourceCopy(string name)
+        {
+            ResourceInfo info = resources[name].Clone();
+            info.Count = 1;
+
+            return info;
+        }
+
         #region // Load
         public void LoadTrailInfo()
         {
