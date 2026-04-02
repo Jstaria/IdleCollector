@@ -30,6 +30,9 @@ namespace IdleEngine
         // Fonts
         private static Dictionary<string, SpriteFont> fonts;
 
+        // Effects
+        private static Dictionary<string, Effect> effects;
+
         public static Dictionary<string, Dictionary<string, Rectangle>> TilemapAtlasKeys { get => tilemapAtlasKeys; }
         public static Texture2D TilemapAtlas { get => tilemapAtlas; }
         public static Rectangle GetTileRect(string accessKey, string tileName)
@@ -61,6 +64,13 @@ namespace IdleEngine
             if (!fonts.ContainsKey(name)) throw new Exception(string.Format("Font: {0} not found in resource atlas!", name));
 
             return fonts[name];
+        }
+
+        public static Effect GetEffect(string name)
+        {
+            if (!effects.ContainsKey(name)) throw new Exception(string.Format("Effect: {0} not found in resource atlas!", name));
+
+            return effects[name];
         }
 
         public static void LoadTilemap(ContentManager Content, string tilemapKeysPath, string tilemapPath)
@@ -187,6 +197,24 @@ namespace IdleEngine
                 SpriteFont media = Content.Load<SpriteFont>(folder + "/" + name);
 
                 fonts.Add(name, media);
+            }
+        }
+
+        public static void LoadEffects(ContentManager Content, string fullFilePath, string folder)
+        {
+            effects = new Dictionary<string, Effect>();
+
+            DirectoryInfo di = new DirectoryInfo(fullFilePath);
+            FileInfo[] files = di.GetFiles("*.xnb");
+
+            int filesLength = files.Length;
+
+            for (int i = 0; i < filesLength; i++)
+            {
+                string name = files[i].Name.Remove(files[i].Name.Length - 4, 4);
+                Effect media = Content.Load<Effect>(folder + "/" + name);
+
+                effects.Add(name, media);
             }
         }
 

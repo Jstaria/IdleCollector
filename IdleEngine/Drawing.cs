@@ -18,6 +18,8 @@ namespace IdleEngine
         private static Dictionary<KeyValuePair<float, float>, Texture2D> cachedCircleOutlines;
         private static Dictionary<KeyValuePair<float, float>, Texture2D> cachedCircles;
 
+        public static Texture2D Pixel => pixel;
+
         public static void Initialize(SpriteBatch sb)
         {
             pixel = new Texture2D(sb.GraphicsDevice, 1, 1);

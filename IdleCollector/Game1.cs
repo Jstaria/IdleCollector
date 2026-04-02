@@ -14,6 +14,11 @@ namespace IdleCollector
 {
     public class Game1 : Game
     {
+        private BasicEffectRenderable _renderable;
+
+
+
+
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -23,6 +28,8 @@ namespace IdleCollector
         private Button button;
         private GameManager _gameManager;
         public static string MainScene = "Main Scene";
+        public float time;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -46,7 +53,7 @@ namespace IdleCollector
             SceneManager.Initialize(MainScene, _graphics, new Point(240 * 2, 135 * 2));
             Drawing.Initialize(_spriteBatch);
 
-            FileIO.InDebug = true;
+            FileIO.InDebug = false;
 
             base.Initialize();
         }
@@ -60,6 +67,8 @@ namespace IdleCollector
             ResourceAtlas.LoadFonts(Content, "Content/Fonts/", "Fonts");
             ResourceAtlas.LoadSongs(Content, "Content/Audio/", "Audio");
             ResourceAtlas.LoadSoundEffects(Content, "Content/SoundEffects/", "SoundEffects");
+            ResourceAtlas.LoadEffects(Content, "Content/Effects/", "Effects");
+
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
@@ -71,7 +80,7 @@ namespace IdleCollector
             _gameManager = new GameManager();
 
             LoadButtons();
-            //LoadEffects();
+            LoadEffects();
         }
 
         protected void LoadButtons()
@@ -97,25 +106,16 @@ namespace IdleCollector
 
         protected void LoadEffects()
         {
-            //Effect pixel = Content.Load<Effect>("Effects/Pixel");
-            //EffectValues[] effectValues = new EffectValues[1];
-            //effectValues[0].ints = new KeyValuePair<string, int>[] {
-            //    new KeyValuePair<string, int>("pixelsX",1920),
-            //    new KeyValuePair<string, int>("pixelsY", 1080),
-            //    new KeyValuePair<string, int>("pixelation", 16)
-            //};
+            _renderable = new BasicEffectRenderable(ResourceAtlas.GetEffect("Stars"), new Vector2(500,300), Vector2.Zero);
+            
+            _renderable.DrawEvent += (effect) =>
+            {
+                effect.Parameters["iTime"].SetValue((float)time);
+                effect.Parameters["iPosition"].SetValue(Renderer.CurrentCamera.Position.ToVector2() / new Vector2(480, 480));
+                
+            };
 
-            //BatchConfig pixelConfig = new BatchConfig(
-            //    SpriteSortMode.Deferred,
-            //    null,
-            //    SamplerState.PointClamp,
-            //    null, null,
-            //    pixel,
-            //    effectValues,
-            //    Matrix.Identity
-            //);
-
-            //Renderer.AddEffectPass(pixelConfig);
+            Renderer.AddToDraw(_renderable);
         }
 
         #endregion
@@ -125,6 +125,8 @@ namespace IdleCollector
         {
             Updater.Update(gameTime);
 
+            time = (float)gameTime.TotalGameTime.TotalSeconds;
+            _renderable.Position = -Renderer.CurrentCamera.Position.ToVector2() - Vector2.One * 10;
             base.Update(gameTime);
         }
 
@@ -136,8 +138,9 @@ namespace IdleCollector
 
             //if (online != null)
             //_spriteBatch.Draw(online, new Vector2(500, 100), Color.White);
-
             _spriteBatch.End();
+
+            
 
             base.Draw(gameTime);
         }

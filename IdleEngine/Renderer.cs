@@ -103,6 +103,16 @@ namespace IdleEngine
                 transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
                 );
 
+        public static void ResetBeginDrawEffect(SpriteBatch sb, Effect effect) => sb.Begin(
+                renderTexConfig.sortMode,
+                blendState: renderTexConfig.blendState,
+                samplerState: renderTexConfig.samplerState,
+                depthStencilState: renderTexConfig.depthStencilState,
+                rasterizerState: renderTexConfig.rasterizerState,
+                effect: effect,
+                transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
+                );
+
         public static void DrawToRenderTargets(SpriteBatch sb)
         {
             DrawRenderTargets?.Invoke(sb);
