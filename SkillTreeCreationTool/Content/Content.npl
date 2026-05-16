@@ -1,0 +1,66 @@
+{
+	"root": "",
+	"references":
+	[
+
+	],
+	"content": {
+		"textures": {
+			"path": "Textures/*.png",
+			"recursive": "True",
+			"action": "build",
+			"importer": "TextureImporter",
+			"processor": "TextureProcessor",
+			"processorParam": {
+				"ColorKeyColor": "255,0,255,255",
+				"ColorKeyEnabled": "True",
+				"GenerateMipmaps": "False",
+				"PremultiplyAlpha": "True",
+				"ResizeToPowerOfTwo": "False",
+				"MakeSquare": "False",
+				"TextureFormat": "Color"
+			}
+		},
+		"audios": {
+			"path": "Audio/*.mp3",
+			"recursive": "True",
+			"action": "build",
+			"importer": "Mp3Importer",
+			"processor": "SongProcessor"
+		},
+
+		"soundeffects": {
+			"path": "SoundEffects/*.mp3",
+			"recursive": "True",
+			"action": "build",
+			"importer": "Mp3Importer",
+			"processor": "SoundEffectProcessor"
+		},
+
+		"effects": {
+			"path": "Effects/*.fx",
+			"recursive": "True",
+			"action": "build",
+			"importer": "EffectImporter",
+			"processor": "EffectProcessor"
+		},
+
+		"fonts": {
+			"path": "Fonts/*.spritefont",
+			"recursive": "True",
+			"action": "build",
+			"importer": "FontDescriptionImporter",
+			"processor": "FontDescriptionProcessor"
+		},
+
+		"text": {
+			"path": "SaveData/*.txt",
+			"action": "copy"
+		},
+		"json": {
+			"path": "SaveData/*.json",
+			"action": "copy"
+		}
+
+	}
+}
