@@ -26,6 +26,7 @@ namespace IdleEngine
         };
 
         private static Point screenMousePos;
+        private static Point prevScreenMousePos;
         private static Point currentMousePos;
         private static Point prevMousePos;
 
@@ -50,6 +51,7 @@ namespace IdleEngine
             prevKBState = currentKBState;
             prevKeysPressed = currentKeysPressed;
             prevMousePos = currentMousePos;
+            prevScreenMousePos = screenMousePos;
             prevScroll = currentScroll;
 
             currentMouseState = Mouse.GetState();
@@ -105,6 +107,7 @@ namespace IdleEngine
         public static Point GetMousePos() => currentMousePos;
         public static Point GetMouseScreenPos() => screenMousePos;
         public static Point GetMouseDelta() => prevMousePos - currentMousePos;
+        public static Point GetMouseScreenDelta() => prevScreenMousePos - screenMousePos;
         public static int GetMouseScroll() => currentScroll;
         public static int GetMouseScrollDelta() => (int)MathF.Max(-1, MathF.Min(prevScroll - currentScroll, 1));
         private static bool OrderKeys(Keys x, Keys y) => x > y;

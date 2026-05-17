@@ -1,0 +1,19 @@
+{
+  "GridSpacing": 16,
+  "IconSize": 32,
+  "TokenID": 9,
+  "treeTokens": {
+    "7": {
+      "TokenIcon": "default-icon",
+      "TokenID": 7,
+      "GridPosition": {
+        "X": 2,
+        "Y": 2
+      },
+      "ParentTokens": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    }
+  },
+  "defaultIcon": "default-icon"
+}
