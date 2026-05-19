@@ -640,7 +640,37 @@
 #begin SaveData/SkillTree.json
 /copy:SaveData/SkillTree.json
 
-#begin Textures/default-icon.png
+#begin Fonts/DePixelHalbfett.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelHalbfett.spritefont
+
+#begin Fonts/DePixelHalbfettTitle.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelHalbfettTitle.spritefont
+
+#begin Fonts/DePixelKlein.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelKlein.spritefont
+
+#begin Fonts/Medodica.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/Medodica.spritefont
+
+#begin Effects/Pixel.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/Pixel.fx
+
+#begin Effects/Stars.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/Stars.fx
+
+#begin Textures/Icons/default-icon.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -650,4 +680,4 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/default-icon.png
+/build:Textures/Icons/default-icon.png

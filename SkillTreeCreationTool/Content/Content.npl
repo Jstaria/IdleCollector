@@ -7,7 +7,7 @@
 	"content": {
 		"textures": {
 			"path": "Textures/*.png",
-			"recursive": "True",
+			"recursive": true,
 			"action": "build",
 			"importer": "TextureImporter",
 			"processor": "TextureProcessor",

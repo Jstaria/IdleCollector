@@ -15,9 +15,11 @@ namespace IdleEngine
     public static class Renderer
     {
         public delegate void OnDraw(SpriteBatch sb);
+        private static Dictionary<string, OnDraw> EarlyDrawEvents;
         private static Dictionary<string, OnDraw> DrawEvents;
         private static Dictionary<string, OnDraw> UIDrawEvents;
         private static event OnDraw DrawRenderTargets;
+        private static event OnDraw EarlyDrawEvent;
         private static event OnDraw DrawEvent;
         private static event OnDraw UIDrawEvent;
         private static event OnDraw IndependentDrawEvent;
@@ -62,6 +64,7 @@ namespace IdleEngine
 
         public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {
+            EarlyDrawEvents = new();
             DrawEvents = new();
             UIDrawEvents = new();
             processes = new List<BatchConfig>();
@@ -132,6 +135,7 @@ namespace IdleEngine
                 effect: renderTexConfig.effect,
                 transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
                 );
+            EarlyDrawEvent?.Invoke(sb);
             DrawEvent?.Invoke(sb);
             IndependentDrawEvent?.Invoke(sb);
             sb.End();
@@ -281,6 +285,26 @@ namespace IdleEngine
                     new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         }
 
+        /// <summary>
+        /// Adds to a scene's early draw loop, must swap scene to see effects
+        /// </summary>
+        public static void AddToSceneEarlyDraw(string sceneName, IRenderable drawable) => AddToSceneEarlyDraw(sceneName, drawable.Draw);
+        /// <summary>
+        /// Adds to a scene's early draw loop, must swap scene to see effects
+        /// </summary>
+        public static void AddToSceneEarlyDraw(string sceneName, OnDraw func) => EarlyDrawEvents[sceneName] += func;
+        /// <summary>
+        /// Adds to current early scene's draw loop, does not require scene swap
+        /// </summary>
+        public static void AddToSceneEarlyDraw(IRenderable drawable) => AddToSceneEarlyDraw(drawable.Draw);
+        /// <summary>
+        /// Adds to current scene's draw loop, does not require scene swap
+        /// </summary>
+        public static void AddToSceneEarlyDraw(OnDraw func)
+        {
+            EarlyDrawEvent += func;
+            EarlyDrawEvents[SceneManager.CurrentSceneName] = EarlyDrawEvent;
+        }
         /// <summary>
         /// Adds to a scene's draw loop, must swap scene to see effects
         /// </summary>

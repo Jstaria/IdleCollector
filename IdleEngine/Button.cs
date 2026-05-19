@@ -32,6 +32,7 @@ namespace IdleCollector
         public float rotationRadians;
         public OnButtonClick OnClick;
         public OnButtonClickString OnClickString;
+        public bool useWorldCoord;
     }
 
     public class Button : IUpdatable, IRenderable
@@ -49,6 +50,7 @@ namespace IdleCollector
         private float timer = .05f;
         private float timeOfLastPress;
         private bool active;
+        private bool usingWorldCoord;
         private RenderTarget2D[] targets;
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
@@ -109,6 +111,7 @@ namespace IdleCollector
             this.fontColor = fontColor;
             this.bounds = bounds;
             this.sound = sound;
+            this.usingWorldCoord = config.useWorldCoord;
 
             if (rotationRadians != 0)
                 Init(gameInstance);
@@ -178,13 +181,15 @@ namespace IdleCollector
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
 
+            Vector2 pos = usingWorldCoord ? Input.GetMousePos().ToVector2() : (Input.GetMouseScreenPos() * Renderer.UIScaler).ToVector2();
+
             if (rotationRadians != 0)
             {
-                if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, (Input.GetMouseScreenPos() * Renderer.UIScaler).ToVector2(), -bounds.Size.ToVector2() / 2)) return;
+                if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, pos, -bounds.Size.ToVector2() / 2)) return;
             }
             else
             {
-                if (!bounds.Contains(Input.GetMouseScreenPos() * Renderer.UIScaler)) return;
+                if (!bounds.Contains(pos)) return;
             }
 
             sound?.Play();

@@ -29,6 +29,7 @@ namespace IdleEngine
         public Rectangle Bounds { get; private set; }
         public bool UseBounds {  get; set; }
         public Point Position { get; set; }
+        public Point TargetPosition { get => targetPoint; set => targetPoint = value; }
         public float Zoom { get; set; }
         public Matrix Transform 
         { 

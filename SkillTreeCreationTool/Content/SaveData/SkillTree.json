@@ -1,19 +1,452 @@
 {
   "GridSpacing": 16,
   "IconSize": 32,
-  "TokenID": 9,
+  "DefaultIcon": "default-icon",
+  "TokenID": 36,
   "treeTokens": {
+    "0": {
+      "TokenIcon": "default-icon",
+      "TokenID": 0,
+      "GridPosition": {
+        "X": 0,
+        "Y": 0
+      },
+      "ParentTokenIDs": [],
+      "ChildTokenIDs": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "4": {
+      "TokenIcon": "default-icon",
+      "TokenID": 4,
+      "GridPosition": {
+        "X": -2,
+        "Y": -3
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        4,
+        4
+      ],
+      "IsCollected": false,
+      "IsCollectable": true
+    },
+    "3": {
+      "TokenIcon": "default-icon",
+      "TokenID": 3,
+      "GridPosition": {
+        "X": 0,
+        "Y": -5
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        3,
+        3
+      ],
+      "IsCollected": false,
+      "IsCollectable": true
+    },
+    "5": {
+      "TokenIcon": "default-icon",
+      "TokenID": 5,
+      "GridPosition": {
+        "X": 2,
+        "Y": -3
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        5,
+        5
+      ],
+      "IsCollected": false,
+      "IsCollectable": true
+    },
+    "6": {
+      "TokenIcon": "default-icon",
+      "TokenID": 6,
+      "GridPosition": {
+        "X": 0,
+        "Y": 5
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        6,
+        6
+      ],
+      "IsCollected": false,
+      "IsCollectable": true
+    },
     "7": {
       "TokenIcon": "default-icon",
       "TokenID": 7,
       "GridPosition": {
-        "X": 2,
-        "Y": 2
+        "X": -2,
+        "Y": 3
       },
-      "ParentTokens": [],
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        7,
+        7
+      ],
+      "IsCollected": false,
+      "IsCollectable": true
+    },
+    "8": {
+      "TokenIcon": "default-icon",
+      "TokenID": 8,
+      "GridPosition": {
+        "X": 2,
+        "Y": 3
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        8,
+        8
+      ],
+      "IsCollected": false,
+      "IsCollectable": true
+    },
+    "9": {
+      "TokenIcon": "default-icon",
+      "TokenID": 9,
+      "GridPosition": {
+        "X": 5,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        8
+      ],
+      "ChildTokenIDs": [
+        9
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "10": {
+      "TokenIcon": "default-icon",
+      "TokenID": 10,
+      "GridPosition": {
+        "X": 3,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        8
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "11": {
+      "TokenIcon": "default-icon",
+      "TokenID": 11,
+      "GridPosition": {
+        "X": 2,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        6
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "12": {
+      "TokenIcon": "default-icon",
+      "TokenID": 12,
+      "GridPosition": {
+        "X": -2,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        6
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "13": {
+      "TokenIcon": "default-icon",
+      "TokenID": 13,
+      "GridPosition": {
+        "X": -3,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        7
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "14": {
+      "TokenIcon": "default-icon",
+      "TokenID": 14,
+      "GridPosition": {
+        "X": -5,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        7
+      ],
+      "ChildTokenIDs": [
+        14
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "15": {
+      "TokenIcon": "default-icon",
+      "TokenID": 15,
+      "GridPosition": {
+        "X": 5,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        5
+      ],
+      "ChildTokenIDs": [
+        15
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "16": {
+      "TokenIcon": "default-icon",
+      "TokenID": 16,
+      "GridPosition": {
+        "X": 3,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        5
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "17": {
+      "TokenIcon": "default-icon",
+      "TokenID": 17,
+      "GridPosition": {
+        "X": 2,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        3
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "18": {
+      "TokenIcon": "default-icon",
+      "TokenID": 18,
+      "GridPosition": {
+        "X": -2,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        3
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "19": {
+      "TokenIcon": "default-icon",
+      "TokenID": 19,
+      "GridPosition": {
+        "X": -3,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        4
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "20": {
+      "TokenIcon": "default-icon",
+      "TokenID": 20,
+      "GridPosition": {
+        "X": -5,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        4
+      ],
+      "ChildTokenIDs": [
+        20
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "21": {
+      "TokenIcon": "default-icon",
+      "TokenID": 21,
+      "GridPosition": {
+        "X": -4,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        20,
+        14,
+        0
+      ],
+      "ChildTokenIDs": [
+        21,
+        21,
+        21
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "22": {
+      "TokenIcon": "default-icon",
+      "TokenID": 22,
+      "GridPosition": {
+        "X": 4,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        0,
+        15,
+        9
+      ],
+      "ChildTokenIDs": [
+        22,
+        22,
+        22,
+        22,
+        22
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "27": {
+      "TokenIcon": "default-icon",
+      "TokenID": 27,
+      "GridPosition": {
+        "X": 7,
+        "Y": -1
+      },
+      "ParentTokenIDs": [
+        22
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "26": {
+      "TokenIcon": "default-icon",
+      "TokenID": 26,
+      "GridPosition": {
+        "X": 7,
+        "Y": 1
+      },
+      "ParentTokenIDs": [
+        22
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "29": {
+      "TokenIcon": "default-icon",
+      "TokenID": 29,
+      "GridPosition": {
+        "X": -7,
+        "Y": -1
+      },
+      "ParentTokenIDs": [
+        21
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "30": {
+      "TokenIcon": "default-icon",
+      "TokenID": 30,
+      "GridPosition": {
+        "X": -7,
+        "Y": 1
+      },
+      "ParentTokenIDs": [
+        21
+      ],
+      "ChildTokenIDs": [],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "33": {
+      "TokenIcon": "dust1",
+      "TokenID": 33,
+      "GridPosition": {
+        "X": -14,
+        "Y": -3
+      },
+      "ParentTokenIDs": [],
+      "ChildTokenIDs": [
+        33,
+        33
+      ],
+      "IsCollected": false,
+      "IsCollectable": true
+    },
+    "34": {
+      "TokenIcon": "dust3",
+      "TokenID": 34,
+      "GridPosition": {
+        "X": -17,
+        "Y": -3
+      },
+      "ParentTokenIDs": [
+        33
+      ],
+      "ChildTokenIDs": [
+        34
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "35": {
+      "TokenIcon": "dust2",
+      "TokenID": 35,
+      "GridPosition": {
+        "X": -17,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        34,
+        33
+      ],
+      "ChildTokenIDs": [],
       "IsCollected": false,
       "IsCollectable": false
     }
   },
-  "defaultIcon": "default-icon"
+  "SkillTreeScene": "SkillTreeScene"
 }

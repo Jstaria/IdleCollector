@@ -14,11 +14,6 @@ namespace IdleCollector
 {
     public class Game1 : Game
     {
-        private BasicEffectRenderable _renderable;
-
-
-
-
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
@@ -28,7 +23,7 @@ namespace IdleCollector
         private Button button;
         private GameManager _gameManager;
         public static string MainScene = "Main Scene";
-        public float time;
+        public static float time;
 
         public Game1()
         {
@@ -106,16 +101,7 @@ namespace IdleCollector
 
         protected void LoadEffects()
         {
-            _renderable = new BasicEffectRenderable(ResourceAtlas.GetEffect("Stars"), new Vector2(500,300), Vector2.Zero);
             
-            _renderable.DrawEvent += (effect) =>
-            {
-                effect.Parameters["iTime"].SetValue((float)time);
-                effect.Parameters["iPosition"].SetValue(Renderer.CurrentCamera.Position.ToVector2() / new Vector2(480, 480));
-                
-            };
-
-            Renderer.AddToDraw(_renderable);
         }
 
         #endregion
@@ -125,8 +111,6 @@ namespace IdleCollector
         {
             Updater.Update(gameTime);
 
-            time = (float)gameTime.TotalGameTime.TotalSeconds;
-            _renderable.Position = -Renderer.CurrentCamera.Position.ToVector2() - Vector2.One * 10;
             base.Update(gameTime);
         }
 

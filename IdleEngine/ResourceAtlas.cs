@@ -22,7 +22,7 @@ namespace IdleEngine
         private static Texture2D tilemapAtlas;
         private static Dictionary<string, Texture2D> textureCache;
         private static Dictionary<string, Dictionary<string, Rectangle>> tilemapAtlasKeys;
-    
+
         // Sound Effects and Audio
         private static Dictionary<string, SoundEffect> soundEffects;
         private static Dictionary<string, Song> songs;
@@ -35,13 +35,14 @@ namespace IdleEngine
 
         public static Dictionary<string, Dictionary<string, Rectangle>> TilemapAtlasKeys { get => tilemapAtlasKeys; }
         public static Texture2D TilemapAtlas { get => tilemapAtlas; }
+        public static Dictionary<string, Texture2D> TextureCache => textureCache;
         public static Rectangle GetTileRect(string accessKey, string tileName)
         {
             if (TilemapAtlas == null) throw new Exception("Tilemap Atlas is empty!");
             if (tilemapAtlasKeys == null) throw new Exception("Tilemap atlas keys missing!");
             if (tilemapAtlasKeys[accessKey] == null) throw new Exception(String.Format("Tilemap atlas does not contain access key {0}", accessKey));
             if (!tilemapAtlasKeys[accessKey].ContainsKey(tileName)) throw new Exception(String.Format("Tile {0} does not exist!", tileName));
-            
+
             return tilemapAtlasKeys[accessKey][tileName];
         }
         public static Rectangle GetRandomTileRect(string accessKey) => GetTileRect(accessKey, GetRandomAtlasKey(accessKey));
@@ -89,7 +90,7 @@ namespace IdleEngine
 
                 string[] dim = entries[0].Split('x');
 
-                int x = int.Parse(dim[0]);  
+                int x = int.Parse(dim[0]);
                 int y = int.Parse(dim[1]);
 
                 for (int k = 1; k < entries.Length; k++)
@@ -102,12 +103,12 @@ namespace IdleEngine
                     for (int i = 0; i < names.Length; i++)
                     {
                         Point position = new Point(xOffset, yOffset);
-                        tilemapAtlasKeys[title[0]].Add(names[i], new Rectangle(position, new Point(x,y)));
-                    
+                        tilemapAtlasKeys[title[0]].Add(names[i], new Rectangle(position, new Point(x, y)));
+
                         xOffset += x;
                     }
                 }
-                
+
                 xOffset = 0;
                 yOffset += y;
             }
@@ -116,7 +117,8 @@ namespace IdleEngine
 
         public static void LoadTextures(ContentManager Content, string fullFilePath, string folder)
         {
-            textureCache = new Dictionary<string, Texture2D>();
+            if (textureCache == null)
+                textureCache = new Dictionary<string, Texture2D>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
             FileInfo[] files = di.GetFiles("*.xnb");
@@ -125,8 +127,9 @@ namespace IdleEngine
 
             for (int i = 0; i < filesLength; i++)
             {
-                string name = files[i].Name.Remove(files[i].Name.Length - 4, 4);
-                Texture2D media = Content.Load<Texture2D>(folder + "/" + name);
+                string name = Path.GetFileNameWithoutExtension(files[i].Name);
+                fullFilePath = fullFilePath.Replace("Content/","").TrimStart('/', '\\'); //"Content/"
+                Texture2D media = Content.Load<Texture2D>($"{fullFilePath}/{name}");
 
                 textureCache.Add(name, media);
             }
@@ -141,7 +144,8 @@ namespace IdleEngine
         /// <param name="fileType">Ending suffix only (Ex. mp3)</param>
         public static void LoadSongs(ContentManager Content, string fullFilePath, string folder)
         {
-            songs = new Dictionary<string, Song>();
+            if (songs == null)
+                songs = new Dictionary<string, Song>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
             FileInfo[] files = di.GetFiles("*.xnb");
@@ -166,7 +170,8 @@ namespace IdleEngine
         /// <param name="fileType">Ending suffix only (Ex. mp3)</param>
         public static void LoadSoundEffects(ContentManager Content, string fullFilePath, string folder)
         {
-            soundEffects = new Dictionary<string, SoundEffect>();
+            if (soundEffects == null)
+                soundEffects = new Dictionary<string, SoundEffect>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
             FileInfo[] files = di.GetFiles("*.xnb");
@@ -184,7 +189,8 @@ namespace IdleEngine
 
         public static void LoadFonts(ContentManager Content, string fullFilePath, string folder)
         {
-            fonts = new Dictionary<string, SpriteFont>();
+            if (fonts == null)
+                fonts = new Dictionary<string, SpriteFont>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
             FileInfo[] files = di.GetFiles("*.xnb");
@@ -202,7 +208,8 @@ namespace IdleEngine
 
         public static void LoadEffects(ContentManager Content, string fullFilePath, string folder)
         {
-            effects = new Dictionary<string, Effect>();
+            if (effects == null)
+                effects = new Dictionary<string, Effect>();
 
             DirectoryInfo di = new DirectoryInfo(fullFilePath);
             FileInfo[] files = di.GetFiles("*.xnb");

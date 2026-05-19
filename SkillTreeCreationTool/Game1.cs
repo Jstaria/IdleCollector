@@ -3,7 +3,6 @@ using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Numerics;
 
 namespace SkillTreeCreationTool
 {
@@ -16,7 +15,10 @@ namespace SkillTreeCreationTool
         public static string MainSceneName = "MainScene";
 
         private SkillTree skillTree;
+        private SkillTreeEditor skillTreeEditor;
         private Camera camera;
+
+        public static Game Instance;
 
         public Game1()
         {
@@ -29,7 +31,11 @@ namespace SkillTreeCreationTool
 
         protected override void Initialize()
         {
+            Instance = this;
+
             SceneManager.Initialize(MainSceneName, _graphics, renderSize);
+            SceneManager.AddScene("SkillTreeScene");
+            SceneManager.SwapScene("SkillTreeScene");
 
             int screenWidth = Renderer.RenderSize.X;
             int screenHeight = Renderer.RenderSize.Y;
@@ -42,9 +48,6 @@ namespace SkillTreeCreationTool
 
             FileIO.InDebug = true;
 
-            skillTree = new SkillTree();
-            SceneManager.AddToScene(skillTree);
-
             base.Initialize();
         }
 
@@ -54,21 +57,16 @@ namespace SkillTreeCreationTool
             Drawing.Initialize(_spriteBatch);
 
             ResourceAtlas.LoadTextures(Content, "Content/Textures/", "Textures");
+            ResourceAtlas.LoadTextures(Content, "Content/Textures/Icons/", "Icons");
+            ResourceAtlas.LoadFonts(Content, "Content/Fonts/", "Fonts");
+            ResourceAtlas.LoadEffects(Content, "Content/Effects", "Effects");
 
-            skillTree.AddToken(new Point(0, 0));
-            skillTree.SetTokenParent(new Point(0, 0), new Point(2,2));
-            skillTree.AddToken(new Point(2, -2));
-            skillTree.SetTokenParent(new Point(0, 0), new Point(2, -2));
+            skillTree = new SkillTree();
+            skillTree.CollectToken(Point.Zero);
+            SceneManager.AddToScene(skillTree);
 
-            skillTree.AddToken(new Point(-2, 2));
-            skillTree.SetTokenParent(new Point(0, 0), new Point(-2, 2));
-            skillTree.AddToken(new Point(-2, -2));
-            skillTree.SetTokenParent(new Point(0, 0), new Point(-2, -2));
-
-            skillTree.AddToken(new Point(2, 4));
-            skillTree.SetTokenParent(new Point(2, 2), new Point(2, 4));
-            skillTree.AddToken(new Point(4, 2));
-            skillTree.SetTokenParent(new Point(2, 2), new Point(4, 2));
+            skillTreeEditor = new SkillTreeEditor(skillTree);
+            SceneManager.AddToScene(skillTreeEditor);
 
             //skillTree.SaveSkillTree();
 
