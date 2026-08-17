@@ -180,11 +180,11 @@ namespace IdleCollector
                 container.DropIn();
         }
 
-        private int SetVolume(int value, string vName)
+        private int SetVolume(float value, string vName)
         {
             VolumeController vCon = VolumeController.Instance;
 
-            vCon.IncrementVolume(vName, 1.0f / (float)MenuData.divisions * value);
+            vCon.ChangeVolume(vName, value);
 
             float volume = vCon.GetVolume(vName);
 
@@ -268,9 +268,11 @@ namespace IdleCollector
     public class Slider : UIContainer
     {
         private int min = 0, max = 0, value = 0;
+        private int sliderWidth = 200, sliderStartX = 0, sliderEndX = 0;
+        private int barWidth;
         private int sensitivity = 50;
         private Button button;
-        public delegate int OnSlide(int value);
+        public delegate int OnSlide(float value);
         public delegate int GetValue();
         private OnSlide slide;
         private ButtonConfig config;
@@ -298,6 +300,13 @@ namespace IdleCollector
             outOfScreen = new Vector2(buttonPosition.X, -200);
             positionSpring = new Spring2D(20, .65f, outOfScreen);
             button.Position = outOfScreen;
+            barWidth = this.sliderWidth / MenuData.divisions;
+            drawPosition = positionSpring.Position;
+            sliderStartX = (int)drawPosition.X;
+            sliderEndX = sliderStartX + (barWidth + 4) * MenuData.divisions;
+
+            // These are for checking mouse collision and needs to use scaled screen coords
+            sliderStartX /= Renderer.UIScaler.X; sliderEndX /= Renderer.UIScaler.Y;
 
             renderables.Add(button);
 
@@ -324,7 +333,7 @@ namespace IdleCollector
             base.Draw(sb);
 
             Vector2 pos = drawPosition + new Vector2(0, -config.bounds.Height / 4);
-            int barWidth = 200 / MenuData.divisions;
+
             sensitivity = (int)(barWidth * .75f);
 
             for (int i = 0; i < MenuData.divisions; i++)
@@ -338,18 +347,18 @@ namespace IdleCollector
 
         private async void GetMouseInput()
         {
-            int mouseX = Input.GetMouseScreenPos().X;
+            int mouseX = Input.GetMouseScreenPos().X + barWidth / 4;
+
+            if (mouseX < sliderStartX || mouseX > sliderEndX) return;
 
             while (Input.IsLeftButtonDown())
             {
-                int newX = Input.GetMouseScreenPos().X;
-                int delta = newX - mouseX;
+                int xDistance = MathHelper.Max(mouseX - sliderStartX, 0);
+                int totalSliderWidth = sliderEndX - sliderStartX;
+                float ratio = (float)xDistance / (float)totalSliderWidth;
 
-                if (MathF.Abs(delta) > sensitivity)
-                {
-                    mouseX = newX;
-                    value = slide.Invoke(MathF.Sign(delta));
-                }
+                mouseX = Input.GetMouseScreenPos().X + barWidth / 4;
+                value = slide.Invoke(ratio);
 
                 await Task.Delay(1);
             }
