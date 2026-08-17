@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
@@ -62,6 +62,10 @@
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IdleEngine\IdleEngine.csproj" />
+    <ProjectReference Include="..\SkillTreeCreationTool\SkillTreeCreationTool.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="IdleEngine">

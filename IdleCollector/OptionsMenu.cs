@@ -329,7 +329,7 @@ namespace IdleCollector
 
             for (int i = 0; i < MenuData.divisions; i++)
             {
-                Color color = i > value ? new Color(30, 15, 15) : Color.White;
+                Color color = i >= value ? new Color(30, 15, 15) : Color.White;
                 sb.Draw(barTex, new Rectangle((int)pos.X - 4, (int)pos.Y + 4, barWidth, barTex.Height * Renderer.UIScaler.Y), null, Color.Black * .25f, 0, Vector2.Zero, SpriteEffects.None, 0f);
                 sb.Draw(barTex, new Rectangle((int)pos.X, (int)pos.Y, barWidth, barTex.Height * Renderer.UIScaler.Y), null, color, 0, Vector2.Zero, SpriteEffects.None, .01f);
                 pos += Vector2.UnitX * (barWidth + 4);
