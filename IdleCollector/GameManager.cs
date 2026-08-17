@@ -256,7 +256,7 @@ namespace IdleCollector
 
             resumeButton = new Button(Game1.Instance, resumeConfig);
             resumeButton.OnClick += () => { isPaused = false; Updater.UnPauseScene(); OnIsPaused?.Invoke(isPaused); };
-            Updater.AddToLateUpdate((gt) => Debug.WriteLine(Input.GetMouseScreenPos().ToString()));
+            //Updater.AddToLateUpdate((gt) => Debug.WriteLine(Input.GetMouseScreenPos().ToString()));
             Updater.AddToLateUpdate((gt) => { if (isPaused && SceneManager.CurrentSceneName != OptionsScene) resumeButton.StandardUpdate(gt); });
             Updater.AddToLateUpdate((gt) => { if (isPaused && SceneManager.CurrentSceneName != OptionsScene) optionsButton.StandardUpdate(gt); });
             Updater.AddToLateUpdate((gt) => { if (isPaused && SceneManager.CurrentSceneName != OptionsScene) menuButton.StandardUpdate(gt); });
