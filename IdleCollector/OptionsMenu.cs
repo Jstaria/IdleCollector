@@ -56,9 +56,9 @@ namespace IdleCollector
             {
                 ["Main"] = new()
                 {
-                    ["Audio"] = new MenuButton(GetButtonConfig("Audio", -1, () => CallMenu("Audio"))),
-                    ["Display"] = new MenuButton(GetButtonConfig("Display", 0, () => CallMenu("Display"))),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1, RequestExit)),
+                    ["Audio"] = new MenuButton(GetButtonConfig("Audio", -1, () => { CallMenu("Audio"); NudgeButtonScale("Main", "Audio", -15f); }, () => HoverButton("Main", "Audio"))),
+                    ["Display"] = new MenuButton(GetButtonConfig("Display", 0, () => { CallMenu("Display"); NudgeButtonScale("Main", "Display", -15f); }, () => HoverButton("Main", "Display"))),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1, () => { RequestExit(); NudgeButtonScale("Main", "Back", -15); }, () => HoverButton("Main", "Back"))),
                 },
                 ["Audio"] = new()
                 {
@@ -67,12 +67,12 @@ namespace IdleCollector
                     ["Sound Effect Volume"] = new Slider(GetButtonConfig("Sound FX", -1f), (value) => { return SetVolume(value, "SoundEffectVolume"); }),
                     ["Character Volume"] = new Slider(GetButtonConfig("Character", -.5f), (value) => { return SetVolume(value, "CharacterVolume"); }),
                     ["Ambient Volume"] = new Slider(GetButtonConfig("Ambient", 0f), (value) => { return SetVolume(value, "AmbientVolume"); }),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1f, () => CallMenu("Main"))),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1f, () => { CallMenu("Main"); NudgeButtonScale("Audio", "Back", -15); }, () => HoverButton("Audio", "Back"))),
                 },
                 ["Display"] = new()
                 {
-                    ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Display Test"); })),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => CallMenu("Main"))),
+                    ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Display Test"); NudgeButtonScale("Display", "Test", -15); }, () => HoverButton("Display", "Test"))),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => { CallMenu("Main"); NudgeButtonScale("Display", "Back", -15); }, () => HoverButton("Display", "Back"))),
                 },
             };
 
@@ -180,6 +180,19 @@ namespace IdleCollector
                 container.DropIn();
         }
 
+        private void HoverButton(string buttonCategory, string button)
+        {
+            Button menuButton = ((MenuButton)buttons[buttonCategory][button]).button;
+            menuButton.RotSpring.RestPosition = 0; //menuButton.ButtonConfig.rotationRadians + MathHelper.ToRadians(5);
+            menuButton.ScaleSpring.RestPosition = 1.1f;
+        }
+
+        private void NudgeButtonScale(string buttonCategory, string button, float nudgeValue)
+        {
+            Button menuButton = ((MenuButton)buttons[buttonCategory][button]).button;
+            menuButton.ScaleSpring.Nudge(nudgeValue);
+        }
+
         private int SetVolume(float value, string vName)
         {
             VolumeController vCon = VolumeController.Instance;
@@ -191,7 +204,7 @@ namespace IdleCollector
             return (int)(volume * MenuData.divisions);
         }
 
-        private ButtonConfig GetButtonConfig(string buttonText, float i, OnButtonClick func = null)
+        private ButtonConfig GetButtonConfig(string buttonText, float i, OnButtonClick clickFunc = null, OnButtonHover hoverFunc = null)
         {
             Color shadowColor = Color.Black * .4f;
             Color fontColor = Color.White;
@@ -206,7 +219,12 @@ namespace IdleCollector
             config.fontColor = fontColor;
             config.textures = [ResourceAtlas.GetTexture("board" + RandomHelper.Instance.GetInt(1, 4))];
             config.rotationRadians = RandomHelper.Instance.GetFloat(-MathHelper.Pi, MathHelper.Pi) * rotationScale;
-            config.OnClick += func;
+            config.OnClick += clickFunc;
+            config.OnHover += hoverFunc;
+            config.rotSpringAngFeq = 40;
+            config.rotSpringDampRatio = 1;
+            config.scaleSpringAngFeq = 40;
+            config.scaleSpringDampRatio = 1f;
 
             return config;
         }

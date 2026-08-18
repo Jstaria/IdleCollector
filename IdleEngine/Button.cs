@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -15,6 +16,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace IdleCollector
 {
+    public delegate void OnButtonHover();
     public delegate void OnButtonClick();
     public delegate void OnButtonClickString(string name);
 
@@ -30,9 +32,12 @@ namespace IdleCollector
         public Color fontColor;
         public Color shadowColor;
         public float rotationRadians;
+        public OnButtonHover OnHover;
         public OnButtonClick OnClick;
         public OnButtonClickString OnClickString;
         public bool useWorldCoord;
+        public float rotSpringAngFeq, rotSpringDampRatio;
+        public float scaleSpringAngFeq, scaleSpringDampRatio;
     }
 
     public class Button : IUpdatable, IRenderable
@@ -51,7 +56,14 @@ namespace IdleCollector
         private float timeOfLastPress;
         private bool active;
         private bool usingWorldCoord;
+        private Spring rotSpring;
+        private Spring scaleSpring;
         private RenderTarget2D[] targets;
+        private ButtonConfig config;
+
+        public ButtonConfig ButtonConfig { get => config; }
+        public Spring RotSpring { get => rotSpring; set => rotSpring = value; }
+        public Spring ScaleSpring { get => scaleSpring; set => scaleSpring = value; }
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
         public Vector2 Position
@@ -64,6 +76,7 @@ namespace IdleCollector
             }
         }
 
+        public event OnButtonHover OnHover;
         public event OnButtonClick OnClick;
         public event OnButtonClickString OnClickString;
 
@@ -73,6 +86,8 @@ namespace IdleCollector
         public Button(Game gameInstance, ButtonConfig config) : this(gameInstance, config.textures, config.bounds, config.texts, config.textParticle, config.font, config.fontColor, config.shadowColor, config.sound, config.rotationRadians, config) { }
         public Button(Game gameInstance, Texture2D[] textures, Rectangle bounds, string[] texts, string textParticle, string fontName, Color fontColor, Color shadowColor, SoundEffect sound, float rotationRadians, ButtonConfig config)
         {
+            this.config = config;
+            OnHover = config.OnHover;
             OnClick = config.OnClick;
             OnClickString = config.OnClickString;
 
@@ -113,17 +128,28 @@ namespace IdleCollector
             this.sound = sound;
             this.usingWorldCoord = config.useWorldCoord;
 
-            if (rotationRadians != 0)
+            //if (rotationRadians != 0)
                 Init(gameInstance);
+
+            rotSpring = new Spring(config.rotSpringAngFeq, config.rotSpringDampRatio, config.rotationRadians);
+            scaleSpring = new Spring(config.scaleSpringAngFeq, config.scaleSpringDampRatio, 1);
         }
 
         public void Draw(SpriteBatch sb)
         {
+            Rectangle drawBounds = this.bounds; // renamed to avoid confusion with the field
+
+            Vector2 originalSize = this.bounds.Size.ToVector2();
+            Vector2 newSize = originalSize * scaleSpring.Position;
+            Vector2 center = Position + newSize / 2;
+
+            drawBounds.Size = newSize.ToPoint();
+            drawBounds.Location = (center - newSize / 2).ToPoint();
+
             if (rotationRadians != 0)
             {
                 RenderTarget2D target = active ? targets[0] : targets[1];
-
-                sb.Draw(target, bounds, null, Color.White, rotationRadians, bounds.Size.ToVector2() / 2/*Vector2.Zero*/, SpriteEffects.None, 0);
+                sb.Draw(target, drawBounds, null, Color.White, rotationRadians, bounds.Size.ToVector2() / 2, SpriteEffects.None, 0);
             }
             else
             {
@@ -131,7 +157,7 @@ namespace IdleCollector
                 {
                     int i = textures.Length == 1 ? 0 : !active ? 0 : 1;
                     Texture2D texture = textures[i];
-                    sb.Draw(texture, bounds, Color.White);
+                    sb.Draw(texture, drawBounds, Color.White);
                 }
 
                 if (customTexts != null)
@@ -142,11 +168,13 @@ namespace IdleCollector
                     text.Draw();
                 }
             }
-
         }
 
         public void DrawRotated(SpriteBatch sb)
         {
+            // Check for when not rotated
+            if (rotationRadians == 0) return;
+
             RenderTarget2D target = active ? targets[0] : targets[1];
             sb.GraphicsDevice.SetRenderTarget(target);
             sb.GraphicsDevice.Clear(Color.Transparent);
@@ -178,21 +206,29 @@ namespace IdleCollector
 
         public void StandardUpdate(GameTime gameTime)
         {
+            scaleSpring.Update();
+            scaleSpring.RestPosition = 1;
+
+            rotSpring.Update();
+            rotSpring.RestPosition = config.rotationRadians;
+            rotationRadians = rotSpring.Position;
+
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
 
             Vector2 pos = usingWorldCoord ? Input.GetMousePos().ToVector2() : (Input.GetMouseScreenPos() * Renderer.UIScaler).ToVector2();
 
-            if (rotationRadians != 0)
-            {
-                if (!CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, pos, -bounds.Size.ToVector2() / 2)) return;
-            }
-            else
-            {
-                if (!bounds.Contains(pos)) return;
-            }
+            bool isHovered = rotationRadians != 0
+                ? CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, pos, -bounds.Size.ToVector2() / 2)
+                : bounds.Contains(pos);
 
-            sound?.Play();
+            if (!isHovered) return;
+
+            OnHover?.Invoke();
+
+            // Play sound on first hover
+            if (!active)
+                sound?.Play();
 
             if (timeDelta < timer) return;
 
