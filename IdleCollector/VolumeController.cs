@@ -15,6 +15,7 @@ namespace IdleCollector
     internal class VolumeController
     {
         public delegate void OnVolumeChange(float volume);
+        public delegate void OnMute(bool mute);
 
         private static VolumeController instance;
         public static VolumeController Instance
@@ -30,6 +31,8 @@ namespace IdleCollector
 
         public float MasterVolume { get; set; }
 
+        public event OnMute MutedEvent;
+        public bool IsMuted { get; set; }
         public event OnVolumeChange MasterVolumeEvent;
         public float SoundEffectVolume { get; set; }
         public event OnVolumeChange SoundEffectVolumeEvent;
@@ -89,6 +92,15 @@ namespace IdleCollector
             PropertyInfo property = type.GetProperty(volumeName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
             return (float)property.GetValue(this);
+        }
+
+        public bool ToggleMute()
+        {
+            IsMuted = !IsMuted;
+
+            Save();
+
+            return IsMuted;
         }
     }
 }

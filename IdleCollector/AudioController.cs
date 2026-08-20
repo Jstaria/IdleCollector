@@ -37,11 +37,12 @@ namespace IdleCollector
         private float masterVolume;
         private float characterVolume;
         private int queueIndex;
+        private bool isMuted;
 
         private List<SoundEffectInstance> soundEffectInstances;
 
         public bool LoopMusic { get; set; }
-
+        public bool IsMuted { get => isMuted; }
         public void Initialize()
         {
             soundEffects = ResourceAtlas.GetSoundEffects();
@@ -57,6 +58,7 @@ namespace IdleCollector
             VolumeController.Instance.MasterVolumeEvent += ChangeMaster;
             VolumeController.Instance.SoundEffectVolumeEvent += ChangeSoundEffect;
             VolumeController.Instance.CharacterVolumeEvent += ChangeCharacter;
+            VolumeController.Instance.MutedEvent += ChangeMute;
 
             MakeQueue();
 
@@ -69,6 +71,21 @@ namespace IdleCollector
         public void ChangeMaster(float volume) => masterVolume = volume;
         public void ChangeSoundEffect(float volume) => soundEffectVolume = volume;
         public void ChangeCharacter(float volume) => characterVolume = volume;
+        public void ChangeMute(bool mute)
+        {
+            isMuted = mute;
+
+            if (!isMuted) return; 
+
+            MediaPlayer.Stop();
+
+            foreach (SoundEffectInstance sfx in soundEffectInstances)
+            {
+                sfx.Stop();
+            }
+
+            CleanSoundInstances();
+        }
 
         public void ControlledUpdate(GameTime gameTime)
         {
@@ -83,6 +100,8 @@ namespace IdleCollector
 
         public void SlowUpdate(GameTime gameTime)
         {
+            if (IsMuted) return;
+
             PlayNextSong();
 
             MediaPlayer.Volume = musicVolume * masterVolume;

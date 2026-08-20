@@ -62,12 +62,13 @@ namespace IdleCollector
                 },
                 ["Audio"] = new()
                 {
-                    ["Master Volume"] = new Slider(GetButtonConfig("Master", -2f), (value) => { return SetVolume(value, "MasterVolume"); }),
-                    ["Music Volume"] = new Slider(GetButtonConfig("Music", -1.5f), (value) => { return SetVolume(value, "MusicVolume"); }),
-                    ["Sound Effect Volume"] = new Slider(GetButtonConfig("Sound FX", -1f), (value) => { return SetVolume(value, "SoundEffectVolume"); }),
-                    ["Character Volume"] = new Slider(GetButtonConfig("Character", -.5f), (value) => { return SetVolume(value, "CharacterVolume"); }),
-                    ["Ambient Volume"] = new Slider(GetButtonConfig("Ambient", 0f), (value) => { return SetVolume(value, "AmbientVolume"); }),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1f, () => { CallMenu("Main"); NudgeButtonScale("Audio", "Back", -15); }, () => HoverButton("Audio", "Back"))),
+                    ["Master Volume"] = new Slider(GetButtonConfig("Master", -2f), (value) => { return SetVolume(value, "MasterVolume"); }, () => GetVolumeValue("MasterVolume")),
+                    ["Music Volume"] = new Slider(GetButtonConfig("Music", -1.5f), (value) => { return SetVolume(value, "MusicVolume"); }, () => GetVolumeValue("MusicVolume")),
+                    ["Sound Effect Volume"] = new Slider(GetButtonConfig("Sound FX", -1f), (value) => { return SetVolume(value, "SoundEffectVolume"); }, () => GetVolumeValue("SoundEffectVolume")),
+                    ["Character Volume"] = new Slider(GetButtonConfig("Character", -.5f), (value) => { return SetVolume(value, "CharacterVolume"); }, () => GetVolumeValue("CharacterVolume")),
+                    ["Ambient Volume"] = new Slider(GetButtonConfig("Ambient", 0f), (value) => { return SetVolume(value, "AmbientVolume"); }, () => GetVolumeValue("AmbientVolume")),
+                    ["Mute"] = new CheckBox(GetButtonConfig("Mute", .5f/*, () => { NudgeButtonScale("Audio", "Mute", -15); }, () => HoverButton("Audio", "Mute")*/), (value) => { return VolumeController.Instance.ToggleMute(); }, () => { return VolumeController.Instance.IsMuted; }),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1.5f, () => { CallMenu("Main"); NudgeButtonScale("Audio", "Back", -15); }, () => HoverButton("Audio", "Back"))),
                 },
                 ["Display"] = new()
                 {
@@ -79,6 +80,7 @@ namespace IdleCollector
             currentMenu = buttons["Main"];
         }
 
+        #region // Menu Methods ======================================================================
         private async void SceneEnter()
         {
             currentMenu = buttons["Main"];
@@ -182,7 +184,7 @@ namespace IdleCollector
 
         private void HoverButton(string buttonCategory, string button)
         {
-            Button menuButton = ((MenuButton)buttons[buttonCategory][button]).button;
+            Button menuButton = buttons[buttonCategory][button].button;
             menuButton.RotSpring.RestPosition = 0; //menuButton.ButtonConfig.rotationRadians + MathHelper.ToRadians(5);
             menuButton.ScaleSpring.RestPosition = 1.1f;
         }
@@ -198,6 +200,12 @@ namespace IdleCollector
             VolumeController vCon = VolumeController.Instance;
 
             vCon.ChangeVolume(vName, value);
+
+            return GetVolumeValue(vName);
+        }
+        private int GetVolumeValue(string vName)
+        {
+            VolumeController vCon = VolumeController.Instance;
 
             float volume = vCon.GetVolume(vName);
 
@@ -229,12 +237,14 @@ namespace IdleCollector
             return config;
         }
     }
+    #endregion
 
-    #region UI Bits
+    #region // UI Bits ======================================================================
     public abstract class UIContainer
     {
         public Vector2 drawPosition;
         public Spring2D positionSpring;
+        public Button button;
 
         protected List<IRenderable> renderables = new();
 
@@ -255,7 +265,6 @@ namespace IdleCollector
 
     public class MenuButton : UIContainer
     {
-        public Button button;
 
         public MenuButton(ButtonConfig config)
         {
@@ -289,7 +298,6 @@ namespace IdleCollector
         private int sliderWidth = 200, sliderStartX = 0, sliderEndX = 0;
         private int barWidth;
         private int sensitivity = 50;
-        private Button button;
         public delegate int OnSlide(float value);
         public delegate int GetValue();
         private OnSlide slide;
@@ -297,7 +305,7 @@ namespace IdleCollector
         private Vector2 textOffset;
         private Texture2D barTex;
 
-        public Slider(ButtonConfig config, OnSlide slide)
+        public Slider(ButtonConfig config, OnSlide slide, GetValue getValue)
         {
             barTex = ResourceAtlas.GetTexture("bar");
             config.OnClick = GetMouseInput;
@@ -328,7 +336,7 @@ namespace IdleCollector
 
             renderables.Add(button);
 
-            value = slide.Invoke(0);
+            value = getValue.Invoke();
         }
 
         public override void PrevUpdate(GameTime gameTime)
@@ -383,12 +391,85 @@ namespace IdleCollector
         }
     }
 
-    public class CheckBox
+    public class CheckBox : UIContainer
     {
-        public delegate void UpdateBool(bool value);
-        public CheckBox(ButtonConfig config, UpdateBool func)
-        {
+        public delegate bool OnCheck(bool value);
+        public delegate bool GetValue();
 
+        private bool value = false;
+        private ButtonConfig config;
+        private Vector2 textOffset;
+        private Texture2D boxTex;
+        private Texture2D checkTex;
+        private Texture2D shadowTex;
+        public event OnCheck OnBoxCheck;
+
+        public CheckBox(ButtonConfig config, OnCheck onCheck, GetValue getValue)
+        {
+            checkTex = ResourceAtlas.GetTexture("check16x16");
+            boxTex = ResourceAtlas.GetTexture("checkboxThin");
+            shadowTex = ResourceAtlas.GetTexture("dropShadow");
+
+            config.bounds.Height = 20 * Renderer.UIScaler.X;
+            config.OnClick = () => { value = onCheck.Invoke(!value); };
+            ButtonConfig config2 = config;
+            textOffset = -new Vector2(config.bounds.Size.X / 4, 0);
+            config2.textOffset = textOffset;
+            config2.rotationRadians = 0.001f;
+            config2.textures = new[] { ResourceAtlas.GetTexture("board" + RandomHelper.Instance.GetInt(5, 8)) };
+
+            this.config = config;
+            button = new Button(Game1.Instance, config2);
+            buttonPosition = config.bounds.Location.ToVector2();
+            outOfScreen = new Vector2(buttonPosition.X, -200);
+            positionSpring = new Spring2D(20, .65f, outOfScreen);
+            button.Position = outOfScreen;
+            drawPosition = positionSpring.Position;
+            value = getValue.Invoke();
+
+            renderables.Add(button);
+        }
+
+        public override void PrevUpdate(GameTime gameTime)
+        {
+            positionSpring.Update();
+            drawPosition = positionSpring.Position;
+            button.Position = drawPosition;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            button.StandardUpdate(gameTime);
+            positionSpring.Update();
+            drawPosition = positionSpring.Position;
+            button.Position = drawPosition;
+        }
+
+        public override void Draw(SpriteBatch sb)
+        {
+            base.Draw(sb);
+
+            int size = boxTex.Width * Renderer.UIScaler.X;
+
+            Vector2 center = drawPosition + new Vector2(config.bounds.Width * 0.25f, 0);
+
+            Rectangle drawRect = new Rectangle(
+                (center - new Vector2(size * 0.5f)).ToPoint(),
+                new Point(size));
+
+            Rectangle shadowRect = new Rectangle(
+                drawRect.Location + new Point(4, 4),
+                drawRect.Size);
+
+            sb.Draw(boxTex, shadowRect, Color.Black * 0.25f);
+            sb.Draw(boxTex, drawRect, Color.White);
+
+            if (value)
+            {
+                sb.Draw(shadowTex, drawRect, Color.White);
+                sb.Draw(checkTex, shadowRect, Color.Black * 0.25f);
+                sb.Draw(checkTex, drawRect, Color.White);
+            }
         }
     }
     #endregion
