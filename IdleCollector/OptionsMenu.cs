@@ -188,7 +188,10 @@ namespace IdleCollector
         {
             Button menuButton = buttons[buttonCategory][button].button;
             menuButton.RotSpring.RestPosition = 0; //menuButton.ButtonConfig.rotationRadians + MathHelper.ToRadians(5);
-            menuButton.ScaleSpring.RestPosition = 1.10f;
+
+            Spring scaleSpring = menuButton.ScaleSpring;
+            scaleSpring.RestPosition = 1.1f;
+            menuButton.ClampSpringVelocity(scaleSpring);
         }
 
         private void NudgeButtonScale(string buttonCategory, string button, float nudgeValue)
@@ -234,7 +237,7 @@ namespace IdleCollector
             config.rotSpringAngFeq = 40;
             config.rotSpringDampRatio = 1;
             config.scaleSpringAngFeq = 40;
-            config.scaleSpringDampRatio = 1f;
+            config.scaleSpringDampRatio = .375f;
 
             return config;
         }

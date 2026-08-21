@@ -191,10 +191,13 @@ namespace IdleCollector
         {
             scaleSpring.Update();
             scaleSpring.RestPosition = 1;
+            ClampSpringVelocity(scaleSpring);
 
             rotSpring.Update();
             rotSpring.RestPosition = config.rotationRadians;
             rotationRadians = rotSpring.Position;
+            //if (Math.Abs(rotSpring.RestPosition - rotSpring.Position) < .005f)
+            //    rotSpring.Position = rotSpring.RestPosition;
 
             float timeDelta = (float)gameTime.TotalGameTime.TotalSeconds - timeOfLastPress;
             active = false;
@@ -262,6 +265,18 @@ namespace IdleCollector
                 bounds.X + bounds.Width / 2 - textLength.X / 2,
                 bounds.Y + bounds.Height / 2 - textLength.Y / 2
             );
+        }
+
+        public void ClampSpringVelocity(Spring spring)
+        {
+            float pixelScaleThreshold = 0.5f / Math.Max(bounds.Width, bounds.Height);
+
+            if (Math.Abs(spring.RestPosition - spring.Position) <= pixelScaleThreshold &&
+                Math.Abs(spring.Velocity) <= 0.1f)
+            {
+                spring.Position = spring.RestPosition;
+                spring.Velocity = 0f;
+            }
         }
     }
 }

@@ -364,5 +364,11 @@ namespace IdleEngine
 
             return tempTexture;
         }
+
+        public static void UpdateScreenSize(Point screenSize)
+        {
+            if (screenSize.X > 0 && screenSize.Y > 0)
+                ScreenSize = screenSize;
+        }
     }
 }

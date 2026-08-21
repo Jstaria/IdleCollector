@@ -25,11 +25,18 @@ namespace IdleCollector
         public static string MainScene = "Main Scene";
         public static float time;
 
+        private bool _adjustingWindowSize;
+        private Point _lastClientSize;
+
         public Game1()
         {
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnClientSizeChanged;
+            Window.ClientSizeChanged += (_, _) => Renderer.UpdateScreenSize(Window.ClientBounds.Size);
+
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1440;
-            _graphics.PreferredBackBufferHeight = 810;
+            _graphics.PreferredBackBufferWidth = 1920 / 2;
+            _graphics.PreferredBackBufferHeight = 1080 / 2;
             _graphics.SynchronizeWithVerticalRetrace = true;
             _graphics.IsFullScreen = false;
             _graphics.HardwareModeSwitch = false;
@@ -45,13 +52,73 @@ namespace IdleCollector
 
             Instance = this;
 
+            Renderer.UpdateScreenSize(GraphicsDevice.Viewport.Bounds.Size);
+            _lastClientSize = new Point(
+                _graphics.PreferredBackBufferWidth,
+                _graphics.PreferredBackBufferHeight);
+
             SceneManager.Initialize(MainScene, _graphics, new Point(240 * 2, 135 * 2));
             Drawing.Initialize(_spriteBatch);
 
-            FileIO.InDebug = false;
+            FileIO.InDebug = true;
 
             base.Initialize();
         }
+
+        #region Helper
+        private void OnClientSizeChanged(object? sender, EventArgs e)
+        {
+            Point size = Window.ClientBounds.Size;
+            if (size.X <= 0 || size.Y <= 0)
+                return;
+
+            if (_adjustingWindowSize)
+            {
+                _lastClientSize = size;
+                return;
+            }
+
+            if (_lastClientSize == Point.Zero)
+            {
+                _lastClientSize = size;
+                return;
+            }
+
+            int widthChange = Math.Abs(size.X - _lastClientSize.X);
+            int heightChange = Math.Abs(size.Y - _lastClientSize.Y);
+
+            int width;
+            int height;
+
+            if (widthChange >= heightChange)
+            {
+                width = size.X;
+                height = (int)Math.Round(width * 9f / 16f);
+            }
+            else
+            {
+                height = size.Y;
+                width = (int)Math.Round(height * 16f / 9f);
+            }
+
+            _lastClientSize = new Point(width, height);
+
+            if (size == _lastClientSize)
+                return;
+
+            _adjustingWindowSize = true;
+            try
+            {
+                _graphics.PreferredBackBufferWidth = width;
+                _graphics.PreferredBackBufferHeight = height;
+                _graphics.ApplyChanges();
+            }
+            finally
+            {
+                _adjustingWindowSize = false;
+            }
+        }
+        #endregion
 
         #region Load
 
@@ -83,7 +150,7 @@ namespace IdleCollector
             ButtonConfig config = new ButtonConfig();
             config.bounds = new Rectangle(10 * Renderer.UIScaler.X, 50 * Renderer.UIScaler.Y, 192 * Renderer.UIScaler.X, 64 * Renderer.UIScaler.Y);
             config.textures = new[] { ResourceAtlas.GetTexture("newGame"), ResourceAtlas.GetTexture("newGameH") };
-            config.rotationRadians = 0 ;//MathHelper.PiOver4;
+            config.rotationRadians = 0;//MathHelper.PiOver4;
 
             button = new Button(Game1.Instance, config);
             button.OnClick += () =>
@@ -101,7 +168,7 @@ namespace IdleCollector
 
         protected void LoadEffects()
         {
-            
+
         }
 
         #endregion
@@ -124,7 +191,7 @@ namespace IdleCollector
             //_spriteBatch.Draw(online, new Vector2(500, 100), Color.White);
             _spriteBatch.End();
 
-            
+
 
             base.Draw(gameTime);
         }

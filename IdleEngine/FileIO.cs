@@ -264,12 +264,22 @@ namespace IdleCollector
         public static void WriteJsonTo<T>(T instance, string path, Formatting format)
         {
             string json = JsonConvert.SerializeObject(instance, format);
+            string jsonPath = path + ".json";
 
-            File.WriteAllText(path + ".json", json);
+            string directory = Path.GetDirectoryName(jsonPath);
+            if (!String.IsNullOrEmpty(directory))
+                Directory.CreateDirectory(directory);
+
+            File.WriteAllText(jsonPath, json);
 
             if (InDebug)
             {
-                File.WriteAllText("../../../" + path + ".json", json);
+                string debugJsonPath = Path.Combine("..", "..", "..", jsonPath);
+                string debugDirectory = Path.GetDirectoryName(debugJsonPath);
+                if (!String.IsNullOrEmpty(debugDirectory))
+                    Directory.CreateDirectory(debugDirectory);
+
+                File.WriteAllText(debugJsonPath, json);
             }
         }
     }
