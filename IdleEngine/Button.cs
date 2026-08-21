@@ -35,6 +35,7 @@ namespace IdleCollector
         public OnButtonHover OnHover;
         public OnButtonClick OnClick;
         public OnButtonClickString OnClickString;
+        public Renderer.OnDraw OnDrawButton;
         public bool useWorldCoord;
         public float rotSpringAngFeq, rotSpringDampRatio;
         public float scaleSpringAngFeq, scaleSpringDampRatio;
@@ -79,6 +80,7 @@ namespace IdleCollector
         public event OnButtonHover OnHover;
         public event OnButtonClick OnClick;
         public event OnButtonClickString OnClickString;
+        public event Renderer.OnDraw OnDrawButton;
 
         /// <summary>
         /// Button Class
@@ -90,6 +92,7 @@ namespace IdleCollector
             OnHover = config.OnHover;
             OnClick = config.OnClick;
             OnClickString = config.OnClickString;
+            OnDrawButton = config.OnDrawButton;
 
             this.rotationRadians = rotationRadians;
             this.textures = textures;
@@ -146,35 +149,13 @@ namespace IdleCollector
             drawBounds.Size = newSize.ToPoint();
             drawBounds.Location = (center - newSize / 2).ToPoint();
 
-            if (rotationRadians != 0)
-            {
-                RenderTarget2D target = active ? targets[0] : targets[1];
-                sb.Draw(target, drawBounds, null, Color.White, rotationRadians, bounds.Size.ToVector2() / 2, SpriteEffects.None, 0);
-            }
-            else
-            {
-                if (textures != null)
-                {
-                    int i = textures.Length == 1 ? 0 : !active ? 0 : 1;
-                    Texture2D texture = textures[i];
-                    sb.Draw(texture, drawBounds, Color.White);
-                }
-
-                if (customTexts != null)
-                {
-                    int i = customTexts.Length == 1 ? 0 : !active ? 0 : 1;
-                    CustomText text = customTexts[i];
-                    text.Update(1 / 60.0f);
-                    text.Draw();
-                }
-            }
+            RenderTarget2D target = active ? targets[0] : targets[1];
+            Vector2 origin = rotationRadians == 0 ? Vector2.Zero : bounds.Size.ToVector2() / 2;
+            sb.Draw(target, drawBounds, null, Color.White, rotationRadians, origin, SpriteEffects.None, 0);
         }
 
-        public void DrawRotated(SpriteBatch sb)
+        public void DrawRT(SpriteBatch sb)
         {
-            // Check for when not rotated
-            if (rotationRadians == 0) return;
-
             RenderTarget2D target = active ? targets[0] : targets[1];
             sb.GraphicsDevice.SetRenderTarget(target);
             sb.GraphicsDevice.Clear(Color.Transparent);
@@ -199,6 +180,8 @@ namespace IdleCollector
                 text.Draw();
                 text.Position = tempPosition;
             }
+
+            OnDrawButton?.Invoke(sb);
 
             sb.End();
             sb.GraphicsDevice.SetRenderTarget(null);
@@ -263,7 +246,7 @@ namespace IdleCollector
                 new RenderTarget2D(gameInst.GraphicsDevice, bounds.Size.X, bounds.Size.Y)
             ];
 
-            Renderer.AddToDrawRT(DrawRotated);
+            Renderer.AddToDrawRT(DrawRT);
         }
 
         private void UpdateTextPositions()

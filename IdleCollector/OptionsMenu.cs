@@ -52,13 +52,15 @@ namespace IdleCollector
 
         private void CreateButtons()
         {
+            float nudgeValue = -10f;
+
             buttons = new()
             {
                 ["Main"] = new()
                 {
-                    ["Audio"] = new MenuButton(GetButtonConfig("Audio", -1, () => { CallMenu("Audio"); NudgeButtonScale("Main", "Audio", -15f); }, () => HoverButton("Main", "Audio"))),
-                    ["Display"] = new MenuButton(GetButtonConfig("Display", 0, () => { CallMenu("Display"); NudgeButtonScale("Main", "Display", -15f); }, () => HoverButton("Main", "Display"))),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1, () => { RequestExit(); NudgeButtonScale("Main", "Back", -15); }, () => HoverButton("Main", "Back"))),
+                    ["Audio"] = new MenuButton(GetButtonConfig("Audio", -1, () => { CallMenu("Audio"); NudgeButtonScale("Main", "Audio", nudgeValue); }, () => HoverButton("Main", "Audio"))),
+                    ["Display"] = new MenuButton(GetButtonConfig("Display", 0, () => { CallMenu("Display"); NudgeButtonScale("Main", "Display", nudgeValue); }, () => HoverButton("Main", "Display"))),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1, () => { RequestExit(); NudgeButtonScale("Main", "Back", nudgeValue); }, () => HoverButton("Main", "Back"))),
                 },
                 ["Audio"] = new()
                 {
@@ -67,13 +69,13 @@ namespace IdleCollector
                     ["Sound Effect Volume"] = new Slider(GetButtonConfig("Sound FX", -1f), (value) => { return SetVolume(value, "SoundEffectVolume"); }, () => GetVolumeValue("SoundEffectVolume")),
                     ["Character Volume"] = new Slider(GetButtonConfig("Character", -.5f), (value) => { return SetVolume(value, "CharacterVolume"); }, () => GetVolumeValue("CharacterVolume")),
                     ["Ambient Volume"] = new Slider(GetButtonConfig("Ambient", 0f), (value) => { return SetVolume(value, "AmbientVolume"); }, () => GetVolumeValue("AmbientVolume")),
-                    ["Mute"] = new CheckBox(GetButtonConfig("Mute", .5f/*, () => { NudgeButtonScale("Audio", "Mute", -15); }, () => HoverButton("Audio", "Mute")*/), (value) => { return VolumeController.Instance.ToggleMute(); }, () => { return VolumeController.Instance.IsMuted; }),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1.5f, () => { CallMenu("Main"); NudgeButtonScale("Audio", "Back", -15); }, () => HoverButton("Audio", "Back"))),
+                    ["Mute"] = new CheckBox(GetButtonConfig("Mute", .5f, () => { NudgeButtonScale("Audio", "Mute", nudgeValue); }, () => HoverButton("Audio", "Mute")), (value) => { return VolumeController.Instance.ToggleMute(); }, () => { return VolumeController.Instance.IsMuted; }),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1.5f, () => { CallMenu("Main"); NudgeButtonScale("Audio", "Back", nudgeValue); }, () => HoverButton("Audio", "Back"))),
                 },
                 ["Display"] = new()
                 {
-                    ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Display Test"); NudgeButtonScale("Display", "Test", -15); }, () => HoverButton("Display", "Test"))),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => { CallMenu("Main"); NudgeButtonScale("Display", "Back", -15); }, () => HoverButton("Display", "Back"))),
+                    ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Display Test"); NudgeButtonScale("Display", "Test", nudgeValue); }, () => HoverButton("Display", "Test"))),
+                    ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => { CallMenu("Main"); NudgeButtonScale("Display", "Back", nudgeValue); }, () => HoverButton("Display", "Back"))),
                 },
             };
 
@@ -186,12 +188,12 @@ namespace IdleCollector
         {
             Button menuButton = buttons[buttonCategory][button].button;
             menuButton.RotSpring.RestPosition = 0; //menuButton.ButtonConfig.rotationRadians + MathHelper.ToRadians(5);
-            menuButton.ScaleSpring.RestPosition = 1.1f;
+            menuButton.ScaleSpring.RestPosition = 1.10f;
         }
 
         private void NudgeButtonScale(string buttonCategory, string button, float nudgeValue)
         {
-            Button menuButton = ((MenuButton)buttons[buttonCategory][button]).button;
+            Button menuButton = buttons[buttonCategory][button].button;
             menuButton.ScaleSpring.Nudge(nudgeValue);
         }
 
@@ -307,9 +309,10 @@ namespace IdleCollector
 
         public Slider(ButtonConfig config, OnSlide slide, GetValue getValue)
         {
-            barTex = ResourceAtlas.GetTexture("bar");
+            barTex = ResourceAtlas.GetTexture("bar1");
             config.OnClick = GetMouseInput;
             config.bounds.Height = 20 * Renderer.UIScaler.X;
+            config.OnDrawButton = DrawSlider;
 
             ButtonConfig config2 = config;
             textOffset = -new Vector2(config.bounds.Size.X / 4, 0);
@@ -354,11 +357,10 @@ namespace IdleCollector
             button.Position = drawPosition;
         }
 
-        public override void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb) => base.Draw(sb);
+        private void DrawSlider(SpriteBatch sb)
         {
-            base.Draw(sb);
-
-            Vector2 pos = drawPosition + new Vector2(0, -config.bounds.Height / 4);
+            Vector2 pos = new Vector2(config.bounds.Width / 2, config.bounds.Height / 4);
 
             sensitivity = (int)(barWidth * .75f);
 
@@ -411,7 +413,9 @@ namespace IdleCollector
             shadowTex = ResourceAtlas.GetTexture("dropShadow");
 
             config.bounds.Height = 20 * Renderer.UIScaler.X;
-            config.OnClick = () => { value = onCheck.Invoke(!value); };
+            config.OnClick += () => { value = onCheck.Invoke(!value); };
+            config.OnDrawButton = DrawCheckbox;
+
             ButtonConfig config2 = config;
             textOffset = -new Vector2(config.bounds.Size.X / 4, 0);
             config2.textOffset = textOffset;
@@ -445,20 +449,19 @@ namespace IdleCollector
             button.Position = drawPosition;
         }
 
-        public override void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb) => base.Draw(sb);
+        private void DrawCheckbox(SpriteBatch sb)
         {
-            base.Draw(sb);
-
             int size = boxTex.Width * Renderer.UIScaler.X;
 
-            Vector2 center = drawPosition + new Vector2(config.bounds.Width * 0.25f, 0);
+            Vector2 center = new Vector2(config.bounds.Width * .75f - boxTex.Width / 2, config.bounds.Height / 2);
 
             Rectangle drawRect = new Rectangle(
                 (center - new Vector2(size * 0.5f)).ToPoint(),
                 new Point(size));
 
             Rectangle shadowRect = new Rectangle(
-                drawRect.Location + new Point(4, 4),
+                drawRect.Location + new Point(-6, 6),
                 drawRect.Size);
 
             sb.Draw(boxTex, shadowRect, Color.Black * 0.25f);
