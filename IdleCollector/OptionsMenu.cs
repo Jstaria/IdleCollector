@@ -64,11 +64,11 @@ namespace IdleCollector
                 },
                 ["Audio"] = new()
                 {
-                    ["Master Volume"] = new Slider(GetButtonConfig("Master", -2f), (value) => { return SetVolume(value, "MasterVolume"); }, () => GetVolumeValue("MasterVolume")),
-                    ["Music Volume"] = new Slider(GetButtonConfig("Music", -1.5f), (value) => { return SetVolume(value, "MusicVolume"); }, () => GetVolumeValue("MusicVolume")),
-                    ["Sound Effect Volume"] = new Slider(GetButtonConfig("Sound FX", -1f), (value) => { return SetVolume(value, "SoundEffectVolume"); }, () => GetVolumeValue("SoundEffectVolume")),
-                    ["Character Volume"] = new Slider(GetButtonConfig("Character", -.5f), (value) => { return SetVolume(value, "CharacterVolume"); }, () => GetVolumeValue("CharacterVolume")),
-                    ["Ambient Volume"] = new Slider(GetButtonConfig("Ambient", 0f), (value) => { return SetVolume(value, "AmbientVolume"); }, () => GetVolumeValue("AmbientVolume")),
+                    ["Master Volume"] = new Slider(GetButtonConfig("Master", -2f, null, () => HoverButton("Audio", "Master Volume")), (value) => { return SetVolume(value, "MasterVolume"); }, () => GetVolumeValue("MasterVolume")),
+                    ["Music Volume"] = new Slider(GetButtonConfig("Music", -1.5f, null, () => HoverButton("Audio", "Music Volume")), (value) => { return SetVolume(value, "MusicVolume"); }, () => GetVolumeValue("MusicVolume")),
+                    ["Sound Effect Volume"] = new Slider(GetButtonConfig("Sound FX", -1f, null, () => HoverButton("Audio", "Sound Effect Volume")), (value) => { return SetVolume(value, "SoundEffectVolume"); }, () => GetVolumeValue("SoundEffectVolume")),
+                    ["Character Volume"] = new Slider(GetButtonConfig("Character", -.5f, null, () => HoverButton("Audio", "Character Volume")), (value) => { return SetVolume(value, "CharacterVolume"); }, () => GetVolumeValue("CharacterVolume")),
+                    ["Ambient Volume"] = new Slider(GetButtonConfig("Ambient", 0f, null, () => HoverButton("Audio", "Ambient Volume")), (value) => { return SetVolume(value, "AmbientVolume"); }, () => GetVolumeValue("AmbientVolume")),
                     ["Mute"] = new CheckBox(GetButtonConfig("Mute", .5f, () => { NudgeButtonScale("Audio", "Mute", nudgeValue); }, () => HoverButton("Audio", "Mute")), (value) => { return VolumeController.Instance.ToggleMute(); }, () => { return VolumeController.Instance.IsMuted; }),
                     ["Back"] = new MenuButton(GetButtonConfig("Back", 1.5f, () => { CallMenu("Main"); NudgeButtonScale("Audio", "Back", nudgeValue); }, () => HoverButton("Audio", "Back"))),
                 },
@@ -310,6 +310,8 @@ namespace IdleCollector
         private Vector2 textOffset;
         private Texture2D barTex;
 
+        private int ScaledMouseX => (int)(Input.GetMouseScreenPos().X + (barWidth / 4) * button.ScaleSpring.Position * 2);
+
         public Slider(ButtonConfig config, OnSlide slide, GetValue getValue)
         {
             barTex = ResourceAtlas.GetTexture("bar1");
@@ -350,6 +352,7 @@ namespace IdleCollector
             positionSpring.Update();
             drawPosition = positionSpring.Position;
             button.Position = drawPosition;
+            UpdateSliderBounds();
         }
 
         public override void Update(GameTime gameTime)
@@ -358,6 +361,7 @@ namespace IdleCollector
             positionSpring.Update();
             drawPosition = positionSpring.Position;
             button.Position = drawPosition;
+            UpdateSliderBounds();
         }
 
         public override void Draw(SpriteBatch sb) => base.Draw(sb);
@@ -378,21 +382,26 @@ namespace IdleCollector
 
         private async void GetMouseInput()
         {
-            int mouseX = Input.GetMouseScreenPos().X + barWidth / 4;
+            int mouseX = ScaledMouseX;
 
             if (mouseX < sliderStartX || mouseX > sliderEndX) return;
 
             while (Input.IsLeftButtonDown())
             {
-                int xDistance = MathHelper.Max(mouseX - sliderStartX, 0);
-                int totalSliderWidth = sliderEndX - sliderStartX;
-                float ratio = (float)xDistance / (float)totalSliderWidth;
+                float xDistance = MathHelper.Max(mouseX - sliderStartX, 0);
+                float totalSliderWidth = sliderEndX  - sliderStartX;
+                float ratio = xDistance / totalSliderWidth;
 
-                mouseX = Input.GetMouseScreenPos().X + barWidth / 4;
+                mouseX = ScaledMouseX;
                 value = slide.Invoke(ratio);
 
                 await Task.Delay(1);
             }
+        }
+
+        private void UpdateSliderBounds()
+        {
+            sliderEndX = sliderStartX + (int)((barWidth + 4) * MenuData.divisions / Renderer.UIScaler.X * button.ScaleSpring.Position);
         }
     }
 

@@ -47,6 +47,7 @@ namespace IdleCollector
         private Texture2D[] textures;
         private SpriteFont font;
         private Rectangle bounds;
+        private Rectangle drawBounds;
         private string[] texts;
         private CustomText[] customTexts;
         private string textParticle;
@@ -65,6 +66,7 @@ namespace IdleCollector
         public ButtonConfig ButtonConfig { get => config; }
         public Spring RotSpring { get => rotSpring; set => rotSpring = value; }
         public Spring ScaleSpring { get => scaleSpring; set => scaleSpring = value; }
+        public Rectangle DrawBounds => drawBounds;
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
         public Vector2 Position
@@ -140,14 +142,7 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
-            Rectangle drawBounds = this.bounds; // renamed to avoid confusion with the field
-
-            Vector2 originalSize = this.bounds.Size.ToVector2();
-            Vector2 newSize = originalSize * scaleSpring.Position;
-            Vector2 center = Position + newSize / 2;
-
-            drawBounds.Size = newSize.ToPoint();
-            drawBounds.Location = (center - newSize / 2).ToPoint();
+            UpdateDrawBounds();
 
             RenderTarget2D target = active ? targets[0] : targets[1];
             Vector2 origin = rotationRadians == 0 ? Vector2.Zero : bounds.Size.ToVector2() / 2;
@@ -192,6 +187,7 @@ namespace IdleCollector
             scaleSpring.Update();
             scaleSpring.RestPosition = 1;
             ClampSpringVelocity(scaleSpring);
+            UpdateDrawBounds();
 
             rotSpring.Update();
             rotSpring.RestPosition = config.rotationRadians;
@@ -205,8 +201,8 @@ namespace IdleCollector
             Vector2 pos = usingWorldCoord ? Input.GetMousePos().ToVector2() : (Input.GetMouseScreenPos() * Renderer.UIScaler).ToVector2();
 
             bool isHovered = rotationRadians != 0
-                ? CollisionHelper.GetRotRectIntersect(bounds, rotationRadians, pos, -bounds.Size.ToVector2() / 2)
-                : bounds.Contains(pos);
+                ? CollisionHelper.GetRotRectIntersect(drawBounds, rotationRadians, pos, -drawBounds.Size.ToVector2() / 2)
+                : drawBounds.Contains(pos);
 
             if (!isHovered) return;
 
@@ -265,6 +261,12 @@ namespace IdleCollector
                 bounds.X + bounds.Width / 2 - textLength.X / 2,
                 bounds.Y + bounds.Height / 2 - textLength.Y / 2
             );
+        }
+
+        private void UpdateDrawBounds()
+        {
+            drawBounds = bounds;
+            drawBounds.Size = (bounds.Size.ToVector2() * scaleSpring.Position).ToPoint();
         }
 
         public void ClampSpringVelocity(Spring spring)
