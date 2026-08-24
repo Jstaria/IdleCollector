@@ -103,7 +103,7 @@ namespace IdleEngine
                 depthStencilState: renderTexConfig.depthStencilState,
                 rasterizerState: renderTexConfig.rasterizerState,
                 effect: renderTexConfig.effect,
-                transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
+                transformMatrix: renderTexConfig.transformMatrix
                 );
 
         public static void ResetBeginDrawEffect(SpriteBatch sb, Effect effect) => sb.Begin(

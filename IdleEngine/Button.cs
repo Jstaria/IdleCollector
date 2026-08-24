@@ -74,8 +74,8 @@ namespace IdleCollector
             get => bounds.Location.ToVector2(); set
             {
                 bounds.Location = value.ToPoint();
-                if (texts != null)
-                    UpdateTextPositions();
+                //if (texts != null)
+                    //UpdateTextPositions();
             }
         }
 
@@ -111,13 +111,13 @@ namespace IdleCollector
                 Vector2 textLength = font.MeasureString(this.texts[0]);
                 textPositions = new Vector2[2];
                 textPositions[0] = new Vector2(
-                    bounds.X + bounds.Width / 2 - textLength.X / 2,
-                    bounds.Y + bounds.Height / 2 - textLength.Y / 2
+                    bounds.Width / 2 - textLength.X / 2,
+                    bounds.Height / 2 - textLength.Y / 2
                 );
                 textLength = texts.Length == 1 ? textLength : font.MeasureString(this.texts[1]);
                 textPositions[1] = new Vector2(
-                    bounds.X + bounds.Width / 2 - textLength.X / 2,
-                    bounds.Y + bounds.Height / 2 - textLength.Y / 2
+                    bounds.Width / 2 - textLength.X / 2,
+                    bounds.Height / 2 - textLength.Y / 2
                 );
 
                 this.customTexts = new CustomText[2];
@@ -168,12 +168,7 @@ namespace IdleCollector
 
                 CustomText text = customTexts[i];
                 text.Update(1 / 60.0f);
-
-                Vector2 tempPosition = new Vector2(text.Position.X, text.Position.Y);
-
-                text.Position = textPositions[i] - bounds.Location.ToVector2();
                 text.Draw();
-                text.Position = tempPosition;
             }
 
             OnDrawButton?.Invoke(sb);

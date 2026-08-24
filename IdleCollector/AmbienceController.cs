@@ -1,6 +1,7 @@
 ﻿using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace IdleCollector
 
         private float masterVolume;
         private float ambientVolume;
+        private bool isMuted;
 
         private static AmbienceController instance;
         public static AmbienceController Instance
@@ -41,9 +43,11 @@ namespace IdleCollector
 
             ambientVolume = VolumeController.Instance.AmbientVolume;
             masterVolume = VolumeController.Instance.MasterVolume;
+            isMuted = VolumeController.Instance.IsMuted;
 
             VolumeController.Instance.AmbientVolumeEvent += AmbientVolume;
             VolumeController.Instance.MasterVolumeEvent += MasterVolume;
+            VolumeController.Instance.MutedEvent += ChangeMute;
 
             sounds = ResourceAtlas.GetSoundEffects();
         }
@@ -97,6 +101,8 @@ namespace IdleCollector
 
         public void PlayContAmbience()
         {
+            if (isMuted) return;
+
             KillAmbience();
             
             continuousAmbiences.Clear();
@@ -110,6 +116,28 @@ namespace IdleCollector
 
                 continuousAmbiences.Add(cont, instance);
             }
+        }
+
+        public void ChangeMute(bool mute)
+        {
+            if (!mute)
+            {
+                if (!mute)
+                PlayContAmbience();
+            }
+
+            isMuted = mute;
+
+            if (!isMuted) return;
+
+            MediaPlayer.Pause();
+
+            foreach (SoundEffectInstance sfx in continuousAmbiences.Values)
+            {
+                sfx.Stop();
+            }
+
+            KillAmbience();
         }
     }
 }

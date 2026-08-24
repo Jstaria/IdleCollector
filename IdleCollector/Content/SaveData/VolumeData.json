@@ -1,8 +1,8 @@
 {
-  "MasterVolume": 0.6142857,
-  "IsMuted": true,
+  "MasterVolume": 0.84415585,
+  "IsMuted": false,
   "SoundEffectVolume": 0.8857143,
-  "MusicVolume": 0.27142859,
+  "MusicVolume": 0.72727275,
   "CharacterVolume": 0.71428573,
-  "AmbientVolume": 0.37142858
+  "AmbientVolume": 1.0
 }

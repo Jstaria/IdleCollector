@@ -68,11 +68,6 @@
     <ProjectReference Include="..\SkillTreeCreationTool\SkillTreeCreationTool.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="IdleEngine">
-      <HintPath>..\IdleEngine\obj\Release\net8.0\IdleEngine.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <None Update="Content\Audio\imagefilm-043-by-sascha-ende-from-filmmusic-io.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -424,8 +424,10 @@ namespace IdleCollector
             boxTex = ResourceAtlas.GetTexture("checkboxThin");
             shadowTex = ResourceAtlas.GetTexture("dropShadow");
 
+            OnBoxCheck = onCheck;
+
             config.bounds.Height = 20 * Renderer.UIScaler.X;
-            config.OnClick += () => { value = onCheck.Invoke(!value); };
+            config.OnClick += () => { value = OnBoxCheck.Invoke(!value); };
             config.OnDrawButton = DrawCheckbox;
 
             ButtonConfig config2 = config;

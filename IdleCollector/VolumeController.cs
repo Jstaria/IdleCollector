@@ -97,6 +97,9 @@ namespace IdleCollector
         public bool ToggleMute()
         {
             IsMuted = !IsMuted;
+            MutedEvent?.Invoke(IsMuted);
+
+            Console.WriteLine("Is {0}Muted", IsMuted ? "" : "Not ");
 
             Save();
 

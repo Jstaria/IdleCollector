@@ -53,6 +53,7 @@ namespace IdleCollector
             soundEffectVolume = VolumeController.Instance.SoundEffectVolume;
             characterVolume = VolumeController.Instance.CharacterVolume;
             masterVolume = VolumeController.Instance.MasterVolume;
+            isMuted = VolumeController.Instance.IsMuted;
 
             VolumeController.Instance.MusicVolumeEvent += ChangeMusic;
             VolumeController.Instance.MasterVolumeEvent += ChangeMaster;
@@ -61,6 +62,8 @@ namespace IdleCollector
             VolumeController.Instance.MutedEvent += ChangeMute;
 
             MakeQueue();
+
+            if (IsMuted) return;
 
             playingSong = queue[0];
             MediaPlayer.Play(playingSong);
@@ -73,11 +76,13 @@ namespace IdleCollector
         public void ChangeCharacter(float volume) => characterVolume = volume;
         public void ChangeMute(bool mute)
         {
+            if (!mute) MediaPlayer.Resume();
+
             isMuted = mute;
 
             if (!isMuted) return; 
 
-            MediaPlayer.Stop();
+            MediaPlayer.Pause();
 
             foreach (SoundEffectInstance sfx in soundEffectInstances)
             {
@@ -112,6 +117,7 @@ namespace IdleCollector
         #region Music
         private void PlayNextSong()
         {
+            if (IsMuted) return;
             if (MediaPlayer.State == MediaState.Playing) return;
 
             int index = (queueIndex + 1);
@@ -147,6 +153,7 @@ namespace IdleCollector
         #region Sound Effect
         public void PlaySoundEffect(string name, string volumeType, float pitch)
         {
+            if (IsMuted) return;
             if (soundEffectInstances.Count > 128) return;
 
             SoundEffectInstance effectInstance = soundEffects[name].CreateInstance();
