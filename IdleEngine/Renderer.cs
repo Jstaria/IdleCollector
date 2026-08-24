@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace IdleEngine
 
         private static BatchConfig renderTexConfig;
         private static List<BatchConfig> processes;
+        private static List<PostProcess> postProcesses;
 
         private static GraphicsDeviceManager _graphics;
 
@@ -46,18 +48,20 @@ namespace IdleEngine
                 return (corner + direction / CurrentCamera.Zoom).ToPoint();
             }
         }
-        public static Point RenderSize {  get; private set; }
+        public static Point RenderSize { get; private set; }
         public static Point ScreenSize { get; private set; }
         public static Camera CurrentCamera { get; set; }
         public static Rectangle CameraBounds { get { return new Rectangle(TopLeftCorner, RenderSize); } }
-        public static Rectangle ScaledCameraBounds { 
-            get { 
+        public static Rectangle ScaledCameraBounds
+        {
+            get
+            {
                 Vector2 center = CameraBounds.Center.ToVector2();
                 Vector2 scaledCorner = ScaledTopLeftCorner.ToVector2();
                 Vector2 halfSize = center - scaledCorner;
                 Point scaledSize = (halfSize * 2).ToPoint();
-                return new Rectangle(ScaledTopLeftCorner, scaledSize); 
-            } 
+                return new Rectangle(ScaledTopLeftCorner, scaledSize);
+            }
         }
         public static Rectangle UIBounds => new Rectangle(0, 0, 1920, 1080);
         public static Point UIScaler => new Point(UIBounds.Width / RenderSize.X, UIBounds.Height / RenderSize.Y);
@@ -68,11 +72,12 @@ namespace IdleEngine
             DrawEvents = new();
             UIDrawEvents = new();
             processes = new List<BatchConfig>();
+            postProcesses = new List<PostProcess>();
 
             _graphics = deviceManager;
 
             RenderSize = renderSize;
-            ScreenSize = _graphics.IsFullScreen ? 
+            ScreenSize = _graphics.IsFullScreen ?
                 new Point(_graphics.GraphicsDevice.DisplayMode.Width, _graphics.GraphicsDevice.DisplayMode.Height) :
                 new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             renderTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
@@ -94,6 +99,13 @@ namespace IdleEngine
         }
 
         public static void AddEffectPass(BatchConfig process) => processes.Add(process);
+        public static void AddPostProcess(PostProcess postProcess)
+        {
+            if (postProcess == null)
+                throw new ArgumentNullException(nameof(postProcess));
+
+            postProcesses.Add(postProcess);
+        }
         public static void ResetRenderTargetUI(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(uiTexture);
         public static void ResetRenderTarget(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(renderTexture);
         public static void ResetBeginDraw(SpriteBatch sb) => sb.Begin(
@@ -113,7 +125,7 @@ namespace IdleEngine
                 depthStencilState: renderTexConfig.depthStencilState,
                 rasterizerState: renderTexConfig.rasterizerState,
                 effect: effect,
-                transformMatrix: CurrentCamera != null ? CurrentCamera.Transform : renderTexConfig.transformMatrix
+                transformMatrix: renderTexConfig.transformMatrix
                 );
 
         public static void DrawToRenderTargets(SpriteBatch sb)
@@ -142,11 +154,6 @@ namespace IdleEngine
 
             sb.GraphicsDevice.SetRenderTarget(null);
 
-            for (int i = 0; i < processes.Count; i++)
-            {
-                ApplyEffectValues(processes[i], sb);
-            }
-
             sb.GraphicsDevice.SetRenderTarget(uiTexture);
             sb.Begin(
                 blendState: renderTexConfig.blendState,
@@ -163,6 +170,11 @@ namespace IdleEngine
             IndependentUIDrawEvent?.Invoke(sb);
             sb.End();
             sb.GraphicsDevice.SetRenderTarget(null);
+
+            for (int i = 0; i < processes.Count; i++)
+            {
+                postProcesses[i].Draw(sb, ref uiTexture);
+            }
         }
 
         private static void ApplyEffectValues(BatchConfig process, SpriteBatch sb)
