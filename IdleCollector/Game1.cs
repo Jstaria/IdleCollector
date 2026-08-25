@@ -36,8 +36,8 @@ namespace IdleCollector
             Window.ClientSizeChanged += (_, _) => Renderer.UpdateScreenSize(Window.ClientBounds.Size);
 
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1920 / 2;
-            _graphics.PreferredBackBufferHeight = 1080 / 2;
+            _graphics.PreferredBackBufferWidth = 1920 / 4;
+            _graphics.PreferredBackBufferHeight = 1080 / 4;
             _graphics.SynchronizeWithVerticalRetrace = true;
             _graphics.IsFullScreen = false;
             _graphics.HardwareModeSwitch = false;
@@ -169,13 +169,7 @@ namespace IdleCollector
 
         protected void LoadEffects()
         {
-            Bloom.BloomConfig bloomConfig = new Bloom.BloomConfig();
-            bloomConfig.bloomStrength = 0f;
-            bloomConfig.bloomThreshold = 0.65f;
-            bloomConfig.spreadStrength = 8;
-            bloomConfig.bloomTint = Color.White;
-
-            Bloom BloomEffect = new Bloom(ResourceAtlas.GetEffect("Bloom"), bloomConfig);
+            Bloom BloomEffect = Bloom.Instance;
 
             Renderer.AddPostProcess(BloomEffect);
         }

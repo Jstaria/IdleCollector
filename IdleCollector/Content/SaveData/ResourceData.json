@@ -8,9 +8,9 @@
       "HasTrail": false,
       "IconTextureKey": "grassIcon",
       "ResourceColor": {
-        "B": 98,
-        "G": 160,
-        "R": 166,
+        "B": 120,
+        "G": 180,
+        "R": 186,
         "A": 255
       }
     },
@@ -37,7 +37,7 @@
       "IconTextureKey": "flowerIcon",
       "ResourceColor": {
         "B": 255,
-        "G": 0,
+        "G": 150,
         "R": 255,
         "A": 255
       }

@@ -32,13 +32,6 @@ float bloomThreshold;
 float bloomStrength;
 float3 bloomTint;
 
-float2 blurOffset;
-float sampleCount;
-
-
-// Must match Bloom.cs.
-#define MAX_BLUR_RADIUS 8
-
 
 // ============================================================
 // EXTRACT
@@ -86,98 +79,6 @@ float4 ExtractPS(VertexShaderOutput input) : COLOR
 
 
 // ============================================================
-// BLUR
-// ============================================================
-//
-// Single-pass box blur.
-//
-// sampleCount controls the radius:
-//
-// 0 = center pixel
-// 1 = -1 to +1
-// 2 = -2 to +2
-// ...
-// 8 = -8 to +8
-//
-// ============================================================
-
-float4 BlurPS(VertexShaderOutput input) : COLOR
-{
-    float2 uv =
-        input.TextureCoordinates;
-
-    float3 total =
-        float3(
-            0,
-            0,
-            0
-        );
-
-    float count = 0;
-
-
-    for (int x = -MAX_BLUR_RADIUS;
-         x <= MAX_BLUR_RADIUS;
-         x++)
-    {
-        for (int y = -MAX_BLUR_RADIUS;
-             y <= MAX_BLUR_RADIUS;
-             y++)
-        {
-            float dist =
-                max(
-                    abs((float) x),
-                    abs((float) y)
-                );
-
-            // Include this sample if it is inside
-            // the requested blur radius.
-            float weight =
-                step(
-                    dist - 0.5,
-                    sampleCount
-                );
-
-
-            float2 sampleUV =
-                uv +
-                float2(
-                    x * blurOffset.x,
-                    y * blurOffset.y
-                );
-
-
-            float4 sampleColor =
-                tex2D(
-                    textureSampler,
-                    sampleUV
-                );
-
-
-            total +=
-                sampleColor.rgb *
-                weight;
-
-            count += weight;
-        }
-    }
-
-
-    total /=
-        max(
-            count,
-            1.0
-        );
-
-
-    return float4(
-        total,
-        1.0
-    );
-}
-
-
-// ============================================================
 // BLOOM COMPOSITE
 // ============================================================
 //
@@ -214,7 +115,6 @@ float4 BloomPS(VertexShaderOutput input) : COLOR
 //
 // C# selects:
 //     effect.Techniques["Extract"]
-//     effect.Techniques["Blur"]
 //     effect.Techniques["Bloom"]
 //
 // ============================================================
@@ -227,18 +127,6 @@ technique Extract
             compile PS_SHADERMODEL ExtractPS();
     }
 }
-
-
-technique Blur
-{
-    pass
-    {
-        PixelShader =
-            compile PS_SHADERMODEL BlurPS();
-    }
-}
-
-
 technique Bloom
 {
     pass

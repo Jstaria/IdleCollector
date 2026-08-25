@@ -215,7 +215,7 @@ namespace IdleCollector
             info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .5f;
             info.HasOutline = true;
             info.OutlineThickness = 4;
-            info.OutlineColor = Color.White * .25f;
+            info.OutlineColor = Color.White;
 
             resources["Grass"].trailInfo = info;
 
@@ -231,7 +231,7 @@ namespace IdleCollector
             info.SegmentsRemovedPerSecond = info.SegmentsPerSecond * .5f;
             info.HasOutline = true;
             info.OutlineThickness = 4;
-            info.OutlineColor = Color.White * .51f;
+            info.OutlineColor = Color.White;
 
             resources["Flower"].trailInfo = info;
         }
