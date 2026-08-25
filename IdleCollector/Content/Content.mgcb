@@ -910,3 +910,8 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/bar2.png
+
+#begin Effects/Bloom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/Bloom.fx

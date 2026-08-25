@@ -104,6 +104,9 @@ namespace IdleEngine
             if (postProcess == null)
                 throw new ArgumentNullException(nameof(postProcess));
 
+            if (postProcesses == null)
+                postProcesses = new List<PostProcess>();
+
             postProcesses.Add(postProcess);
         }
         public static void ResetRenderTargetUI(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(uiTexture);
@@ -171,7 +174,7 @@ namespace IdleEngine
             sb.End();
             sb.GraphicsDevice.SetRenderTarget(null);
 
-            for (int i = 0; i < processes.Count; i++)
+            for (int i = 0; i < postProcesses.Count; i++)
             {
                 postProcesses[i].Draw(sb, ref uiTexture);
             }

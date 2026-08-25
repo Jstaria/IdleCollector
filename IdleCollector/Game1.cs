@@ -1,4 +1,5 @@
 ﻿using IdleEngine;
+using IdleEngine.PostProcesses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -168,7 +169,15 @@ namespace IdleCollector
 
         protected void LoadEffects()
         {
+            Bloom.BloomConfig bloomConfig = new Bloom.BloomConfig();
+            bloomConfig.bloomStrength = 0f;
+            bloomConfig.bloomThreshold = 0.65f;
+            bloomConfig.spreadStrength = 8;
+            bloomConfig.bloomTint = Color.White;
 
+            Bloom BloomEffect = new Bloom(ResourceAtlas.GetEffect("Bloom"), bloomConfig);
+
+            Renderer.AddPostProcess(BloomEffect);
         }
 
         #endregion
