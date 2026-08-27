@@ -215,7 +215,7 @@ namespace IdleCollector
             int posX = 1920 / 2;
 
             Color shadColor = Color.Black * .45f;
-            Color fColor = Color.White;
+            Color fColor = Color.White * 10;
             PauseText = new CustomText(Game1.Instance, "Fonts/DePixelHalbfettTitle", "<fx 0,2,0,0,0>Paused</fx>", new Vector2(posX - (ResourceAtlas.GetFont("DePixelHalbfettTitle").MeasureString("Paused...").X) / 2, posY), new Vector2(1000, 100), color: fColor, padding: new Vector2(30, 30), shadowColor: shadColor);
             PauseText.Refresh();
 
@@ -267,6 +267,8 @@ namespace IdleCollector
 
                 if (isPaused)
                 {
+                    sb.Draw(ResourceAtlas.GetTexture("pauseBlock"), new Rectangle(0, 1080 - 400, 1920, 300), Color.Black * .25f);
+
                     PauseText.Draw();
                     optionsButton.Draw(sb);
                     menuButton.Draw(sb);

@@ -22,6 +22,7 @@ namespace IdleCollector
         private Texture2D shadow;
         private bool wasWalking;
         private int lastWalkingFrameY;
+        private float spawnRingPulseTime;
 
         public Player(Texture2D spriteSheet, Point position, Rectangle bounds, Point frameCount, float frameSpeed)
         {
@@ -49,6 +50,7 @@ namespace IdleCollector
 
         public override void StandardUpdate(GameTime gameTime)
         {
+            spawnRingPulseTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
             walkParticles.StandardUpdate(gameTime);
         }
 
@@ -59,7 +61,8 @@ namespace IdleCollector
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.DrawCircleOutline(Position, spawnRange - 1, spawnRange, Color.White * .35f, .95f);
+            float spawnRingAlpha = .4f + MathF.Sin(spawnRingPulseTime * 4f) * .125f;
+            sb.DrawCircleOutline(Position, spawnRange - 1, spawnRange, Color.White * spawnRingAlpha, .95f);
             sb.DrawCircleCompletion(Position + Vector2.UnitY * 15, 5, prevSpawnTime / (spawnFrequency * 60.0f), Color.White * .65f, .95f);
 
             sb.Draw(spriteSheet, new Rectangle(Position.ToPoint(), Bounds.Size), new Rectangle(64 * CurrentFrame.X, 64 * CurrentFrame.Y, 64, 64), Color.White, 0, Origin, SpriteEffects.None, LayerDepth);

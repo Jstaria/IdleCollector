@@ -17,6 +17,10 @@ namespace IdleCollector
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _fpsFont;
+        private readonly Stopwatch _fpsStopwatch = Stopwatch.StartNew();
+        private int _drawsSinceFpsUpdate;
+        private string _fpsText = "FPS: 0";
 
         public static Game Instance;
 
@@ -44,6 +48,10 @@ namespace IdleCollector
             _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            //IsFixedTimeStep = false;
+            //_graphics.SynchronizeWithVerticalRetrace = false;
+            //_graphics.ApplyChanges();
         }
 
         protected override void Initialize()
@@ -131,6 +139,7 @@ namespace IdleCollector
             ResourceAtlas.LoadSongs(Content, "Content/Audio/", "Audio");
             ResourceAtlas.LoadSoundEffects(Content, "Content/SoundEffects/", "SoundEffects");
             ResourceAtlas.LoadEffects(Content, "Content/Effects/", "Effects");
+            _fpsFont = ResourceAtlas.GetFont("DePixelKlein");
 
             Renderer.AddToSceneDraw((_spriteBatch) => { _spriteBatch.Draw(ResourceAtlas.GetTexture("screen"), new Rectangle(0, 0, 480, 270), Color.White); });
 
@@ -171,7 +180,7 @@ namespace IdleCollector
         {
             Bloom BloomEffect = Bloom.Instance;
 
-            Renderer.AddPostProcess(BloomEffect);
+            Renderer.AddPostProcess("Background", BloomEffect);
         }
 
         #endregion
@@ -186,9 +195,22 @@ namespace IdleCollector
 
         protected override void Draw(GameTime gameTime)
         {
+            _drawsSinceFpsUpdate++;
+            double fpsElapsedSeconds = _fpsStopwatch.Elapsed.TotalSeconds;
+            if (fpsElapsedSeconds >= 0.5)
+            {
+                _fpsText = $"FPS: {(int)Math.Round(_drawsSinceFpsUpdate / fpsElapsedSeconds)}";
+                _drawsSinceFpsUpdate = 0;
+                _fpsStopwatch.Restart();
+            }
+
             Renderer.Draw(_spriteBatch);
 
             _spriteBatch.Begin();
+
+            if (_fpsFont != null)
+                _spriteBatch.DrawString(_fpsFont, _fpsText, new Vector2(6, 6), Color.Black,
+                    0f, Vector2.Zero, .25f, SpriteEffects.None, 0f);
 
             //if (online != null)
             //_spriteBatch.Draw(online, new Vector2(500, 100), Color.White);

@@ -1,4 +1,5 @@
 ﻿using IdleEngine;
+using IdleEngine.PostProcesses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -26,7 +27,7 @@ namespace IdleCollector
         private RandomHelper random;
         private WindManager windManager;
         private ParticleSystem windParticles;
-        private ParticleSystem floraParticles;
+        private ParticleSystem grassSpawnParticles;
 
         private float floraParticleLayerDepth;
         private Vector2 floraParticleSpawnPosition;
@@ -73,7 +74,7 @@ namespace IdleCollector
                 piece.ControlledUpdate(gameTime);
             }
 
-            floraParticles.ControlledUpdate(gameTime);
+            grassSpawnParticles.ControlledUpdate(gameTime);
             windParticles.ControlledUpdate(gameTime);
         }
 
@@ -81,7 +82,7 @@ namespace IdleCollector
         {
             windManager.SlowUpdate(gameTime);
             windParticles.SlowUpdate(gameTime);
-            floraParticles.SlowUpdate(gameTime);
+            grassSpawnParticles.SlowUpdate(gameTime);
 
             if (activeTiles == null) return;
 
@@ -106,7 +107,7 @@ namespace IdleCollector
                 piece.StandardUpdate(gameTime);
             }
 
-            floraParticles.StandardUpdate(gameTime);
+            grassSpawnParticles.StandardUpdate(gameTime);
             windParticles.StandardUpdate(gameTime);
             windParticles.SetParticlesVelocity(-windManager.WindDirection);
         }
@@ -121,11 +122,12 @@ namespace IdleCollector
 
                 if (!piece.Bounds.Intersects(Renderer.ScaledCameraBounds)) continue;
 
+                piece.DrawTile(sb);
                 piece.Draw(sb);
             }
 
             windParticles.Draw(sb);
-            floraParticles.Draw(sb);
+            grassSpawnParticles.Draw(sb);
 
             foreach (Fence fence in fences)
             {
@@ -181,7 +183,7 @@ namespace IdleCollector
                 {
                     floraParticleSpawnPosition = tp.Position;
                     floraParticleLayerDepth = GetLayerDepth(tp.Position.Y + RandomHelper.Instance.GetInt(0, TileSize));
-                    floraParticles.EmitParticles();
+                    grassSpawnParticles.EmitParticles();
                 }
             }
 
@@ -277,20 +279,20 @@ namespace IdleCollector
 
             stats.SpawnBounds = bounds;
             stats.UseRandomBounds = false;
-            stats.ParticleRotation = new float[] { 0 };
-            stats.ParticleRotationSpeed = (t) => MathF.Sin(t * 10) * .05f;
+            stats.ParticleRotation = new float[] { 0, MathF.PI * 2 };
+            stats.ParticleRotationSpeed = (t) => MathF.Sin(t * 10) * Vector2.Dot(windManager.WindDirection, new Vector2(-1, 0) * .1f);
             stats.ParticleLifeSpan = new float[] { 1.5f, 2.5f };
             stats.ResetParticlesAfterDeath = false;
 
-            stats.StartingVelocity = new Vector2[] { new Vector2(-.1f, -.5f), new Vector2(.1f, -1f) };
+            stats.StartingVelocity = new Vector2[] { new Vector2(-.1f, -.75f), new Vector2(.1f, -1f) };
             stats.ActingForce = (t) => (Vector2.UnitY * .02f - windManager.WindDirection * .01f);
 
-            floraParticles = new ParticleSystem(stats);
+            grassSpawnParticles = new ParticleSystem(stats);
         }
 
         public void CreateWorld()
         {
-            floraParticles?.Reset();
+            grassSpawnParticles?.Reset();
 
             int worldHalfX = (WorldSizeX * TileSize) / 2;
             int worldHalfY = (WorldSizeY * TileSize) / 2;
@@ -300,6 +302,10 @@ namespace IdleCollector
             worldFloor = new TilePiece[WorldSizeX, WorldSizeY];
 
             tileTree = new CollisionTree<TilePiece>(WorldBounds, WorldTreeDepth);
+
+            Color sandColor = new Color(250, 204, 158);
+            Bloom.Instance.AddExclusionColor(sandColor);
+            Bloom.Instance.AddBoostColor(new Color(222, 138, 201));
 
             for (int j = 0; j < WorldSizeY; j++)
                 for (int i = 0; i < WorldSizeX; i++)
@@ -312,7 +318,7 @@ namespace IdleCollector
                     string tileName = ResourceAtlas.GetRandomAtlasKey(tileType);
 
                     float noiseValue = noise.GetNoise(bounds.Location.X / 2, bounds.Location.Y / 2);
-                    Color sandColor = new Color(250, 204, 158);
+                   
                     Color color = Color.Lerp(sandColor, Color.Brown, noiseValue / 4);
 
                     noiseValue = noise.GetNoise((bounds.Location.X / 4 + 1000), (bounds.Location.Y / 4 + 1000));

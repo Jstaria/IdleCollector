@@ -19,7 +19,8 @@ namespace IdleEngine
         private static Dictionary<string, OnDraw> EarlyDrawEvents;
         private static Dictionary<string, OnDraw> DrawEvents;
         private static Dictionary<string, OnDraw> UIDrawEvents;
-        private static event OnDraw DrawRenderTargets;
+        private static Dictionary<string, OnDraw> DrawRenderTargets;
+        private static event OnDraw DrawIndependentRTs;
         private static event OnDraw EarlyDrawEvent;
         private static event OnDraw DrawEvent;
         private static event OnDraw UIDrawEvent;
@@ -33,7 +34,7 @@ namespace IdleEngine
 
         private static BatchConfig renderTexConfig;
         private static List<BatchConfig> processes;
-        private static List<PostProcess> postProcesses;
+        private static Dictionary<string, PostProcess> postProcesses;
 
         private static GraphicsDeviceManager _graphics;
 
@@ -68,11 +69,12 @@ namespace IdleEngine
 
         public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {
+            DrawRenderTargets = new();
             EarlyDrawEvents = new();
             DrawEvents = new();
             UIDrawEvents = new();
             processes = new List<BatchConfig>();
-            postProcesses = new List<PostProcess>();
+            postProcesses = new ();
 
             _graphics = deviceManager;
 
@@ -99,16 +101,18 @@ namespace IdleEngine
         }
 
         public static void AddEffectPass(BatchConfig process) => processes.Add(process);
-        public static void AddPostProcess(PostProcess postProcess)
+        public static void AddPostProcess(string name, PostProcess postProcess)
         {
             if (postProcess == null)
                 throw new ArgumentNullException(nameof(postProcess));
 
             if (postProcesses == null)
-                postProcesses = new List<PostProcess>();
+                postProcesses = new ();
 
-            postProcesses.Add(postProcess);
+            postProcesses.Add(name, postProcess);
         }
+        public static PostProcess GetPostProcess(string name) => postProcesses[name];
+
         public static void ResetRenderTargetUI(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(uiTexture);
         public static void ResetRenderTarget(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(renderTexture);
         public static void ResetBeginDraw(SpriteBatch sb) => sb.Begin(
@@ -120,6 +124,15 @@ namespace IdleEngine
                 effect: renderTexConfig.effect,
                 transformMatrix: renderTexConfig.transformMatrix
                 );
+        public static void ResetBeginDrawCam(SpriteBatch sb, BlendState state = null) => sb.Begin(
+               renderTexConfig.sortMode,
+               blendState: state == null ? renderTexConfig.blendState : state,
+               samplerState: renderTexConfig.samplerState,
+               depthStencilState: renderTexConfig.depthStencilState,
+               rasterizerState: renderTexConfig.rasterizerState,
+               effect: renderTexConfig.effect,
+               transformMatrix: CurrentCamera.Transform
+               );
 
         public static void ResetBeginDrawEffect(SpriteBatch sb, Effect effect) => sb.Begin(
                 renderTexConfig.sortMode,
@@ -133,7 +146,10 @@ namespace IdleEngine
 
         public static void DrawToRenderTargets(SpriteBatch sb)
         {
-            DrawRenderTargets?.Invoke(sb);
+            DrawIndependentRTs?.Invoke(sb);
+
+            if (DrawRenderTargets.ContainsKey(SceneManager.CurrentSceneName))
+                DrawRenderTargets[SceneManager.CurrentSceneName]?.Invoke(sb);
         }
 
         public static void DrawToTexture(SpriteBatch sb)
@@ -174,9 +190,11 @@ namespace IdleEngine
             sb.End();
             sb.GraphicsDevice.SetRenderTarget(null);
 
+            var pp = postProcesses.Values.ToList();
+
             for (int i = 0; i < postProcesses.Count; i++)
             {
-                postProcesses[i].Draw(sb, ref uiTexture);
+                pp[i].Draw(sb, ref uiTexture);
             }
         }
 
@@ -368,7 +386,14 @@ namespace IdleEngine
             UIDrawEvent += func;
             UIDrawEvents[SceneManager.CurrentSceneName] = UIDrawEvent;
         }
-        public static void AddToDrawRT(OnDraw func) => DrawRenderTargets += func;
+        public static void AddToDrawRT(OnDraw func) => DrawIndependentRTs += func;
+        public static void AddToDrawRT(OnDraw func, string name)
+        {
+            if (!DrawRenderTargets.ContainsKey(name))
+                DrawRenderTargets.Add(name, null);
+
+            DrawRenderTargets[name] += func;
+        }
         public static Texture2D GetLastRender()
         {
             Texture2D tempTexture = new Texture2D(_graphics.GraphicsDevice, renderTexture.Width, renderTexture.Height);

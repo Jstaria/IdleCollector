@@ -166,10 +166,13 @@ namespace IdleCollector
                 interactable.InteractWith(entity);
         }
 
-        public void Draw(SpriteBatch sb)
+        public void DrawTile(SpriteBatch sb)
         {
             sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, ResourceAtlas.GetTileRect(TileType, TextureKey), color, 0, Vector2.Zero, SpriteEffects.None, layerDepth);
+        }
 
+        public void Draw(SpriteBatch sb)
+        {
             foreach (Interactable interactable in producingInteractables)
                 interactable.Draw(sb);
 
