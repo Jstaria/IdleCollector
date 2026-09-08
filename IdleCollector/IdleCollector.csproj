@@ -68,6 +68,9 @@
     <ProjectReference Include="..\SkillTreeCreationTool\SkillTreeCreationTool.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Content\Config\OptionsMenu.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Audio\imagefilm-043-by-sascha-ende-from-filmmusic-io.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

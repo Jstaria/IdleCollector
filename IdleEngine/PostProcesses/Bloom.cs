@@ -28,7 +28,7 @@ namespace IdleEngine.PostProcesses
             return new BloomConfig
             {
                 bloomStrength = .60f,
-                bloomThreshold = .15f,
+                bloomThreshold = .075f,
                 bloomTint = Color.White,
                 bloomDownsampleFactor = 4,
                 blurKernelRadius = 4,

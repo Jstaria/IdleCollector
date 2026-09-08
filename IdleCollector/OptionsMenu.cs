@@ -20,6 +20,29 @@ namespace IdleCollector
         public static int divisions = 20;
     }
 
+    internal sealed class OptionsMenuConfig
+    {
+        public List<MenuDefinition> Menus { get; set; } = new();
+    }
+
+    internal sealed class MenuDefinition
+    {
+        public string Id { get; set; }
+        public List<MenuItemDefinition> Items { get; set; } = new();
+    }
+
+    internal sealed class MenuItemDefinition
+    {
+        public string Id { get; set; }
+        public string Label { get; set; }
+        public string Type { get; set; }
+        public float Row { get; set; }
+        public string Action { get; set; }
+        public string Target { get; set; }
+        public string Binding { get; set; }
+        public int? Steps { get; set; }
+    }
+
     internal class OptionsMenu : IScene
     {
         private OptionsState currentState;
@@ -30,6 +53,8 @@ namespace IdleCollector
         private Dictionary<string, UIContainer> currentMenu;
         private Dictionary<string, UIContainer> prevMenu;
         private float timer;
+
+        private const string ConfigPath = "Content/Config/OptionsMenu";
 
         public float LayerDepth { get; set; }
         public Color Color { get; set; }
@@ -52,34 +77,98 @@ namespace IdleCollector
 
         private void CreateButtons()
         {
-            float nudgeValue = -10f;
+            OptionsMenuConfig config = new();
+            FileIO.ReadJsonInto(config, ConfigPath);
 
-            buttons = new()
+            buttons = new();
+            foreach (MenuDefinition menu in config.Menus)
             {
-                ["Main"] = new()
+                if (String.IsNullOrWhiteSpace(menu.Id) || buttons.ContainsKey(menu.Id))
+                    throw new InvalidOperationException("Every options menu requires a unique id.");
+
+                Dictionary<string, UIContainer> menuButtons = new();
+                foreach (MenuItemDefinition item in menu.Items)
                 {
-                    ["Audio"] = new MenuButton(GetButtonConfig("Audio", -1, () => { CallMenu("Audio"); NudgeButtonScale("Main", "Audio", nudgeValue); }, () => HoverButton("Main", "Audio"))),
-                    ["Display"] = new MenuButton(GetButtonConfig("Display", 0, () => { CallMenu("Display"); NudgeButtonScale("Main", "Display", nudgeValue); }, () => HoverButton("Main", "Display"))),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1, () => { RequestExit(); NudgeButtonScale("Main", "Back", nudgeValue); }, () => HoverButton("Main", "Back"))),
-                },
-                ["Audio"] = new()
-                {
-                    ["Master Volume"] = new Slider(GetButtonConfig("Master", -2f, null, () => HoverButton("Audio", "Master Volume")), (value) => { return SetVolume(value, "MasterVolume"); }, () => GetVolumeValue("MasterVolume")),
-                    ["Music Volume"] = new Slider(GetButtonConfig("Music", -1.5f, null, () => HoverButton("Audio", "Music Volume")), (value) => { return SetVolume(value, "MusicVolume"); }, () => GetVolumeValue("MusicVolume")),
-                    ["Sound Effect Volume"] = new Slider(GetButtonConfig("Sound FX", -1f, null, () => HoverButton("Audio", "Sound Effect Volume")), (value) => { return SetVolume(value, "SoundEffectVolume"); }, () => GetVolumeValue("SoundEffectVolume")),
-                    ["Character Volume"] = new Slider(GetButtonConfig("Character", -.5f, null, () => HoverButton("Audio", "Character Volume")), (value) => { return SetVolume(value, "CharacterVolume"); }, () => GetVolumeValue("CharacterVolume")),
-                    ["Ambient Volume"] = new Slider(GetButtonConfig("Ambient", 0f, null, () => HoverButton("Audio", "Ambient Volume")), (value) => { return SetVolume(value, "AmbientVolume"); }, () => GetVolumeValue("AmbientVolume")),
-                    ["Mute"] = new CheckBox(GetButtonConfig("Mute", .5f, () => { NudgeButtonScale("Audio", "Mute", nudgeValue); }, () => HoverButton("Audio", "Mute")), (value) => { return VolumeController.Instance.ToggleMute(); }, () => { return VolumeController.Instance.IsMuted; }),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", 1.5f, () => { CallMenu("Main"); NudgeButtonScale("Audio", "Back", nudgeValue); }, () => HoverButton("Audio", "Back"))),
-                },
-                ["Display"] = new()
-                {
-                    ["Test"] = new MenuButton(GetButtonConfig("Test", -.5f, () => { Debug.WriteLine("Display Test"); NudgeButtonScale("Display", "Test", nudgeValue); }, () => HoverButton("Display", "Test"))),
-                    ["Back"] = new MenuButton(GetButtonConfig("Back", .5f, () => { CallMenu("Main"); NudgeButtonScale("Display", "Back", nudgeValue); }, () => HoverButton("Display", "Back"))),
-                },
-            };
+                    if (String.IsNullOrWhiteSpace(item.Id) || menuButtons.ContainsKey(item.Id))
+                        throw new InvalidOperationException($"Menu '{menu.Id}' contains an invalid or duplicate item id.");
+
+                    menuButtons.Add(item.Id, CreateContainer(menu.Id, item));
+                }
+
+                buttons.Add(menu.Id, menuButtons);
+            }
+
+            if (!buttons.ContainsKey("Main"))
+                throw new InvalidOperationException("Options menu config must define a Main menu.");
 
             currentMenu = buttons["Main"];
+        }
+
+        private UIContainer CreateContainer(string menuId, MenuItemDefinition item)
+        {
+            const float nudgeValue = -10f;
+
+            return item.Type switch
+            {
+                "button" => new MenuButton(GetButtonConfig(item.Label, item.Row,
+                    () => { ExecuteAction(item); NudgeButtonScale(menuId, item.Id, nudgeValue); },
+                    () => HoverButton(menuId, item.Id))),
+                "slider" => new Slider(GetButtonConfig(item.Label, item.Row, null, () => HoverButton(menuId, item.Id)),
+                    value => SetVolume(value, RequireBinding(item), item.Steps ?? MenuData.divisions),
+                    () => GetVolumeValue(RequireBinding(item), item.Steps ?? MenuData.divisions),
+                    item.Steps ?? MenuData.divisions),
+                "checkbox" => new CheckBox(GetButtonConfig(item.Label, item.Row,
+                    () => NudgeButtonScale(menuId, item.Id, nudgeValue),
+                    () => HoverButton(menuId, item.Id)),
+                    _ => ExecuteCheckAction(item),
+                    () => GetCheckValue(item)),
+                _ => throw new InvalidOperationException($"Unsupported options control type '{item.Type}' for '{item.Id}'.")
+            };
+        }
+
+        private void ExecuteAction(MenuItemDefinition item)
+        {
+            switch (item.Action)
+            {
+                case "openMenu":
+                    if (String.IsNullOrWhiteSpace(item.Target) || !buttons.ContainsKey(item.Target))
+                        throw new InvalidOperationException($"Button '{item.Id}' references an unknown menu.");
+
+                    CallMenu(item.Target);
+                    break;
+                case "closeOptions":
+                    RequestExit();
+                    break;
+                case "debugLog":
+                    Debug.WriteLine(item.Target);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unsupported options button action '{item.Action}'.");
+            }
+        }
+
+        private bool ExecuteCheckAction(MenuItemDefinition item)
+        {
+            if (item.Action == "toggleMute")
+                return VolumeController.Instance.ToggleMute();
+
+            throw new InvalidOperationException($"Unsupported options checkbox action '{item.Action}'.");
+        }
+
+        private bool GetCheckValue(MenuItemDefinition item)
+        {
+            if (item.Binding == "IsMuted")
+                return VolumeController.Instance.IsMuted;
+
+            throw new InvalidOperationException($"Unsupported options checkbox binding '{item.Binding}'.");
+        }
+
+        private static string RequireBinding(MenuItemDefinition item)
+        {
+            if (String.IsNullOrWhiteSpace(item.Binding))
+                throw new InvalidOperationException($"Options slider '{item.Id}' requires a binding.");
+
+            return item.Binding;
         }
 
         #region // Menu Methods ======================================================================
@@ -200,21 +289,21 @@ namespace IdleCollector
             menuButton.ScaleSpring.Nudge(nudgeValue);
         }
 
-        private int SetVolume(float value, string vName)
+        private int SetVolume(float value, string vName, int divisions)
         {
             VolumeController vCon = VolumeController.Instance;
 
             vCon.ChangeVolume(vName, value);
 
-            return GetVolumeValue(vName);
+            return GetVolumeValue(vName, divisions);
         }
-        private int GetVolumeValue(string vName)
+        private int GetVolumeValue(string vName, int divisions)
         {
             VolumeController vCon = VolumeController.Instance;
 
             float volume = vCon.GetVolume(vName);
 
-            return (int)(volume * MenuData.divisions);
+            return (int)(volume * divisions);
         }
 
         private ButtonConfig GetButtonConfig(string buttonText, float i, OnButtonClick clickFunc = null, OnButtonHover hoverFunc = null)
@@ -300,9 +389,13 @@ namespace IdleCollector
     public class Slider : UIContainer
     {
         private int min = 0, max = 0, value = 0;
-        private int sliderWidth = 200, sliderStartX = 0, sliderEndX = 0;
+        private int sliderWidth = 280, sliderStartX = 0, sliderEndX = 0;
         private int barWidth;
+        private const float SegmentGap = 4f;
+        private float segmentWidth;
+        private float TrackWidth => sliderWidth;
         private int sensitivity = 50;
+        private readonly int divisions;
         public delegate int OnSlide(float value);
         public delegate int GetValue();
         private OnSlide slide;
@@ -310,10 +403,18 @@ namespace IdleCollector
         private Vector2 textOffset;
         private Texture2D barTex;
 
-        private int ScaledMouseX => (int)(Input.GetMouseScreenPos().X + (barWidth / 4) * button.ScaleSpring.Position * 2);
+        private int ScaledMouseX => (int)(Input.GetMouseScreenPos().X /*+ (barWidth / 4) * button.ScaleSpring.Position * 2*/);
 
-        public Slider(ButtonConfig config, OnSlide slide, GetValue getValue)
+        public Slider(ButtonConfig config, OnSlide slide, GetValue getValue, int divisions)
         {
+            if (divisions <= 0)
+                throw new ArgumentOutOfRangeException(nameof(divisions), "Slider divisions must be greater than zero.");
+
+            this.divisions = divisions;
+            segmentWidth = (TrackWidth - SegmentGap * (divisions - 1)) / divisions;
+            if (segmentWidth <= 0)
+                throw new ArgumentOutOfRangeException(nameof(divisions), "Slider divisions leave no room for segments.");
+
             barTex = ResourceAtlas.GetTexture("bar1");
             config.OnClick = GetMouseInput;
             config.bounds.Height = 20 * Renderer.UIScaler.X;
@@ -337,7 +438,7 @@ namespace IdleCollector
             barWidth = this.sliderWidth / MenuData.divisions;
             drawPosition = positionSpring.Position;
             sliderStartX = (int)drawPosition.X;
-            sliderEndX = sliderStartX + (barWidth + 4) * MenuData.divisions;
+            sliderEndX = sliderStartX + (int)(TrackWidth / Renderer.UIScaler.X);
 
             // These are for checking mouse collision and needs to use scaled screen coords
             sliderStartX /= Renderer.UIScaler.X; sliderEndX /= Renderer.UIScaler.Y;
@@ -369,14 +470,19 @@ namespace IdleCollector
         {
             Vector2 pos = new Vector2(config.bounds.Width / 2, config.bounds.Height / 4);
 
-            sensitivity = (int)(barWidth * .75f);
+            sensitivity = (int)(segmentWidth * .75f);
 
-            for (int i = 0; i < MenuData.divisions; i++)
+            float startX = config.bounds.Width / 2f;
+            for (int i = 0; i < divisions; i++)
             {
                 Color color = i >= value ? new Color(30, 15, 15) : Color.White;
-                sb.Draw(barTex, new Rectangle((int)pos.X - 4, (int)pos.Y + 4, barWidth, barTex.Height * Renderer.UIScaler.Y), null, Color.Black * .25f, 0, Vector2.Zero, SpriteEffects.None, 0f);
-                sb.Draw(barTex, new Rectangle((int)pos.X, (int)pos.Y, barWidth, barTex.Height * Renderer.UIScaler.Y), null, color, 0, Vector2.Zero, SpriteEffects.None, .01f);
-                pos += Vector2.UnitX * (barWidth + 4);
+                int left = (int)MathF.Round(startX);
+                int right = (int)MathF.Round(startX + segmentWidth);
+                int width = Math.Max(right - left, 1);
+
+                sb.Draw(barTex, new Rectangle(left - 4, (int)pos.Y + 4, width, barTex.Height * Renderer.UIScaler.Y), null, Color.Black * .25f, 0, Vector2.Zero, SpriteEffects.None, 0f);
+                sb.Draw(barTex, new Rectangle(left, (int)pos.Y, width, barTex.Height * Renderer.UIScaler.Y), null, color, 0, Vector2.Zero, SpriteEffects.None, .01f);
+                startX += segmentWidth + SegmentGap;
             }
         }
 
@@ -389,8 +495,9 @@ namespace IdleCollector
             while (Input.IsLeftButtonDown())
             {
                 float xDistance = MathHelper.Max(mouseX - sliderStartX, 0);
-                float totalSliderWidth = sliderEndX  - sliderStartX;
-                float ratio = xDistance / totalSliderWidth;
+                float totalSliderWidth = sliderEndX - sliderStartX;
+                float trackPosition = MathHelper.Clamp(xDistance / totalSliderWidth * TrackWidth, 0, TrackWidth);
+                float ratio = GetDivisionCount(trackPosition) / (float)divisions;
 
                 mouseX = ScaledMouseX;
                 value = slide.Invoke(ratio);
@@ -399,10 +506,22 @@ namespace IdleCollector
             }
         }
 
+        private int GetDivisionCount(float trackPosition)
+        {
+            float segmentCenter = segmentWidth / 2f;
+            if (trackPosition < segmentCenter)
+                return 0;
+
+            float divisionStride = segmentWidth + SegmentGap;
+            int count = 1 + (int)MathF.Floor((trackPosition - segmentCenter + divisionStride / 2f) / divisionStride);
+            return Math.Clamp(count, 0, divisions);
+        }
+
         private void UpdateSliderBounds()
         {
-            sliderEndX = sliderStartX + (int)((barWidth + 4) * MenuData.divisions / Renderer.UIScaler.X * button.ScaleSpring.Position);
+            sliderEndX = sliderStartX + (int)(TrackWidth / Renderer.UIScaler.X * button.ScaleSpring.Position);
         }
+
     }
 
     public class CheckBox : UIContainer

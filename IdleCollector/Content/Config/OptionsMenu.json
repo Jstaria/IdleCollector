@@ -1,0 +1,31 @@
+{
+  "menus": [
+    {
+      "id": "Main",
+      "items": [
+        { "id": "audio", "label": "Audio", "type": "button", "row": -1, "action": "openMenu", "target": "Audio" },
+        { "id": "display", "label": "Display", "type": "button", "row": 0, "action": "openMenu", "target": "Display" },
+        { "id": "back", "label": "Back", "type": "button", "row": 1, "action": "closeOptions" }
+      ]
+    },
+    {
+      "id": "Audio",
+      "items": [
+        { "id": "master", "label": "Master", "type": "slider", "row": -2, "binding": "MasterVolume", "steps": 20 },
+        { "id": "music", "label": "Music", "type": "slider", "row": -1.5, "binding": "MusicVolume", "steps": 20 },
+        { "id": "soundFx", "label": "Sound FX", "type": "slider", "row": -1, "binding": "SoundEffectVolume", "steps": 20 },
+        { "id": "character", "label": "Character", "type": "slider", "row": -0.5, "binding": "CharacterVolume", "steps": 20 },
+        { "id": "ambient", "label": "Ambient", "type": "slider", "row": 0, "binding": "AmbientVolume", "steps": 20 },
+        { "id": "mute", "label": "Mute", "type": "checkbox", "row": 0.5, "binding": "IsMuted", "action": "toggleMute" },
+        { "id": "back", "label": "Back", "type": "button", "row": 1.5, "action": "openMenu", "target": "Main" }
+      ]
+    },
+    {
+      "id": "Display",
+      "items": [
+        { "id": "test", "label": "Test", "type": "button", "row": -0.5, "action": "debugLog", "target": "Display Test" },
+        { "id": "back", "label": "Back", "type": "button", "row": 0.5, "action": "openMenu", "target": "Main" }
+      ]
+    }
+  ]
+}
