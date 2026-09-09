@@ -1,3 +1,4 @@
+using IdleCollector;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -27,6 +28,7 @@ namespace IdleEngine.PostProcesses
         {
             return new BloomConfig
             {
+                useBloom = true,
                 bloomStrength = .60f,
                 bloomThreshold = .075f,
                 bloomTint = Color.White,
@@ -83,7 +85,7 @@ namespace IdleEngine.PostProcesses
         private bool useBloom;
 
         public bool SaveExtractedBloomDebugPng { get; set; }
-        public bool UseBloom => useBloom;
+        public bool UseBloom => Config.useBloom;
 
         public Bloom()
         {
@@ -102,7 +104,7 @@ namespace IdleEngine.PostProcesses
 
         public override void Draw(SpriteBatch sb, ref RenderTarget2D renderTarget)
         {
-            if (!useBloom) return;
+            if (!config.useBloom) return;
 
             // dreturn;
             if (sb == null)
@@ -281,6 +283,24 @@ namespace IdleEngine.PostProcesses
                 config.bloomBoostColors.Add(color);
         }
 
-        internal bool Toggle() => useBloom = !useBloom;
+        internal bool Toggle()
+        {
+            config.useBloom = !config.useBloom;
+
+            Save();
+
+            return config.useBloom;
+        }
+
+        public void SetBloom(float value)
+        {
+            Config.bloomStrength = value;
+            Save();
+        }
+
+        internal void Save()
+        {
+            FileIO.WriteJsonTo(config, "Content/Config/Bloom", Newtonsoft.Json.Formatting.Indented);
+        }
     }
 }

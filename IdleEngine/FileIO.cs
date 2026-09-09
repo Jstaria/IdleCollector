@@ -274,13 +274,31 @@ namespace IdleCollector
 
             if (InDebug)
             {
-                string debugJsonPath = Path.Combine("..", "..", "..", jsonPath);
+                string projectDirectory = FindProjectDirectory();
+                if (projectDirectory == null)
+                    return;
+
+                string debugJsonPath = Path.Combine(projectDirectory, jsonPath);
                 string debugDirectory = Path.GetDirectoryName(debugJsonPath);
                 if (!String.IsNullOrEmpty(debugDirectory))
                     Directory.CreateDirectory(debugDirectory);
 
                 File.WriteAllText(debugJsonPath, json);
             }
+        }
+
+        private static string FindProjectDirectory()
+        {
+            DirectoryInfo directory = new DirectoryInfo(AppContext.BaseDirectory);
+            while (directory != null)
+            {
+                if (directory.GetFiles("*.csproj").Length > 0)
+                    return directory.FullName;
+
+                directory = directory.Parent;
+            }
+
+            return null;
         }
     }
 }

@@ -9,12 +9,111 @@
   },
   "bloomDownsampleFactor": 4,
   "blurKernelRadius": 4,
-  "bloomExcludedColors": [],
+  "bloomExcludedColors": [
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    }
+  ],
   "bloomExclusionTolerance": 0.95,
   "bloomExclusionSoftness": 0.02,
   "bloomExclusionStrength": 0.4,
-  "bloomBoostColors": [],
+  "bloomBoostColors": [
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    }
+  ],
   "bloomBoostTolerance": 0.85,
   "bloomBoostSoftness": 0.02,
-  "bloomBoostStrength": 2.0
+  "bloomBoostStrength": 2.0,
+  "useBloom": true
 }

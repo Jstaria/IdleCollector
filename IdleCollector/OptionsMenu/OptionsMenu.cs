@@ -201,7 +201,7 @@ namespace IdleCollector
             RegisterDefaultVolumeBinding(nameof(VolumeController.SoundEffectVolume));
             RegisterDefaultVolumeBinding(nameof(VolumeController.CharacterVolume));
             RegisterDefaultVolumeBinding(nameof(VolumeController.AmbientVolume));
-            RegisterSliderBinding("bloomStrength", () => Bloom.Instance.Config.bloomStrength, value => Bloom.Instance.Config.bloomStrength = value);
+            RegisterSliderBinding("bloomStrength", () => Bloom.Instance.Config.bloomStrength, Bloom.Instance.SetBloom);
         }
 
         private void RegisterDefaultVolumeBinding(string propertyName)

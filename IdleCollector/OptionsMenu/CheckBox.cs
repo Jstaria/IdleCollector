@@ -1,6 +1,7 @@
 using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Threading.Tasks;
 
 namespace IdleCollector
 {
@@ -42,9 +43,15 @@ namespace IdleCollector
             positionSpring = new Spring2D(20, .65f, outOfScreen);
             button.Position = outOfScreen;
             drawPosition = positionSpring.Position;
-            value = getValue.Invoke();
+            GetValueWait(100, getValue);
 
             renderables.Add(button);
+        }
+
+        private async void GetValueWait(int time, GetValue getValue)
+        {
+            await Task.Delay(time);
+            value = getValue.Invoke();
         }
 
         public override void PrevUpdate(GameTime gameTime)

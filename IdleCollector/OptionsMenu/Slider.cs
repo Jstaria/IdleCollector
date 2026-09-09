@@ -64,6 +64,12 @@ namespace IdleCollector
             sliderEndX /= Renderer.UIScaler.Y;
 
             renderables.Add(button);
+            GetValueWait(100, getValue);
+        }
+
+        private async void GetValueWait(int time, GetValue getValue)
+        {
+            await Task.Delay(time);
             value = getValue.Invoke();
         }
 
