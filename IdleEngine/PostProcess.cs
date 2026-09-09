@@ -18,6 +18,21 @@ namespace IdleEngine
         public PostProcess() { }
 
         public virtual PostProcessTarget Target => PostProcessTarget.Normal;
+        public virtual IReadOnlyCollection<string> SceneTargets => Array.Empty<string>();
+
+        public bool AppliesToScene(string sceneName)
+        {
+            if (SceneTargets.Count == 0)
+                return true;
+
+            foreach (string target in SceneTargets)
+            {
+                if (target == sceneName)
+                    return true;
+            }
+
+            return false;
+        }
 
         public abstract void Draw(
             SpriteBatch sb,

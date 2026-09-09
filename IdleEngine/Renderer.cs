@@ -198,7 +198,8 @@ namespace IdleEngine
 
             for (int i = 0; i < postProcesses.Count; i++)
             {
-                if (pp[i].Target == PostProcessTarget.Normal)
+                if (pp[i].AppliesToScene(SceneManager.CurrentSceneName) &&
+                    pp[i].Target == PostProcessTarget.Normal)
                     pp[i].Draw(sb, ref normalTexture, uiOverlayTexture, ref combinedTexture);
             }
 
@@ -220,7 +221,8 @@ namespace IdleEngine
             combinedTexture = uiTexture;
             for (int i = 0; i < postProcesses.Count; i++)
             {
-                if (pp[i].Target == PostProcessTarget.Combined)
+                if (pp[i].AppliesToScene(SceneManager.CurrentSceneName) &&
+                    pp[i].Target == PostProcessTarget.Combined)
                     pp[i].Draw(sb, ref normalTexture, uiOverlayTexture, ref combinedTexture);
             }
 

@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace IdleEngine.PostProcesses
 {
@@ -13,9 +14,11 @@ namespace IdleEngine.PostProcesses
         private readonly Effect effect;
         private readonly Texture2D maskTexture;
         private RenderTarget2D outputTexture;
+        private static readonly IReadOnlyCollection<string> targetScenes = new[] { "Game Scene", "Options Scene" };
 
         public float MaskCutoff { get; set; } = .4f;
         public int MaxBlurRadius { get; set; } = 8;
+        public override IReadOnlyCollection<string> SceneTargets => targetScenes;
 
         public Blur()
         {
