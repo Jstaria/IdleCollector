@@ -1,0 +1,20 @@
+{
+  "bloomThreshold": 0.075,
+  "bloomStrength": 0.6,
+  "bloomTint": {
+    "B": 255,
+    "G": 255,
+    "R": 255,
+    "A": 255
+  },
+  "bloomDownsampleFactor": 4,
+  "blurKernelRadius": 4,
+  "bloomExcludedColors": [],
+  "bloomExclusionTolerance": 0.95,
+  "bloomExclusionSoftness": 0.02,
+  "bloomExclusionStrength": 0.4,
+  "bloomBoostColors": [],
+  "bloomBoostTolerance": 0.85,
+  "bloomBoostSoftness": 0.02,
+  "bloomBoostStrength": 2.0
+}

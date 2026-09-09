@@ -23,7 +23,7 @@ namespace IdleEngine.PostProcesses
             }
         }
 
-        private static BloomConfig GetBloomConfig()
+        private static BloomConfig CreateDefaultConfig()
         {
             return new BloomConfig
             {
@@ -45,7 +45,7 @@ namespace IdleEngine.PostProcesses
             };
         }
 
-        public struct BloomConfig
+        public sealed class BloomConfig
         {
             public float bloomThreshold;
             public float bloomStrength;
@@ -60,6 +60,7 @@ namespace IdleEngine.PostProcesses
             public float bloomBoostTolerance;
             public float bloomBoostSoftness;
             public float bloomBoostStrength;
+            public bool useBloom;
         }
 
         private readonly Effect effect;
@@ -79,7 +80,10 @@ namespace IdleEngine.PostProcesses
         private const int MaxBoostBloomColors = 4;
         private readonly Vector3[] boostBloomColors = new Vector3[MaxBoostBloomColors];
 
+        private bool useBloom;
+
         public bool SaveExtractedBloomDebugPng { get; set; }
+        public bool UseBloom => useBloom;
 
         public Bloom()
         {
@@ -87,7 +91,7 @@ namespace IdleEngine.PostProcesses
                 instance = this;
 
             effect = ResourceAtlas.GetEffect("Bloom");
-            config = GetBloomConfig();
+            config = CreateDefaultConfig();
         }
 
         public BloomConfig Config
@@ -98,6 +102,8 @@ namespace IdleEngine.PostProcesses
 
         public override void Draw(SpriteBatch sb, ref RenderTarget2D renderTarget)
         {
+            if (!useBloom) return;
+
             // dreturn;
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
@@ -274,5 +280,7 @@ namespace IdleEngine.PostProcesses
                 !config.bloomBoostColors.Contains(color))
                 config.bloomBoostColors.Add(color);
         }
+
+        internal bool Toggle() => useBloom = !useBloom;
     }
 }

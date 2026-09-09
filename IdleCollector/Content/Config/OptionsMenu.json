@@ -23,7 +23,8 @@
     {
       "id": "Display",
       "items": [
-        { "id": "test", "label": "Test", "type": "button", "row": -0.5, "action": "debugLog", "target": "Display Test" },
+        { "id": "bloom", "label": "Bloom Glow", "type": "slider", "row": -1.0, "binding": "bloomStrength", "steps": 10 },
+        { "id": "bloomCheck", "label": "Bloom", "type": "checkbox", "row": -0.5, "binding": "hasBloom", "action": "toggleBloom" },
         { "id": "back", "label": "Back", "type": "button", "row": 0.5, "action": "openMenu", "target": "Main" }
       ]
     }

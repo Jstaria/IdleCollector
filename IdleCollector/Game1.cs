@@ -179,6 +179,7 @@ namespace IdleCollector
         protected void LoadEffects()
         {
             Bloom BloomEffect = Bloom.Instance;
+            FileIO.ReadJsonInto(BloomEffect.Config, "Content/Config/Bloom");
 
             Renderer.AddPostProcess("Background", BloomEffect);
         }
