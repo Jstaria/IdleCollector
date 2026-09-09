@@ -102,21 +102,27 @@ namespace IdleEngine.PostProcesses
             set => config = value;
         }
 
-        public override void Draw(SpriteBatch sb, ref RenderTarget2D renderTarget)
+        public override PostProcessTarget Target => PostProcessTarget.Combined;
+
+        public override void Draw(
+            SpriteBatch sb,
+            ref RenderTarget2D normalTexture,
+            RenderTarget2D uiTexture,
+            ref RenderTarget2D combinedTexture)
         {
             if (!config.useBloom) return;
 
             // dreturn;
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
-            if (renderTarget == null)
-                throw new ArgumentNullException(nameof(renderTarget));
+            if (combinedTexture == null)
+                throw new ArgumentNullException(nameof(combinedTexture));
 
             GraphicsDevice graphicsDevice = sb.GraphicsDevice;
-            EnsureRenderTargets(graphicsDevice, renderTarget);
-            SetEffectParameters(renderTarget);
+            EnsureRenderTargets(graphicsDevice, combinedTexture);
+            SetEffectParameters(combinedTexture);
 
-            RenderTarget2D original = renderTarget;
+            RenderTarget2D original = combinedTexture;
             bool saveDebug = SaveExtractedBloomDebugPng || Input.IsMiddleButtonDownOnce();
 
             if (saveDebug)
@@ -141,7 +147,7 @@ namespace IdleEngine.PostProcesses
             if (saveDebug)
                 SaveRenderTargetPng(output, "combinedBloom.png");
 
-            renderTarget = output;
+            combinedTexture = output;
             graphicsDevice.SetRenderTarget(null);
 
         }

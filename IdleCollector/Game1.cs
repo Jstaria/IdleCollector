@@ -182,6 +182,7 @@ namespace IdleCollector
             FileIO.ReadJsonInto(BloomEffect.Config, "Content/Config/Bloom");
 
             Renderer.AddPostProcess("Background", BloomEffect);
+            Renderer.AddPostProcess("MaskedBlur", Blur.Instance);
         }
 
         #endregion

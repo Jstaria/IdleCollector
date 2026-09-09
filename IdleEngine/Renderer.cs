@@ -27,7 +27,9 @@ namespace IdleEngine
         private static event OnDraw IndependentDrawEvent;
         private static event OnDraw IndependentUIDrawEvent;
         private static RenderTarget2D renderTexture;
+        private static RenderTarget2D uiOverlayTexture;
         private static RenderTarget2D uiTexture;
+        private static RenderTarget2D postProcessedUiTexture;
         private static RenderTarget2D finalTexture;
         private static RenderTarget2D[] targets;
         private static Color[] colorData;
@@ -84,6 +86,7 @@ namespace IdleEngine
                 new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
             renderTexture = new RenderTarget2D(_graphics.GraphicsDevice, renderSize.X, renderSize.Y);
 
+            uiOverlayTexture = new RenderTarget2D(_graphics.GraphicsDevice, UIBounds.Width, UIBounds.Height);
             uiTexture = new RenderTarget2D(_graphics.GraphicsDevice, UIBounds.Width, UIBounds.Height);
             renderTexConfig = new BatchConfig(
                 SpriteSortMode.FrontToBack,
@@ -173,7 +176,8 @@ namespace IdleEngine
 
             sb.GraphicsDevice.SetRenderTarget(null);
 
-            sb.GraphicsDevice.SetRenderTarget(uiTexture);
+            sb.GraphicsDevice.SetRenderTarget(uiOverlayTexture);
+            sb.GraphicsDevice.Clear(Color.Transparent);
             sb.Begin(
                 blendState: renderTexConfig.blendState,
                 samplerState: renderTexConfig.samplerState,
@@ -183,19 +187,44 @@ namespace IdleEngine
                 transformMatrix: Matrix.Identity
                 );
 
-            Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
-            sb.Draw(finalTexture == null ? renderTexture : finalTexture, destinationRect, Color.White);
             UIDrawEvent?.Invoke(sb);
             IndependentUIDrawEvent?.Invoke(sb);
             sb.End();
             sb.GraphicsDevice.SetRenderTarget(null);
 
+            RenderTarget2D normalTexture = finalTexture == null ? renderTexture : finalTexture;
+            RenderTarget2D combinedTexture = null;
             var pp = postProcesses.Values.ToList();
 
             for (int i = 0; i < postProcesses.Count; i++)
             {
-                pp[i].Draw(sb, ref uiTexture);
+                if (pp[i].Target == PostProcessTarget.Normal)
+                    pp[i].Draw(sb, ref normalTexture, uiOverlayTexture, ref combinedTexture);
             }
+
+            sb.GraphicsDevice.SetRenderTarget(uiTexture);
+            sb.GraphicsDevice.Clear(Color.Transparent);
+            sb.Begin(
+                blendState: renderTexConfig.blendState,
+                samplerState: renderTexConfig.samplerState,
+                depthStencilState: renderTexConfig.depthStencilState,
+                rasterizerState: renderTexConfig.rasterizerState,
+                effect: renderTexConfig.effect,
+                transformMatrix: Matrix.Identity
+                );
+            sb.Draw(normalTexture, uiTexture.Bounds, Color.White);
+            sb.Draw(uiOverlayTexture, uiTexture.Bounds, Color.White);
+            sb.End();
+            sb.GraphicsDevice.SetRenderTarget(null);
+
+            combinedTexture = uiTexture;
+            for (int i = 0; i < postProcesses.Count; i++)
+            {
+                if (pp[i].Target == PostProcessTarget.Combined)
+                    pp[i].Draw(sb, ref normalTexture, uiOverlayTexture, ref combinedTexture);
+            }
+
+            postProcessedUiTexture = combinedTexture;
         }
 
         private static void ApplyEffectValues(BatchConfig process, SpriteBatch sb)
@@ -292,7 +321,7 @@ namespace IdleEngine
             Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
 
             sb.Begin(samplerState: SamplerState.PointClamp);
-            sb.Draw(uiTexture, destinationRect, Color.White);
+            sb.Draw(postProcessedUiTexture ?? uiTexture, destinationRect, Color.White);
             sb.End();
         }
 

@@ -57,6 +57,8 @@ namespace IdleCollector
 
         public void Draw(SpriteBatch sb)
         {
+            if (prevRender != null)
+                sb.Draw(prevRender, new Rectangle(Point.Zero, Renderer.RenderSize), Color.White);
         }
 
         public void ControlledUpdate(GameTime gameTime)
@@ -326,7 +328,6 @@ namespace IdleCollector
 
         public void UIDraw(SpriteBatch sb)
         {
-            sb.Draw(prevRender, Renderer.UIBounds, Color.White);
             sb.DrawRect(Renderer.UIBounds, Color.Black * .4f * optionsFade);
 
             foreach (UIContainer container in currentMenu.Values)
@@ -336,5 +337,6 @@ namespace IdleCollector
                 foreach (UIContainer container in prevMenu.Values)
                     container.Draw(sb);
         }
+
     }
 }

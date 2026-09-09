@@ -7,10 +7,22 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
+    public enum PostProcessTarget
+    {
+        Normal,
+        Combined
+    }
+
     public abstract class PostProcess
     {
         public PostProcess() { }
 
-        public abstract void Draw(SpriteBatch sb, ref RenderTarget2D renderTarget);
+        public virtual PostProcessTarget Target => PostProcessTarget.Normal;
+
+        public abstract void Draw(
+            SpriteBatch sb,
+            ref RenderTarget2D normalTexture,
+            RenderTarget2D uiTexture,
+            ref RenderTarget2D combinedTexture);
     }
 }
