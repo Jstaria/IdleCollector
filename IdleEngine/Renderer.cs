@@ -30,9 +30,11 @@ namespace IdleEngine
         private static RenderTarget2D uiOverlayTexture;
         private static RenderTarget2D uiTexture;
         private static RenderTarget2D postProcessedUiTexture;
+        private static RenderTarget2D postProcessedNormalTexture;
         private static RenderTarget2D finalTexture;
         private static RenderTarget2D[] targets;
         private static Color[] colorData;
+        private static Texture2D presentationFadeTexture;
 
         private static BatchConfig renderTexConfig;
         private static List<BatchConfig> processes;
@@ -68,6 +70,7 @@ namespace IdleEngine
         }
         public static Rectangle UIBounds => new Rectangle(0, 0, 1920, 1080);
         public static Point UIScaler => new Point(UIBounds.Width / RenderSize.X, UIBounds.Height / RenderSize.Y);
+        public static Rectangle PresentationBounds => CalculatePresentationBounds(ScreenSize);
 
         public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {
@@ -203,6 +206,8 @@ namespace IdleEngine
                     pp[i].Draw(sb, ref normalTexture, uiOverlayTexture, ref combinedTexture);
             }
 
+            postProcessedNormalTexture = normalTexture;
+
             sb.GraphicsDevice.SetRenderTarget(uiTexture);
             sb.GraphicsDevice.Clear(Color.Transparent);
             sb.Begin(
@@ -291,12 +296,13 @@ namespace IdleEngine
         }
         public static Vector2 GetWorldPosition(Vector2 screenPosition)
         {
-            float scaleX = RenderSize.X / (float)ScreenSize.X;
-            float scaleY = RenderSize.Y / (float)ScreenSize.Y;
+            Rectangle presentationBounds = PresentationBounds;
+            float scaleX = RenderSize.X / (float)presentationBounds.Width;
+            float scaleY = RenderSize.Y / (float)presentationBounds.Height;
 
             Vector2 worldPosition = new Vector2(
-                screenPosition.X * scaleX - CurrentCamera.Position.X,
-                screenPosition.Y * scaleY - CurrentCamera.Position.Y
+                (screenPosition.X - presentationBounds.X) * scaleX - CurrentCamera.Position.X,
+                (screenPosition.Y - presentationBounds.Y) * scaleY - CurrentCamera.Position.Y
             );
 
             return worldPosition;
@@ -320,11 +326,95 @@ namespace IdleEngine
             DrawToRenderTargets(sb);
             DrawToTexture(sb);
 
-            Rectangle destinationRect = new Rectangle(0, 0, sb.GraphicsDevice.Viewport.Width, sb.GraphicsDevice.Viewport.Height);
+            Rectangle destinationRect = CalculatePresentationBounds(sb.GraphicsDevice.Viewport.Bounds.Size);
+            Texture2D presentationTexture = postProcessedUiTexture ?? uiTexture;
+            Texture2D reflectionTexture = postProcessedNormalTexture ?? renderTexture;
 
+            sb.GraphicsDevice.Clear(Color.Black);
             sb.Begin(samplerState: SamplerState.PointClamp);
-            sb.Draw(postProcessedUiTexture ?? uiTexture, destinationRect, Color.White);
+            DrawMirroredPresentationEdges(sb, reflectionTexture, destinationRect, sb.GraphicsDevice.Viewport.Bounds);
+            sb.Draw(presentationTexture, destinationRect, Color.White);
             sb.End();
+        }
+
+        private static void DrawMirroredPresentationEdges(
+            SpriteBatch sb,
+            Texture2D presentationTexture,
+            Rectangle presentationBounds,
+            Rectangle viewportBounds)
+        {
+            if (presentationBounds.X == 0 && presentationBounds.Y == 0)
+                return;
+
+            presentationFadeTexture ??= ResourceAtlas.GetTexture("pauseBlock");
+
+            const int maxReflectionSize = 48;
+            int halfWidth = presentationFadeTexture.Width / 2;
+            Rectangle outerToInner = new Rectangle(halfWidth, 0, presentationFadeTexture.Width - halfWidth, presentationFadeTexture.Height);
+            Rectangle innerToOuter = new Rectangle(0, 0, halfWidth, presentationFadeTexture.Height);
+
+            float fadeAmt = .5f;
+
+            if (presentationBounds.X > 0)
+            {
+                int barWidth = presentationBounds.X - viewportBounds.X;
+                int reflectionWidth = Math.Min(maxReflectionSize, barWidth);
+                Rectangle leftBar = new Rectangle(presentationBounds.X - reflectionWidth, presentationBounds.Y, reflectionWidth, presentationBounds.Height);
+                Rectangle rightBar = new Rectangle(presentationBounds.Right, presentationBounds.Y, reflectionWidth, presentationBounds.Height);
+                int sourceWidth = Math.Clamp(
+                    (int)MathF.Ceiling(reflectionWidth * presentationTexture.Width / (float)presentationBounds.Width),
+                    1,
+                    presentationTexture.Width);
+
+                sb.Draw(presentationTexture, leftBar, new Rectangle(0, 0, sourceWidth, presentationTexture.Height), Color.White * fadeAmt, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
+                sb.Draw(presentationTexture, rightBar, new Rectangle(presentationTexture.Width - sourceWidth, 0, sourceWidth, presentationTexture.Height), Color.White * fadeAmt, 0f, Vector2.Zero, SpriteEffects.FlipHorizontally, 0f);
+                sb.Draw(presentationFadeTexture, leftBar, outerToInner, Color.White);
+                sb.Draw(presentationFadeTexture, rightBar, innerToOuter, Color.White);
+            }
+
+            if (presentationBounds.Y > 0)
+            {
+                int barHeight = presentationBounds.Y - viewportBounds.Y;
+                int reflectionHeight = Math.Min(maxReflectionSize, barHeight);
+                Rectangle topBar = new Rectangle(presentationBounds.X, presentationBounds.Y - reflectionHeight, presentationBounds.Width, reflectionHeight);
+                Rectangle bottomBar = new Rectangle(presentationBounds.X, presentationBounds.Bottom, presentationBounds.Width, reflectionHeight);
+                int sourceHeight = Math.Clamp(
+                    (int)MathF.Ceiling(reflectionHeight * presentationTexture.Height / (float)presentationBounds.Height),
+                    1,
+                    presentationTexture.Height);
+
+                sb.Draw(presentationTexture, topBar, new Rectangle(0, 0, presentationTexture.Width, sourceHeight), Color.White * fadeAmt, 0f, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
+                sb.Draw(presentationTexture, bottomBar, new Rectangle(0, presentationTexture.Height - sourceHeight, presentationTexture.Width, sourceHeight), Color.White * fadeAmt, 0f, Vector2.Zero, SpriteEffects.FlipVertically, 0f);
+                DrawVerticalPresentationFade(sb, outerToInner, topBar);
+                DrawVerticalPresentationFade(sb, innerToOuter, bottomBar);
+            }
+        }
+
+        private static void DrawVerticalPresentationFade(SpriteBatch sb, Rectangle source, Rectangle destination)
+        {
+            Vector2 scale = new Vector2(
+                destination.Height / (float)source.Width,
+                destination.Width / (float)source.Height);
+            Vector2 position = new Vector2(destination.Right, destination.Top);
+
+            sb.Draw(presentationFadeTexture, position, source, Color.White, MathHelper.PiOver2,
+                Vector2.Zero, scale, SpriteEffects.None, 0f);
+        }
+
+        private static Rectangle CalculatePresentationBounds(Point availableSize)
+        {
+            float scale = Math.Min(
+                availableSize.X / (float)UIBounds.Width,
+                availableSize.Y / (float)UIBounds.Height);
+            Point size = new Point(
+                Math.Max(1, (int)MathF.Round(UIBounds.Width * scale)),
+                Math.Max(1, (int)MathF.Round(UIBounds.Height * scale)));
+
+            return new Rectangle(
+                (availableSize.X - size.X) / 2,
+                (availableSize.Y - size.Y) / 2,
+                size.X,
+                size.Y);
         }
 
         internal static void SwapScene(string sceneName)

@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using IdleCollector;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,13 @@ namespace IdleEngine.PostProcesses
 {
     public class Blur : PostProcess
     {
+        public sealed class BlurConfig
+        {
+            public bool useBlur = true;
+            public float maskCutoff = .4f;
+            public int maxBlurRadius = 8;
+        }
+
         private static Blur instance;
 
         public static Blur Instance => instance ??= new Blur();
@@ -15,10 +23,13 @@ namespace IdleEngine.PostProcesses
         private readonly Texture2D maskTexture;
         private RenderTarget2D outputTexture;
         private static readonly IReadOnlyCollection<string> targetScenes = new[] { "Game Scene", "Options Scene" };
+        private readonly BlurConfig config = new();
 
-        public float MaskCutoff { get; set; } = .4f;
-        public int MaxBlurRadius { get; set; } = 8;
+        public float MaskCutoff { get => config.maskCutoff; set => config.maskCutoff = value; }
+        public int MaxBlurRadius => config.maxBlurRadius;
         public override IReadOnlyCollection<string> SceneTargets => targetScenes;
+        public bool UseBlur => config.useBlur;
+        public BlurConfig Config => config;
 
         public Blur()
         {
@@ -33,6 +44,9 @@ namespace IdleEngine.PostProcesses
             RenderTarget2D uiTexture,
             ref RenderTarget2D combinedTexture)
         {
+            if (!config.useBlur)
+                return;
+
             if (sb == null)
                 throw new ArgumentNullException(nameof(sb));
             if (normalTexture == null)
@@ -43,7 +57,7 @@ namespace IdleEngine.PostProcesses
             effect.Parameters["blurMaskTexture"]?.SetValue(maskTexture);
             effect.Parameters["texelSize"]?.SetValue(new Vector2(1f / normalTexture.Width, 1f / normalTexture.Height));
             effect.Parameters["maskCutoff"]?.SetValue(MathHelper.Clamp(MaskCutoff, 0f, 1f));
-            effect.Parameters["maxBlurRadius"]?.SetValue(Math.Clamp(MaxBlurRadius, 1, 4));
+            effect.Parameters["maxBlurRadius"]?.SetValue(Math.Clamp(MaxBlurRadius, 1, 8));
             effect.CurrentTechnique = effect.Techniques["MaskedBlur"];
 
             sb.GraphicsDevice.SetRenderTarget(outputTexture);
@@ -55,6 +69,24 @@ namespace IdleEngine.PostProcesses
 
             normalTexture = outputTexture;
             sb.GraphicsDevice.SetRenderTarget(null);
+        }
+
+        public void SetBlurRadius(int radius)
+        {
+            config.maxBlurRadius = Math.Clamp(radius, 1, 8);
+            Save();
+        }
+
+        public bool Toggle()
+        {
+            config.useBlur = !config.useBlur;
+            Save();
+            return config.useBlur;
+        }
+
+        private void Save()
+        {
+            FileIO.WriteJsonTo(config, "Content/Config/Blur", Newtonsoft.Json.Formatting.Indented);
         }
 
         private void EnsureOutputTexture(GraphicsDevice graphicsDevice, RenderTarget2D source)

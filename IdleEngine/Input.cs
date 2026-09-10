@@ -60,10 +60,19 @@ namespace IdleEngine
             currentMousePos = currentMouseState.Position;
             screenMousePos = currentMousePos;            
             Point renderSize = Renderer.RenderSize;
-            Point screenSize = Renderer.ScreenSize;
             Point transform = Renderer.CurrentCamera == null ? Point.Zero : Renderer.CurrentCamera.Position;
-            currentMousePos.X = (int)(currentMousePos.X * ((float)renderSize.X / (float)screenSize.X));
-            currentMousePos.Y = (int)(currentMousePos.Y * ((float)renderSize.Y / (float)screenSize.Y));
+            Rectangle presentationBounds = Renderer.PresentationBounds;
+
+            if (!presentationBounds.Contains(currentMousePos))
+            {
+                currentMousePos = new Point(-1, -1);
+            }
+            else
+            {
+                currentMousePos.X = (int)((currentMousePos.X - presentationBounds.X) * ((float)renderSize.X / presentationBounds.Width));
+                currentMousePos.Y = (int)((currentMousePos.Y - presentationBounds.Y) * ((float)renderSize.Y / presentationBounds.Height));
+            }
+
             screenMousePos = currentMousePos;
             currentMousePos -= transform;
 

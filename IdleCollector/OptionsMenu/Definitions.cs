@@ -27,6 +27,7 @@ namespace IdleCollector
         public string Label { get; set; }
         public string Type { get; set; }
         public float Row { get; set; }
+        public float Column { get; set; }
         public string Action { get; set; }
         public string Target { get; set; }
         public string Binding { get; set; }

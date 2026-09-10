@@ -30,14 +30,10 @@ namespace IdleCollector
         public static string MainScene = "Main Scene";
         public static float time;
 
-        private bool _adjustingWindowSize;
-        private Point _lastClientSize;
-
         public Game1()
         {
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += OnClientSizeChanged;
-            Window.ClientSizeChanged += (_, _) => Renderer.UpdateScreenSize(Window.ClientBounds.Size);
 
             _graphics = new GraphicsDeviceManager(this);
             _graphics.PreferredBackBufferWidth = 1920 / 4;
@@ -62,9 +58,6 @@ namespace IdleCollector
             Instance = this;
 
             Renderer.UpdateScreenSize(GraphicsDevice.Viewport.Bounds.Size);
-            _lastClientSize = new Point(
-                _graphics.PreferredBackBufferWidth,
-                _graphics.PreferredBackBufferHeight);
 
             SceneManager.Initialize(MainScene, _graphics, new Point(240 * 2, 135 * 2));
             Drawing.Initialize(_spriteBatch);
@@ -81,51 +74,7 @@ namespace IdleCollector
             if (size.X <= 0 || size.Y <= 0)
                 return;
 
-            if (_adjustingWindowSize)
-            {
-                _lastClientSize = size;
-                return;
-            }
-
-            if (_lastClientSize == Point.Zero)
-            {
-                _lastClientSize = size;
-                return;
-            }
-
-            int widthChange = Math.Abs(size.X - _lastClientSize.X);
-            int heightChange = Math.Abs(size.Y - _lastClientSize.Y);
-
-            int width;
-            int height;
-
-            if (widthChange >= heightChange)
-            {
-                width = size.X;
-                height = (int)Math.Round(width * 9f / 16f);
-            }
-            else
-            {
-                height = size.Y;
-                width = (int)Math.Round(height * 16f / 9f);
-            }
-
-            _lastClientSize = new Point(width, height);
-
-            if (size == _lastClientSize)
-                return;
-
-            _adjustingWindowSize = true;
-            try
-            {
-                _graphics.PreferredBackBufferWidth = width;
-                _graphics.PreferredBackBufferHeight = height;
-                _graphics.ApplyChanges();
-            }
-            finally
-            {
-                _adjustingWindowSize = false;
-            }
+            Renderer.UpdateScreenSize(size);
         }
         #endregion
 
@@ -180,9 +129,11 @@ namespace IdleCollector
         {
             Bloom BloomEffect = Bloom.Instance;
             FileIO.ReadJsonInto(BloomEffect.Config, "Content/Config/Bloom");
+            Blur BlurEffect = Blur.Instance;
+            FileIO.ReadJsonInto(BlurEffect.Config, "Content/Config/Blur");
 
             Renderer.AddPostProcess("Background", BloomEffect);
-            Renderer.AddPostProcess("MaskedBlur", Blur.Instance);
+            Renderer.AddPostProcess("MaskedBlur", BlurEffect);
         }
 
         #endregion
@@ -211,7 +162,7 @@ namespace IdleCollector
             _spriteBatch.Begin();
 
             if (_fpsFont != null)
-                _spriteBatch.DrawString(_fpsFont, _fpsText, new Vector2(6, 6), Color.Black,
+                _spriteBatch.DrawString(_fpsFont, _fpsText, Renderer.PresentationBounds.Location.ToVector2() + new Vector2(6, 6), Color.Black,
                     0f, Vector2.Zero, .25f, SpriteEffects.None, 0f);
 
             //if (online != null)

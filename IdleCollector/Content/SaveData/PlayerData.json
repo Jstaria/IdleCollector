@@ -1,6 +1,6 @@
 {
   "speed": 2,
-  "spawnRange": 50,
+  "spawnRange": 500,
   "interactRange": 10,
   "pickupRange": 50,
   "spawnFrequency": 1.0

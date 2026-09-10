@@ -121,10 +121,6 @@ namespace IdleCollector
         {
             base.InteractWith(collider);
 
-            float distance = CollisionHelper.GetDistance(this, collider);
-
-            Color color = DrawColor;
-
             SetRotation(collider, 20, .2f, false);
         }
 

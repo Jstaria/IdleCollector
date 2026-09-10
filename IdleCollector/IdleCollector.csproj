@@ -68,6 +68,9 @@
     <ProjectReference Include="..\SkillTreeCreationTool\SkillTreeCreationTool.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Content\Config\Blur.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Content\Config\Bloom.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

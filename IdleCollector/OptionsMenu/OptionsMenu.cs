@@ -121,11 +121,11 @@ namespace IdleCollector
 
             return item.Type switch
             {
-                "button" => new MenuButton(GetButtonConfig(item.Label, item.Row,
+                "button" => new MenuButton(GetButtonConfig(item.Label, item.Row, item.Column,
                     () => { ExecuteAction(item); NudgeButtonScale(menuId, item.Id, nudgeValue); },
                     () => HoverButton(menuId, item.Id))),
                 "slider" => CreateSlider(menuId, item),
-                "checkbox" => new CheckBox(GetButtonConfig(item.Label, item.Row,
+                "checkbox" => new CheckBox(GetButtonConfig(item.Label, item.Row, item.Column,
                     () => NudgeButtonScale(menuId, item.Id, nudgeValue),
                     () => HoverButton(menuId, item.Id)),
                     _ => ExecuteCheckAction(item),
@@ -139,7 +139,7 @@ namespace IdleCollector
             SliderBinding binding = GetSliderBinding(item);
             int steps = item.Steps ?? MenuData.divisions;
 
-            return new Slider(GetButtonConfig(item.Label, item.Row, null, () => HoverButton(menuId, item.Id)),
+            return new Slider(GetButtonConfig(item.Label, item.Row, item.Column, null, () => HoverButton(menuId, item.Id)),
                 value => SetSliderValue(binding, value, steps),
                 () => GetSliderValue(binding, steps),
                 steps);
@@ -174,6 +174,9 @@ namespace IdleCollector
             if (item.Action == "toggleBloom")
                 return Bloom.Instance.Toggle();
 
+            if (item.Action == "toggleBlur")
+                return Blur.Instance.Toggle();
+
             throw new InvalidOperationException($"Unsupported options checkbox action '{item.Action}'.");
         }
 
@@ -184,6 +187,9 @@ namespace IdleCollector
 
             if (item.Binding == "hasBloom")
                 return Bloom.Instance.UseBloom;
+
+            if (item.Binding == "hasBlur")
+                return Blur.Instance.UseBlur;
 
             throw new InvalidOperationException($"Unsupported options checkbox binding '{item.Binding}'.");
         }
@@ -204,6 +210,10 @@ namespace IdleCollector
             RegisterDefaultVolumeBinding(nameof(VolumeController.CharacterVolume));
             RegisterDefaultVolumeBinding(nameof(VolumeController.AmbientVolume));
             RegisterSliderBinding("bloomStrength", () => Bloom.Instance.Config.bloomStrength, Bloom.Instance.SetBloom);
+            RegisterSliderBinding(
+                "blurStrength",
+                () => (Blur.Instance.MaxBlurRadius) / 8f,
+                value => Blur.Instance.SetBlurRadius((int)MathF.Round(1 + value * 7f)));
         }
 
         private void RegisterDefaultVolumeBinding(string propertyName)
@@ -305,10 +315,11 @@ namespace IdleCollector
             buttons[menuId][itemId].button.ScaleSpring.Nudge(nudgeValue);
         }
 
-        private ButtonConfig GetButtonConfig(string buttonText, float row, OnButtonClick clickFunc = null, OnButtonHover hoverFunc = null)
+        private ButtonConfig GetButtonConfig(string buttonText, float row, float column, OnButtonClick clickFunc = null, OnButtonHover hoverFunc = null)
         {
             ButtonConfig config = new ButtonConfig();
             config.bounds = new Rectangle(startingPosition.ToPoint(), new Point(150, 30) * Renderer.UIScaler);
+            config.bounds.X += (int)(column * 175);
             config.bounds.Y += (int)(row * 175);
             config.texts = new string[] { buttonText, "<fx 0,0,0,0,1>></fx> " + buttonText + " <fx 0,0,0,0,2><</fx>" };
             config.font = "DePixelHalbfett";

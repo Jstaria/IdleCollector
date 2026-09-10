@@ -30,7 +30,7 @@ float4 MaskedBlurPS(VertexShaderOutput input) : COLOR
         return original;
 
     float blurAmount = saturate((maskCutoff - maskValue) / max(maskCutoff, 0.0001));
-    const int shaderMaxRadius = 4;
+    const int shaderMaxRadius = 8;
     int radius = clamp((int)ceil(blurAmount * min(maxBlurRadius, shaderMaxRadius)), 1, shaderMaxRadius);
     float sigma = max(0.5, radius * 0.5);
     float3 blurredColor = 0.0;

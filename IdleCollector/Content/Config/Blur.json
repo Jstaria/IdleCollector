@@ -1,0 +1,5 @@
+{
+  "useBlur": true,
+  "maskCutoff": 0.4,
+  "maxBlurRadius": 4
+}
