@@ -13,7 +13,7 @@ namespace IdleEngine
     public class RandomHelper
     {
         private static RandomHelper instance;
-
+        private FastNoiseLite noise;
         private Random random = new Random();
         private int seed;
 
@@ -32,10 +32,18 @@ namespace IdleEngine
         {
             random = new Random();
             seed = random.Next(0, int.MaxValue);
+            noise = new FastNoiseLite(seed);
+            noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+            noise.SetFrequency(.01f);
             random = new Random(seed);
         }
 
-        public void SetSeed(int seed) => random = new Random(seed);
+        public void SetSeed(int seed)
+        {
+            random = new Random(seed);
+            noise = new FastNoiseLite(seed);
+        }
+
         public int GetSeed() => seed;
 
         public int GetInt(int min, int max) => random.Next(min, max + 1);
@@ -64,6 +72,8 @@ namespace IdleEngine
 
             return doubles;
         }
+
+        public float GetFloatNoise(Vector2 position) => noise.GetNoise(position.X, position.Y);
 
         public float GetFloat(float min, float max)
         {

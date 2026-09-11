@@ -1,6 +1,7 @@
 ﻿using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace IdleCollector
         private float coolDown = 1;
         private bool playGrass;
         private bool prevGrass;
+        private float hue;
+
         public override Vector2 Origin { get => new Vector2(Bounds.Width / 2, Bounds.Height / 2); }
         public float CoolDown => coolDown;
 
@@ -43,6 +46,7 @@ namespace IdleCollector
 
         public override void StandardUpdate(GameTime gameTime)
         {
+            //hue = (float)gameTime.TotalGameTime.TotalSeconds * 20;
             float elapsedSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (coolDown > 0)
@@ -102,6 +106,9 @@ namespace IdleCollector
         }
         public override void SecondaryInteractWith(Entity collider)
         {
+            //float noise = (RandomHelper.Instance.GetFloatNoise(Position / 5) + 1) * 180;
+            //Color = RandomHelper.Instance.GetColor(getRGB((int)noise - 40), getRGB((int)noise + 40));
+
             Color = RandomHelper.Instance.GetColor(touched[0], touched[1]);
         }
 
@@ -109,6 +116,47 @@ namespace IdleCollector
         {
             posSpring.Nudge(strength);
             rotSpring.Nudge(strength);
+        }
+
+        public Color getRGB(int H, double S = 1, double V = 1)
+        {
+            H %= 360;
+            H = Math.Abs(H);
+
+            double dC = (V * S);
+            double Hd = ((double)H) / 60;
+            double dX = (dC * (1 - Math.Abs((Hd % 2) - 1)));//dC * (1 - ((Hd + 1) % 2));
+
+            int C = (int)(dC * 255);
+            int X = (int)(dX * 255);
+
+            //Console.WriteLine("H:" + H + " S:" + S + " V:" + V + ", C: " + C + " X:" + X + " Hd:" + Hd);
+
+            if (Hd < 1)
+            {
+                return new Color(C, X, 0);
+            }
+            else if (Hd < 2)
+            {
+                return new Color(X, C, 0);
+            }
+            else if (Hd < 3)
+            {
+                return new Color(0, C, X);
+            }
+            else if (Hd < 4)
+            {
+                return new Color(0, X, C);
+            }
+            else if (Hd < 5)
+            {
+                return new Color(X, 0, C);
+            }
+            else if (Hd < 6)
+            {
+                return new Color(C, 0, X);
+            }
+            return new Color(0, 0, 0);
         }
 
         public override void ApplyWind(Vector2 windScroll, FastNoiseLite noise)

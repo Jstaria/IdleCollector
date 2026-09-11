@@ -1,6 +1,6 @@
 {
   "bloomThreshold": 0.075,
-  "bloomStrength": 0.6,
+  "bloomStrength": 0.4,
   "bloomTint": {
     "B": 255,
     "G": 255,
@@ -81,12 +81,36 @@
       "G": 204,
       "R": 250,
       "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
+    },
+    {
+      "B": 158,
+      "G": 204,
+      "R": 250,
+      "A": 255
     }
   ],
   "bloomExclusionTolerance": 0.95,
   "bloomExclusionSoftness": 0.02,
   "bloomExclusionStrength": 0.4,
   "bloomBoostColors": [
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
+    {
+      "B": 201,
+      "G": 138,
+      "R": 222,
+      "A": 255
+    },
     {
       "B": 201,
       "G": 138,
