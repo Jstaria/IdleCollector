@@ -75,14 +75,9 @@ namespace IdleCollector
 
         private CustomText PauseText;
 
-        private void SetupDebug()
-        {
-
-        }
-
-        #region // Update & Draw
         public GameManager()
         {
+            instance = this;
             Type = UpdateType.Standard;
 
             musicCon = AudioController.Instance;
@@ -90,6 +85,13 @@ namespace IdleCollector
 
             Setup();
         }
+
+        private void SetupDebug()
+        {
+
+        }
+
+        #region // Update & Draw
 
         public void ControlledUpdate(GameTime gameTime)
         {

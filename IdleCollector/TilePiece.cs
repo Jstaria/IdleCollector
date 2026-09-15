@@ -21,6 +21,9 @@ namespace IdleCollector
         private List<InnerTile> innerTiles;
         private List<Interactable> producingInteractables;
         private float layerDepth;
+        private int actLeft;
+        private int actAttempts;
+        private bool calledForFlora;
 
         public bool debugColorSwap { get; set; }
         public string TextureKey { get => textureKey; }
@@ -35,6 +38,15 @@ namespace IdleCollector
         public float LayerDepth { get => layerDepth; set => layerDepth = value; }
         public UpdateType Type { get; set; }
         public Vector2 Origin { get; set; }
+        public int ActivationAttempts
+        {
+            get { return actAttempts; }
+            set { 
+                actAttempts = value;
+                foreach (InnerTile tile in innerTiles)
+                    tile.ActivationsLeft = value;       
+            }
+        }
         #endregion
 
         public TilePiece(Rectangle bounds, string textureKey, string tileType, Point tilePosition, Color color)
@@ -82,7 +94,7 @@ namespace IdleCollector
             {
                 InnerTile tile = innerTiles[j];
 
-                if (tile.InteractableCount > 0) continue;
+                if (innerTiles[j].ActivationsLeft == 0) continue;
 
                 affectedTile = true;
 
@@ -92,27 +104,34 @@ namespace IdleCollector
                 var assembly = Assembly.GetExecutingAssembly();
                 List<InteractableStats> types = SpawnManager.Instance.GetSpawnedTypes();
 
-                for (int i = 0; i < types.Count; i++)
+                if (!calledForFlora && innerTiles[j].ActivationsLeft == 1)
                 {
-                    Vector2 position = random.GetVector2(Bounds);
-
-                    object interactable = Activator.CreateInstance(assembly.GetType("IdleCollector." + types[i].ClassName));
-
+                    for (int i = 0; i < types.Count; i++)
                     {
-                        Interactable plant = (Interactable)interactable;
-                        plant.Bounds = new Rectangle(position.ToPoint(), plant.Bounds.Size);
-                        plant.Position = position;
-                        plant.Radius = 8;
-                        float yPos = position.Y + plant.Origin.Y;
-                        plant.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
-                        plant.WorldDepth = worldBounds.Y;
-                        plant.WorldHeight = worldBounds.Height;
-                        plant.DrawColor = Color;
-                        producingInteractables.Add(plant);
+                        calledForFlora = true;
+                        Vector2 position = random.GetVector2(Bounds);
+
+                        object interactable = Activator.CreateInstance(assembly.GetType("IdleCollector." + types[i].ClassName));
+
+                        {
+                            Interactable plant = (Interactable)interactable;
+                            plant.Bounds = new Rectangle(position.ToPoint(), plant.Bounds.Size);
+                            plant.Position = position;
+                            plant.Radius = 8;
+                            float yPos = position.Y + plant.Origin.Y;
+                            plant.LayerDepth = (yPos - worldBounds.Y) / (float)worldBounds.Height + float.Epsilon;
+                            plant.WorldDepth = worldBounds.Y;
+                            plant.WorldHeight = worldBounds.Height;
+                            plant.DrawColor = Color;
+                            producingInteractables.Add(plant);
+                        }
                     }
                 }
 
-                for (int i = 0; i < 8; i++)
+                int grassNum = 8 / ActivationAttempts + (RandomHelper.Instance.GetInt(0,3) == 0 ? 1 : 0);
+                innerTiles[j].ActivationsLeft--;
+
+                for (int i = 0; i < grassNum; i++)
                 {
                     Vector2 position = random.GetVector2(keyBounds);
 
@@ -123,7 +142,7 @@ namespace IdleCollector
                     grass.Bounds = new Rectangle(position.ToPoint(), ResourceAtlas.GetRandomTileRect("grass").Size);
                     float yPos = position.Y + grass.Origin.Y;
                     grass.LayerDepth = MathHelper.Clamp((yPos - worldBounds.Y - worldBounds.Height) / ((float)worldBounds.Height * 2), 0.00001f, .9999f);
-                    grass.Color = Color;
+                    grass.ApplyColor(Color);
                     grass.WorldDepth = worldBounds.Y;
                     grass.WorldHeight = worldBounds.Height;
 
@@ -168,7 +187,7 @@ namespace IdleCollector
 
         public void DrawTile(SpriteBatch sb)
         {
-            sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, ResourceAtlas.GetTileRect(TileType, TextureKey), color, 0, Vector2.Zero, SpriteEffects.None, layerDepth);
+            sb.Draw(ResourceAtlas.TilemapAtlas, Bounds, ResourceAtlas.GetTileRect(TileType, TextureKey), color, MathF.PI / 2, new Vector2(0, Bounds.Size.X), SpriteEffects.FlipVertically, layerDepth);
         }
 
         public void Draw(SpriteBatch sb)

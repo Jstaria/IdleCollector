@@ -14,6 +14,7 @@ namespace IdleEngine
     {
         private static RandomHelper instance;
         private FastNoiseLite noise;
+        private FastNoiseLite.NoiseType type;
         private Random random = new Random();
         private int seed;
 
@@ -32,8 +33,9 @@ namespace IdleEngine
         {
             random = new Random();
             seed = random.Next(0, int.MaxValue);
+            type = FastNoiseLite.NoiseType.OpenSimplex2;
             noise = new FastNoiseLite(seed);
-            noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+            noise.SetNoiseType(type);
             noise.SetFrequency(.01f);
             random = new Random(seed);
         }
@@ -74,7 +76,14 @@ namespace IdleEngine
         }
 
         public float GetFloatNoise(Vector2 position) => noise.GetNoise(position.X, position.Y);
+        public float GetFloatNoise(Vector2 position, FastNoiseLite.NoiseType type)
+        {
+            noise.SetNoiseType(type);
+            float value = noise.GetNoise(position.X, position.Y);
+            noise.SetNoiseType(this.type);
 
+            return value;
+        }
         public float GetFloat(float min, float max)
         {
             float t = (float)GetDouble();

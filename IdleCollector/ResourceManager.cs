@@ -128,6 +128,8 @@ namespace IdleCollector
 
         private string jsonPath = "Content/SaveData/ResourceData";
 
+        public bool IsPaused { get; set; }
+
         public ResourceManager()
         {
             instance = this;
@@ -315,6 +317,8 @@ namespace IdleCollector
                 objs[i].Draw(sb, Position, colorFade);
             }
 
+            if (IsPaused) return;
+
             for (int i = 0; i < resourceObjs.Count; i++)
             {
                 resourceObjs[i].Draw(sb);
@@ -365,6 +369,7 @@ namespace IdleCollector
         public void OnIsPaused(bool paused)
         {
             targetFade = paused ? 0 : 1;
+            IsPaused = paused;
         }
     }
 }

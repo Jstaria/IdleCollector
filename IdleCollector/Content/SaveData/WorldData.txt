@@ -3,3 +3,4 @@ WorldSizeY: 50
 WorldTreeDepth: 5
 WorldNoiseFrequency: .0025
 TileSize: 32
+ActivationAttempts: 4

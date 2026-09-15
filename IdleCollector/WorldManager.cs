@@ -20,6 +20,7 @@ namespace IdleCollector
         private int WorldSizeY = 10;
         private float WorldNoiseFrequency = .01f;
         private int TileSize = 32;
+        private int ActivationAttempts = 2;
 
         private int seed = 1;
 
@@ -326,6 +327,7 @@ namespace IdleCollector
 
                     worldFloor[i, j] = new TilePiece(bounds, tileName, tileType, new Point(i, j), color);
                     worldFloor[i, j].LayerDepth = 0.0f;
+                    worldFloor[i, j].ActivationAttempts = ActivationAttempts;
                     tileTree.AddChild(worldFloor[i, j], bounds.Location);
                 }
 

@@ -18,6 +18,7 @@ namespace IdleCollector
 
         public EmptyCollider Collider { get; set; }
         public float Cooldown { get; set; }
+        public int ActivationsLeft { get; set; }
         public int InteractableCount { get => interactables.Count; }
         public float LayerDepth { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Color Color { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -80,13 +81,15 @@ namespace IdleCollector
         public void SecondaryInteractWith(Entity entity)
         {
             if (interactables.Count == 0) return;
-            if (!(Cooldown <= 0 && !alreadyInteractedWith)) return;
-
-            alreadyInteractedWith = true;
-            ResourceManager.Instance.SpawnResourceUIObj(entity.Position/*Collider.Position + Collider.Origin*/, grassResource);
+            if (!(Cooldown <= 0 && ActivationsLeft >= 0)) return;
 
             foreach (Interactable interactable in interactables)
                 interactable.SecondaryInteractWith(entity);
+
+            if (alreadyInteractedWith) return;
+            ResourceManager.Instance.SpawnResourceUIObj(entity.Position/*Collider.Position + Collider.Origin*/, grassResource);
+
+            alreadyInteractedWith = true;
         }
     }
 }

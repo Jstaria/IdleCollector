@@ -112,7 +112,7 @@ namespace IdleCollector
 
         protected virtual void SpawnResource(string name, int fps, Point frameCount, ResourceInfo info, GameTime gameTime)
         {
-            if (spawnedResources.Count > productionLimit) return;
+            if (spawnedResources.Count >= productionLimit) return;
             passedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (passedTime < 1) return;
