@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace SkillTreeCreationTool
         public Point GridPosition { get; set; }
         public List<int> ParentTokenIDs { get; set; }
         public List<int> ChildTokenIDs { get; set; }
+        public List<SkillEffectDefinition> Effects { get; set; }
         [JsonIgnore] public List<SkillTreeToken> ChildTokens { get; set; }
         [JsonIgnore] public List<SkillTreeToken> ParentTokens { get; set; }
 
@@ -30,6 +32,7 @@ namespace SkillTreeCreationTool
             GridPosition = gridPosition;
             ParentTokenIDs = new List<int>();
             ChildTokenIDs = new List<int>();
+            Effects = new List<SkillEffectDefinition>();
             ChildTokens = new List<SkillTreeToken>();
             ParentTokens = new List<SkillTreeToken>();
             IsCollected = false;

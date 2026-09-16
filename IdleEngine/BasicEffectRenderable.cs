@@ -35,14 +35,14 @@ namespace IdleEngine
         public void Draw(SpriteBatch sb)
         {
             sb.End();
-            Renderer.ResetBeginDrawEffect(sb, effect);
+            Renderer.ResetBeginDraw(sb, effect, DrawSpace.World);
 
             DrawEvent?.Invoke(effect);
 
             sb.Draw(Drawing.Pixel, position, null, color, 0, Vector2.Zero, size, SpriteEffects.None, layerDepth);
 
             sb.End();
-            Renderer.ResetBeginDraw(sb);
+            Renderer.ResetBeginDraw(sb, drawSpace: DrawSpace.World);
         }
 
         public void Move(Vector2 direction) => position += direction;

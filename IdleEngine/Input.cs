@@ -33,13 +33,15 @@ namespace IdleEngine
         private static int currentScroll;
         private static int prevScroll;
 
+        public static bool IsMouseInPresentationBounds { get; private set; }
+
         public static void Initialize()
         {
             prevKeysPressed = new Keys[64];
             currentKeysPressed = new Keys[64];
 
-            currentMousePos = new Point(0, 0);
-            prevMousePos = new Point(0, 0);
+            currentMousePos = Point.Zero;
+            prevMousePos = Point.Zero;
 
             // Initialize can be found in SceneManager.cs just after Updater Init
             Updater.AddToLateUpdate(Update);
@@ -63,16 +65,9 @@ namespace IdleEngine
             Point transform = Renderer.CurrentCamera == null ? Point.Zero : Renderer.CurrentCamera.Position;
             Rectangle presentationBounds = Renderer.PresentationBounds;
 
-            if (!presentationBounds.Contains(currentMousePos))
-            {
-                currentMousePos = new Point(-1, -1);
-            }
-            else
-            {
-                currentMousePos.X = (int)((currentMousePos.X - presentationBounds.X) * ((float)renderSize.X / presentationBounds.Width));
-                currentMousePos.Y = (int)((currentMousePos.Y - presentationBounds.Y) * ((float)renderSize.Y / presentationBounds.Height));
-            }
-
+            IsMouseInPresentationBounds = presentationBounds.Contains(currentMousePos);
+            currentMousePos.X = (int)((currentMousePos.X - presentationBounds.X) * ((float)renderSize.X / presentationBounds.Width));
+            currentMousePos.Y = (int)((currentMousePos.Y - presentationBounds.Y) * ((float)renderSize.Y / presentationBounds.Height));
             screenMousePos = currentMousePos;
             currentMousePos -= transform;
 

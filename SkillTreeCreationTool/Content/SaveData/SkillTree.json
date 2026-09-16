@@ -2,7 +2,7 @@
   "GridSpacing": 16,
   "IconSize": 32,
   "DefaultIcon": "default-icon",
-  "TokenID": 36,
+  "TokenID": 38,
   "treeTokens": {
     "0": {
       "TokenIcon": "default-icon",
@@ -22,6 +22,7 @@
         0,
         0
       ],
+      "Effects": [],
       "IsCollected": true,
       "IsCollectable": true
     },
@@ -39,6 +40,7 @@
         4,
         4
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": true
     },
@@ -56,6 +58,7 @@
         3,
         3
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": true
     },
@@ -73,6 +76,7 @@
         5,
         5
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": true
     },
@@ -90,6 +94,7 @@
         6,
         6
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": true
     },
@@ -107,6 +112,7 @@
         7,
         7
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": true
     },
@@ -124,6 +130,7 @@
         8,
         8
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": true
     },
@@ -140,6 +147,7 @@
       "ChildTokenIDs": [
         9
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -154,6 +162,7 @@
         8
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -168,6 +177,7 @@
         6
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -182,6 +192,7 @@
         6
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -196,6 +207,7 @@
         7
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -212,6 +224,7 @@
       "ChildTokenIDs": [
         14
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -228,6 +241,7 @@
       "ChildTokenIDs": [
         15
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -242,6 +256,7 @@
         5
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -256,6 +271,7 @@
         3
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -270,6 +286,7 @@
         3
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -284,6 +301,7 @@
         4
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -300,6 +318,7 @@
       "ChildTokenIDs": [
         20
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -320,6 +339,7 @@
         21,
         21
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -342,6 +362,7 @@
         22,
         22
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -356,6 +377,7 @@
         22
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -370,6 +392,7 @@
         22
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -384,6 +407,7 @@
         21
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -398,6 +422,7 @@
         21
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -413,6 +438,7 @@
         33,
         33
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": true
     },
@@ -429,6 +455,7 @@
       "ChildTokenIDs": [
         34
       ],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -444,6 +471,7 @@
         33
       ],
       "ChildTokenIDs": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     }

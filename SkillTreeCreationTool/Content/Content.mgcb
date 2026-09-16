@@ -645,6 +645,11 @@
 /processor:FontDescriptionProcessor
 /build:Fonts/DePixelHalbfett.spritefont
 
+#begin Fonts/EffectEditor.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/EffectEditor.spritefont
+
 #begin Fonts/DePixelHalbfettTitle.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

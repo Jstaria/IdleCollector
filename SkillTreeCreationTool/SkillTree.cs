@@ -126,6 +126,13 @@ namespace SkillTreeCreationTool
             }
         }
 
+        private void UnlockSkill(int tokenId)
+        {
+            SkillTreeToken token = GetToken(tokenId);
+
+            token.Collect();
+        }
+
         private void DrawDebug(SpriteBatch sb)
         {
             int gridSize = 100;
@@ -268,6 +275,21 @@ namespace SkillTreeCreationTool
 
         public int GetTokenID(Point gridPosition) => tokenPositions[gridPosition].TokenID;
         public SkillTreeToken GetToken(Point gridPosition) => tokenPositions[gridPosition];
+        public SkillTreeToken GetToken(int id) => treeTokens[id];
+
+        public void AddEffect(Point gridPosition, SkillEffectDefinition effect)
+        {
+            SkillTreeToken token = GetToken(gridPosition);
+            token.Effects ??= new List<SkillEffectDefinition>();
+            token.Effects.Add(effect);
+        }
+
+        public void AddEffect(int tokenId, SkillEffectDefinition effect)
+        {
+            SkillTreeToken token = treeTokens[tokenId];
+            token.Effects ??= new List<SkillEffectDefinition>();
+            token.Effects.Add(effect);
+        }
 
         public void SetTokenParent(SkillTreeToken parentToken, SkillTreeToken childToken)
         {
@@ -313,6 +335,7 @@ namespace SkillTreeCreationTool
 
             foreach (SkillTreeToken token in treeTokens.Values)
             {
+                token.Effects ??= new List<SkillEffectDefinition>();
                 tokenPositions.Add(token.GridPosition, token);
             }
         }

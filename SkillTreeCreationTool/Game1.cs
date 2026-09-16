@@ -3,6 +3,7 @@ using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace SkillTreeCreationTool
 {
@@ -17,6 +18,7 @@ namespace SkillTreeCreationTool
         private SkillTree skillTree;
         private SkillTreeEditor skillTreeEditor;
         private Camera camera;
+        private static readonly Queue<char> textInput = new();
 
         public static Game Instance;
 
@@ -27,6 +29,20 @@ namespace SkillTreeCreationTool
             _graphics.PreferredBackBufferHeight = 720;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            Window.TextInput += OnTextInput;
+        }
+
+        public static string ConsumeTextInput()
+        {
+            char[] characters = textInput.ToArray();
+            textInput.Clear();
+            return new string(characters);
+        }
+
+        private static void OnTextInput(object sender, TextInputEventArgs e)
+        {
+            if (!char.IsControl(e.Character))
+                textInput.Enqueue(e.Character);
         }
 
         protected override void Initialize()
@@ -67,6 +83,7 @@ namespace SkillTreeCreationTool
 
             skillTreeEditor = new SkillTreeEditor(skillTree);
             SceneManager.AddToScene(skillTreeEditor);
+            Renderer.AddToSceneUIDraw(skillTreeEditor.DrawUi);
 
             //skillTree.SaveSkillTree();
 

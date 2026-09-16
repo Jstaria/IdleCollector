@@ -13,6 +13,12 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
+    public enum DrawSpace
+    {
+        Screen,
+        World
+    }
+
     public static class Renderer
     {
         public delegate void OnDraw(SpriteBatch sb);
@@ -121,33 +127,20 @@ namespace IdleEngine
 
         public static void ResetRenderTargetUI(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(uiTexture);
         public static void ResetRenderTarget(SpriteBatch sb) => sb.GraphicsDevice.SetRenderTarget(renderTexture);
-        public static void ResetBeginDraw(SpriteBatch sb) => sb.Begin(
+        public static void ResetBeginDraw(
+            SpriteBatch sb,
+            Effect effect = null,
+            DrawSpace drawSpace = DrawSpace.Screen,
+            BlendState blendState = null) => sb.Begin(
                 renderTexConfig.sortMode,
-                blendState: renderTexConfig.blendState,
+                blendState: blendState ?? renderTexConfig.blendState,
                 samplerState: renderTexConfig.samplerState,
                 depthStencilState: renderTexConfig.depthStencilState,
                 rasterizerState: renderTexConfig.rasterizerState,
-                effect: renderTexConfig.effect,
-                transformMatrix: renderTexConfig.transformMatrix
-                );
-        public static void ResetBeginDrawCam(SpriteBatch sb, BlendState state = null) => sb.Begin(
-               renderTexConfig.sortMode,
-               blendState: state == null ? renderTexConfig.blendState : state,
-               samplerState: renderTexConfig.samplerState,
-               depthStencilState: renderTexConfig.depthStencilState,
-               rasterizerState: renderTexConfig.rasterizerState,
-               effect: renderTexConfig.effect,
-               transformMatrix: CurrentCamera.Transform
-               );
-
-        public static void ResetBeginDrawEffect(SpriteBatch sb, Effect effect) => sb.Begin(
-                renderTexConfig.sortMode,
-                blendState: renderTexConfig.blendState,
-                samplerState: renderTexConfig.samplerState,
-                depthStencilState: renderTexConfig.depthStencilState,
-                rasterizerState: renderTexConfig.rasterizerState,
-                effect: effect,
-                transformMatrix: renderTexConfig.transformMatrix
+                effect: effect ?? renderTexConfig.effect,
+                transformMatrix: drawSpace == DrawSpace.World && CurrentCamera != null
+                    ? CurrentCamera.Transform
+                    : renderTexConfig.transformMatrix
                 );
 
         public static void DrawToRenderTargets(SpriteBatch sb)
