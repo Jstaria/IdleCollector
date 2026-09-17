@@ -414,6 +414,7 @@ namespace IdleEngine
 
         internal static void SwapScene(string sceneName)
         {
+            EarlyDrawEvent = EarlyDrawEvents[sceneName];
             DrawEvent = DrawEvents[sceneName];
             UIDrawEvent = UIDrawEvents[sceneName];
         }
@@ -423,6 +424,7 @@ namespace IdleEngine
             if (DrawEvents.ContainsKey(sceneName))
                 throw new Exception(String.Format("Events already has scene: {0}", sceneName));
             DrawEvents.Add(sceneName, (SpriteBatch sb) => { });
+            EarlyDrawEvents.Add(sceneName, (SpriteBatch sb) => { });
             UIDrawEvents.Add(sceneName, (SpriteBatch sb) => { });
         }
 
@@ -441,7 +443,12 @@ namespace IdleEngine
         /// <summary>
         /// Adds to a scene's early draw loop, must swap scene to see effects
         /// </summary>
-        public static void AddToSceneEarlyDraw(string sceneName, OnDraw func) => EarlyDrawEvents[sceneName] += func;
+        public static void AddToSceneEarlyDraw(string sceneName, OnDraw func)
+        {
+            EarlyDrawEvents[sceneName] += func;
+            if (SceneManager.CurrentSceneName == sceneName)
+                EarlyDrawEvent = EarlyDrawEvents[sceneName];
+        }
         /// <summary>
         /// Adds to current early scene's draw loop, does not require scene swap
         /// </summary>

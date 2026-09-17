@@ -1,5 +1,6 @@
 ﻿using IdleCollector;
 using IdleEngine;
+using IdleEngine.PostProcesses;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,6 +21,7 @@ namespace SkillTreeCreationTool
         private SkillTreeEditor skillTreeEditor;
         private Camera camera;
         private static readonly Queue<char> textInput = new();
+        private bool suppressEscapeUntilReleased;
 
         public static Game Instance;
 
@@ -94,6 +96,7 @@ namespace SkillTreeCreationTool
             ResourceAtlas.LoadTextures(Content, "Content/Textures/Icons/", "Icons");
             ResourceAtlas.LoadFonts(Content, "Content/Fonts/", "Fonts");
             ResourceAtlas.LoadEffects(Content, "Content/Effects", "Effects");
+            LoadPostProcesses();
 
             skillTree = new SkillTree();
             skillTree.CollectToken(Point.Zero);
@@ -108,9 +111,24 @@ namespace SkillTreeCreationTool
             //Renderer.AddToSceneDraw((sb) => { sb.Draw(ResourceAtlas.GetTexture("board1"), new Vector2(0,0), Color.White);  });
         }
 
+        private static void LoadPostProcesses()
+        {
+            Bloom bloom = Bloom.Instance;
+            FileIO.ReadJsonInto(bloom.Config, "Content/Config/Bloom");
+            Renderer.AddPostProcess("Bloom", bloom);
+        }
+
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            bool escapeDown = Keyboard.GetState().IsKeyDown(Keys.Escape);
+            bool editingToken = skillTree?.editing == true;
+            if (!escapeDown)
+                suppressEscapeUntilReleased = false;
+            else if (editingToken)
+                suppressEscapeUntilReleased = true;
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                (!editingToken && escapeDown && !suppressEscapeUntilReleased))
                 Exit();
 
             Updater.Update(gameTime);
@@ -120,7 +138,7 @@ namespace SkillTreeCreationTool
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Gray);
+            GraphicsDevice.Clear(Color.White);
 
             Renderer.Draw(_spriteBatch);
 

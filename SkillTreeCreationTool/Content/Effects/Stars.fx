@@ -18,7 +18,7 @@ struct VertexShaderOutput
 #define ITER2 12
 #define iResolutionX 480.0f
 #define iResolutionY 270.0f
-#define OVERALL_TINT 0.5f
+#define OVERALL_TINT 1.0f
 
 #define GLOW_INTENSITY   0.004   // overall brightness of the halo
 #define GLOW_RADIUS      0.08     // how far the glow spreads (lower = tighter)

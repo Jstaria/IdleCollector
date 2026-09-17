@@ -16,6 +16,9 @@ namespace SkillTreeCreationTool
 {
     public class SkillTree : IScene
     {
+        private const float LinkLineThickness = 15f;
+        private const float LinkPulseTravelTime = 3f;
+
         [JsonRequired] public int GridSpacing = 100;
         [JsonRequired] public int IconSize = 50;
         [JsonIgnore] public Point IconSizePoint;
@@ -26,6 +29,8 @@ namespace SkillTreeCreationTool
 
         [JsonProperty] private Dictionary<int, SkillTreeToken> treeTokens;
         [JsonIgnore] private Dictionary<Point, SkillTreeToken> tokenPositions;
+        [JsonIgnore] private readonly Dictionary<(int Parent, int Child), LinkParticleSystem> linkParticles = new();
+        [JsonIgnore] public LinkParticleSettings LinkParticleSettings { get; } = new();
 
         [JsonIgnore] public float LayerDepth { get; set; }
         [JsonIgnore] public Color Color { get; set; }
@@ -36,6 +41,7 @@ namespace SkillTreeCreationTool
         private Point lastCameraPosition;
 
         private BasicEffectRenderable _renderable;
+        private LinkPulseRenderable linkPulseRenderable;
         public string SkillTreeScene = "SkillTreeScene";
         [JsonIgnore] private float time;
         [JsonIgnore] public float zoom = 1;
@@ -69,13 +75,21 @@ namespace SkillTreeCreationTool
                 Renderer.CurrentCamera.Zoom = 1;
             });
 
-            Renderer.AddToSceneEarlyDraw(_renderable);
+            Renderer.AddToSceneEarlyDraw(SkillTreeScene, _renderable);
+
+            linkPulseRenderable = new LinkPulseRenderable(
+                ResourceAtlas.GetEffect("LinkPulse"),
+                DrawLinkPulseLines,
+                () => time);
+            Renderer.AddToSceneEarlyDraw(SkillTreeScene, linkPulseRenderable);
         }
 
         private void SetFamilyTokens()
         {
             foreach (var token in treeTokens.Values)
             {
+                token.ChildTokens.Clear();
+                token.ParentTokens.Clear();
                 if (token.IconWidth <= 0)
                     token.IconWidth = IconSize;
                 if (token.IconHeight <= 0)
@@ -94,11 +108,16 @@ namespace SkillTreeCreationTool
                     token.ParentTokens.Add(treeTokens[parent]);
                 }
             }
+
+            RefreshTokenDepths();
         }
 
         public void Draw(SpriteBatch sb)
         {
             //DrawDebug(sb);
+
+            foreach (LinkParticleSystem particles in linkParticles.Values)
+                particles.Draw(sb, zoom);
 
             var tokens = treeTokens.Values.ToList();
 
@@ -116,17 +135,23 @@ namespace SkillTreeCreationTool
                 Rectangle tokenRect = new Rectangle((position - iconSize / 2f).ToPoint(), iconSize.ToPoint());
                 sb.Draw(tex, tokenRect, drawColor);
 
-                for (int j = 0; j < token.ParentTokenIDs.Count; j++)
+            }
+        }
+
+        private void DrawLinkPulseLines(SpriteBatch sb, Effect effect)
+        {
+            foreach (SkillTreeToken child in treeTokens.Values)
+            {
+                foreach (int parentId in child.ParentTokenIDs)
                 {
-                    int parent = token.ParentTokenIDs[j];
-                    Vector2 parentPos = (treeTokens[parent].GridPosition).ToVector2() * GridSpacing * zoom;
+                    if (!treeTokens.ContainsKey(parentId))
+                        continue;
 
-                    Vector2 point1 = Vector2.Lerp(position, parentPos, 1f / 3f);
-                    Vector2 point2 = Vector2.Lerp(position, parentPos, 2f / 3f);
-
-                    sb.DrawLineCentered(position, point1, 2 * zoom, token.IsCollected ? Color.White : drawColor, .25f);
-                    sb.DrawLineCentered(point1, point2, 3 * zoom, token.IsCollected ? Color.White : drawColor, .25f);
-                    sb.DrawLineCentered(point2, parentPos, 4 * zoom, token.IsCollected ? Color.White : drawColor, .25f);
+                    Vector2 start = GetWorldPosition(treeTokens[parentId].GridPosition).ToVector2() * zoom;
+                    Vector2 end = GetWorldPosition(child.GridPosition).ToVector2() * zoom;
+                    Color color = GetLinkColor(child.TokenID);
+                    effect.Parameters["pulseDelay"]?.SetValue(treeTokens[parentId].Depth * LinkPulseTravelTime);
+                    sb.DrawLineCentered(start, end, LinkLineThickness * zoom, color, .2f);
                 }
             }
         }
@@ -176,16 +201,17 @@ namespace SkillTreeCreationTool
         {
             foreach (SkillTreeToken token in treeTokens.Values)
             {
-                token.IsCollectable = token.ParentTokenIDs.All(token => treeTokens[token].IsCollected);
-
-                if (token.ParentTokenIDs.Count == 0 || token.ParentTokenIDs == null)
-                    token.IsCollectable = true;
+                token.IsCollected = true;
+                token.IsCollectable = true;
             }
+
         }
 
         public void StandardUpdate(GameTime gameTime)
         {
             time = (float)gameTime.TotalGameTime.TotalSeconds;
+            UpdateLinkParticles(gameTime);
+
             zoomTarget = Math.Clamp(zoomTarget, 0.5f, 2f);
             zoom = MathHelper.Lerp(zoom, zoomTarget, .25f);
 
@@ -222,9 +248,44 @@ namespace SkillTreeCreationTool
             zoomTarget -= Input.GetMouseScrollDelta() * .25f;
         }
 
-        public void ControlledUpdate(GameTime gameTime)
+        public void ControlledUpdate(GameTime gameTime) { }
+
+        private void UpdateLinkParticles(GameTime gameTime)
         {
-            //throw new NotImplementedException();
+            HashSet<(int Parent, int Child)> activeLinks = new();
+            foreach (SkillTreeToken child in treeTokens.Values)
+            {
+                foreach (int parentId in child.ParentTokenIDs)
+                {
+                    if (!treeTokens.ContainsKey(parentId))
+                        continue;
+
+                    var link = (Parent: parentId, Child: child.TokenID);
+                    activeLinks.Add(link);
+                    if (!linkParticles.TryGetValue(link, out LinkParticleSystem particles))
+                    {
+                        particles = new LinkParticleSystem(LinkParticleSettings);
+                        linkParticles.Add(link, particles);
+                    }
+
+                    particles.Update(gameTime, GetLinkStart(link), GetLinkEnd(link), GetLinkColor(link.Child));
+                }
+            }
+
+            foreach (var link in linkParticles.Keys.Where(link => !activeLinks.Contains(link)).ToList())
+                linkParticles.Remove(link);
+        }
+
+        private Vector2 GetLinkStart((int Parent, int Child) link) =>
+            GetWorldPosition(treeTokens[link.Parent].GridPosition).ToVector2() * zoom;
+
+        private Vector2 GetLinkEnd((int Parent, int Child) link) =>
+            GetWorldPosition(treeTokens[link.Child].GridPosition).ToVector2() * zoom;
+
+        private Color GetLinkColor(int childId)
+        {
+            SkillTreeToken child = treeTokens[childId];
+            return child.IsCollected ? Color.White : child.IsCollectable ? Color.White * .25f : Color.White * .05f;
         }
 
         public void CollectToken(Point gridPosition)
@@ -276,6 +337,7 @@ namespace SkillTreeCreationTool
 
             treeTokens.Remove(id);
             tokenPositions.Remove(gridPosition);
+            RefreshTokenDepths();
         }
 
         public bool CheckForToken(Point gridPosition)
@@ -308,6 +370,28 @@ namespace SkillTreeCreationTool
 
             parentToken.ChildTokens.Add(childToken);
             childToken.ParentTokens.Add(parentToken);
+            RefreshTokenDepths();
+        }
+
+        private void RefreshTokenDepths()
+        {
+            foreach (SkillTreeToken token in treeTokens.Values)
+                token.Depth = CalculateTokenDepth(token, new HashSet<int>());
+        }
+
+        private int CalculateTokenDepth(SkillTreeToken token, HashSet<int> visited)
+        {
+            if (!visited.Add(token.TokenID) || token.ParentTokenIDs.Count == 0)
+                return 0;
+
+            int depth = int.MaxValue;
+            foreach (int parentId in token.ParentTokenIDs)
+            {
+                if (treeTokens.TryGetValue(parentId, out SkillTreeToken parent))
+                    depth = Math.Min(depth, CalculateTokenDepth(parent, new HashSet<int>(visited)) + 1);
+            }
+
+            return depth == int.MaxValue ? 0 : depth;
         }
 
         public void SetTokenParent(Point parentPos, Point childPos)
