@@ -3,6 +3,7 @@ using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace SkillTreeCreationTool
@@ -24,9 +25,16 @@ namespace SkillTreeCreationTool
 
         public Game1()
         {
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnClientSizeChanged;
+
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.PreferredBackBufferWidth = 1920 / 4;
+            _graphics.PreferredBackBufferHeight = 1080 / 4;
+            _graphics.SynchronizeWithVerticalRetrace = true;
+            _graphics.IsFullScreen = false;
+            _graphics.HardwareModeSwitch = false;
+            _graphics.ApplyChanges();
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             Window.TextInput += OnTextInput;
@@ -49,6 +57,9 @@ namespace SkillTreeCreationTool
         {
             Instance = this;
 
+            Renderer.UpdateScreenSize(GraphicsDevice.Viewport.Bounds.Size);
+            Renderer.DrawPresentationEdgeReflections = false;
+
             SceneManager.Initialize(MainSceneName, _graphics, renderSize);
             SceneManager.AddScene("SkillTreeScene");
             SceneManager.SwapScene("SkillTreeScene");
@@ -65,6 +76,13 @@ namespace SkillTreeCreationTool
             FileIO.InDebug = true;
 
             base.Initialize();
+        }
+
+        private void OnClientSizeChanged(object sender, EventArgs e)
+        {
+            Point size = Window.ClientBounds.Size;
+            if (size.X > 0 && size.Y > 0)
+                Renderer.UpdateScreenSize(size);
         }
 
         protected override void LoadContent()

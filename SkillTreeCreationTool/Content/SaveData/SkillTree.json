@@ -22,7 +22,14 @@
         0,
         0
       ],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "This is a test",
+          "Value": "Cactus",
+          "Amount": 99.0,
+          "SkillEffectDescription": "This is a test"
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },

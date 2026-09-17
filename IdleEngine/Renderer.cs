@@ -77,6 +77,7 @@ namespace IdleEngine
         public static Rectangle UIBounds => new Rectangle(0, 0, 1920, 1080);
         public static Point UIScaler => new Point(UIBounds.Width / RenderSize.X, UIBounds.Height / RenderSize.Y);
         public static Rectangle PresentationBounds => CalculatePresentationBounds(ScreenSize);
+        public static bool DrawPresentationEdgeReflections { get; set; } = true;
 
         public static void Initialize(GraphicsDeviceManager deviceManager, Point renderSize)
         {
@@ -325,7 +326,8 @@ namespace IdleEngine
 
             sb.GraphicsDevice.Clear(Color.Black);
             sb.Begin(samplerState: SamplerState.PointClamp);
-            DrawMirroredPresentationEdges(sb, reflectionTexture, destinationRect, sb.GraphicsDevice.Viewport.Bounds);
+            if (DrawPresentationEdgeReflections)
+                DrawMirroredPresentationEdges(sb, reflectionTexture, destinationRect, sb.GraphicsDevice.Viewport.Bounds);
             sb.Draw(presentationTexture, destinationRect, Color.White);
             sb.End();
         }

@@ -76,6 +76,11 @@ namespace SkillTreeCreationTool
         {
             foreach (var token in treeTokens.Values)
             {
+                if (token.IconWidth <= 0)
+                    token.IconWidth = IconSize;
+                if (token.IconHeight <= 0)
+                    token.IconHeight = IconSize;
+
                 var childIDs = token.ChildTokenIDs;
                 var parentIDs = token.ParentTokenIDs;
 
@@ -106,10 +111,10 @@ namespace SkillTreeCreationTool
                     token.IsCollectable ? Color.White * .25f : Color.White * .05f;
 
                 Vector2 position = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-                Rectangle tokenRect = new Rectangle((position).ToPoint(), new Point((int)((float)IconSize * zoom)));
                 Texture2D tex = ResourceAtlas.GetTexture(token.TokenIcon);
-                Vector2 origin = new Vector2(tex.Width / 2, tex.Height / 2);
-                sb.Draw(tex, tokenRect, null, drawColor, 0, origin, SpriteEffects.None, 0.5f);
+                Vector2 iconSize = new Vector2(token.IconWidth, token.IconHeight) * zoom;
+                Rectangle tokenRect = new Rectangle((position - iconSize / 2f).ToPoint(), iconSize.ToPoint());
+                sb.Draw(tex, tokenRect, drawColor);
 
                 for (int j = 0; j < token.ParentTokenIDs.Count; j++)
                 {
@@ -242,11 +247,16 @@ namespace SkillTreeCreationTool
 
             int id = TokenID;
 
-            treeTokens.Add(id, new SkillTreeToken(DefaultIcon, gridPosition, id));
-            tokenPositions.Add(gridPosition, treeTokens[id]);
+            SkillTreeToken token = new SkillTreeToken(DefaultIcon, gridPosition, id)
+            {
+                IconWidth = IconSize,
+                IconHeight = IconSize
+            };
+            treeTokens.Add(id, token);
+            tokenPositions.Add(gridPosition, token);
             TokenID++;
 
-            return treeTokens[id];
+            return token;
         }
 
         public void RemoveToken(Point gridPosition)

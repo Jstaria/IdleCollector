@@ -36,6 +36,9 @@ namespace SkillTreeCreationTool
         private int activeEffectIndex = -1;
         private EffectField activeEffectField;
         private string activeAmountText = string.Empty;
+        private bool editedTokenWasCollected;
+        private IconSizeField activeIconSizeField;
+        private string iconSizeText = string.Empty;
 
         private enum EffectField
         {
@@ -44,6 +47,13 @@ namespace SkillTreeCreationTool
             Value,
             Amount,
             Description
+        }
+
+        private enum IconSizeField
+        {
+            None,
+            Width,
+            Height
         }
 
         public SkillTreeEditor(SkillTree st)
@@ -70,6 +80,10 @@ namespace SkillTreeCreationTool
                 iconSelect.button.OnClick += () =>
                 {
                     newToken.TokenIcon = icon;
+                    newToken.IconWidth = iconSelect.icon.Width;
+                    newToken.IconHeight = iconSelect.icon.Height;
+                    activeIconSizeField = IconSizeField.None;
+                    iconSizeText = string.Empty;
                 };
 
                 iconSelects.Add(iconSelect);
@@ -90,14 +104,16 @@ namespace SkillTreeCreationTool
         public void DrawPreview(SpriteBatch sb)
         {
             Point gridPosition = skillTree.GetGridPosition();
-            Rectangle iconRect = new Rectangle((skillTree.GetWorldPosition(gridPosition).ToVector2() * skillTree.zoom).ToPoint(), (skillTree.IconSizePoint.ToVector2() * skillTree.zoom).ToPoint());
+            Vector2 iconPosition = skillTree.GetWorldPosition(gridPosition).ToVector2() * skillTree.zoom;
             bool hasToken = skillTree.CheckForToken(gridPosition);
-            sb.Draw(
-                ResourceAtlas.GetTexture(skillTree.DefaultIcon),
-                iconRect, null, hasToken ? Color.Transparent : Color.Green * .75f,
-                0, skillTree.iconOrigin, SpriteEffects.None, .9f);
+            Texture2D iconTexture = ResourceAtlas.GetTexture(newToken?.TokenIcon ?? skillTree.DefaultIcon);
+            int iconWidth = newToken?.IconWidth ?? skillTree.IconSize;
+            int iconHeight = newToken?.IconHeight ?? skillTree.IconSize;
+            Vector2 iconSize = new Vector2(iconWidth, iconHeight) * skillTree.zoom;
+            Rectangle iconRect = new Rectangle((iconPosition - iconSize / 2f).ToPoint(), iconSize.ToPoint());
+            sb.Draw(iconTexture, iconRect, hasToken ? Color.Transparent : Color.Green * .75f);
             if (hasToken)
-                sb.DrawCircleOutline(iconRect.Location.ToVector2(), 3, 5, Color.Purple * .5f, .95f);
+                sb.DrawCircleOutline(iconPosition, 3, 5, Color.Purple * .5f, .95f);
             foreach (var token in parentTokens)
             {
                 sb.DrawCircleOutline(skillTree.GetWorldPosition(token.GridPosition).ToVector2() * skillTree.zoom, 3, 5, Color.Purple, .95f);
@@ -139,16 +155,16 @@ namespace SkillTreeCreationTool
 
                     parentTokens.Clear();
 
-                    UpdateFunction = UpdateEdit;
-                    DrawFunction = DrawEdit;
-
-                    skillTree.editing = true;
-
-                    Renderer.CurrentCamera.SetTarget(skillTree.GetWorldPosition((gPos.ToVector2()).ToPoint()));
-                    skillTree.zoomTarget = 1f;
-                    newToken.IsCollected = true;
+                    BeginEditing(newToken, gPos);
                 }
 
+            }
+
+            if (Input.IsRightButtonDownOnce())
+            {
+                Point gPos = skillTree.GetGridPosition();
+                if (skillTree.CheckForToken(gPos))
+                    BeginEditing(skillTree.GetToken(gPos), gPos);
             }
 
             if (Input.IsMiddleButtonDownOnce())
@@ -162,6 +178,26 @@ namespace SkillTreeCreationTool
 
                 skillTree.RemoveToken(gPos);
             }
+        }
+
+        private void BeginEditing(SkillTreeToken token, Point gridPosition)
+        {
+            newToken = token;
+            editedTokenWasCollected = token.IsCollected;
+            expandedEffects.Clear();
+            effectScroll = 0;
+            activeEffectIndex = -1;
+            activeEffectField = EffectField.None;
+            activeIconSizeField = IconSizeField.None;
+            iconSizeText = string.Empty;
+
+            UpdateFunction = UpdateEdit;
+            DrawFunction = DrawEdit;
+            skillTree.editing = true;
+
+            Renderer.CurrentCamera.SetTarget(skillTree.GetWorldPosition(gridPosition));
+            skillTree.zoomTarget = 1f;
+            newToken.IsCollected = true;
         }
 
         public void SlowUpdate(GameTime gameTime)
@@ -191,24 +227,32 @@ namespace SkillTreeCreationTool
 
         private void DrawIconSelect(SpriteBatch sb)
         {
-            scroll += Input.GetMouseScrollDelta() * 20;
-            scroll = (int)Math.Clamp(scroll, 0f, 100f);
+            LayoutIconSelects();
+            for (int i = 0; i < iconSelects.Count; i++)
+                iconSelects[i].Draw(sb);
+        }
 
+        private void LayoutIconSelects()
+        {
             Point camPos = Renderer.CurrentCamera.Position;
-
             for (int i = 0; i < iconSelects.Count; i++)
             {
-                IconSelect icon = iconSelects[i];
-
                 float x = i % 5 * 32 - camPos.X;
                 float y = i / 5 * 32 - camPos.Y - scroll;
-
-                Rectangle rect = new Rectangle((int)x, (int)y, 32, 32);
-
-                icon.button.Position = new Vector2(x, y);
-
-                icon.Draw(sb);
+                iconSelects[i].position = new Point((int)x, (int)y);
             }
+        }
+
+        private Rectangle GetIconSelectBounds()
+        {
+            if (iconSelects.Count == 0)
+                return Rectangle.Empty;
+
+            Rectangle bounds = new Rectangle(iconSelects[0].position, iconSelects[0].size);
+            for (int i = 1; i < iconSelects.Count; i++)
+                bounds = Rectangle.Union(bounds, new Rectangle(iconSelects[i].position, iconSelects[i].size));
+
+            return bounds;
         }
 
         private void DrawEffectEditor(SpriteBatch sb)
@@ -218,13 +262,17 @@ namespace SkillTreeCreationTool
 
             Rectangle panel = GetEffectPanelBounds();
             Rectangle addButton = new Rectangle(panel.Right - 48, panel.Y + 10, 38, 38);
+            Rectangle iconWidthBounds = GetIconWidthBounds(panel);
+            Rectangle iconHeightBounds = GetIconHeightBounds(panel);
             SpriteFont font = ResourceAtlas.GetFont("EffectEditor");
 
             sb.Draw(Drawing.Pixel, panel, Color.Black * .8f);
             sb.DrawRect(panel, 1, Color.White * .4f);
-            sb.DrawString(font, "Effects", panel.Location.ToVector2() + new Vector2(14, 10), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            DrawIconSizeField(sb, font, iconWidthBounds, "W", newToken.IconWidth, IconSizeField.Width);
+            DrawIconSizeField(sb, font, iconHeightBounds, "H", newToken.IconHeight, IconSizeField.Height);
+            sb.DrawString(font, "Effects", new Vector2(panel.X + 350, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
             sb.Draw(Drawing.Pixel, addButton, Color.Green * .75f);
-            sb.DrawString(font, "+", addButton.Location.ToVector2() + new Vector2(10, 3), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+            sb.DrawString(font, "+", addButton.Location.ToVector2() + new Vector2(11, -6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
 
             int y = panel.Y + 58 - effectScroll;
             for (int i = 0; i < newToken.Effects.Count; i++)
@@ -234,7 +282,7 @@ namespace SkillTreeCreationTool
                 bool expanded = expandedEffects.Contains(i);
 
                 sb.Draw(Drawing.Pixel, header, expanded ? Color.DarkSlateGray : Color.Black * .6f);
-                sb.DrawString(font, $"{(expanded ? "-" : "+")} Effect {i + 1}", header.Location.ToVector2() + new Vector2(10, 10), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+                sb.DrawString(font, $"{(expanded ? "-" : "+")} Effect {i + 1}", header.Location.ToVector2() + new Vector2(10, 2), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
                 y += 58;
 
                 if (!expanded)
@@ -254,13 +302,13 @@ namespace SkillTreeCreationTool
             Rectangle fieldBounds = new Rectangle(panel.X + 165, y, panel.Width - 177, fieldHeight);
             bool active = activeEffectIndex == effectIndex && activeEffectField == field;
 
-            sb.DrawString(font, label, new Vector2(panel.X + 14, y + 13), Color.LightGray, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.DrawString(font, label, new Vector2(panel.X + 14, y), Color.LightGray, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
             sb.Draw(Drawing.Pixel, fieldBounds, active ? Color.DarkBlue : Color.Black * .6f);
             sb.DrawRect(fieldBounds, 1, active ? Color.White : Color.White * .25f);
             string displayValue = field == EffectField.Description
                 ? WrapText(font, value, fieldBounds.Width - 14)
                 : value;
-            sb.DrawString(font, displayValue, fieldBounds.Location.ToVector2() + new Vector2(7, 8), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+            sb.DrawString(font, displayValue, fieldBounds.Location.ToVector2() + new Vector2(7, 0), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
             y += fieldHeight + 8;
         }
 
@@ -317,6 +365,26 @@ namespace SkillTreeCreationTool
             return new Rectangle(Renderer.UIBounds.Width - 728, 8, 720, Renderer.UIBounds.Height - 16);
         }
 
+        private static Rectangle GetIconWidthBounds(Rectangle panel)
+        {
+            return new Rectangle(panel.X + 58, panel.Y + 8, 98, 42);
+        }
+
+        private static Rectangle GetIconHeightBounds(Rectangle panel)
+        {
+            return new Rectangle(panel.X + 218, panel.Y + 8, 98, 42);
+        }
+
+        private void DrawIconSizeField(SpriteBatch sb, SpriteFont font, Rectangle bounds, string label, int value, IconSizeField field)
+        {
+            bool active = activeIconSizeField == field;
+            sb.DrawString(font, label, new Vector2(bounds.X - 35, bounds.Y), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.Draw(Drawing.Pixel, bounds, active ? Color.DarkBlue : Color.Black * .6f);
+            sb.DrawRect(bounds, 1, active ? Color.White : Color.White * .25f);
+            string displayedValue = active ? iconSizeText : value.ToString(CultureInfo.InvariantCulture);
+            sb.DrawString(font, displayedValue, bounds.Location.ToVector2() + new Vector2(7,0), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+        }
+
         private void UpdateEffectEditor()
         {
             if (newToken == null)
@@ -325,9 +393,12 @@ namespace SkillTreeCreationTool
             Rectangle panel = GetEffectPanelBounds();
             Point mousePosition = (Input.GetMouseScreenPos().ToVector2() * Renderer.UIScaler.ToVector2()).ToPoint();
             bool mouseOverPanel = panel.Contains(mousePosition);
+            int maximumScroll = GetMaximumEffectScroll(panel);
 
             if (mouseOverPanel)
-                effectScroll = Math.Max(0, effectScroll - Input.GetMouseScrollDelta() * 36);
+                effectScroll = Math.Clamp(effectScroll - Input.GetMouseScrollDelta() * 36, 0, maximumScroll);
+            else
+                effectScroll = Math.Clamp(effectScroll, 0, maximumScroll);
 
             if (mouseOverPanel && Input.IsLeftButtonDownOnce())
                 HandleEffectEditorClick(panel, mousePosition);
@@ -335,14 +406,48 @@ namespace SkillTreeCreationTool
             UpdateEffectFieldText();
         }
 
+        private int GetMaximumEffectScroll(Rectangle panel)
+        {
+            SpriteFont font = ResourceAtlas.GetFont("EffectEditor");
+            int contentHeight = 0;
+            for (int i = 0; i < newToken.Effects.Count; i++)
+            {
+                contentHeight += 58;
+                if (!expandedEffects.Contains(i))
+                    continue;
+
+                SkillEffectDefinition effect = newToken.Effects[i];
+                contentHeight += GetEffectFieldHeight(font, panel, EffectField.Key, effect.Key) + 8;
+                contentHeight += GetEffectFieldHeight(font, panel, EffectField.Value, effect.Value) + 8;
+                contentHeight += GetEffectFieldHeight(font, panel, EffectField.Amount, effect.Amount.ToString(CultureInfo.InvariantCulture)) + 8;
+                contentHeight += GetEffectFieldHeight(font, panel, EffectField.Description, effect.SkillEffectDescription) + 12;
+            }
+
+            int visibleHeight = panel.Height - 66;
+            return Math.Max(0, contentHeight - visibleHeight);
+        }
+
         private void HandleEffectEditorClick(Rectangle panel, Point mousePosition)
         {
             Rectangle addButton = new Rectangle(panel.Right - 48, panel.Y + 10, 38, 38);
+            if (GetIconWidthBounds(panel).Contains(mousePosition))
+            {
+                SelectIconSizeField(IconSizeField.Width);
+                return;
+            }
+
+            if (GetIconHeightBounds(panel).Contains(mousePosition))
+            {
+                SelectIconSizeField(IconSizeField.Height);
+                return;
+            }
+
             if (addButton.Contains(mousePosition))
             {
                 skillTree.AddEffect(newToken.TokenID, new SkillEffectDefinition());
                 int index = newToken.Effects.Count - 1;
                 expandedEffects.Add(index);
+                activeIconSizeField = IconSizeField.None;
                 SelectEffectField(index, EffectField.Key);
                 return;
             }
@@ -357,6 +462,7 @@ namespace SkillTreeCreationTool
                         expandedEffects.Remove(i);
                     activeEffectIndex = -1;
                     activeEffectField = EffectField.None;
+                    activeIconSizeField = IconSizeField.None;
                     return;
                 }
 
@@ -391,6 +497,7 @@ namespace SkillTreeCreationTool
         {
             activeEffectIndex = effectIndex;
             activeEffectField = field;
+            activeIconSizeField = IconSizeField.None;
             activeAmountText = field == EffectField.Amount
                 ? newToken.Effects[effectIndex].Amount.ToString(CultureInfo.InvariantCulture)
                 : string.Empty;
@@ -399,6 +506,28 @@ namespace SkillTreeCreationTool
         private void UpdateEffectFieldText()
         {
             string typedText = Game1.ConsumeTextInput();
+            if (activeIconSizeField != IconSizeField.None)
+            {
+                foreach (char character in typedText)
+                {
+                    if (iconSizeText.Length < 4 && char.IsDigit(character))
+                        iconSizeText += character;
+                }
+
+                if (Input.IsButtonDownOnce(Keys.Back) && iconSizeText.Length > 0)
+                    iconSizeText = iconSizeText[..^1];
+
+                if (int.TryParse(iconSizeText, NumberStyles.Integer, CultureInfo.InvariantCulture, out int iconSize))
+                {
+                    if (activeIconSizeField == IconSizeField.Width)
+                        newToken.IconWidth = Math.Max(1, iconSize);
+                    else
+                        newToken.IconHeight = Math.Max(1, iconSize);
+                }
+
+                return;
+            }
+
             if (activeEffectIndex < 0 || activeEffectIndex >= newToken.Effects.Count)
                 return;
 
@@ -415,6 +544,15 @@ namespace SkillTreeCreationTool
                 value = value[..^1];
 
             SetEffectFieldValue(effect, activeEffectField, value);
+        }
+
+        private void SelectIconSizeField(IconSizeField field)
+        {
+            activeIconSizeField = field;
+            iconSizeText = (field == IconSizeField.Width ? newToken.IconWidth : newToken.IconHeight)
+                .ToString(CultureInfo.InvariantCulture);
+            activeEffectIndex = -1;
+            activeEffectField = EffectField.None;
         }
 
         private string GetEffectFieldValue(SkillEffectDefinition effect, EffectField field)
@@ -452,6 +590,13 @@ namespace SkillTreeCreationTool
 
         private void UpdateIconSelect(GameTime gt)
         {
+            LayoutIconSelects();
+            if (GetIconSelectBounds().Contains(Input.GetMousePos()))
+            {
+                scroll = Math.Clamp(scroll + Input.GetMouseScrollDelta() * 20, 0, 100);
+                LayoutIconSelects();
+            }
+
             for (int i = 0; i < iconSelects.Count; i++)
             {
                 IconSelect icon = iconSelects[i];
@@ -465,7 +610,7 @@ namespace SkillTreeCreationTool
                 DrawFunction = DrawPreview;
 
                 skillTree.editing = false;
-                newToken.IsCollected = false;
+                newToken.IsCollected = editedTokenWasCollected;
             }
         }
     }

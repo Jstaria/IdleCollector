@@ -14,6 +14,8 @@ namespace SkillTreeCreationTool
     public class SkillTreeToken
     {
         public string TokenIcon { get; set; }
+        public int IconWidth { get; set; }
+        public int IconHeight { get; set; }
         public int TokenID { get; set; }
         public Point GridPosition { get; set; }
         public List<int> ParentTokenIDs { get; set; }

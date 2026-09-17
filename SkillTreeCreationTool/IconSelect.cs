@@ -36,8 +36,8 @@ namespace SkillTreeCreationTool
 
         public void Update(GameTime gt)
         {
-            button.StandardUpdate(gt);
             button.Position = position.ToVector2();
+            button.StandardUpdate(gt);
         }
 
         public void Draw(SpriteBatch sb)
