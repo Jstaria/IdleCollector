@@ -101,9 +101,9 @@ namespace SkillTreeCreationTool
             Point gridPosition = skillTree.GetGridPosition();
             Vector2 iconPosition = skillTree.GetWorldPosition(gridPosition).ToVector2() * skillTree.zoom;
             bool hasToken = skillTree.CheckForToken(gridPosition);
-            Texture2D iconTexture = ResourceAtlas.GetTexture(newToken?.TokenIcon ?? skillTree.DefaultIcon);
-            int iconWidth = newToken?.IconWidth ?? skillTree.IconSize;
-            int iconHeight = newToken?.IconHeight ?? skillTree.IconSize;
+            Texture2D iconTexture = ResourceAtlas.GetTexture(skillTree.DefaultIcon);
+            int iconWidth = skillTree.IconSize;
+            int iconHeight = skillTree.IconSize;
             Vector2 iconSize = new Vector2(iconWidth, iconHeight) * skillTree.zoom;
             Rectangle iconRect = new Rectangle((iconPosition - iconSize / 2f).ToPoint(), iconSize.ToPoint());
             sb.Draw(iconTexture, iconRect, hasToken ? Color.Transparent : Color.Green * .75f);

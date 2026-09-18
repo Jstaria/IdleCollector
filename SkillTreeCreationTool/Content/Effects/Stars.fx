@@ -190,7 +190,7 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
                 // CORE_MAX is usually lower than GLOW_MAX so the white core stays tight
                 // while the blue halo can spread wider
                 glow = clamp(glow, 0.0, CORE_MAX);
-                snow += (core * 2.0 + glow) * depthFactor;
+                snow += (core * 2.0 + glow) * depthFactor * .125f;
             }
         }
     }
