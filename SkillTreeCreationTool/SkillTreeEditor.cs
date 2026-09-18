@@ -45,6 +45,7 @@ namespace SkillTreeCreationTool
         private EffectField activeEffectField;
         private string activeAmountText = string.Empty;
         private bool editedTokenWasCollected;
+        private bool unlockedInEditor;
         private bool createdTokenBeingEdited;
         private IconSizeField activeIconSizeField;
         private string iconSizeText = string.Empty;
@@ -118,6 +119,14 @@ namespace SkillTreeCreationTool
 
         private void UpdatePreview(GameTime gameTime)
         {
+            if (Input.IsButtonDownOnce(Keys.Delete) && parentTokens.Count > 0)
+            {
+                foreach (SkillTreeToken token in parentTokens.ToList())
+                    skillTree.RemoveToken(token.GridPosition);
+                parentTokens.Clear();
+                return;
+            }
+
             if (Input.IsLeftButtonDownOnce())
             {
                 Point gPos = skillTree.GetGridPosition();
@@ -165,6 +174,7 @@ namespace SkillTreeCreationTool
         {
             newToken = token;
             editedTokenWasCollected = token.IsCollected;
+            unlockedInEditor = token.IsCollected;
             createdTokenBeingEdited = wasCreated;
             expandedEffects.Clear();
             effectScroll = 0;
@@ -180,7 +190,6 @@ namespace SkillTreeCreationTool
 
             Renderer.CurrentCamera.SetTarget(skillTree.GetWorldPosition(gridPosition));
             skillTree.zoomTarget = 1f;
-            newToken.IsCollected = true;
         }
 
         public void SlowUpdate(GameTime gameTime) { }
@@ -235,6 +244,7 @@ namespace SkillTreeCreationTool
 
             Rectangle panel = GetEffectPanelBounds();
             Rectangle addButton = new Rectangle(panel.Right - 48, panel.Y + 10, 38, 38);
+            Rectangle unlockedBounds = GetUnlockedBounds(panel);
             Rectangle iconWidthBounds = GetIconWidthBounds(panel);
             Rectangle iconHeightBounds = GetIconHeightBounds(panel);
             SpriteFont font = ResourceAtlas.GetFont("EffectEditor");
@@ -243,7 +253,12 @@ namespace SkillTreeCreationTool
             sb.DrawRect(panel, 1, Color.White * .4f);
             DrawIconSizeField(sb, font, iconWidthBounds, "W", newToken.IconWidth, IconSizeField.Width);
             DrawIconSizeField(sb, font, iconHeightBounds, "H", newToken.IconHeight, IconSizeField.Height);
-            sb.DrawString(font, "Effects", new Vector2(panel.X + 350, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.DrawString(font, "Unlock", new Vector2(panel.X + 350, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.Draw(Drawing.Pixel, unlockedBounds, unlockedInEditor ? Color.ForestGreen : Color.Black * .6f);
+            sb.DrawRect(unlockedBounds, 1, Color.White * (unlockedInEditor ? 1f : .25f));
+            if (unlockedInEditor)
+                sb.DrawString(font, "X", unlockedBounds.Location.ToVector2() + new Vector2(12, -3), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+            sb.DrawString(font, "Effects", new Vector2(panel.X + 540, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
             sb.Draw(Drawing.Pixel, addButton, Color.Green * .75f);
             sb.DrawString(font, "+", addButton.Location.ToVector2() + new Vector2(11, -6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
 
@@ -346,6 +361,11 @@ namespace SkillTreeCreationTool
             return new Rectangle(panel.X + 218, panel.Y + 8, 98, 42);
         }
 
+        private static Rectangle GetUnlockedBounds(Rectangle panel)
+        {
+            return new Rectangle(panel.X + 490, panel.Y + 8, 42, 42);
+        }
+
         private void DrawIconSizeField(SpriteBatch sb, SpriteFont font, Rectangle bounds, string label, int value, IconSizeField field)
         {
             bool active = activeIconSizeField == field;
@@ -400,6 +420,12 @@ namespace SkillTreeCreationTool
         private void HandleEffectEditorClick(Rectangle panel, Point mousePosition)
         {
             Rectangle addButton = new Rectangle(panel.Right - 48, panel.Y + 10, 38, 38);
+            if (GetUnlockedBounds(panel).Contains(mousePosition))
+            {
+                unlockedInEditor = !unlockedInEditor;
+                return;
+            }
+
             if (GetIconWidthBounds(panel).Contains(mousePosition))
             {
                 SelectIconSizeField(IconSizeField.Width);
@@ -595,12 +621,12 @@ namespace SkillTreeCreationTool
                 EndEditing();
         }
 
-        private void EndEditing()
+        private void EndEditing(bool save = true)
         {
             updateFunction = UpdatePreview;
             drawFunction = DrawPreview;
             skillTree.editing = false;
-            newToken.IsCollected = editedTokenWasCollected;
+            newToken.IsCollected = save ? unlockedInEditor : editedTokenWasCollected;
             createdTokenBeingEdited = false;
         }
 
@@ -609,7 +635,7 @@ namespace SkillTreeCreationTool
             if (createdTokenBeingEdited)
                 skillTree.RemoveToken(newToken.GridPosition);
 
-            EndEditing();
+            EndEditing(false);
         }
     }
 }

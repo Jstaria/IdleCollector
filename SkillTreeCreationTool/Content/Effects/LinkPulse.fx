@@ -27,9 +27,13 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
     float isTraveling = step(localTime, pulseTravelTime);
 
     float alongLine = abs(input.TextureCoordinates.x - pulsePosition);
+    float pulseEndFade = smoothstep(0.0, 0.24, input.TextureCoordinates.x) *
+        smoothstep(0.0, 0.24, 1.0 - input.TextureCoordinates.x);
 
+    float edgeAmount = abs(input.TextureCoordinates.x - 0.5) * 2.0;
+    float waveAmplitude = lerp(0.02, 0.44, pow(edgeAmount, 0.8));
     float waveCenter = 0.5 +
-        sin(input.TextureCoordinates.x * 28.0 - iTime * 4.0) * 0.12;
+        sin(input.TextureCoordinates.x * 28.0 - iTime * 4.0) * waveAmplitude;
 
     float acrossLine = abs(input.TextureCoordinates.y - waveCenter);
 
@@ -41,12 +45,14 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
     float pulse = exp2(-11.0 * alongLine) *
                   exp2(-11.0 * acrossLine) *
                   isTraveling *
-                  pulseFade;
+                  pulseFade *
+                  pulseEndFade;
 
     float centerDistance = abs(input.TextureCoordinates.y - 0.5) * 2.0;
 
-    float sideFade = exp2(-6.0 * centerDistance);
-    float centerGlow = exp2(-14.0 * centerDistance);
+    // The backing strip is wider for the end waves; this keeps its middle visually narrow.
+    float sideFade = exp2(-12.0 * centerDistance);
+    float centerGlow = exp2(-28.0 * centerDistance);
 
     float endFade = sin(input.TextureCoordinates.x * 3.141593);
 

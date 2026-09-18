@@ -1,17 +1,22 @@
-{
+﻿{
   "GridSpacing": 16,
   "IconSize": 32,
   "DefaultIcon": "default-icon",
-  "TokenID": 38,
+  "TokenID": 41,
   "treeTokens": {
     "0": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 0,
       "TokenID": 0,
       "GridPosition": {
         "X": 0,
         "Y": 0
       },
-      "ParentTokenIDs": [],
+      "ParentTokenIDs": [
+
+      ],
       "ChildTokenIDs": [
         0,
         0,
@@ -35,6 +40,9 @@
     },
     "4": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 4,
       "GridPosition": {
         "X": -2,
@@ -47,12 +55,17 @@
         4,
         4
       ],
-      "Effects": [],
-      "IsCollected": true,
-      "IsCollectable": true
+      "Effects": [
+
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
     },
     "3": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 3,
       "GridPosition": {
         "X": 0,
@@ -65,12 +78,17 @@
         3,
         3
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": false
     },
     "5": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 5,
       "GridPosition": {
         "X": 2,
@@ -83,12 +101,17 @@
         5,
         5
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": false
     },
     "6": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 6,
       "GridPosition": {
         "X": 0,
@@ -101,12 +124,17 @@
         6,
         6
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": false
     },
     "7": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 7,
       "GridPosition": {
         "X": -2,
@@ -119,12 +147,17 @@
         7,
         7
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": false
     },
     "8": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 8,
       "GridPosition": {
         "X": 2,
@@ -137,12 +170,17 @@
         8,
         8
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": false
     },
     "9": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 9,
       "GridPosition": {
         "X": 5,
@@ -154,12 +192,17 @@
       "ChildTokenIDs": [
         9
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "10": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 10,
       "GridPosition": {
         "X": 3,
@@ -168,13 +211,20 @@
       "ParentTokenIDs": [
         8
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "11": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 11,
       "GridPosition": {
         "X": 2,
@@ -183,13 +233,20 @@
       "ParentTokenIDs": [
         6
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "12": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 12,
       "GridPosition": {
         "X": -2,
@@ -198,13 +255,20 @@
       "ParentTokenIDs": [
         6
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "13": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 13,
       "GridPosition": {
         "X": -3,
@@ -213,13 +277,20 @@
       "ParentTokenIDs": [
         7
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "14": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 14,
       "GridPosition": {
         "X": -5,
@@ -231,12 +302,17 @@
       "ChildTokenIDs": [
         14
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "15": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 15,
       "GridPosition": {
         "X": 5,
@@ -248,12 +324,17 @@
       "ChildTokenIDs": [
         15
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "16": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 16,
       "GridPosition": {
         "X": 3,
@@ -262,13 +343,20 @@
       "ParentTokenIDs": [
         5
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "17": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 17,
       "GridPosition": {
         "X": 2,
@@ -277,13 +365,20 @@
       "ParentTokenIDs": [
         3
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "18": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 18,
       "GridPosition": {
         "X": -2,
@@ -292,13 +387,20 @@
       "ParentTokenIDs": [
         3
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "19": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 19,
       "GridPosition": {
         "X": -3,
@@ -307,13 +409,20 @@
       "ParentTokenIDs": [
         4
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "20": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 20,
       "GridPosition": {
         "X": -5,
@@ -325,12 +434,17 @@
       "ChildTokenIDs": [
         20
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "21": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 21,
       "GridPosition": {
         "X": -4,
@@ -346,12 +460,17 @@
         21,
         21
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "22": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 22,
       "GridPosition": {
         "X": 4,
@@ -369,12 +488,17 @@
         22,
         22
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "27": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 27,
       "GridPosition": {
         "X": 7,
@@ -383,13 +507,21 @@
       "ParentTokenIDs": [
         22
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+        27,
+        27
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "26": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 26,
       "GridPosition": {
         "X": 7,
@@ -398,13 +530,20 @@
       "ParentTokenIDs": [
         22
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "29": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 29,
       "GridPosition": {
         "X": -7,
@@ -413,13 +552,20 @@
       "ParentTokenIDs": [
         21
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "30": {
       "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 2,
       "TokenID": 30,
       "GridPosition": {
         "X": -7,
@@ -428,29 +574,43 @@
       "ParentTokenIDs": [
         21
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "33": {
       "TokenIcon": "dust1",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 0,
       "TokenID": 33,
       "GridPosition": {
         "X": -14,
         "Y": -3
       },
-      "ParentTokenIDs": [],
+      "ParentTokenIDs": [
+
+      ],
       "ChildTokenIDs": [
         33,
         33
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": false
     },
     "34": {
       "TokenIcon": "dust3",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 34,
       "GridPosition": {
         "X": -17,
@@ -462,12 +622,17 @@
       "ChildTokenIDs": [
         34
       ],
-      "Effects": [],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     },
     "35": {
       "TokenIcon": "dust2",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 1,
       "TokenID": 35,
       "GridPosition": {
         "X": -17,
@@ -477,8 +642,34 @@
         34,
         33
       ],
-      "ChildTokenIDs": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
+      "IsCollected": false,
+      "IsCollectable": false
+    },
+    "40": {
+      "TokenIcon": "default-icon",
+      "IconWidth": 32,
+      "IconHeight": 32,
+      "Depth": 3,
+      "TokenID": 40,
+      "GridPosition": {
+        "X": 20,
+        "Y": -1
+      },
+      "ParentTokenIDs": [
+        27
+      ],
+      "ChildTokenIDs": [
+
+      ],
+      "Effects": [
+
+      ],
       "IsCollected": false,
       "IsCollectable": false
     }

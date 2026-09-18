@@ -16,7 +16,7 @@ namespace SkillTreeCreationTool
 {
     public class SkillTree : IScene
     {
-        private const float LinkLineThickness = 15f;
+        private const float LinkLineThickness = 30f;
         private const float LinkPulseTravelTime = 3f;
 
         [JsonRequired] public int GridSpacing = 100;
@@ -86,26 +86,31 @@ namespace SkillTreeCreationTool
 
         private void SetFamilyTokens()
         {
-            foreach (var token in treeTokens.Values)
+            foreach (SkillTreeToken token in treeTokens.Values)
             {
                 token.ChildTokens.Clear();
                 token.ParentTokens.Clear();
+                token.ParentTokenIDs ??= new List<int>();
+                token.ChildTokenIDs ??= new List<int>();
+                token.ParentTokenIDs = token.ParentTokenIDs
+                    .Where(parentId => parentId != token.TokenID && treeTokens.ContainsKey(parentId))
+                    .Distinct()
+                    .ToList();
+                token.ChildTokenIDs.Clear();
                 if (token.IconWidth <= 0)
                     token.IconWidth = IconSize;
                 if (token.IconHeight <= 0)
                     token.IconHeight = IconSize;
+            }
 
-                var childIDs = token.ChildTokenIDs;
-                var parentIDs = token.ParentTokenIDs;
-
-                foreach (var child in childIDs)
+            foreach (SkillTreeToken child in treeTokens.Values)
+            {
+                foreach (int parentId in child.ParentTokenIDs)
                 {
-                    token.ChildTokens.Add(treeTokens[child]);
-                }
-
-                foreach (var parent in parentIDs)
-                {
-                    token.ParentTokens.Add(treeTokens[parent]);
+                    SkillTreeToken parent = treeTokens[parentId];
+                    parent.ChildTokenIDs.Add(child.TokenID);
+                    parent.ChildTokens.Add(child);
+                    child.ParentTokens.Add(parent);
                 }
             }
 
@@ -142,6 +147,9 @@ namespace SkillTreeCreationTool
         {
             foreach (SkillTreeToken child in treeTokens.Values)
             {
+                if (!CanPulseLink(child))
+                    continue;
+
                 foreach (int parentId in child.ParentTokenIDs)
                 {
                     if (!treeTokens.ContainsKey(parentId))
@@ -200,10 +208,9 @@ namespace SkillTreeCreationTool
         public void SlowUpdate(GameTime gameTime)
         {
             foreach (SkillTreeToken token in treeTokens.Values)
-            {
-                token.IsCollected = true;
-                token.IsCollectable = true;
-            }
+                token.IsCollectable = token.ParentTokenIDs.Count == 0 ||
+                    token.ParentTokenIDs.All(parentId =>
+                        treeTokens.TryGetValue(parentId, out SkillTreeToken parent) && parent.IsCollected);
 
         }
 
@@ -255,6 +262,9 @@ namespace SkillTreeCreationTool
             HashSet<(int Parent, int Child)> activeLinks = new();
             foreach (SkillTreeToken child in treeTokens.Values)
             {
+                if (!CanFlowLinkParticles(child))
+                    continue;
+
                 foreach (int parentId in child.ParentTokenIDs)
                 {
                     if (!treeTokens.ContainsKey(parentId))
@@ -287,6 +297,12 @@ namespace SkillTreeCreationTool
             SkillTreeToken child = treeTokens[childId];
             return child.IsCollected ? Color.White : child.IsCollectable ? Color.White * .25f : Color.White * .05f;
         }
+
+        private static bool CanPulseLink(SkillTreeToken child) =>
+            child.IsCollected || child.IsCollectable;
+
+        private static bool CanFlowLinkParticles(SkillTreeToken child) =>
+            child.IsCollected;
 
         public void CollectToken(Point gridPosition)
         {
@@ -325,18 +341,15 @@ namespace SkillTreeCreationTool
             if (!CheckForToken(gridPosition)) return;
 
             int id = tokenPositions[gridPosition].TokenID;
-            
-            foreach (SkillTreeToken token in treeTokens[id].ChildTokens)
+            treeTokens.Remove(id);
+            tokenPositions.Remove(gridPosition);
+            foreach (SkillTreeToken token in treeTokens.Values)
             {
                 token.RemoveParentToken(id);
-            }
-            foreach (SkillTreeToken token in treeTokens[id].ParentTokens)
-            {
                 token.RemoveChildToken(id);
             }
 
-            treeTokens.Remove(id);
-            tokenPositions.Remove(gridPosition);
+            SetFamilyTokens();
             RefreshTokenDepths();
         }
 
@@ -365,8 +378,12 @@ namespace SkillTreeCreationTool
 
         public void SetTokenParent(SkillTreeToken parentToken, SkillTreeToken childToken)
         {
+            if (parentToken == null || childToken == null || parentToken == childToken ||
+                childToken.ParentTokenIDs.Contains(parentToken.TokenID))
+                return;
+
             childToken.SetParentToken(parentToken.TokenID);
-            parentToken.SetChildToken(parentToken.TokenID);
+            parentToken.SetChildToken(childToken.TokenID);
 
             parentToken.ChildTokens.Add(childToken);
             childToken.ParentTokens.Add(parentToken);
