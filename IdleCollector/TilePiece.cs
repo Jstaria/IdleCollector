@@ -140,9 +140,9 @@ namespace IdleCollector
                     grass.Radius = 8;
                     grass.Position = position;
                     grass.Bounds = new Rectangle(position.ToPoint(), ResourceAtlas.GetRandomTileRect("grass").Size);
+                    grass.ApplyColor(Color);
                     float yPos = position.Y + grass.Origin.Y;
                     grass.LayerDepth = MathHelper.Clamp((yPos - worldBounds.Y - worldBounds.Height) / ((float)worldBounds.Height * 2), 0.00001f, .9999f);
-                    grass.ApplyColor(Color);
                     grass.WorldDepth = worldBounds.Y;
                     grass.WorldHeight = worldBounds.Height;
 

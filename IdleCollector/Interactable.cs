@@ -88,7 +88,7 @@ namespace IdleCollector
 
             if (distance > amt) return;
 
-            float lerp = 1 - distance / amt;
+            float lerp = (1 - distance / amt)/* + RandomHelper.Instance.GetFloat(-.1f, .1f)*/;
             xOffsetAmt = direction * amt * offsetModifier; // Vector2.UnitX * MathF.Sign(dot) * amt * .75f;
 
             posSpring.RestPosition = lerp;

@@ -25,8 +25,11 @@ namespace IdleCollector
         private bool playGrass;
         private bool prevGrass;
         private float hue;
+        private bool touched;
 
-        public override Vector2 Origin { get => new Vector2(Bounds.Width / 2, Bounds.Height / 2); }
+        public Action<Vector2, bool> SpawnWalkParticles;
+
+        public override Vector2 Origin { get; set; }
         public float CoolDown => coolDown;
         public float Size { get; set; } = 1f;
 
@@ -41,6 +44,7 @@ namespace IdleCollector
             xOffsetAmt = RandomHelper.Instance.GetVector2(-Vector2.One, Vector2.One);
 
             textureSourceRect = ResourceAtlas.GetTileRect(tileType, textureKey);
+            SpawnWalkParticles += WorldManager.SpawnWalkParticles;
 
             //if (RandomHelper.Instance.GetDouble() < .5f)
             SpawnColor = Color.White;
@@ -84,7 +88,7 @@ namespace IdleCollector
         public override void Draw(SpriteBatch sb)
         {
             Vector2 offset = xOffsetAmt * posSpring.Position;
-            float yPos = Position.Y + offset.Y + Origin.Y * 2 + Rotation;
+            float yPos = Position.Y + offset.Y + Origin.Y + (touched ? 8 : 20) + Rotation;
             LayerDepth = WorldManager.GetLayerDepth(yPos);
 
             sb.Draw(ResourceAtlas.TilemapAtlas, Position + offset, textureSourceRect,
@@ -101,13 +105,26 @@ namespace IdleCollector
             {
                 AudioController.Instance.PlaySoundEffect("grass" + RandomHelper.Instance.GetInt(8, 11), "soundEffectVolume", RandomHelper.Instance.GetFloat(-.5f, .5f));
                 AudioController.Instance.PlaySoundEffect("grass" + RandomHelper.Instance.GetInt(1, 7), "soundEffectVolume", RandomHelper.Instance.GetFloat(-.5f, .5f));
+                if (RandomHelper.Instance.GetDouble() < .5f) SpawnWalkParticles?.Invoke(Position, touched);
             }
 
             prevGrass = playGrass;
         }
         public override void SecondaryInteractWith(Entity collider)
         {
+            if (coolDown > 0) return;
+            if (touched) return;
+
             Color = RandomHelper.Instance.GetColor(touchedColor[0], touchedColor[1]);
+
+            tileType = "grassBig";
+            textureKey = ResourceAtlas.GetRandomAtlasKey(tileType);
+            textureSourceRect = ResourceAtlas.GetTileRect(tileType, textureKey);
+            Origin = Origin + new Vector2(8, 12);
+            LayerDepth = WorldManager.GetLayerDepth(Position.Y + Origin.Y - 16);
+
+            touched = true;
+            if (RandomHelper.Instance.GetDouble() < .5f) SpawnWalkParticles?.Invoke(Position, touched);
         }
 
         private static Color AdjustSaturationFromNoise(Color color, float noiseValue, float amount = .35f)
@@ -211,22 +228,30 @@ namespace IdleCollector
 
         public override void ApplyWind(Vector2 windScroll, FastNoiseLite noise)
         {
-            float value = .1f;
+            float value = touched ? -.25f : .125f;
             WaveColor = new Color(Color.ToVector3() + new Vector3(value));
 
-            float noiseValue = noise.GetNoise(Position.X + windScroll.X, Position.Y + windScroll.Y);
+            float noiseValue = noise.GetNoise(
+                (Position.X + windScroll.X) * 1.5f,
+                (Position.Y + windScroll.Y) * 1.5f
+            );
+
             rotSpring.Nudge(noiseValue * .75f);
 
-            DrawColor = Color.Lerp(WaveColor, Color, ((noiseValue + 1) / 2));
+            if (noiseValue < 0)
+                DrawColor = Color.Lerp(Color, WaveColor, -noiseValue);
+            else
+                DrawColor = new Color(Color.ToVector3() + new Vector3(noiseValue * 0.05f));
         }
 
         public void ApplyColor(Color color)
         {
-            positionNoiseValue = RandomHelper.Instance.GetFloatNoise(Position * 2, FastNoiseLite.NoiseType.Cellular);
+            positionNoiseValue = RandomHelper.Instance.GetFloatNoise(Position * 3, FastNoiseLite.NoiseType.Cellular);
             sizeScaler = MathHelper.Lerp(1f, 1.75f, (positionNoiseValue + 1f) / 2f);
+            Origin = new Vector2(Bounds.Width / 2, Bounds.Height / 2);
 
-            touchedColor[1] = AdjustSaturationFromNoise(touchedColor[1], positionNoiseValue);
-            Color = AdjustSaturationFromNoise(color, positionNoiseValue);
+            touchedColor[1] = Color.White;
+            Color = AdjustSaturationFromNoise(color, positionNoiseValue + .5f);
         }
     }
 }

@@ -81,7 +81,6 @@ namespace IdleCollector
         public void SecondaryInteractWith(Entity entity)
         {
             if (interactables.Count == 0) return;
-            if (!(Cooldown <= 0 && ActivationsLeft >= 0)) return;
 
             foreach (Interactable interactable in interactables)
                 interactable.SecondaryInteractWith(entity);

@@ -154,11 +154,13 @@ namespace IdleCollector
             float yPos = Position.Y + offset.Y + Origin.Y *.65f + Rotation;
             LayerDepth = WorldManager.GetLayerDepth(yPos);
 
-            sb.Draw(ResourceAtlas.TilemapAtlas, rect, middleCactus, DrawColor, Rotation, Origin, flipSprite[0] ? SpriteEffects.FlipHorizontally : SpriteEffects.None, LayerDepth);
+            Color color = Color.White;
+
+            sb.Draw(ResourceAtlas.TilemapAtlas, rect, middleCactus, color, Rotation, Origin, flipSprite[0] ? SpriteEffects.FlipHorizontally : SpriteEffects.None, LayerDepth);
 
             if (!MultiStructure) return;
-            sb.Draw(ResourceAtlas.TilemapAtlas, rect, !flipSprite[1] ? leftCactus : rightCactus, DrawColor, leftRotation, LeftOrigin, flipSprite[1] ? SpriteEffects.FlipHorizontally : SpriteEffects.None, LayerDepth - .0001f);
-            sb.Draw(ResourceAtlas.TilemapAtlas, rect, !flipSprite[2] ? rightCactus : leftCactus, DrawColor, rightRotation, RightOrigin, flipSprite[2] ? SpriteEffects.FlipHorizontally : SpriteEffects.None, LayerDepth - .0001f);
+            sb.Draw(ResourceAtlas.TilemapAtlas, rect, !flipSprite[1] ? leftCactus : rightCactus, color, leftRotation, LeftOrigin, flipSprite[1] ? SpriteEffects.FlipHorizontally : SpriteEffects.None, LayerDepth - .0001f);
+            sb.Draw(ResourceAtlas.TilemapAtlas, rect, !flipSprite[2] ? rightCactus : leftCactus, color, rightRotation, RightOrigin, flipSprite[2] ? SpriteEffects.FlipHorizontally : SpriteEffects.None, LayerDepth - .0001f);
         }
 
         public override void ControlledUpdate(GameTime gameTime)

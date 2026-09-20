@@ -28,10 +28,11 @@ namespace IdleCollector
         private RandomHelper random;
         private WindManager windManager;
         private ParticleSystem windParticles;
-        private ParticleSystem grassSpawnParticles;
+        private static ParticleSystem grassSpawnParticles;
+        private static ParticleSystem grassWalkParticles;
 
-        private float floraParticleLayerDepth;
-        private Vector2 floraParticleSpawnPosition;
+        private static float floraParticleLayerDepth;
+        private static Vector2 floraParticleSpawnPosition;
 
         private TilePiece[,] worldFloor;
         private static Rectangle worldBounds;
@@ -76,6 +77,7 @@ namespace IdleCollector
             }
 
             grassSpawnParticles.ControlledUpdate(gameTime);
+            grassWalkParticles.ControlledUpdate(gameTime);
             windParticles.ControlledUpdate(gameTime);
         }
 
@@ -84,6 +86,7 @@ namespace IdleCollector
             windManager.SlowUpdate(gameTime);
             windParticles.SlowUpdate(gameTime);
             grassSpawnParticles.SlowUpdate(gameTime);
+            grassWalkParticles.SlowUpdate(gameTime);
 
             if (activeTiles == null) return;
 
@@ -109,6 +112,7 @@ namespace IdleCollector
             }
 
             grassSpawnParticles.StandardUpdate(gameTime);
+            grassWalkParticles.StandardUpdate(gameTime);
             windParticles.StandardUpdate(gameTime);
             windParticles.SetParticlesVelocity(-windManager.WindDirection);
         }
@@ -129,6 +133,7 @@ namespace IdleCollector
 
             windParticles.Draw(sb);
             grassSpawnParticles.Draw(sb);
+            grassWalkParticles.Draw(sb);
 
             foreach (Fence fence in fences)
             {
@@ -194,7 +199,14 @@ namespace IdleCollector
                 AudioController.Instance.PlaySoundEffect("placeGrass", "soundEffectVolume", RandomHelper.Instance.GetFloat(-1,0));
                 Renderer.CurrentCamera.ShakeCamera(40, .5f, Vector2.Normalize(RandomHelper.Instance.GetVector2(Vector2.One, -Vector2.One))*200);
             }
-                
+        }
+
+        public static void SpawnWalkParticles(Vector2 position, bool touched)
+        {
+            floraParticleSpawnPosition = position;
+            floraParticleLayerDepth = GetLayerDepth(position.Y + 50);
+            ParticleSystem sys = touched ? grassWalkParticles : grassSpawnParticles;
+            sys.EmitParticles();
         }
 
         private void LoadWorldData(string name, string folder)
@@ -289,6 +301,25 @@ namespace IdleCollector
             stats.ActingForce = (t) => (Vector2.UnitY * .02f - windManager.WindDirection * .01f);
 
             grassSpawnParticles = new ParticleSystem(stats);
+
+            bounds = new Rectangle[][]
+{
+                new Rectangle[] { new Rectangle(0, 0, TileSize/2, TileSize/2) },
+};
+
+            stats.EmitCount = new int[] { 1,2 };
+            stats.SpawnBounds = bounds;
+            stats.UseRandomBounds = false;
+            stats.ParticleRotation = new float[] { 0, MathF.PI * 2 };
+            stats.ParticleRotationSpeed = (t) => MathF.Sin(t * 10) * Vector2.Dot(windManager.WindDirection, new Vector2(-1, 0) * .1f);
+            stats.ParticleLifeSpan = new float[] { .5f, 1.5f };
+            stats.ResetParticlesAfterDeath = false;
+
+            stats.StartingVelocity = new Vector2[] { new Vector2(-.1f, -.5f), new Vector2(.1f, -.75f) };
+            stats.ActingForce = (t) => (Vector2.UnitY * .02f - windManager.WindDirection * .01f);
+            stats.ParticleStartColor = new Color[] { new Color(173, 181, 113), new Color(222, 236, 146) };
+
+            grassWalkParticles = new ParticleSystem(stats);
         }
 
         public void CreateWorld()
