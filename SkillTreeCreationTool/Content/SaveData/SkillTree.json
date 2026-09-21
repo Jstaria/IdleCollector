@@ -1,8 +1,8 @@
-﻿{
+{
   "GridSpacing": 16,
   "IconSize": 32,
   "DefaultIcon": "default-icon",
-  "TokenID": 41,
+  "TokenID": 43,
   "treeTokens": {
     "0": {
       "TokenIcon": "default-icon",
@@ -14,19 +14,18 @@
         "X": 0,
         "Y": 0
       },
-      "ParentTokenIDs": [
-
-      ],
+      "ParentTokenIDs": [],
       "ChildTokenIDs": [
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
+        4,
+        3,
+        5,
+        6,
+        7,
+        8,
+        21,
+        22
       ],
+      "ResourceCosts": [],
       "Effects": [
         {
           "Key": "This is a test",
@@ -52,14 +51,13 @@
         0
       ],
       "ChildTokenIDs": [
-        4,
-        4
+        19,
+        20
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "3": {
       "TokenIcon": "default-icon",
@@ -75,14 +73,13 @@
         0
       ],
       "ChildTokenIDs": [
-        3,
-        3
+        17,
+        18
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "5": {
       "TokenIcon": "default-icon",
@@ -98,14 +95,13 @@
         0
       ],
       "ChildTokenIDs": [
-        5,
-        5
+        15,
+        16
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "6": {
       "TokenIcon": "default-icon",
@@ -121,14 +117,13 @@
         0
       ],
       "ChildTokenIDs": [
-        6,
-        6
+        11,
+        12
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "7": {
       "TokenIcon": "default-icon",
@@ -144,14 +139,13 @@
         0
       ],
       "ChildTokenIDs": [
-        7,
-        7
+        13,
+        14
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "8": {
       "TokenIcon": "default-icon",
@@ -167,14 +161,13 @@
         0
       ],
       "ChildTokenIDs": [
-        8,
-        8
+        9,
+        10
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "9": {
       "TokenIcon": "default-icon",
@@ -190,11 +183,10 @@
         8
       ],
       "ChildTokenIDs": [
-        9
+        22
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -211,12 +203,9 @@
       "ParentTokenIDs": [
         8
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -233,12 +222,9 @@
       "ParentTokenIDs": [
         6
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -255,12 +241,9 @@
       "ParentTokenIDs": [
         6
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -277,12 +260,9 @@
       "ParentTokenIDs": [
         7
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -300,11 +280,10 @@
         7
       ],
       "ChildTokenIDs": [
-        14
+        21
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -322,11 +301,10 @@
         5
       ],
       "ChildTokenIDs": [
-        15
+        22
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -343,12 +321,9 @@
       "ParentTokenIDs": [
         5
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -365,12 +340,9 @@
       "ParentTokenIDs": [
         3
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -387,12 +359,9 @@
       "ParentTokenIDs": [
         3
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -409,12 +378,9 @@
       "ParentTokenIDs": [
         4
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -432,11 +398,10 @@
         4
       ],
       "ChildTokenIDs": [
-        20
+        21
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -456,13 +421,11 @@
         0
       ],
       "ChildTokenIDs": [
-        21,
-        21,
-        21
+        29,
+        30
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -482,15 +445,11 @@
         9
       ],
       "ChildTokenIDs": [
-        22,
-        22,
-        22,
-        22,
-        22
+        27,
+        26
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -508,12 +467,10 @@
         22
       ],
       "ChildTokenIDs": [
-        27,
-        27
+        40
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -530,12 +487,9 @@
       "ParentTokenIDs": [
         22
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -552,12 +506,9 @@
       "ParentTokenIDs": [
         21
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -574,12 +525,9 @@
       "ParentTokenIDs": [
         21
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -593,18 +541,15 @@
         "X": -14,
         "Y": -3
       },
-      "ParentTokenIDs": [
-
-      ],
+      "ParentTokenIDs": [],
       "ChildTokenIDs": [
-        33,
-        33
+        34,
+        35
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "34": {
       "TokenIcon": "dust3",
@@ -620,11 +565,10 @@
         33
       ],
       "ChildTokenIDs": [
-        34
+        35
       ],
-      "Effects": [
-
-      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -642,12 +586,9 @@
         34,
         33
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     },
@@ -664,12 +605,9 @@
       "ParentTokenIDs": [
         27
       ],
-      "ChildTokenIDs": [
-
-      ],
-      "Effects": [
-
-      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": false,
       "IsCollectable": false
     }

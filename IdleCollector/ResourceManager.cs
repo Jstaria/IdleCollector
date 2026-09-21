@@ -154,6 +154,31 @@ namespace IdleCollector
             accessedResource.Count += count * accessedResource.Multiplier;
         }
 
+        public int GetResourceCount(string name) =>
+            resources.TryGetValue(name, out ResourceInfo resource) ? resource.Count : 0;
+
+        public bool CanAfford(IReadOnlyDictionary<string, int> costs)
+        {
+            foreach (KeyValuePair<string, int> cost in costs)
+            {
+                if (cost.Value < 0 || GetResourceCount(cost.Key) < cost.Value)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool TrySpend(IReadOnlyDictionary<string, int> costs)
+        {
+            if (!CanAfford(costs))
+                return false;
+
+            foreach (KeyValuePair<string, int> cost in costs)
+                resources[cost.Key].Count -= cost.Value;
+
+            return true;
+        }
+
         private void DespawnResourceUIObj(ResourceUIObject obj)
         {
             AddPointsTo(obj.ResourceInfo.Name, obj.ResourceInfo.Count);

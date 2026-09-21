@@ -31,6 +31,9 @@ namespace SkillTreeCreationTool
         [JsonIgnore] private Dictionary<Point, SkillTreeToken> tokenPositions;
         [JsonIgnore] private readonly Dictionary<(int Parent, int Child), LinkParticleSystem> linkParticles = new();
         [JsonIgnore] public LinkParticleSettings LinkParticleSettings { get; } = new();
+        [JsonIgnore] internal SkillTreeShockwave Shockwave { get; set; }
+        [JsonIgnore] private ParticleSystem unlockBurstParticles;
+        [JsonIgnore] private Vector2 unlockBurstPosition;
 
         [JsonIgnore] public float LayerDepth { get; set; }
         [JsonIgnore] public Color Color { get; set; }
@@ -82,6 +85,8 @@ namespace SkillTreeCreationTool
                 DrawLinkPulseLines,
                 () => time);
             Renderer.AddToSceneEarlyDraw(SkillTreeScene, linkPulseRenderable);
+
+            unlockBurstParticles = CreateUnlockBurstParticles();
         }
 
         private void SetFamilyTokens()
@@ -121,6 +126,7 @@ namespace SkillTreeCreationTool
         {
             //DrawDebug(sb);
 
+            unlockBurstParticles.Draw(sb);
             foreach (LinkParticleSystem particles in linkParticles.Values)
                 particles.Draw(sb, zoom);
 
@@ -207,6 +213,7 @@ namespace SkillTreeCreationTool
 
         public void SlowUpdate(GameTime gameTime)
         {
+            unlockBurstParticles.SlowUpdate(gameTime);
             foreach (SkillTreeToken token in treeTokens.Values)
                 token.IsCollectable = token.ParentTokenIDs.Count == 0 ||
                     token.ParentTokenIDs.All(parentId =>
@@ -217,6 +224,9 @@ namespace SkillTreeCreationTool
         public void StandardUpdate(GameTime gameTime)
         {
             time = (float)gameTime.TotalGameTime.TotalSeconds;
+            if (Shockwave != null)
+                Shockwave.Time = time;
+            unlockBurstParticles.StandardUpdate(gameTime);
             UpdateLinkParticles(gameTime);
 
             zoomTarget = Math.Clamp(zoomTarget, 0.5f, 2f);
@@ -255,7 +265,65 @@ namespace SkillTreeCreationTool
             zoomTarget -= Input.GetMouseScrollDelta() * .25f;
         }
 
-        public void ControlledUpdate(GameTime gameTime) { }
+        public void ControlledUpdate(GameTime gameTime) => unlockBurstParticles.ControlledUpdate(gameTime);
+
+        private ParticleSystem CreateUnlockBurstParticles()
+        {
+            TrailInfo trail = new TrailInfo
+            {
+                TrailLength = 48f,
+                NumberOfSegments = 16,
+                TipWidth = 3,
+                EndWidth = 0,
+                SegmentsPerSecond = 24f,
+                SegmentsRemovedPerSecond = 18f,
+                SegmentColor = _ => Color.White * .7f,
+                TrackLayerDepth = () => .4f
+            };
+
+            ParticleSystemStats stats = new ParticleSystemStats
+            {
+                SpawnBounds = new[] { new[] { new Rectangle(-16, -16, 32, 32) } },
+                CurrentBounds = 0,
+                UseRandomBounds = false,
+                SpawnShape = ParticleSpawnShape.Circle,
+                SpawnPlacement = ParticleSpawnPlacement.Edge,
+                ParticleLifeSpan = new[] { .5175f, .73f },
+                TrackPosition = () => unlockBurstPosition,
+                ParticleDespawnDistance = 1000f,
+                TrackLayerDepth = () => .24f,
+                MaxParticleCount = 80,
+                ParticleStartColor = new[] { Color.White },
+                ParticleEndColor = new[] { Color.Transparent },
+                ParticleTextureKeys = new[] { "square" },
+                ParticleSpeed = new[] { .1f, .5f },
+                ParticleSize = new[] { .05f, .1f },
+                EmitRate = new[] { 0f },
+                EmitCount = new[] { 28 },
+                ParticleRotation = new[] { 0f },
+                ParticleRotationSpeed = _ => 0f,
+                ParticleColorDecayRate = t => t,
+                ParticleSizeDecayRate = t => 1f - t,
+                StartingVelocity = new[] { new Vector2(-2.5f), new Vector2(2.5f) },
+                ActingForce = _ => RandomHelper.Instance.GetVector2(new Vector2(-.8f), new Vector2(.8f)) /*+ Vector2.UnitY * .015f*/,
+                ResetParticlesAfterDeath = false,
+                Trail = trail
+            };
+
+            return new ParticleSystem(stats);
+        }
+
+        public void UnlockToken(int tokenId)
+        {
+            SkillTreeToken token = treeTokens[tokenId];
+            if (token.IsCollected)
+                return;
+
+            token.Collect();
+            Shockwave?.Add(GetWorldPosition(token.GridPosition).ToVector2() * zoom);
+            unlockBurstPosition = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
+            unlockBurstParticles.EmitParticles();
+        }
 
         private void UpdateLinkParticles(GameTime gameTime)
         {
@@ -306,7 +374,7 @@ namespace SkillTreeCreationTool
 
         public void CollectToken(Point gridPosition)
         {
-            tokenPositions[gridPosition].Collect();
+            UnlockToken(tokenPositions[gridPosition].TokenID);
         }
 
         public void AddToken(Vector2 worldPosition)
@@ -350,7 +418,6 @@ namespace SkillTreeCreationTool
             }
 
             SetFamilyTokens();
-            RefreshTokenDepths();
         }
 
         public bool CheckForToken(Point gridPosition)
@@ -376,6 +443,20 @@ namespace SkillTreeCreationTool
             token.Effects.Add(effect);
         }
 
+        public void AddResourceCost(Point gridPosition, string resource, int amount) =>
+            AddResourceCost(GetTokenID(gridPosition), resource, amount);
+
+        public void AddResourceCost(int tokenId, string resource, int amount)
+        {
+            SkillTreeToken token = treeTokens[tokenId];
+            token.ResourceCosts ??= new List<ResourceCost>();
+            token.ResourceCosts.Add(new ResourceCost
+            {
+                Resource = resource,
+                Amount = Math.Max(0, amount)
+            });
+        }
+
         public void SetTokenParent(SkillTreeToken parentToken, SkillTreeToken childToken)
         {
             if (parentToken == null || childToken == null || parentToken == childToken ||
@@ -392,12 +473,16 @@ namespace SkillTreeCreationTool
 
         private void RefreshTokenDepths()
         {
+            Dictionary<int, int> depths = new();
             foreach (SkillTreeToken token in treeTokens.Values)
-                token.Depth = CalculateTokenDepth(token, new HashSet<int>());
+                token.Depth = CalculateTokenDepth(token, new HashSet<int>(), depths);
         }
 
-        private int CalculateTokenDepth(SkillTreeToken token, HashSet<int> visited)
+        private int CalculateTokenDepth(SkillTreeToken token, HashSet<int> visited, Dictionary<int, int> depths)
         {
+            if (depths.TryGetValue(token.TokenID, out int cachedDepth))
+                return cachedDepth;
+
             if (!visited.Add(token.TokenID) || token.ParentTokenIDs.Count == 0)
                 return 0;
 
@@ -405,10 +490,12 @@ namespace SkillTreeCreationTool
             foreach (int parentId in token.ParentTokenIDs)
             {
                 if (treeTokens.TryGetValue(parentId, out SkillTreeToken parent))
-                    depth = Math.Min(depth, CalculateTokenDepth(parent, new HashSet<int>(visited)) + 1);
+                    depth = Math.Min(depth, CalculateTokenDepth(parent, new HashSet<int>(visited), depths) + 1);
             }
 
-            return depth == int.MaxValue ? 0 : depth;
+            int result = depth == int.MaxValue ? 0 : depth;
+            depths[token.TokenID] = result;
+            return result;
         }
 
         public void SetTokenParent(Point parentPos, Point childPos)
@@ -446,6 +533,7 @@ namespace SkillTreeCreationTool
 
             foreach (SkillTreeToken token in treeTokens.Values)
             {
+                token.ResourceCosts ??= new List<ResourceCost>();
                 token.Effects ??= new List<SkillEffectDefinition>();
                 tokenPositions.Add(token.GridPosition, token);
             }

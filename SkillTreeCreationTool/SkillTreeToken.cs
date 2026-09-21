@@ -11,6 +11,12 @@ using System.Threading.Tasks;
 
 namespace SkillTreeCreationTool
 {
+    public sealed class ResourceCost
+    {
+        public string Resource { get; set; } = string.Empty;
+        public int Amount { get; set; }
+    }
+
     public class SkillTreeToken
     {
         public string TokenIcon { get; set; }
@@ -21,6 +27,7 @@ namespace SkillTreeCreationTool
         public Point GridPosition { get; set; }
         public List<int> ParentTokenIDs { get; set; }
         public List<int> ChildTokenIDs { get; set; }
+        public List<ResourceCost> ResourceCosts { get; set; }
         public List<SkillEffectDefinition> Effects { get; set; }
         [JsonIgnore] public List<SkillTreeToken> ChildTokens { get; set; }
         [JsonIgnore] public List<SkillTreeToken> ParentTokens { get; set; }
@@ -35,6 +42,7 @@ namespace SkillTreeCreationTool
             GridPosition = gridPosition;
             ParentTokenIDs = new List<int>();
             ChildTokenIDs = new List<int>();
+            ResourceCosts = new List<ResourceCost>();
             Effects = new List<SkillEffectDefinition>();
             ChildTokens = new List<SkillTreeToken>();
             ParentTokens = new List<SkillTreeToken>();

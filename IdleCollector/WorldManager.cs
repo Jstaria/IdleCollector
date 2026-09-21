@@ -318,6 +318,7 @@ namespace IdleCollector
             stats.StartingVelocity = new Vector2[] { new Vector2(-.1f, -.5f), new Vector2(.1f, -.75f) };
             stats.ActingForce = (t) => (Vector2.UnitY * .02f - windManager.WindDirection * .01f);
             stats.ParticleStartColor = new Color[] { new Color(173, 181, 113), new Color(222, 236, 146) };
+            stats.ParticleEndColor = new Color[] { new Color(173, 181, 113) * 0f, new Color(222, 236, 146) * 0f };
 
             grassWalkParticles = new ParticleSystem(stats);
         }

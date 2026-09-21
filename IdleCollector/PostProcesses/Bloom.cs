@@ -123,7 +123,7 @@ namespace IdleEngine.PostProcesses
             SetEffectParameters(combinedTexture);
 
             RenderTarget2D original = combinedTexture;
-            bool saveDebug = SaveExtractedBloomDebugPng || Input.IsMiddleButtonDownOnce();
+            bool saveDebug = SaveExtractedBloomDebugPng;//|| Input.IsMiddleButtonDownOnce();
 
             if (saveDebug)
                 SaveRenderTargetPng(original, "original.png");

@@ -10,12 +10,26 @@ using System.Threading.Tasks;
 
 namespace IdleEngine
 {
+    public enum ParticleSpawnShape
+    {
+        Rectangle,
+        Circle
+    }
+
+    public enum ParticleSpawnPlacement
+    {
+        Inside,
+        Edge
+    }
+
     public struct ParticleSystemStats
     {
         public Vector2[] StartingVelocity;
         public Rectangle[][] SpawnBounds;
         public int CurrentBounds;
         public bool UseRandomBounds;
+        public ParticleSpawnShape SpawnShape;
+        public ParticleSpawnPlacement SpawnPlacement;
         public float[] ParticleLifeSpan;
         public GetVector TrackPosition;
         public Curve<Vector2> ActingForce;
@@ -38,6 +52,7 @@ namespace IdleEngine
 
         public Curve ParticleColorDecayRate;
         public Curve ParticleSizeDecayRate;
+        public TrailInfo? Trail;
     }
 
     public class ParticleSystem : IRenderable, IUpdatable
@@ -144,6 +159,7 @@ namespace IdleEngine
 
                 particleStats.ColorDecayRate = stats.ParticleColorDecayRate;
                 particleStats.SizeDecayRate = stats.ParticleSizeDecayRate;
+                particleStats.Trail = stats.Trail;
 
                 particleStats.StartColor = stats.ParticleStartColor.Length == 1 ?
                     stats.ParticleStartColor[0] :
@@ -164,7 +180,7 @@ namespace IdleEngine
                     if (bounds[ind].Length != 0)
                         ind2 = RandomHelper.Instance.GetIntExclusive(0, bounds[ind].Length);
 
-                    return RandomHelper.Instance.GetVector2(bounds[ind][ind2]);
+                    return GetSpawnPosition(bounds[ind][ind2]);
                 };
 
                 if (stats.ParticleTextureKeys != null)
@@ -194,6 +210,44 @@ namespace IdleEngine
                 Particle particle = new Particle(particleStats);
                 particles.Add(particle);
             }
+        }
+
+        private Vector2 GetSpawnPosition(Rectangle bounds)
+        {
+            return stats.SpawnShape switch
+            {
+                ParticleSpawnShape.Circle => GetCircleSpawnPosition(bounds),
+                _ => GetRectangleSpawnPosition(bounds)
+            };
+        }
+
+        private Vector2 GetRectangleSpawnPosition(Rectangle bounds)
+        {
+            if (stats.SpawnPlacement == ParticleSpawnPlacement.Inside)
+                return RandomHelper.Instance.GetVector2(bounds);
+
+            float width = Math.Max(1f, bounds.Width);
+            float height = Math.Max(1f, bounds.Height);
+            float perimeterPosition = RandomHelper.Instance.GetFloat(0f, (width + height) * 2f);
+            if (perimeterPosition < width)
+                return new Vector2(bounds.X + perimeterPosition, bounds.Y);
+            if ((perimeterPosition -= width) < height)
+                return new Vector2(bounds.Right, bounds.Y + perimeterPosition);
+            if ((perimeterPosition -= height) < width)
+                return new Vector2(bounds.Right - perimeterPosition, bounds.Bottom);
+
+            return new Vector2(bounds.X, bounds.Bottom - (perimeterPosition - width));
+        }
+
+        private Vector2 GetCircleSpawnPosition(Rectangle bounds)
+        {
+            Vector2 center = bounds.Center.ToVector2();
+            float radius = Math.Max(0.5f, Math.Min(bounds.Width, bounds.Height) / 2f);
+            float angle = RandomHelper.Instance.GetFloat(0f, MathHelper.TwoPi);
+            float distance = stats.SpawnPlacement == ParticleSpawnPlacement.Edge
+                ? radius
+                : radius * MathF.Sqrt(RandomHelper.Instance.GetFloat(0f, 1f));
+            return center + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * distance;
         }
 
         private void CullParticles()

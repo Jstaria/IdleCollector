@@ -3,6 +3,7 @@ using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -38,9 +39,14 @@ namespace SkillTreeCreationTool
         private readonly List<SkillTreeToken> parentTokens = new();
         private SkillTreeToken newToken;
         private readonly List<IconSelect> iconSelects = new();
+        private readonly List<string> resourceOptions = new();
         private int scroll;
         private readonly HashSet<int> expandedEffects = new();
         private int effectScroll;
+        private int activeCostIndex = -1;
+        private CostField activeCostField;
+        private string activeCostAmountText = string.Empty;
+        private int resourceDropdownCostIndex = -1;
         private int activeEffectIndex = -1;
         private EffectField activeEffectField;
         private string activeAmountText = string.Empty;
@@ -67,12 +73,43 @@ namespace SkillTreeCreationTool
             Height
         }
 
+        private enum CostField
+        {
+            None,
+            Resource,
+            Amount
+        }
+
         public SkillTreeEditor(SkillTree st)
         {
             skillTree = st;
             drawFunction = DrawPreview;
             updateFunction = UpdatePreview;
             LoadIcons();
+            LoadResourceOptions();
+        }
+
+        private void LoadResourceOptions()
+        {
+            JObject resourceData = JObject.Parse(System.IO.File.ReadAllText(FindResourceDataPath()));
+            resourceOptions.AddRange(resourceData["resources"]!.Children<JProperty>()
+                .Select(property => property.Name)
+                .OrderBy(name => name));
+        }
+
+        private static string FindResourceDataPath()
+        {
+            System.IO.DirectoryInfo directory = new System.IO.DirectoryInfo(AppContext.BaseDirectory);
+            while (directory != null)
+            {
+                string path = System.IO.Path.Combine(directory.FullName, "IdleCollector", "Content", "SaveData", "ResourceData.json");
+                if (System.IO.File.Exists(path))
+                    return path;
+
+                directory = directory.Parent;
+            }
+
+            throw new System.IO.FileNotFoundException("Could not locate IdleCollector ResourceData.json.");
         }
 
         private void LoadIcons()
@@ -121,9 +158,7 @@ namespace SkillTreeCreationTool
         {
             if (Input.IsButtonDownOnce(Keys.Delete) && parentTokens.Count > 0)
             {
-                foreach (SkillTreeToken token in parentTokens.ToList())
-                    skillTree.RemoveToken(token.GridPosition);
-                parentTokens.Clear();
+                DeleteTokens(parentTokens);
                 return;
             }
 
@@ -148,10 +183,21 @@ namespace SkillTreeCreationTool
                 Point gPos = skillTree.GetGridPosition();
                 if (skillTree.CheckForToken(gPos))
                 {
-                    parentTokens.Remove(skillTree.GetToken(gPos));
-                    skillTree.RemoveToken(gPos);
+                    SkillTreeToken token = skillTree.GetToken(gPos);
+                    if (Input.IsButtonDown(Keys.LeftControl) || Input.IsButtonDown(Keys.RightControl))
+                        skillTree.UnlockToken(token.TokenID);
+                    else
+                        DeleteTokens(new[] { token });
                 }
             }
+        }
+
+        private void DeleteTokens(IEnumerable<SkillTreeToken> tokens)
+        {
+            foreach (SkillTreeToken token in tokens.ToList())
+                skillTree.RemoveToken(token.GridPosition);
+
+            parentTokens.RemoveAll(token => !skillTree.CheckForToken(token.GridPosition));
         }
 
         private void ToggleParentToken(SkillTreeToken token)
@@ -180,6 +226,9 @@ namespace SkillTreeCreationTool
             effectScroll = 0;
             activeEffectIndex = -1;
             activeEffectField = EffectField.None;
+            activeCostIndex = -1;
+            activeCostField = CostField.None;
+            resourceDropdownCostIndex = -1;
             activeIconSizeField = IconSizeField.None;
             iconSizeText = string.Empty;
             replaceIconSizeText = false;
@@ -243,7 +292,7 @@ namespace SkillTreeCreationTool
                 return;
 
             Rectangle panel = GetEffectPanelBounds();
-            Rectangle addButton = new Rectangle(panel.Right - 48, panel.Y + 10, 38, 38);
+            Rectangle addCostButton = new Rectangle(panel.Right - 48, panel.Y + 66 - effectScroll, 38, 38);
             Rectangle unlockedBounds = GetUnlockedBounds(panel);
             Rectangle iconWidthBounds = GetIconWidthBounds(panel);
             Rectangle iconHeightBounds = GetIconHeightBounds(panel);
@@ -258,11 +307,29 @@ namespace SkillTreeCreationTool
             sb.DrawRect(unlockedBounds, 1, Color.White * (unlockedInEditor ? 1f : .25f));
             if (unlockedInEditor)
                 sb.DrawString(font, "X", unlockedBounds.Location.ToVector2() + new Vector2(12, -3), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
-            sb.DrawString(font, "Effects", new Vector2(panel.X + 540, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
-            sb.Draw(Drawing.Pixel, addButton, Color.Green * .75f);
-            sb.DrawString(font, "+", addButton.Location.ToVector2() + new Vector2(11, -6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
-
             int y = panel.Y + EffectHeaderSpacing - effectScroll;
+            sb.Draw(Drawing.Pixel, new Rectangle(panel.X + 10, y, panel.Width - 20, EffectHeaderHeight), Color.DarkSlateGray);
+            sb.DrawString(font, "Costs", new Vector2(panel.X + 20, y + 2), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.Draw(Drawing.Pixel, addCostButton, Color.Green * .75f);
+            sb.DrawString(font, "+", addCostButton.Location.ToVector2() + new Vector2(11, -6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+            y += EffectHeaderSpacing;
+
+            for (int i = 0; i < newToken.ResourceCosts.Count; i++)
+            {
+                ResourceCost cost = newToken.ResourceCosts[i];
+                DrawRemoveButton(sb, font, GetCostRemoveBounds(panel, y));
+                DrawCostField(sb, font, panel, ref y, i, CostField.Resource, "Resource", cost.Resource);
+                DrawCostField(sb, font, panel, ref y, i, CostField.Amount, "Amount", cost.Amount.ToString(CultureInfo.InvariantCulture));
+                y += 4;
+            }
+
+            Rectangle effectsHeader = new Rectangle(panel.X + 10, y, panel.Width - 20, EffectHeaderHeight);
+            Rectangle addEffectButton = new Rectangle(effectsHeader.Right - 48, effectsHeader.Y + 6, 38, 38);
+            sb.Draw(Drawing.Pixel, effectsHeader, Color.DarkSlateGray);
+            sb.DrawString(font, "Effects", new Vector2(panel.X + 20, y + 2), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.Draw(Drawing.Pixel, addEffectButton, Color.Green * .75f);
+            sb.DrawString(font, "+", addEffectButton.Location.ToVector2() + new Vector2(11, -6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+            y += EffectHeaderSpacing;
             for (int i = 0; i < newToken.Effects.Count; i++)
             {
                 SkillEffectDefinition effect = newToken.Effects[i];
@@ -271,6 +338,7 @@ namespace SkillTreeCreationTool
 
                 sb.Draw(Drawing.Pixel, header, expanded ? Color.DarkSlateGray : Color.Black * .6f);
                 sb.DrawString(font, $"{(expanded ? "-" : "+")} Effect {i + 1}", header.Location.ToVector2() + new Vector2(10, 2), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+                DrawRemoveButton(sb, font, GetEffectRemoveBounds(header));
                 y += EffectHeaderSpacing;
 
                 if (!expanded)
@@ -280,7 +348,58 @@ namespace SkillTreeCreationTool
                     DrawEffectField(sb, font, panel, ref y, i, field, label, GetEffectDisplayValue(effect, field));
                 y += 4;
             }
+
+            DrawResourceDropdown(sb, font, panel);
         }
+
+        private static void DrawRemoveButton(SpriteBatch sb, SpriteFont font, Rectangle bounds)
+        {
+            sb.Draw(Drawing.Pixel, bounds, Color.DarkRed * .85f);
+            sb.DrawRect(bounds, 1, Color.White * .35f);
+            sb.DrawString(font, "-", bounds.Location.ToVector2() + new Vector2(11, -6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .98f);
+        }
+
+        private void DrawCostField(SpriteBatch sb, SpriteFont font, Rectangle panel, ref int y, int costIndex, CostField field, string label, string value)
+        {
+            Rectangle bounds = new Rectangle(panel.X + 165, y, panel.Width - 177, EffectFieldHeight);
+            bool active = activeCostIndex == costIndex && activeCostField == field;
+            sb.DrawString(font, label, new Vector2(panel.X + 14, y), Color.LightGray, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.Draw(Drawing.Pixel, bounds, active ? Color.DarkBlue : Color.Black * .6f);
+            sb.DrawRect(bounds, 1, active ? Color.White : Color.White * .25f);
+            sb.DrawString(font, value, bounds.Location.ToVector2() + new Vector2(7, 0), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+            y += EffectFieldHeight + EffectFieldSpacing;
+        }
+
+        private void DrawResourceDropdown(SpriteBatch sb, SpriteFont font, Rectangle panel)
+        {
+            if (resourceDropdownCostIndex < 0 || resourceDropdownCostIndex >= newToken.ResourceCosts.Count)
+                return;
+
+            Rectangle bounds = GetResourceDropdownBounds(panel, resourceDropdownCostIndex);
+            sb.Draw(Drawing.Pixel, bounds, Color.Black * .95f);
+            sb.DrawRect(bounds, 1, Color.White * .5f);
+            for (int i = 0; i < resourceOptions.Count; i++)
+            {
+                Rectangle optionBounds = new Rectangle(bounds.X, bounds.Y + i * EffectFieldHeight, bounds.Width, EffectFieldHeight);
+                bool selected = resourceOptions[i] == newToken.ResourceCosts[resourceDropdownCostIndex].Resource;
+                sb.Draw(Drawing.Pixel, optionBounds, selected ? Color.DarkSlateGray : Color.Transparent);
+                sb.DrawString(font, resourceOptions[i], optionBounds.Location.ToVector2() + new Vector2(7, 0), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .98f);
+            }
+        }
+
+        private Rectangle GetResourceDropdownBounds(Rectangle panel, int costIndex)
+        {
+            int costStartY = panel.Y + EffectHeaderSpacing - effectScroll + EffectHeaderSpacing;
+            int rowHeight = (EffectFieldHeight + EffectFieldSpacing) * 2 + 4;
+            int resourceY = costStartY + costIndex * rowHeight;
+            return new Rectangle(panel.X + 165, resourceY + EffectFieldHeight, panel.Width - 177, resourceOptions.Count * EffectFieldHeight);
+        }
+
+        private static Rectangle GetCostRemoveBounds(Rectangle panel, int y) =>
+            new Rectangle(panel.Right - 50, y, 38, 38);
+
+        private static Rectangle GetEffectRemoveBounds(Rectangle header) =>
+            new Rectangle(header.Right - 42, header.Y + 6, 34, 38);
 
         private void DrawEffectField(SpriteBatch sb, SpriteFont font, Rectangle panel, ref int y, int effectIndex, EffectField field, string label, string value)
         {
@@ -400,7 +519,10 @@ namespace SkillTreeCreationTool
         private int GetMaximumEffectScroll(Rectangle panel)
         {
             SpriteFont font = ResourceAtlas.GetFont("EffectEditor");
-            int contentHeight = 0;
+            int contentHeight = EffectHeaderSpacing;
+            contentHeight += newToken.ResourceCosts.Count * (EffectFieldHeight + EffectFieldSpacing) * 2;
+            contentHeight += newToken.ResourceCosts.Count * 4;
+            contentHeight += EffectHeaderSpacing;
             for (int i = 0; i < newToken.Effects.Count; i++)
             {
                 contentHeight += EffectHeaderSpacing;
@@ -419,7 +541,10 @@ namespace SkillTreeCreationTool
 
         private void HandleEffectEditorClick(Rectangle panel, Point mousePosition)
         {
-            Rectangle addButton = new Rectangle(panel.Right - 48, panel.Y + 10, 38, 38);
+            Rectangle addCostButton = new Rectangle(panel.Right - 48, panel.Y + 66 - effectScroll, 38, 38);
+            if (TrySelectResourceDropdown(panel, mousePosition))
+                return;
+
             if (GetUnlockedBounds(panel).Contains(mousePosition))
             {
                 unlockedInEditor = !unlockedInEditor;
@@ -438,7 +563,33 @@ namespace SkillTreeCreationTool
                 return;
             }
 
-            if (addButton.Contains(mousePosition))
+            if (addCostButton.Contains(mousePosition))
+            {
+                skillTree.AddResourceCost(newToken.TokenID, resourceOptions.FirstOrDefault() ?? string.Empty, 0);
+                SelectCostField(newToken.ResourceCosts.Count - 1, CostField.Resource);
+                resourceDropdownCostIndex = newToken.ResourceCosts.Count - 1;
+                return;
+            }
+
+            int y = panel.Y + EffectHeaderSpacing - effectScroll;
+            y += EffectHeaderSpacing;
+            for (int i = 0; i < newToken.ResourceCosts.Count; i++)
+            {
+                if (GetCostRemoveBounds(panel, y).Contains(mousePosition))
+                {
+                    RemoveCost(i);
+                    return;
+                }
+
+                if (TrySelectCostField(panel, ref y, i, mousePosition, CostField.Resource) ||
+                    TrySelectCostField(panel, ref y, i, mousePosition, CostField.Amount))
+                    return;
+                y += 4;
+            }
+
+            Rectangle effectsHeader = new Rectangle(panel.X + 10, y, panel.Width - 20, EffectHeaderHeight);
+            Rectangle addEffectButton = new Rectangle(effectsHeader.Right - 48, effectsHeader.Y + 6, 38, 38);
+            if (addEffectButton.Contains(mousePosition))
             {
                 skillTree.AddEffect(newToken.TokenID, new SkillEffectDefinition());
                 int index = newToken.Effects.Count - 1;
@@ -448,10 +599,16 @@ namespace SkillTreeCreationTool
                 return;
             }
 
-            int y = panel.Y + EffectHeaderSpacing - effectScroll;
+            y += EffectHeaderSpacing;
             for (int i = 0; i < newToken.Effects.Count; i++)
             {
                 Rectangle header = new Rectangle(panel.X + 10, y, panel.Width - 20, EffectHeaderHeight);
+                if (GetEffectRemoveBounds(header).Contains(mousePosition))
+                {
+                    RemoveEffect(i);
+                    return;
+                }
+
                 if (header.Contains(mousePosition))
                 {
                     if (!expandedEffects.Add(i))
@@ -470,8 +627,71 @@ namespace SkillTreeCreationTool
                     if (TrySelectEffectField(panel, ref y, i, mousePosition, field))
                         return;
 
-                y += 4;
+            y += 4;
             }
+        }
+
+        private void RemoveCost(int index)
+        {
+            newToken.ResourceCosts.RemoveAt(index);
+            activeCostIndex = -1;
+            activeCostField = CostField.None;
+            resourceDropdownCostIndex = -1;
+        }
+
+        private void RemoveEffect(int index)
+        {
+            newToken.Effects.RemoveAt(index);
+            int[] expanded = expandedEffects.Where(effectIndex => effectIndex != index)
+                .Select(effectIndex => effectIndex > index ? effectIndex - 1 : effectIndex)
+                .ToArray();
+            expandedEffects.Clear();
+            foreach (int effectIndex in expanded)
+                expandedEffects.Add(effectIndex);
+
+            activeEffectIndex = -1;
+            activeEffectField = EffectField.None;
+        }
+
+        private bool TrySelectResourceDropdown(Rectangle panel, Point mousePosition)
+        {
+            if (resourceDropdownCostIndex < 0)
+                return false;
+
+            Rectangle bounds = GetResourceDropdownBounds(panel, resourceDropdownCostIndex);
+            if (!bounds.Contains(mousePosition))
+            {
+                resourceDropdownCostIndex = -1;
+                return false;
+            }
+
+            int optionIndex = (mousePosition.Y - bounds.Y) / EffectFieldHeight;
+            if (optionIndex >= 0 && optionIndex < resourceOptions.Count)
+                newToken.ResourceCosts[resourceDropdownCostIndex].Resource = resourceOptions[optionIndex];
+
+            resourceDropdownCostIndex = -1;
+            return true;
+        }
+
+        private bool TrySelectCostField(Rectangle panel, ref int y, int costIndex, Point mousePosition, CostField field)
+        {
+            Rectangle bounds = new Rectangle(panel.X + 165, y, panel.Width - 177, EffectFieldHeight);
+            y += EffectFieldHeight + EffectFieldSpacing;
+            if (!bounds.Contains(mousePosition))
+                return false;
+
+            if (field == CostField.Resource)
+            {
+                resourceDropdownCostIndex = costIndex;
+                activeCostIndex = -1;
+                activeCostField = CostField.None;
+            }
+            else
+            {
+                resourceDropdownCostIndex = -1;
+                SelectCostField(costIndex, field);
+            }
+            return true;
         }
 
         private bool TrySelectEffectField(Rectangle panel, ref int y, int effectIndex, Point mousePosition, EffectField field)
@@ -491,6 +711,8 @@ namespace SkillTreeCreationTool
         {
             activeEffectIndex = effectIndex;
             activeEffectField = field;
+            activeCostIndex = -1;
+            activeCostField = CostField.None;
             activeIconSizeField = IconSizeField.None;
             activeAmountText = field == EffectField.Amount
                 ? newToken.Effects[effectIndex].Amount.ToString(CultureInfo.InvariantCulture)
@@ -503,6 +725,12 @@ namespace SkillTreeCreationTool
             if (activeIconSizeField != IconSizeField.None)
             {
                 UpdateIconSize(typedText);
+                return;
+            }
+
+            if (activeCostIndex >= 0 && activeCostIndex < newToken.ResourceCosts.Count)
+            {
+                UpdateCostFieldText(typedText);
                 return;
             }
 
@@ -524,6 +752,42 @@ namespace SkillTreeCreationTool
                 value = value[..^1];
 
             SetEffectFieldValue(effect, activeEffectField, value);
+        }
+
+        private void SelectCostField(int costIndex, CostField field)
+        {
+            activeCostIndex = costIndex;
+            activeCostField = field;
+            activeEffectIndex = -1;
+            activeEffectField = EffectField.None;
+            activeIconSizeField = IconSizeField.None;
+            activeCostAmountText = field == CostField.Amount
+                ? newToken.ResourceCosts[costIndex].Amount.ToString(CultureInfo.InvariantCulture)
+                : string.Empty;
+        }
+
+        private void UpdateCostFieldText(string typedText)
+        {
+            ResourceCost cost = newToken.ResourceCosts[activeCostIndex];
+            string value = activeCostField == CostField.Amount ? activeCostAmountText : cost.Resource;
+            foreach (char character in typedText)
+            {
+                bool valid = activeCostField == CostField.Amount ? char.IsDigit(character) : !char.IsControl(character);
+                if (valid && value.Length < 40)
+                    value += character;
+            }
+
+            if (Input.IsButtonDownOnce(Keys.Back) && value.Length > 0)
+                value = value[..^1];
+
+            if (activeCostField == CostField.Resource)
+                cost.Resource = value;
+            else
+            {
+                activeCostAmountText = value;
+                if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int amount))
+                    cost.Amount = Math.Max(0, amount);
+            }
         }
 
         private void UpdateIconSize(string typedText)
@@ -626,7 +890,10 @@ namespace SkillTreeCreationTool
             updateFunction = UpdatePreview;
             drawFunction = DrawPreview;
             skillTree.editing = false;
-            newToken.IsCollected = save ? unlockedInEditor : editedTokenWasCollected;
+            if (save && unlockedInEditor && !newToken.IsCollected)
+                skillTree.UnlockToken(newToken.TokenID);
+            else
+                newToken.IsCollected = save ? unlockedInEditor : editedTokenWasCollected;
             createdTokenBeingEdited = false;
         }
 

@@ -680,6 +680,11 @@
 /processor:EffectProcessor
 /build:Effects/LinkPulse.fx
 
+#begin Effects/SkillTreeShockwave.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeShockwave.fx
+
 #begin Effects/Bloom.fx
 /importer:EffectImporter
 /processor:EffectProcessor

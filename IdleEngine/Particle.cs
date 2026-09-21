@@ -31,6 +31,7 @@ namespace IdleEngine
 
         public float Rotation;
         public Curve<float> RotationSpeed;
+        public TrailInfo? Trail;
 
         public string ParticleText;
         public SpriteFont Font;
@@ -47,6 +48,8 @@ namespace IdleEngine
 
         private float size;
         private float rotationAngle;
+        private Trail trail;
+        private Color currentColor;
 
         public float LifeSpan { get => lifeSpan; }
         public float LayerDepth { get; set; }
@@ -66,6 +69,8 @@ namespace IdleEngine
 
         public void Draw(SpriteBatch sb)
         {
+            trail?.Draw(sb);
+
             if (stats.Font == null)
                 DrawAsset(sb); 
             else if (texture == null)
@@ -84,8 +89,7 @@ namespace IdleEngine
 
         private void DrawAsset(SpriteBatch sb)
         {
-            Color color = Color.Lerp(stats.StartColor, stats.EndColor, colorDecay);
-            sb.Draw(texture, position, null, color, rotationAngle, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), size, SpriteEffects.None, stats.LayerDepth.Invoke());
+            sb.Draw(texture, position, null, currentColor, rotationAngle, new Vector2(texture.Width / 2.0f, texture.Height / 2.0f), size, SpriteEffects.None, stats.LayerDepth.Invoke());
         }
 
         public void ControlledUpdate(GameTime gameTime)
@@ -98,6 +102,7 @@ namespace IdleEngine
                 velocity += stats.ActingForce.Invoke(t);
 
             position += velocity * stats.Speed;
+            trail?.ControlledUpdate(gameTime);
         }
 
        public void StandardUpdate(GameTime gameTime)
@@ -107,13 +112,15 @@ namespace IdleEngine
             size = stats.SizeDecayRate(t) * stats.Size;
 
             colorDecay = stats.ColorDecayRate(t);
+            currentColor = Color.Lerp(stats.StartColor, stats.EndColor, colorDecay);
 
             rotationAngle += stats.RotationSpeed(t);
+            trail?.StandardUpdate(gameTime);
         }
 
         public void SlowUpdate(GameTime gameTime)
         {
-            
+            trail?.SlowUpdate(gameTime);
         }
 
         public void Reset()
@@ -122,6 +129,22 @@ namespace IdleEngine
             position = stats.Position.Invoke();
             velocity = stats.StartingVelocity;
             rotationAngle = stats.Rotation;
+            currentColor = stats.StartColor;
+            CreateTrail();
+        }
+
+        private void CreateTrail()
+        {
+            if (!stats.Trail.HasValue)
+            {
+                trail = null;
+                return;
+            }
+
+            TrailInfo trailInfo = stats.Trail.Value;
+            trailInfo.TrackPosition = () => position;
+            trailInfo.SegmentColor = _ => currentColor;
+            trail = new Trail(trailInfo);
         }
         public void SetStartingVelocity(Vector2 vec) => stats.StartingVelocity = vec;
         public void SetVelocity(Vector2 vec) => velocity = vec;

@@ -19,6 +19,7 @@ namespace SkillTreeCreationTool
 
         private SkillTree skillTree;
         private SkillTreeEditor skillTreeEditor;
+        private SkillTreeShockwave skillTreeShockwave;
         private Camera camera;
         private static readonly Queue<char> textInput = new();
         private bool suppressEscapeUntilReleased;
@@ -101,6 +102,10 @@ namespace SkillTreeCreationTool
             skillTree = new SkillTree();
             skillTree.CollectToken(Point.Zero);
             SceneManager.AddToScene(skillTree);
+
+            skillTreeShockwave = new SkillTreeShockwave();
+            Renderer.AddPostProcess("SkillTreeShockwave", skillTreeShockwave);
+            skillTree.Shockwave = skillTreeShockwave;
 
             skillTreeEditor = new SkillTreeEditor(skillTree);
             SceneManager.AddToScene(skillTreeEditor);
