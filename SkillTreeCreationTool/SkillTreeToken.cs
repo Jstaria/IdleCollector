@@ -19,9 +19,15 @@ namespace SkillTreeCreationTool
 
     public class SkillTreeToken
     {
-        public string TokenIcon { get; set; }
+        public string TokenIcon { get; set; } = "default-icon";
+        public string TokenIcon2 { get; set; } = "";
+        public string TokenIcon3 { get; set; } = "";
         public int IconWidth { get; set; }
         public int IconHeight { get; set; }
+        public int IconWidth2 { get; set; }
+        public int IconHeight2 { get; set; }
+        public int IconWidth3 { get; set; }
+        public int IconHeight3 { get; set; }
         public int Depth { get; set; }
         public int TokenID { get; set; }
         public Point GridPosition { get; set; }
@@ -33,11 +39,14 @@ namespace SkillTreeCreationTool
         [JsonIgnore] public List<SkillTreeToken> ParentTokens { get; set; }
 
         public bool IsCollected { get; set; }
-        public bool IsCollectable {  get; set; }
+        public bool IsCollectable { get; set; }
 
         public SkillTreeToken(string iconName, Point gridPosition, int tokenID)
         {
             TokenIcon = iconName;
+            TokenIcon2 = "";
+            TokenIcon3 = "";
+
             TokenID = tokenID;
             GridPosition = gridPosition;
             ParentTokenIDs = new List<int>();
@@ -59,6 +68,5 @@ namespace SkillTreeCreationTool
         {
             IsCollected = true;
         }
-
     }
 }

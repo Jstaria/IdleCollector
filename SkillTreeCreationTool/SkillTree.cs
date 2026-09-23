@@ -50,12 +50,12 @@ namespace SkillTreeCreationTool
         [JsonIgnore] public float zoom = 1;
         [JsonIgnore] public float zoomTarget = 1;
         [JsonIgnore] public bool editing = false;
-        
+
 
         public SkillTree()
         {
             treeTokens = new();
-            
+
             LoadSkillTree();
 
             IconSizePoint = new Point(IconSize);
@@ -132,21 +132,43 @@ namespace SkillTreeCreationTool
 
             var tokens = treeTokens.Values.ToList();
 
-            for ( int i = 0; i < treeTokens.Values.Count; i++)
+            for (int i = 0; i < treeTokens.Values.Count; i++)
             {
                 SkillTreeToken token = tokens[i];
 
-                Color drawColor = 
-                    token.IsCollected ? Color.White : 
+                Color drawColor =
+                    token.IsCollected ? Color.White :
                     token.IsCollectable ? Color.White * .25f : Color.White * .05f;
 
                 Vector2 position = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-                Texture2D tex = ResourceAtlas.GetTexture(token.TokenIcon);
-                Vector2 iconSize = new Vector2(token.IconWidth, token.IconHeight) * zoom;
-                Rectangle tokenRect = new Rectangle((position - iconSize / 2f).ToPoint(), iconSize.ToPoint());
-                sb.Draw(tex, tokenRect, drawColor);
+                DrawTokenIcon(sb, token.TokenIcon, token.IconWidth, token.IconHeight, position, drawColor);
+                DrawTokenIcon(sb, token.TokenIcon2, token.IconWidth2, token.IconHeight2, position, drawColor);
+                DrawTokenIcon(sb, token.TokenIcon3, token.IconWidth3, token.IconHeight3, position, drawColor);
 
             }
+        }
+
+        private void DrawTokenIcon(
+            SpriteBatch sb,
+            string iconName,
+            int width,
+            int height,
+            Vector2 position,
+            Color drawColor)
+        {
+            if (string.IsNullOrEmpty(iconName) || width <= 0 || height <= 0)
+                return;
+
+            Texture2D tex = ResourceAtlas.GetTexture(iconName);
+            if (tex == null)
+                return;
+
+            Vector2 iconSize = new Vector2(width, height) * zoom;
+            Rectangle tokenRect = new Rectangle(
+                (position - iconSize / 2f).ToPoint(),
+                iconSize.ToPoint());
+
+            sb.Draw(tex, tokenRect, drawColor);
         }
 
         private void DrawLinkPulseLines(SpriteBatch sb, Effect effect)
@@ -207,7 +229,7 @@ namespace SkillTreeCreationTool
 
             foreach (SkillTreeToken token in treeTokens.Values)
             {
-                sb.DrawString(ResourceAtlas.GetFont("DePixelHalbfett"),token.TokenID.ToString(), token.GridPosition.ToVector2() * GridSpacing, Color.Black, 0, -Vector2.One * IconSize / 2 , .35f, SpriteEffects.None, .75f);
+                sb.DrawString(ResourceAtlas.GetFont("DePixelHalbfett"), token.TokenID.ToString(), token.GridPosition.ToVector2() * GridSpacing, Color.Black, 0, -Vector2.One * IconSize / 2, .35f, SpriteEffects.None, .75f);
             }
         }
 
@@ -422,7 +444,7 @@ namespace SkillTreeCreationTool
 
         public bool CheckForToken(Point gridPosition)
         {
-            return tokenPositions.ContainsKey(gridPosition); 
+            return tokenPositions.ContainsKey(gridPosition);
         }
 
         public int GetTokenID(Point gridPosition) => tokenPositions[gridPosition].TokenID;
@@ -535,6 +557,37 @@ namespace SkillTreeCreationTool
             {
                 token.ResourceCosts ??= new List<ResourceCost>();
                 token.Effects ??= new List<SkillEffectDefinition>();
+                token.TokenIcon2 ??= string.Empty;
+                token.TokenIcon3 ??= string.Empty;
+
+                if (token.IconWidth2 <= 0 && !string.IsNullOrEmpty(token.TokenIcon2))
+                {
+                    Texture2D texture = ResourceAtlas.GetTexture(token.TokenIcon2);
+                    if (texture != null)
+                        token.IconWidth2 = texture.Width;
+                }
+
+                if (token.IconHeight2 <= 0 && !string.IsNullOrEmpty(token.TokenIcon2))
+                {
+                    Texture2D texture = ResourceAtlas.GetTexture(token.TokenIcon2);
+                    if (texture != null)
+                        token.IconHeight2 = texture.Height;
+                }
+
+                if (token.IconWidth3 <= 0 && !string.IsNullOrEmpty(token.TokenIcon3))
+                {
+                    Texture2D texture = ResourceAtlas.GetTexture(token.TokenIcon3);
+                    if (texture != null)
+                        token.IconWidth3 = texture.Width;
+                }
+
+                if (token.IconHeight3 <= 0 && !string.IsNullOrEmpty(token.TokenIcon3))
+                {
+                    Texture2D texture = ResourceAtlas.GetTexture(token.TokenIcon3);
+                    if (texture != null)
+                        token.IconHeight3 = texture.Height;
+                }
+
                 tokenPositions.Add(token.GridPosition, token);
             }
         }

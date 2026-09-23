@@ -14,8 +14,8 @@ namespace SkillTreeCreationTool
 {
     public class SkillTreeEditor : IScene
     {
-        private const int IconCellSize = 32;
-        private const int IconsPerRow = 5;
+        private const int IconCellSize = 16;
+        private const int IconsPerRow = 10;
         private const int EffectHeaderHeight = 50;
         private const int EffectHeaderSpacing = 58;
         private const int EffectFieldHeight = 46;
@@ -54,6 +54,7 @@ namespace SkillTreeCreationTool
         private bool unlockedInEditor;
         private bool createdTokenBeingEdited;
         private IconSizeField activeIconSizeField;
+        private int activeIconSlot;
         private string iconSizeText = string.Empty;
         private bool replaceIconSizeText;
 
@@ -119,9 +120,13 @@ namespace SkillTreeCreationTool
                 IconSelect iconSelect = new IconSelect(icon, ResourceAtlas.TextureCache[icon], new Point(IconCellSize));
                 iconSelect.button.OnClick += () =>
                 {
-                    newToken.TokenIcon = icon;
-                    newToken.IconWidth = iconSelect.icon.Width;
-                    newToken.IconHeight = iconSelect.icon.Height;
+                    SetIconForActiveSlot(icon);
+
+                    SetIconSizeForSlot(
+                        activeIconSlot,
+                        iconSelect.icon.Width,
+                        iconSelect.icon.Height);
+
                     activeIconSizeField = IconSizeField.None;
                     iconSizeText = string.Empty;
                     replaceIconSizeText = false;
@@ -230,6 +235,7 @@ namespace SkillTreeCreationTool
             activeCostField = CostField.None;
             resourceDropdownCostIndex = -1;
             activeIconSizeField = IconSizeField.None;
+            activeIconSlot = 0;
             iconSizeText = string.Empty;
             replaceIconSizeText = false;
 
@@ -300,9 +306,13 @@ namespace SkillTreeCreationTool
 
             sb.Draw(Drawing.Pixel, panel, Color.Black * .8f);
             sb.DrawRect(panel, 1, Color.White * .4f);
-            DrawIconSizeField(sb, font, iconWidthBounds, "W", newToken.IconWidth, IconSizeField.Width);
-            DrawIconSizeField(sb, font, iconHeightBounds, "H", newToken.IconHeight, IconSizeField.Height);
-            sb.DrawString(font, "Unlock", new Vector2(panel.X + 350, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            DrawIconSizeField(sb, font, iconWidthBounds, "W", GetIconWidthForSlot(activeIconSlot), IconSizeField.Width);
+            DrawIconSizeField(sb, font, iconHeightBounds, "H", GetIconHeightForSlot(activeIconSlot), IconSizeField.Height);
+            for (int i = 0; i < 3; i++)
+                DrawIconSlot(sb, font, panel, i);
+
+            sb.DrawString(font, "Textures", new Vector2(panel.X + 340, panel.Y + 50), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.DrawString(font, "Unlock", new Vector2(panel.X + 565, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
             sb.Draw(Drawing.Pixel, unlockedBounds, unlockedInEditor ? Color.ForestGreen : Color.Black * .6f);
             sb.DrawRect(unlockedBounds, 1, Color.White * (unlockedInEditor ? 1f : .25f));
             if (unlockedInEditor)
@@ -482,7 +492,156 @@ namespace SkillTreeCreationTool
 
         private static Rectangle GetUnlockedBounds(Rectangle panel)
         {
-            return new Rectangle(panel.X + 490, panel.Y + 8, 42, 42);
+            return new Rectangle(panel.X + 625, panel.Y + 8, 42, 42);
+        }
+
+        private static Rectangle GetIconSlotBounds(Rectangle panel, int slot)
+        {
+            return new Rectangle(panel.X + 340 + slot * 48, panel.Y + 8, 42, 42);
+        }
+
+        private string GetIconForSlot(int slot)
+        {
+            return slot switch
+            {
+                0 => newToken.TokenIcon,
+                1 => newToken.TokenIcon2,
+                2 => newToken.TokenIcon3,
+                _ => string.Empty
+            };
+        }
+
+        private int GetIconWidthForSlot(int slot)
+        {
+            return slot switch
+            {
+                0 => newToken.IconWidth,
+                1 => newToken.IconWidth2,
+                2 => newToken.IconWidth3,
+                _ => 0
+            };
+        }
+
+        private int GetIconHeightForSlot(int slot)
+        {
+            return slot switch
+            {
+                0 => newToken.IconHeight,
+                1 => newToken.IconHeight2,
+                2 => newToken.IconHeight3,
+                _ => 0
+            };
+        }
+
+        private void SetIconSizeForSlot(int slot, int width, int height)
+        {
+            switch (slot)
+            {
+                case 0:
+                    newToken.IconWidth = width;
+                    newToken.IconHeight = height;
+                    break;
+
+                case 1:
+                    newToken.IconWidth2 = width;
+                    newToken.IconHeight2 = height;
+                    break;
+
+                case 2:
+                    newToken.IconWidth3 = width;
+                    newToken.IconHeight3 = height;
+                    break;
+            }
+        }
+
+        private void SetIconWidthForSlot(int slot, int width)
+        {
+            switch (slot)
+            {
+                case 0:
+                    newToken.IconWidth = width;
+                    break;
+
+                case 1:
+                    newToken.IconWidth2 = width;
+                    break;
+
+                case 2:
+                    newToken.IconWidth3 = width;
+                    break;
+            }
+        }
+
+        private void SetIconHeightForSlot(int slot, int height)
+        {
+            switch (slot)
+            {
+                case 0:
+                    newToken.IconHeight = height;
+                    break;
+
+                case 1:
+                    newToken.IconHeight2 = height;
+                    break;
+
+                case 2:
+                    newToken.IconHeight3 = height;
+                    break;
+            }
+        }
+
+        private void SetIconForActiveSlot(string icon)
+        {
+            switch (activeIconSlot)
+            {
+                case 0:
+                    newToken.TokenIcon = icon;
+                    break;
+
+                case 1:
+                    newToken.TokenIcon2 = icon;
+                    break;
+
+                case 2:
+                    newToken.TokenIcon3 = icon;
+                    break;
+            }
+        }
+
+        private void DrawIconSlot(SpriteBatch sb, SpriteFont font, Rectangle panel, int slot)
+        {
+            Rectangle bounds = GetIconSlotBounds(panel, slot);
+            bool active = activeIconSlot == slot;
+
+            sb.Draw(Drawing.Pixel, bounds, active ? Color.DarkBlue : Color.Black * .6f);
+            sb.DrawRect(bounds, 1, active ? Color.White : Color.White * .25f);
+
+            string iconName = GetIconForSlot(slot);
+            if (!string.IsNullOrEmpty(iconName))
+            {
+                Texture2D texture = ResourceAtlas.GetTexture(iconName);
+                if (texture != null)
+                {
+                    Rectangle textureBounds = new Rectangle(
+                        bounds.X + 3,
+                        bounds.Y + 3,
+                        bounds.Width - 6,
+                        bounds.Height - 6);
+
+                    sb.Draw(texture, textureBounds, Color.White);
+                }
+            }
+
+            sb.DrawString(
+                font,
+                (slot + 1).ToString(),
+                bounds.Location.ToVector2() + new Vector2(3, -3),
+                active ? Color.Yellow : Color.White,
+                0,
+                Vector2.Zero,
+                .65f,
+                SpriteEffects.None,
+                .98f);
         }
 
         private void DrawIconSizeField(SpriteBatch sb, SpriteFont font, Rectangle bounds, string label, int value, IconSizeField field)
@@ -492,7 +651,7 @@ namespace SkillTreeCreationTool
             sb.Draw(Drawing.Pixel, bounds, active ? Color.DarkBlue : Color.Black * .6f);
             sb.DrawRect(bounds, 1, active ? Color.White : Color.White * .25f);
             string displayedValue = active ? iconSizeText : value.ToString(CultureInfo.InvariantCulture);
-            sb.DrawString(font, displayedValue, bounds.Location.ToVector2() + new Vector2(7,0), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+            sb.DrawString(font, displayedValue, bounds.Location.ToVector2() + new Vector2(7, 0), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
         }
 
         private void UpdateEffectEditor()
@@ -544,6 +703,18 @@ namespace SkillTreeCreationTool
             Rectangle addCostButton = new Rectangle(panel.Right - 48, panel.Y + 66 - effectScroll, 38, 38);
             if (TrySelectResourceDropdown(panel, mousePosition))
                 return;
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (GetIconSlotBounds(panel, i).Contains(mousePosition))
+                {
+                    activeIconSlot = i;
+                    activeIconSizeField = IconSizeField.None;
+                    iconSizeText = string.Empty;
+                    replaceIconSizeText = false;
+                    return;
+                }
+            }
 
             if (GetUnlockedBounds(panel).Contains(mousePosition))
             {
@@ -627,7 +798,7 @@ namespace SkillTreeCreationTool
                     if (TrySelectEffectField(panel, ref y, i, mousePosition, field))
                         return;
 
-            y += 4;
+                y += 4;
             }
         }
 
@@ -815,9 +986,9 @@ namespace SkillTreeCreationTool
                 return;
 
             if (activeIconSizeField == IconSizeField.Width)
-                newToken.IconWidth = Math.Max(1, size);
+                SetIconWidthForSlot(activeIconSlot, Math.Max(1, size));
             else
-                newToken.IconHeight = Math.Max(1, size);
+                SetIconHeightForSlot(activeIconSlot, Math.Max(1, size));
         }
 
         private void SelectIconSizeField(IconSizeField field)
@@ -868,8 +1039,11 @@ namespace SkillTreeCreationTool
             LayoutIconSelects();
             if (GetIconSelectBounds().Contains(Input.GetMousePos()))
             {
-                scroll = Math.Clamp(scroll + Input.GetMouseScrollDelta() * 20, 0, 100);
-                LayoutIconSelects();
+                if (!(GetIconSelectBounds().Height < Renderer.RenderSize.Y))
+                {
+                    scroll = Math.Clamp(scroll + Input.GetMouseScrollDelta() * 20, 0, 100);
+                    LayoutIconSelects();
+                }
             }
 
             for (int i = 0; i < iconSelects.Count; i++)
