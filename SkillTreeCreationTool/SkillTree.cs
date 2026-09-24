@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -16,6 +17,9 @@ namespace SkillTreeCreationTool
 {
     public class SkillTree : IScene
     {
+        public static SkillTree Instance => instance ??= new SkillTree();
+        private static SkillTree instance;
+
         private const float LinkLineThickness = 30f;
         private const float LinkPulseTravelTime = 3f;
 
@@ -87,6 +91,7 @@ namespace SkillTreeCreationTool
             Renderer.AddToSceneEarlyDraw(SkillTreeScene, linkPulseRenderable);
 
             unlockBurstParticles = CreateUnlockBurstParticles();
+            instance = this;
         }
 
         private void SetFamilyTokens()
@@ -245,6 +250,8 @@ namespace SkillTreeCreationTool
 
         public void StandardUpdate(GameTime gameTime)
         {
+            unlockBurstParticles.SetBoundsSize(zoom);
+
             time = (float)gameTime.TotalGameTime.TotalSeconds;
             if (Shockwave != null)
                 Shockwave.Time = time;
@@ -322,12 +329,12 @@ namespace SkillTreeCreationTool
                 ParticleSize = new[] { .05f, .1f },
                 EmitRate = new[] { 0f },
                 EmitCount = new[] { 28 },
-                ParticleRotation = new[] { 0f },
+                ParticleRotation = new[] { 0f, MathF.PI * 2 },
                 ParticleRotationSpeed = _ => 0f,
                 ParticleColorDecayRate = t => t,
-                ParticleSizeDecayRate = t => 1f - t,
-                StartingVelocity = new[] { new Vector2(-2.5f), new Vector2(2.5f) },
-                ActingForce = _ => RandomHelper.Instance.GetVector2(new Vector2(-.8f), new Vector2(.8f)) /*+ Vector2.UnitY * .015f*/,
+                ParticleSizeDecayRate = t => (1f - t) * zoom,
+                TrackStartingVelocity = () => { return RandomHelper.Instance.GetVector2(new Vector2(-2.5f), new Vector2(2.5f)) * zoom; },
+                ActingForce = _ => RandomHelper.Instance.GetVector2(new Vector2(-.8f), new Vector2(.8f)) * zoom /*+ Vector2.UnitY * .015f*/,
                 ResetParticlesAfterDeath = false,
                 Trail = trail
             };

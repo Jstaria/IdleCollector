@@ -312,7 +312,7 @@ namespace SkillTreeCreationTool
                 DrawIconSlot(sb, font, panel, i);
 
             sb.DrawString(font, "Textures", new Vector2(panel.X + 340, panel.Y + 50), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
-            sb.DrawString(font, "Unlock", new Vector2(panel.X + 565, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
+            sb.DrawString(font, "Unlock", new Vector2(panel.X + 495, panel.Y + 6), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
             sb.Draw(Drawing.Pixel, unlockedBounds, unlockedInEditor ? Color.ForestGreen : Color.Black * .6f);
             sb.DrawRect(unlockedBounds, 1, Color.White * (unlockedInEditor ? 1f : .25f));
             if (unlockedInEditor)
@@ -994,7 +994,9 @@ namespace SkillTreeCreationTool
         private void SelectIconSizeField(IconSizeField field)
         {
             activeIconSizeField = field;
-            iconSizeText = (field == IconSizeField.Width ? newToken.IconWidth : newToken.IconHeight)
+            iconSizeText = (field == IconSizeField.Width
+                ? GetIconWidthForSlot(activeIconSlot)
+                : GetIconHeightForSlot(activeIconSlot))
                 .ToString(CultureInfo.InvariantCulture);
             replaceIconSizeText = true;
             activeEffectIndex = -1;

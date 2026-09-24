@@ -49,6 +49,7 @@ namespace SkillTreeCreationTool
             for (int i = 0; i < shockwaves.Count; i++)
                 shaderShockwaves[i] = new Vector4(shockwaves[i].Position, shockwaves[i].StartTime, Shockwave.Duration);
 
+            effect.Parameters["zoom"]?.SetValue(SkillTree.Instance.zoom);
             effect.Parameters["iTime"]?.SetValue(Time);
             effect.Parameters["shockwaves"]?.SetValue(shaderShockwaves);
             effect.Parameters["shockwaveCount"]?.SetValue(shockwaves.Count);

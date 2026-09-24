@@ -8,6 +8,9 @@
 #define PS_SHADERMODEL ps_4_0_level_9_1
 #endif
 
+#define iResolutionX 480.0f
+#define iResolutionY 270.0f
+
 struct VertexShaderOutput
 {
     float4 Color : COLOR0;
@@ -15,13 +18,18 @@ struct VertexShaderOutput
 };
 
 sampler2D textureSampler;
+
 float iTime;
+float zoom;
+
 float4 shockwaves[8];
 int shockwaveCount;
 
 float4 MainPS(VertexShaderOutput input) : SV_Target
 {
     float2 uv = input.TextureCoordinates;
+
+    float aspect = iResolutionX / iResolutionY;
 
     for (int i = 0; i < 8; i++)
     {
@@ -30,12 +38,34 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
 
         float age = iTime - shockwaves[i].z;
         float progress = saturate(age / shockwaves[i].w);
+
         float2 offset = uv - shockwaves[i].xy;
+
+        offset.x *= aspect;
+
         float distance = length(offset);
-        float ringRadius = progress * 0.35;
-        float ring = 1.0 - smoothstep(0.0, 0.035, abs(distance - ringRadius));
-        float strength = ring * (1.0 - progress) * 0.018;
-        uv += normalize(offset + 0.00001) * strength;
+
+        float ringRadius = progress * 0.35 * zoom;
+
+        float ringThickness = 0.035 * zoom;
+
+        float ring = 1.0 - smoothstep(
+            0.0,
+            ringThickness,
+            abs(distance - ringRadius)
+        );
+
+        float strength =
+            ring *
+            (1.0 - progress) *
+            0.018 *
+            zoom;
+
+        float2 direction = normalize(offset + 0.00001);
+
+        direction.x /= aspect;
+
+        uv += direction * strength;
     }
 
     return tex2D(textureSampler, uv) * input.Color;
