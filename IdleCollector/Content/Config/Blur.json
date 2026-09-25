@@ -1,5 +1,5 @@
 {
   "useBlur": true,
   "maskCutoff": 0.4,
-  "maxBlurRadius": 2
+  "maxBlurRadius": 4
 }
