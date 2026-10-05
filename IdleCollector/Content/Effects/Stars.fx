@@ -18,6 +18,7 @@ struct VertexShaderOutput
 #define ITER2 12
 #define iResolutionX 480.0f
 #define iResolutionY 270.0f
+#define OVERALL_TINT 1.0f
 
 #define GLOW_INTENSITY   0.004   // overall brightness of the halo
 #define GLOW_RADIUS      0.08     // how far the glow spreads (lower = tighter)
@@ -189,7 +190,7 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
                 // CORE_MAX is usually lower than GLOW_MAX so the white core stays tight
                 // while the blue halo can spread wider
                 glow = clamp(glow, 0.0, CORE_MAX);
-                snow += (core * 2.0 + glow) * depthFactor;
+                snow += (core * 2.0 + glow) * depthFactor * .125f;
             }
         }
     }
@@ -225,7 +226,7 @@ float4 MainPS(VertexShaderOutput input) : SV_Target
     
     //finalColor.a = .5f;
     
-    return finalColor;
+    return finalColor * OVERALL_TINT;
 }
 
 technique Starfield

@@ -146,9 +146,9 @@ namespace SkillTreeCreationTool
                     token.IsCollectable ? Color.White * .25f : Color.White * .05f;
 
                 Vector2 position = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-                DrawTokenIcon(sb, token.TokenIcon, token.IconWidth, token.IconHeight, position, drawColor);
-                DrawTokenIcon(sb, token.TokenIcon2, token.IconWidth2, token.IconHeight2, position, drawColor);
-                DrawTokenIcon(sb, token.TokenIcon3, token.IconWidth3, token.IconHeight3, position, drawColor);
+                DrawTokenIcon(sb, token.TokenIcon, token.IconWidth, token.IconHeight, position, drawColor, .5f);
+                DrawTokenIcon(sb, token.TokenIcon2, token.IconWidth2, token.IconHeight2, position, drawColor, .51f);
+                DrawTokenIcon(sb, token.TokenIcon3, token.IconWidth3, token.IconHeight3, position, drawColor, .52f);
 
             }
         }
@@ -159,7 +159,8 @@ namespace SkillTreeCreationTool
             int width,
             int height,
             Vector2 position,
-            Color drawColor)
+            Color drawColor,
+            float layerDepth)
         {
             if (string.IsNullOrEmpty(iconName) || width <= 0 || height <= 0)
                 return;
@@ -173,7 +174,7 @@ namespace SkillTreeCreationTool
                 (position - iconSize / 2f).ToPoint(),
                 iconSize.ToPoint());
 
-            sb.Draw(tex, tokenRect, drawColor);
+            sb.Draw(tex, tokenRect, null, drawColor, 0f, Vector2.Zero, SpriteEffects.None, layerDepth);
         }
 
         private void DrawLinkPulseLines(SpriteBatch sb, Effect effect)

@@ -7,7 +7,7 @@
 	"content": {
 		"textures": {
 			"path": "Textures/*.png",
-			"recursive": true,
+			"recursive": "True",
 			"action": "build",
 			"importer": "TextureImporter",
 			"processor": "TextureProcessor",
@@ -57,8 +57,12 @@
 			"path": "SaveData/*.txt",
 			"action": "copy"
 		},
-		"json": {
+		"SDjson": {
 			"path": "SaveData/*.json",
+			"action": "copy"
+		},
+		"Cjson": {
+			"path": "Config/*.json",
 			"action": "copy"
 		}
 

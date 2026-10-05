@@ -13,6 +13,214 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Audio/imagefilm-043-by-sascha-ende-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/build:Audio/imagefilm-043-by-sascha-ende-from-filmmusic-io.mp3
+
+#begin Audio/story-of-a-fairy-by-sascha-ende-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/build:Audio/story-of-a-fairy-by-sascha-ende-from-filmmusic-io.mp3
+
+#begin Audio/story-of-a-sunflower-by-sascha-ende-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/build:Audio/story-of-a-sunflower-by-sascha-ende-from-filmmusic-io.mp3
+
+#begin Audio/stranded-by-sascha-ende-from-filmmusic-io.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/build:Audio/stranded-by-sascha-ende-from-filmmusic-io.mp3
+
+#begin Config/Bloom.json
+/copy:Config/Bloom.json
+
+#begin Config/Blur.json
+/copy:Config/Blur.json
+
+#begin Config/OptionsMenu.json
+/copy:Config/OptionsMenu.json
+
+#begin Effects/Bloom.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/Bloom.fx
+
+#begin Effects/LinkPulse.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/LinkPulse.fx
+
+#begin Effects/MaskedBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/MaskedBlur.fx
+
+#begin Effects/NightOverlay.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/NightOverlay.fx
+
+#begin Effects/Pixel.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/Pixel.fx
+
+#begin Effects/SkillTreeShockwave.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeShockwave.fx
+
+#begin Effects/Stars.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/Stars.fx
+
+#begin Fonts/DePixelHalbfett.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelHalbfett.spritefont
+
+#begin Fonts/DePixelHalbfettTitle.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelHalbfettTitle.spritefont
+
+#begin Fonts/DePixelKlein.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/DePixelKlein.spritefont
+
+#begin Fonts/EffectEditor.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/EffectEditor.spritefont
+
+#begin Fonts/Medodica.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/Medodica.spritefont
+
+#begin SaveData/atlasKeys.txt
+/copy:SaveData/atlasKeys.txt
+
+#begin SaveData/GameData.json
+/copy:SaveData/GameData.json
+
+#begin SaveData/PlayerData.json
+/copy:SaveData/PlayerData.json
+
+#begin SaveData/ResourceData.json
+/copy:SaveData/ResourceData.json
+
+#begin SaveData/SkillTree.json
+/copy:SaveData/SkillTree.json
+
+#begin SaveData/SpawnData.json
+/copy:SaveData/SpawnData.json
+
+#begin SaveData/VolumeData.json
+/copy:SaveData/VolumeData.json
+
+#begin SaveData/WorldData.txt
+/copy:SaveData/WorldData.txt
+
+#begin SoundEffects/footstep.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/footstep.mp3
+
+#begin SoundEffects/grass1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass1.mp3
+
+#begin SoundEffects/grass10.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass10.mp3
+
+#begin SoundEffects/grass11.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass11.mp3
+
+#begin SoundEffects/grass2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass2.mp3
+
+#begin SoundEffects/grass3.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass3.mp3
+
+#begin SoundEffects/grass4.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass4.mp3
+
+#begin SoundEffects/grass5.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass5.mp3
+
+#begin SoundEffects/grass6.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass6.mp3
+
+#begin SoundEffects/grass7.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass7.mp3
+
+#begin SoundEffects/grass8.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass8.mp3
+
+#begin SoundEffects/grass9.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grass9.mp3
+
+#begin SoundEffects/grassPlace1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grassPlace1.mp3
+
+#begin SoundEffects/grassPlace2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/grassPlace2.mp3
+
+#begin SoundEffects/placeGrass.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/placeGrass.mp3
+
+#begin SoundEffects/pop.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/pop.mp3
+
+#begin SoundEffects/resourceCollect.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/resourceCollect.mp3
+
+#begin SoundEffects/resourceCollect2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/resourceCollect2.mp3
+
+#begin SoundEffects/wind.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/build:SoundEffects/wind.mp3
+
 #begin Textures/atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -72,6 +280,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/bar.png
+
+#begin Textures/bar1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/bar1.png
+
+#begin Textures/bar2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/bar2.png
+
+#begin Textures/blur.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/blur.png
 
 #begin Textures/board1.png
 /importer:TextureImporter
@@ -169,18 +413,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/board8.png
 
-#begin Textures/cactusIcon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/cactusIcon.png
-
 #begin Textures/charSheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -193,6 +425,54 @@
 /processorParam:TextureFormat=Color
 /build:Textures/charSheet.png
 
+#begin Textures/check.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/check.png
+
+#begin Textures/check16x16.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/check16x16.png
+
+#begin Textures/checkbox.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/checkbox.png
+
+#begin Textures/checkboxThin.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/checkboxThin.png
+
 #begin Textures/circle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -204,6 +484,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/circle.png
+
+#begin Textures/dropShadow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/dropShadow.png
 
 #begin Textures/dust1.png
 /importer:TextureImporter
@@ -313,18 +605,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/dust9.png
 
-#begin Textures/flowerIcon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/flowerIcon.png
-
 #begin Textures/fox_outline.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -433,7 +713,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/grass5.png
 
-#begin Textures/grassIcon.png
+#begin Textures/Icons/back_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -443,7 +723,67 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/grassIcon.png
+/build:Textures/Icons/back_1.png
+
+#begin Textures/Icons/back_2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/back_2.png
+
+#begin Textures/Icons/back_3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/back_3.png
+
+#begin Textures/Icons/back_4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/back_4.png
+
+#begin Textures/Icons/back_5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/back_5.png
+
+#begin Textures/Icons/back_6.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/back_6.png
 
 #begin Textures/loot_beam.png
 /importer:TextureImporter
@@ -480,6 +820,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/newGameH.png
+
+#begin Textures/pauseBlock.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/pauseBlock.png
 
 #begin Textures/resourceBar.png
 /importer:TextureImporter
@@ -589,6 +941,30 @@
 /processorParam:TextureFormat=Color
 /build:Textures/square.png
 
+#begin Textures/T_Noise04.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/T_Noise04.png
+
+#begin Textures/T_Noise11.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/T_Noise11.png
+
 #begin Textures/tempMenu.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -625,7 +1001,7 @@
 /processorParam:TextureFormat=Color
 /build:Textures/tempPause.png
 
-#begin Textures/treeIcon.png
+#begin Textures/Icons/cactusIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -635,60 +1011,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Textures/treeIcon.png
-
-#begin SaveData/SkillTree.json
-/copy:SaveData/SkillTree.json
-
-#begin Fonts/DePixelHalbfett.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/build:Fonts/DePixelHalbfett.spritefont
-
-#begin Fonts/EffectEditor.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/build:Fonts/EffectEditor.spritefont
-
-#begin Fonts/DePixelHalbfettTitle.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/build:Fonts/DePixelHalbfettTitle.spritefont
-
-#begin Fonts/DePixelKlein.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/build:Fonts/DePixelKlein.spritefont
-
-#begin Fonts/Medodica.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/build:Fonts/Medodica.spritefont
-
-#begin Effects/Pixel.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/build:Effects/Pixel.fx
-
-#begin Effects/Stars.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/build:Effects/Stars.fx
-
-#begin Effects/LinkPulse.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/build:Effects/LinkPulse.fx
-
-#begin Effects/SkillTreeShockwave.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/build:Effects/SkillTreeShockwave.fx
-
-#begin Effects/Bloom.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/build:Effects/Bloom.fx
+/build:Textures/Icons/cactusIcon.png
 
 #begin Textures/Icons/default-icon.png
 /importer:TextureImporter
@@ -701,3 +1024,39 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Icons/default-icon.png
+
+#begin Textures/Icons/flowerIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/flowerIcon.png
+
+#begin Textures/Icons/grassIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/grassIcon.png
+
+#begin Textures/Icons/treeIcon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/treeIcon.png
