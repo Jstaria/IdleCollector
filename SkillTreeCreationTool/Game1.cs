@@ -94,7 +94,6 @@ namespace SkillTreeCreationTool
             Drawing.Initialize(_spriteBatch);
 
             ResourceAtlas.LoadTextures(Content, "Content/Textures/", "Textures");
-            ResourceAtlas.LoadTextures(Content, "Content/Textures/Icons/", "Icons");
             ResourceAtlas.LoadFonts(Content, "Content/Fonts/", "Fonts");
             ResourceAtlas.LoadEffects(Content, "Content/Effects", "Effects");
             LoadPostProcesses();

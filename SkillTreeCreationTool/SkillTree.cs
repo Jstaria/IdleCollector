@@ -22,6 +22,7 @@ namespace SkillTreeCreationTool
 
         private const float LinkLineThickness = 30f;
         private const float LinkPulseTravelTime = 3f;
+        private const float HoverAuraRadius = 32f;
 
         [JsonRequired] public int GridSpacing = 100;
         [JsonRequired] public int IconSize = 50;
@@ -51,6 +52,9 @@ namespace SkillTreeCreationTool
         private LinkPulseRenderable linkPulseRenderable;
         public string SkillTreeScene = "SkillTreeScene";
         [JsonIgnore] private float time;
+        [JsonIgnore] private int hoverAuraTokenId = -1;
+        [JsonIgnore] private float hoverAuraAlpha;
+        [JsonIgnore] private Vector4 hoverAuraTimeOffsets;
         [JsonIgnore] public float zoom = 1;
         [JsonIgnore] public float zoomTarget = 1;
         [JsonIgnore] public bool editing = false;
@@ -135,6 +139,9 @@ namespace SkillTreeCreationTool
             foreach (LinkParticleSystem particles in linkParticles.Values)
                 particles.Draw(sb, zoom);
 
+            DrawHoveredTokenPortal(sb);
+            DrawHoveredTokenRing(sb);
+
             var tokens = treeTokens.Values.ToList();
 
             for (int i = 0; i < treeTokens.Values.Count; i++)
@@ -175,6 +182,53 @@ namespace SkillTreeCreationTool
                 iconSize.ToPoint());
 
             sb.Draw(tex, tokenRect, null, drawColor, 0f, Vector2.Zero, SpriteEffects.None, layerDepth);
+        }
+
+        private void DrawHoveredTokenRing(SpriteBatch sb)
+        {
+            if (hoverAuraTokenId < 0 || !treeTokens.TryGetValue(hoverAuraTokenId, out SkillTreeToken token) || hoverAuraAlpha <= .001f)
+                return;
+
+            Vector2 center = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
+            float auraRadius = HoverAuraRadius * zoom;
+            Color color = GetHoverEffectColor(token);
+            Effect effect = ResourceAtlas.GetEffect("SkillTreeHoverAura");
+
+            sb.End();
+            effect.Parameters["iTime"]?.SetValue(time);
+            effect.Parameters["ringTimeOffsets"]?.SetValue(hoverAuraTimeOffsets);
+            Renderer.ResetBeginDraw(sb, effect, DrawSpace.World);
+            float diameter = auraRadius * 2f;
+            sb.Draw(Drawing.Pixel, new Rectangle((center - Vector2.One * auraRadius).ToPoint(), new Point((int)diameter)), color);
+
+            sb.End();
+            Renderer.ResetBeginDraw(sb, drawSpace: DrawSpace.World);
+        }
+
+        private void DrawHoveredTokenPortal(SpriteBatch sb)
+        {
+            if (hoverAuraTokenId < 0 || !treeTokens.TryGetValue(hoverAuraTokenId, out SkillTreeToken token) || hoverAuraAlpha <= .001f)
+                return;
+
+            Vector2 center = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
+            float radius = 24f * zoom;
+            Color color = GetHoverEffectColor(token);
+            Effect effect = ResourceAtlas.GetEffect("SkillTreeHoverPortal");
+
+            sb.End();
+            effect.Parameters["iTime"]?.SetValue(time);
+            Renderer.ResetBeginDraw(sb, effect, DrawSpace.World);
+            float diameter = radius * 2f;
+            sb.Draw(Drawing.Pixel, new Rectangle((center - Vector2.One * radius).ToPoint(), new Point((int)diameter)), color);
+
+            sb.End();
+            Renderer.ResetBeginDraw(sb, drawSpace: DrawSpace.World);
+        }
+
+        private Color GetHoverEffectColor(SkillTreeToken token)
+        {
+            float iconAlpha = token.IsCollected ? 1f : token.IsCollectable ? .25f : .05f;
+            return Color.White * (iconAlpha * .5f * hoverAuraAlpha);
         }
 
         private void DrawLinkPulseLines(SpriteBatch sb, Effect effect)
@@ -254,6 +308,7 @@ namespace SkillTreeCreationTool
             unlockBurstParticles.SetBoundsSize(zoom);
 
             time = (float)gameTime.TotalGameTime.TotalSeconds;
+            UpdateHoverAura((float)gameTime.ElapsedGameTime.TotalSeconds);
             if (Shockwave != null)
                 Shockwave.Time = time;
             unlockBurstParticles.StandardUpdate(gameTime);
@@ -293,6 +348,28 @@ namespace SkillTreeCreationTool
             }
 
             zoomTarget -= Input.GetMouseScrollDelta() * .25f;
+        }
+
+        private void UpdateHoverAura(float elapsedSeconds)
+        {
+            Point gridPosition = GetGridPosition();
+            int hoveredTokenId = CheckForToken(gridPosition) ? GetTokenID(gridPosition) : -1;
+            float targetAlpha = hoveredTokenId >= 0 ? 1f : 0f;
+
+            if (hoveredTokenId >= 0 && hoveredTokenId != hoverAuraTokenId)
+            {
+                hoverAuraTokenId = hoveredTokenId;
+                hoverAuraAlpha = 0f;
+                hoverAuraTimeOffsets = new Vector4(
+                    RandomHelper.Instance.GetFloat(0f, 20f),
+                    RandomHelper.Instance.GetFloat(0f, 20f),
+                    RandomHelper.Instance.GetFloat(0f, 20f),
+                    RandomHelper.Instance.GetFloat(0f, 20f));
+            }
+
+            hoverAuraAlpha = MathHelper.Lerp(hoverAuraAlpha, targetAlpha, 1f - MathF.Exp(-5f * elapsedSeconds));
+            if (hoverAuraAlpha <= .01f && targetAlpha == 0f)
+                hoverAuraTokenId = -1;
         }
 
         public void ControlledUpdate(GameTime gameTime) => unlockBurstParticles.ControlledUpdate(gameTime);

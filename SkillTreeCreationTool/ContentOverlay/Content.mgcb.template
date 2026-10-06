@@ -1,0 +1,35 @@
+
+#----------------------------- Global Properties ----------------------------#
+
+/outputDir:bin/$(Platform)
+/intermediateDir:obj/$(Platform)
+/platform:DesktopGL
+/config:
+/profile:Reach
+/compress:False
+
+#-------------------------------- References --------------------------------#
+
+
+#---------------------------------- Content ---------------------------------#
+
+#begin Config/Bloom.json
+/copy:Config/Bloom.json
+
+#begin Effects/LinkPulse.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/LinkPulse.fx
+
+#begin Effects/SkillTreeShockwave.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeShockwave.fx
+
+#begin Fonts/EffectEditor.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/build:Fonts/EffectEditor.spritefont
+
+#begin SaveData/SkillTree.json
+/copy:SaveData/SkillTree.json

@@ -43,10 +43,15 @@
 		<Message Text="Restoring dotnet tools (this might take a while depending on your internet speed and should only happen upon building your project for the first time, or after upgrading MonoGame, or clearing your nuget cache)" Importance="High" />
 		<Exec Command="dotnet tool restore" />
 	</Target>
-	<Target Name="CopyIdleCollectorContent" BeforeTargets="Build">
+	<Target Name="CopyIdleCollectorRuntimeContent" BeforeTargets="CollectContentReferences">
 		<ItemGroup>
-			<ContentToCopy Include="..\IdleCollector\Content\**\*" />
+			<!-- To sync another folder, add its source glob here and its matching Content path to RemoveDir/MakeDir below. -->
+			<ContentToCopy Include="..\IdleCollector\Content\Textures\**\*" />
+			<ContentToCopy Include="..\IdleCollector\Content\SoundEffects\**\*" />
 		</ItemGroup>
+
+		<RemoveDir Directories="Content\Textures;Content\SoundEffects" />
+		<MakeDir Directories="Content\Textures;Content\SoundEffects" />
 
 		<Copy
 			SourceFiles="@(ContentToCopy)"
