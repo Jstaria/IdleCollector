@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
@@ -43,15 +43,10 @@
 		<Message Text="Restoring dotnet tools (this might take a while depending on your internet speed and should only happen upon building your project for the first time, or after upgrading MonoGame, or clearing your nuget cache)" Importance="High" />
 		<Exec Command="dotnet tool restore" />
 	</Target>
-	<Target Name="CopyIdleCollectorRuntimeContent" BeforeTargets="CollectContentReferences">
+	<Target Name="CopyIdleCollectorContent" BeforeTargets="Build">
 		<ItemGroup>
-			<!-- To sync another folder, add its source glob here and its matching Content path to RemoveDir/MakeDir below. -->
-			<ContentToCopy Include="..\IdleCollector\Content\Textures\**\*" />
-			<ContentToCopy Include="..\IdleCollector\Content\SoundEffects\**\*" />
+			<ContentToCopy Include="..\IdleCollector\Content\**\*" />
 		</ItemGroup>
-
-		<RemoveDir Directories="Content\Textures;Content\SoundEffects" />
-		<MakeDir Directories="Content\Textures;Content\SoundEffects" />
 
 		<Copy
 			SourceFiles="@(ContentToCopy)"

@@ -140,7 +140,7 @@ namespace SkillTreeCreationTool
                 particles.Draw(sb, zoom);
 
             DrawHoveredTokenPortal(sb);
-            DrawHoveredTokenRing(sb);
+            //DrawHoveredTokenRing(sb);
 
             var tokens = treeTokens.Values.ToList();
 
