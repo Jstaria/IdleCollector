@@ -104,6 +104,7 @@ namespace SkillTreeCreationTool
             {
                 token.ChildTokens.Clear();
                 token.ParentTokens.Clear();
+                EnsureIconLayers(token);
                 token.ParentTokenIDs ??= new List<int>();
                 token.ChildTokenIDs ??= new List<int>();
                 token.ParentTokenIDs = token.ParentTokenIDs
@@ -111,10 +112,6 @@ namespace SkillTreeCreationTool
                     .Distinct()
                     .ToList();
                 token.ChildTokenIDs.Clear();
-                if (token.IconWidth <= 0)
-                    token.IconWidth = IconSize;
-                if (token.IconHeight <= 0)
-                    token.IconHeight = IconSize;
             }
 
             foreach (SkillTreeToken child in treeTokens.Values)
@@ -129,6 +126,33 @@ namespace SkillTreeCreationTool
             }
 
             RefreshTokenDepths();
+        }
+
+        private void EnsureIconLayers(SkillTreeToken token)
+        {
+            token.IconLayers ??= new List<IconLayer>();
+            if (token.IconLayers.Count == 0)
+            {
+                token.IconLayers.Add(new IconLayer
+                {
+                    Icon = DefaultIcon,
+                    Width = IconSize,
+                    Height = IconSize
+                });
+            }
+
+            foreach (IconLayer layer in token.IconLayers)
+            {
+                if ((layer.Width <= 0 || layer.Height <= 0) && !string.IsNullOrEmpty(layer.Icon))
+                {
+                    Texture2D texture = ResourceAtlas.GetTexture(layer.Icon);
+                    if (texture != null)
+                    {
+                        layer.Width = layer.Width > 0 ? layer.Width : texture.Width;
+                        layer.Height = layer.Height > 0 ? layer.Height : texture.Height;
+                    }
+                }
+            }
         }
 
         public void Draw(SpriteBatch sb)
@@ -153,9 +177,11 @@ namespace SkillTreeCreationTool
                     token.IsCollectable ? Color.White * .25f : Color.White * .05f;
 
                 Vector2 position = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-                DrawTokenIcon(sb, token.TokenIcon, token.IconWidth, token.IconHeight, position, drawColor, .5f);
-                DrawTokenIcon(sb, token.TokenIcon2, token.IconWidth2, token.IconHeight2, position, drawColor, .51f);
-                DrawTokenIcon(sb, token.TokenIcon3, token.IconWidth3, token.IconHeight3, position, drawColor, .52f);
+                for (int layerIndex = 0; layerIndex < token.IconLayers.Count; layerIndex++)
+                {
+                    IconLayer layer = token.IconLayers[layerIndex];
+                    DrawTokenIcon(sb, layer.Icon, layer.Width, layer.Height, position, drawColor, .5f + layerIndex * .01f);
+                }
 
             }
         }
@@ -211,10 +237,9 @@ namespace SkillTreeCreationTool
                 return;
 
             Vector2 center = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-            int largestIconDimension = Math.Max(
-                Math.Max(token.IconWidth, token.IconHeight),
-                Math.Max(Math.Max(token.IconWidth2, token.IconHeight2), Math.Max(token.IconWidth3, token.IconHeight3)));
-            float radius = Math.Max(1f, largestIconDimension * zoom * .75f);
+            int largestIconDimension = token.IconLayers.Max(layer => Math.Max(layer.Width, layer.Height));
+            float portalSize = token.PortalSize > 0 ? token.PortalSize : largestIconDimension;
+            float radius = Math.Max(1f, portalSize * zoom * .75f);
             Color color = GetHoverEffectColor(token);
             Effect effect = ResourceAtlas.GetEffect("SkillTreeHoverPortal");
 
@@ -322,13 +347,14 @@ namespace SkillTreeCreationTool
 
             if (editing) return;
 
-            if (Input.IsRightButtonDownOnce())
+            if (Input.IsMouseInPresentationBounds && Input.IsRightButtonDownOnce())
             {
                 mouseStart = (Input.GetMouseScreenPos().ToVector2() / zoom).ToPoint();
-                cameraStart = lastCameraPosition;
+                cameraStart = GetCurrentCameraTargetPosition();
+                lastCameraPosition = cameraStart;
             }
 
-            if (Input.IsRightButtonDown())
+            if (Input.IsMouseInPresentationBounds && Input.IsRightButtonDown())
             {
                 Point mouseCurrent = (Input.GetMouseScreenPos().ToVector2() / zoom).ToPoint();
                 Point delta = mouseStart - mouseCurrent;
@@ -350,12 +376,22 @@ namespace SkillTreeCreationTool
                     ResetSkillTree();
             }
 
-            zoomTarget -= Input.GetMouseScrollDelta() * .25f;
+            if (Input.IsMouseInPresentationBounds)
+                zoomTarget -= Input.GetMouseScrollDelta() * .25f;
+        }
+
+        private static Point GetCurrentCameraTargetPosition()
+        {
+            Point cameraPosition = Renderer.CurrentCamera.Position;
+            Point renderSize = Renderer.RenderSize;
+            return new Point(renderSize.X / 2 - cameraPosition.X, renderSize.Y / 2 - cameraPosition.Y);
         }
 
         private void UpdateHoverAura(float elapsedSeconds)
         {
-            int hoveredTokenId = TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken token) ? token.TokenID : -1;
+            int hoveredTokenId = Input.IsMouseInPresentationBounds && TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken token)
+                ? token.TokenID
+                : -1;
             float targetAlpha = hoveredTokenId >= 0 ? 1f : 0f;
 
             if (hoveredTokenId >= 0 && hoveredTokenId != hoverAuraTokenId)
@@ -378,9 +414,8 @@ namespace SkillTreeCreationTool
         {
             foreach (SkillTreeToken token in treeTokens.Values.OrderByDescending(token => token.Depth))
             {
-                int largestDimension = Math.Max(
-                    Math.Max(token.IconWidth, token.IconHeight),
-                    Math.Max(Math.Max(token.IconWidth2, token.IconHeight2), Math.Max(token.IconWidth3, token.IconHeight3)));
+                EnsureIconLayers(token);
+                int largestDimension = token.IconLayers.Max(layer => Math.Max(layer.Width, layer.Height));
                 if (largestDimension <= 0)
                     continue;
 
@@ -525,11 +560,9 @@ namespace SkillTreeCreationTool
 
             int id = TokenID;
 
-            SkillTreeToken token = new SkillTreeToken(DefaultIcon, gridPosition, id)
-            {
-                IconWidth = IconSize,
-                IconHeight = IconSize
-            };
+            SkillTreeToken token = new SkillTreeToken(DefaultIcon, gridPosition, id);
+            token.IconLayers[0].Width = IconSize;
+            token.IconLayers[0].Height = IconSize;
             treeTokens.Add(id, token);
             tokenPositions.Add(gridPosition, token);
             TokenID++;
@@ -668,36 +701,7 @@ namespace SkillTreeCreationTool
             {
                 token.ResourceCosts ??= new List<ResourceCost>();
                 token.Effects ??= new List<SkillEffectDefinition>();
-                token.TokenIcon2 ??= string.Empty;
-                token.TokenIcon3 ??= string.Empty;
-
-                if (token.IconWidth2 <= 0 && !string.IsNullOrEmpty(token.TokenIcon2))
-                {
-                    Texture2D texture = ResourceAtlas.GetTexture(token.TokenIcon2);
-                    if (texture != null)
-                        token.IconWidth2 = texture.Width;
-                }
-
-                if (token.IconHeight2 <= 0 && !string.IsNullOrEmpty(token.TokenIcon2))
-                {
-                    Texture2D texture = ResourceAtlas.GetTexture(token.TokenIcon2);
-                    if (texture != null)
-                        token.IconHeight2 = texture.Height;
-                }
-
-                if (token.IconWidth3 <= 0 && !string.IsNullOrEmpty(token.TokenIcon3))
-                {
-                    Texture2D texture = ResourceAtlas.GetTexture(token.TokenIcon3);
-                    if (texture != null)
-                        token.IconWidth3 = texture.Width;
-                }
-
-                if (token.IconHeight3 <= 0 && !string.IsNullOrEmpty(token.TokenIcon3))
-                {
-                    Texture2D texture = ResourceAtlas.GetTexture(token.TokenIcon3);
-                    if (texture != null)
-                        token.IconHeight3 = texture.Height;
-                }
+                EnsureIconLayers(token);
 
                 tokenPositions.Add(token.GridPosition, token);
             }

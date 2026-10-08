@@ -5,15 +5,6 @@
   "TokenID": 48,
   "treeTokens": {
     "0": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 0,
       "TokenID": 0,
       "GridPosition": {
@@ -36,51 +27,22 @@
         {
           "Key": "This is a test",
           "Value": "Cactus",
-          "Amount": 99.0,
+          "Amount": 99,
           "SkillEffectDescription": "This is a test"
         }
       ],
       "IsCollected": true,
-      "IsCollectable": true
-    },
-    "4": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
-      "Depth": 1,
-      "TokenID": 4,
-      "GridPosition": {
-        "X": -2,
-        "Y": -3
-      },
-      "ParentTokenIDs": [
-        0
+      "IsCollectable": true,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
       ],
-      "ChildTokenIDs": [
-        19,
-        20
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": true
+      "PortalSize": 32
     },
     "3": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 1,
       "TokenID": 3,
       "GridPosition": {
@@ -97,18 +59,44 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": true,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
+    },
+    "4": {
+      "Depth": 1,
+      "TokenID": 4,
+      "GridPosition": {
+        "X": -2,
+        "Y": -3
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        19,
+        20
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": false,
+      "IsCollectable": true,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "5": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 1,
       "TokenID": 5,
       "GridPosition": {
@@ -125,18 +113,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": true,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "6": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 1,
       "TokenID": 6,
       "GridPosition": {
@@ -153,18 +140,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": true,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "7": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 1,
       "TokenID": 7,
       "GridPosition": {
@@ -181,18 +167,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": true,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "8": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 1,
       "TokenID": 8,
       "GridPosition": {
@@ -209,18 +194,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": true
+      "IsCollectable": true,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "9": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 9,
       "GridPosition": {
@@ -236,18 +220,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "10": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 10,
       "GridPosition": {
@@ -261,18 +244,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "11": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 11,
       "GridPosition": {
@@ -286,18 +268,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "12": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 12,
       "GridPosition": {
@@ -311,18 +292,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "13": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 13,
       "GridPosition": {
@@ -336,18 +316,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "14": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 14,
       "GridPosition": {
@@ -363,18 +342,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "15": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 15,
       "GridPosition": {
@@ -390,18 +368,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "16": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 16,
       "GridPosition": {
@@ -415,18 +392,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "17": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 17,
       "GridPosition": {
@@ -440,18 +416,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "18": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 18,
       "GridPosition": {
@@ -465,18 +440,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "19": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 19,
       "GridPosition": {
@@ -490,18 +464,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "20": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 20,
       "GridPosition": {
@@ -517,18 +490,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "21": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 1,
       "TokenID": 21,
       "GridPosition": {
@@ -547,18 +519,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "22": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 1,
       "TokenID": 22,
       "GridPosition": {
@@ -577,18 +548,41 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
+    },
+    "26": {
+      "Depth": 2,
+      "TokenID": 26,
+      "GridPosition": {
+        "X": 7,
+        "Y": 1
+      },
+      "ParentTokenIDs": [
+        22
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": false,
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "27": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 27,
       "GridPosition": {
@@ -604,43 +598,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
-    },
-    "26": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
-      "Depth": 2,
-      "TokenID": 26,
-      "GridPosition": {
-        "X": 7,
-        "Y": 1
-      },
-      "ParentTokenIDs": [
-        22
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
       ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
+      "PortalSize": 32
     },
     "29": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 29,
       "GridPosition": {
@@ -654,18 +622,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "30": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 2,
       "TokenID": 30,
       "GridPosition": {
@@ -679,18 +646,17 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     },
     "40": {
-      "TokenIcon": "default-icon",
-      "TokenIcon2": "",
-      "TokenIcon3": "",
-      "IconWidth": 32,
-      "IconHeight": 32,
-      "IconWidth2": 0,
-      "IconHeight2": 0,
-      "IconWidth3": 0,
-      "IconHeight3": 0,
       "Depth": 3,
       "TokenID": 40,
       "GridPosition": {
@@ -704,7 +670,15 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": false,
-      "IsCollectable": false
+      "IsCollectable": false,
+      "IconLayers": [
+        {
+          "Icon": "default-icon",
+          "Width": 32,
+          "Height": 32
+        }
+      ],
+      "PortalSize": 32
     }
   },
   "SkillTreeScene": "SkillTreeScene"
