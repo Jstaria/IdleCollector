@@ -170,25 +170,22 @@ namespace SkillTreeCreationTool
             if (Input.IsLeftButtonDownOnce())
             {
                 Point gPos = skillTree.GetGridPosition();
-                if (skillTree.CheckForToken(gPos))
-                    ToggleParentToken(skillTree.GetToken(gPos));
+                if (skillTree.TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken token))
+                    ToggleParentToken(token);
                 else
                     CreateToken(gPos);
             }
 
             if (Input.IsRightButtonDownOnce())
             {
-                Point gPos = skillTree.GetGridPosition();
-                if (skillTree.CheckForToken(gPos))
-                    BeginEditing(skillTree.GetToken(gPos), gPos);
+                if (skillTree.TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken token))
+                    BeginEditing(token, token.GridPosition);
             }
 
             if (Input.IsMiddleButtonDownOnce())
             {
-                Point gPos = skillTree.GetGridPosition();
-                if (skillTree.CheckForToken(gPos))
+                if (skillTree.TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken token))
                 {
-                    SkillTreeToken token = skillTree.GetToken(gPos);
                     if (Input.IsButtonDown(Keys.LeftControl) || Input.IsButtonDown(Keys.RightControl))
                         skillTree.UnlockToken(token.TokenID);
                     else

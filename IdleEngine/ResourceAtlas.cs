@@ -131,6 +131,8 @@ namespace IdleEngine
                 fullFilePath = fullFilePath.Replace("Content/","").TrimStart('/', '\\'); //"Content/"
                 Texture2D media = Content.Load<Texture2D>($"{fullFilePath}/{name}");
 
+                if (textureCache.ContainsKey(name)) continue;
+
                 textureCache.Add(name, media);
             }
         }

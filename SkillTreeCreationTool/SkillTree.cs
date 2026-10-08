@@ -211,7 +211,10 @@ namespace SkillTreeCreationTool
                 return;
 
             Vector2 center = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-            float radius = 24f * zoom;
+            int largestIconDimension = Math.Max(
+                Math.Max(token.IconWidth, token.IconHeight),
+                Math.Max(Math.Max(token.IconWidth2, token.IconHeight2), Math.Max(token.IconWidth3, token.IconHeight3)));
+            float radius = Math.Max(1f, largestIconDimension * zoom * .75f);
             Color color = GetHoverEffectColor(token);
             Effect effect = ResourceAtlas.GetEffect("SkillTreeHoverPortal");
 
@@ -352,8 +355,7 @@ namespace SkillTreeCreationTool
 
         private void UpdateHoverAura(float elapsedSeconds)
         {
-            Point gridPosition = GetGridPosition();
-            int hoveredTokenId = CheckForToken(gridPosition) ? GetTokenID(gridPosition) : -1;
+            int hoveredTokenId = TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken token) ? token.TokenID : -1;
             float targetAlpha = hoveredTokenId >= 0 ? 1f : 0f;
 
             if (hoveredTokenId >= 0 && hoveredTokenId != hoverAuraTokenId)
@@ -370,6 +372,30 @@ namespace SkillTreeCreationTool
             hoverAuraAlpha = MathHelper.Lerp(hoverAuraAlpha, targetAlpha, 1f - MathF.Exp(-5f * elapsedSeconds));
             if (hoverAuraAlpha <= .01f && targetAlpha == 0f)
                 hoverAuraTokenId = -1;
+        }
+
+        public bool TryGetTokenAt(Vector2 mousePosition, out SkillTreeToken hitToken)
+        {
+            foreach (SkillTreeToken token in treeTokens.Values.OrderByDescending(token => token.Depth))
+            {
+                int largestDimension = Math.Max(
+                    Math.Max(token.IconWidth, token.IconHeight),
+                    Math.Max(Math.Max(token.IconWidth2, token.IconHeight2), Math.Max(token.IconWidth3, token.IconHeight3)));
+                if (largestDimension <= 0)
+                    continue;
+
+                Vector2 center = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
+                float halfSize = largestDimension * zoom / 2f;
+                Rectangle bounds = new Rectangle((center - Vector2.One * halfSize).ToPoint(), new Point((int)(halfSize * 2f)));
+                if (bounds.Contains(mousePosition))
+                {
+                    hitToken = token;
+                    return true;
+                }
+            }
+
+            hitToken = null;
+            return false;
         }
 
         public void ControlledUpdate(GameTime gameTime) => unlockBurstParticles.ControlledUpdate(gameTime);
