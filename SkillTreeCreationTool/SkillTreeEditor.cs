@@ -226,6 +226,7 @@ namespace SkillTreeCreationTool
             newToken = token;
             editedTokenWasCollected = token.IsCollected;
             unlockedInEditor = token.IsCollected;
+            token.IsCollected = true;
             createdTokenBeingEdited = wasCreated;
             expandedEffects.Clear();
             effectScroll = 0;
