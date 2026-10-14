@@ -11,8 +11,7 @@ namespace SkillTreeCreationTool
     {
         private const int IconCellSize = 16;
         private const int IconsPerRow = 10;
-        private const int EffectHeaderHeight = 50;
-        private const int EffectHeaderSpacing = 58;
+        private const int EffectHeaderSpacing = SkillTreeEditorHeaderDropdown.Spacing;
         private const int EffectFieldHeight = 46;
         private const int EffectFieldSpacing = 8;
 
@@ -37,6 +36,7 @@ namespace SkillTreeCreationTool
         private readonly List<string> resourceOptions = new();
         private int scroll;
         private readonly HashSet<int> expandedEffects = new();
+        private readonly SkillTreeEditorHeaderDropdown headerDropdown = new(string.Empty);
         private int effectScroll;
         private int activeCostIndex = -1;
         private CostField activeCostField;
@@ -52,6 +52,11 @@ namespace SkillTreeCreationTool
         private int activeIconSlot;
         private string iconSizeText = string.Empty;
         private bool replaceIconSizeText;
+        private int expandedTintLayer = -1;
+        private int activeTintLayer = -1;
+        private int activeTintChannel = -1;
+        private string tintText = string.Empty;
+        private bool replaceTintText;
 
         private enum EffectField
         {

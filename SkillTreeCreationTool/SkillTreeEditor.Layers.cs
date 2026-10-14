@@ -11,20 +11,6 @@ namespace SkillTreeCreationTool
 {
     public partial class SkillTreeEditor
     {
-        private readonly SkillTreeEditorHeaderDropdown layersHeaderDropdown = new("Layers");
-        private readonly List<SkillTreeEditorHeaderDropdown> layerOptionHeaderDropdowns = new();
-
-        private SkillTreeEditorHeaderDropdown GetLayerOptionHeaderDropdown(int index)
-        {
-            while (layerOptionHeaderDropdowns.Count <= index)
-                layerOptionHeaderDropdowns.Add(new SkillTreeEditorHeaderDropdown(string.Empty));
-
-            SkillTreeEditorHeaderDropdown header = layerOptionHeaderDropdowns[index];
-            header.Label = $"Layer {index + 1}";
-            header.LabelOffset = new Vector2(60, 2);
-            return header;
-        }
-
         private void LoadIcons()
         {
             foreach (string icon in ResourceAtlas.TextureCache.Keys.OrderBy(key => key))
@@ -32,9 +18,12 @@ namespace SkillTreeCreationTool
                 IconSelect iconSelect = new IconSelect(icon, ResourceAtlas.TextureCache[icon], new Point(IconCellSize));
                 iconSelect.button.OnClick += () =>
                 {
-                    SetIconForActiveSlot(icon);
-                    SetIconSizeForSlot(activeIconSlot, iconSelect.icon.Width, iconSelect.icon.Height);
+                    IconLayer layer = GetActiveIconLayer();
+                    layer.Icon = icon;
+                    layer.Width = iconSelect.icon.Width;
+                    layer.Height = iconSelect.icon.Height;
                     activeIconSizeField = IconSizeField.None;
+                    activeTintLayer = activeTintChannel = -1;
                     iconSizeText = string.Empty;
                     replaceIconSizeText = false;
                 };
@@ -48,9 +37,7 @@ namespace SkillTreeCreationTool
             UpdateEffectEditor();
         }
 
-        public void DrawEdit(SpriteBatch sb) => DrawIconSelect(sb);
-
-        private void DrawIconSelect(SpriteBatch sb)
+        public void DrawEdit(SpriteBatch sb)
         {
             LayoutIconSelects();
             foreach (IconSelect iconSelect in iconSelects)
@@ -59,13 +46,9 @@ namespace SkillTreeCreationTool
 
         private void LayoutIconSelects()
         {
-            Point cameraPosition = Renderer.CurrentCamera.Position;
+            Point camera = Renderer.CurrentCamera.Position;
             for (int i = 0; i < iconSelects.Count; i++)
-            {
-                int x = i % IconsPerRow * IconCellSize - cameraPosition.X;
-                int y = i / IconsPerRow * IconCellSize - cameraPosition.Y - scroll;
-                iconSelects[i].position = new Point(x, y);
-            }
+                iconSelects[i].position = new Point(i % IconsPerRow * IconCellSize - camera.X, i / IconsPerRow * IconCellSize - camera.Y - scroll);
         }
 
         private Rectangle GetIconSelectBounds()
@@ -79,164 +62,69 @@ namespace SkillTreeCreationTool
             return bounds;
         }
 
-        private IconLayer GetActiveIconLayer() => GetIconLayer(activeIconSlot);
-
-        private IconLayer GetIconLayer(int slot)
+        private IconLayer GetActiveIconLayer()
         {
             newToken.IconLayers ??= new List<IconLayer>();
             if (newToken.IconLayers.Count == 0)
-            {
-                newToken.IconLayers.Add(new IconLayer
-                {
-                    Icon = skillTree.DefaultIcon,
-                    Width = skillTree.IconSize,
-                    Height = skillTree.IconSize
-                });
-            }
-
-            activeIconSlot = Math.Clamp(slot, 0, newToken.IconLayers.Count - 1);
+                newToken.IconLayers.Add(new IconLayer { Icon = skillTree.DefaultIcon, Width = skillTree.IconSize, Height = skillTree.IconSize });
+            activeIconSlot = Math.Clamp(activeIconSlot, 0, newToken.IconLayers.Count - 1);
             return newToken.IconLayers[activeIconSlot];
         }
 
-        private void SetIconSizeForSlot(int slot, int width, int height)
+        private void DrawLayerRow(SpriteBatch sb, SpriteFont font, PanelRow row)
         {
-            IconLayer layer = GetIconLayer(slot);
-            layer.Width = width;
-            layer.Height = height;
+            IconLayer layer = newToken.IconLayers[row.Index];
+            headerDropdown.Draw(sb, font, row.Bounds, row.Label, row.Index == activeIconSlot, labelOffset: new Vector2(60, 2));
+            Rectangle preview = GetLayerPreviewBounds(row.Bounds);
+            sb.Draw(Drawing.Pixel, preview, Color.Black * .6f);
+            sb.DrawRect(preview, 1, Color.White * .25f);
+            if (!string.IsNullOrEmpty(layer.Icon) && ResourceAtlas.GetTexture(layer.Icon) is Texture2D texture)
+                sb.Draw(texture, preview, Color.FromNonPremultiplied(layer.Tint.ToVector4()));
+
+            DrawTintSwatch(sb, row.Bounds, layer.Tint);
+            DrawLayerSizeField(sb, font, GetLayerWidthBounds(row.Bounds), "W", layer.Width, row.Index, IconSizeField.Width);
+            DrawLayerSizeField(sb, font, GetLayerHeightBounds(row.Bounds), "H", layer.Height, row.Index, IconSizeField.Height);
+            if (newToken.IconLayers.Count > 1)
+                SkillTreeEditorHeaderDropdown.DrawRemoveButton(sb, font, SkillTreeEditorHeaderDropdown.GetRemoveButtonBounds(row.Bounds));
         }
 
-        private void SetIconWidthForSlot(int slot, int width) => GetIconLayer(slot).Width = width;
-        private void SetIconHeightForSlot(int slot, int height) => GetIconLayer(slot).Height = height;
-        private void SetIconForActiveSlot(string icon) => GetActiveIconLayer().Icon = icon;
-
-        private static Rectangle GetLayersHeaderBounds(Rectangle panel, int y) =>
-            new Rectangle(panel.X + 10, y, panel.Width - 20, EffectHeaderHeight);
-
-        private static Rectangle GetLayerAddBounds(Rectangle panel, int y)
+        private void DrawLayerSizeField(SpriteBatch sb, SpriteFont font, Rectangle bounds, string label, int value, int index, IconSizeField field)
         {
-            Rectangle header = GetLayersHeaderBounds(panel, y);
-            return new Rectangle(header.Right - 48, header.Y + 6, 38, 38);
+            bool active = activeIconSlot == index && activeIconSizeField == field;
+            DrawField(sb, font, bounds, label, active ? iconSizeText : value.ToString(), active, new Vector2(bounds.X - 20, bounds.Y), Color.White);
         }
 
-        private static Rectangle GetLayerItemBounds(Rectangle panel, int y) =>
-            new Rectangle(panel.X + 10, y, panel.Width - 20, EffectHeaderHeight);
-
-        private static Rectangle GetLayerWidthBounds(Rectangle layerBounds) =>
-            new Rectangle(layerBounds.Right - 270, layerBounds.Y + 4, 72, 42);
-
-        private static Rectangle GetLayerHeightBounds(Rectangle layerBounds) =>
-            new Rectangle(layerBounds.Right - 152, layerBounds.Y + 4, 72, 42);
-
-        private static Rectangle GetLayerRemoveBounds(Rectangle layerBounds) =>
-            new Rectangle(layerBounds.Right - 42, layerBounds.Y + 6, 34, 38);
-
-        private static Rectangle GetLayerPreviewBounds(Rectangle layerBounds) =>
-            new Rectangle(layerBounds.X + 1, layerBounds.Y + 1, 48, 48);
-
-        private static void DrawLayerPreview(SpriteBatch sb, Rectangle bounds, string icon)
+        private void HandleLayerRowClick(PanelRow row, Point mousePosition)
         {
-            sb.Draw(Drawing.Pixel, bounds, Color.Black * .6f);
-            sb.DrawRect(bounds, 1, Color.White * .25f);
-            if (string.IsNullOrEmpty(icon))
-                return;
-
-            Texture2D texture = ResourceAtlas.GetTexture(icon);
-            if (texture != null)
-                sb.Draw(texture, bounds, Color.White);
-        }
-
-        private void DrawLayerSizeField(SpriteBatch sb, SpriteFont font, Rectangle bounds, string label, int value, int layerIndex, IconSizeField field)
-        {
-            bool active = activeIconSlot == layerIndex && activeIconSizeField == field;
-            sb.DrawString(font, label, new Vector2(bounds.X - 20, bounds.Y), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .95f);
-            sb.Draw(Drawing.Pixel, bounds, active ? Color.DarkBlue : Color.Black * .6f);
-            sb.DrawRect(bounds, 1, active ? Color.White : Color.White * .25f);
-            string displayedValue = active ? iconSizeText : value.ToString();
-            sb.DrawString(font, displayedValue, bounds.Location.ToVector2() + new Vector2(7, 0), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .96f);
-        }
-
-        private void DrawIconLayerSection(SpriteBatch sb, SpriteFont font, Rectangle panel, ref int y)
-        {
-            Rectangle header = GetLayersHeaderBounds(panel, y);
-            layersHeaderDropdown.IsExpanded = true;
-            layersHeaderDropdown.Layout(header, false, true);
-            layersHeaderDropdown.Draw(sb, font);
-            y += EffectHeaderSpacing;
-
-            for (int i = newToken.IconLayers.Count - 1; i >= 0; i--)
+            if (newToken.IconLayers.Count > 1 && SkillTreeEditorHeaderDropdown.GetRemoveButtonBounds(row.Bounds).Contains(mousePosition))
             {
-                IconLayer layer = newToken.IconLayers[i];
-                Rectangle layerBounds = GetLayerItemBounds(panel, y);
-                SkillTreeEditorHeaderDropdown layerHeader = GetLayerOptionHeaderDropdown(i);
-                layerHeader.IsExpanded = i == activeIconSlot;
-                layerHeader.Layout(layerBounds, false, false);
-                layerHeader.Draw(sb, font);
-                DrawLayerPreview(sb, GetLayerPreviewBounds(layerBounds), layer.Icon);
-                DrawLayerSizeField(sb, font, GetLayerWidthBounds(layerBounds), "W", layer.Width, i, IconSizeField.Width);
-                DrawLayerSizeField(sb, font, GetLayerHeightBounds(layerBounds), "H", layer.Height, i, IconSizeField.Height);
-                if (newToken.IconLayers.Count > 1)
-                    DrawRemoveButton(sb, font, GetLayerRemoveBounds(layerBounds));
-                y += EffectHeaderSpacing;
+                newToken.IconLayers.RemoveAt(row.Index);
+                activeIconSlot = Math.Clamp(activeIconSlot, 0, newToken.IconLayers.Count - 1);
+                activeIconSizeField = IconSizeField.None;
+                activeTintLayer = activeTintChannel = expandedTintLayer = -1;
+                iconSizeText = string.Empty;
+                replaceIconSizeText = false;
             }
-        }
-
-        private bool HandleIconLayerClick(Rectangle panel, ref int y, Point mousePosition)
-        {
-            if (GetLayerAddBounds(panel, y).Contains(mousePosition))
+            else if (GetLayerTintBounds(row.Bounds).Contains(mousePosition))
             {
-                newToken.IconLayers.Add(new IconLayer());
-                activeIconSlot = newToken.IconLayers.Count - 1;
+                expandedTintLayer = expandedTintLayer == row.Index ? -1 : row.Index;
+                activeIconSlot = row.Index;
+                activeTintLayer = activeTintChannel = -1;
+                activeIconSizeField = IconSizeField.None;
+                ClearCostSelection();
+                ClearEffectSelection();
+            }
+            else if (GetLayerWidthBounds(row.Bounds).Contains(mousePosition))
+                SelectIconSizeField(row.Index, IconSizeField.Width);
+            else if (GetLayerHeightBounds(row.Bounds).Contains(mousePosition))
+                SelectIconSizeField(row.Index, IconSizeField.Height);
+            else
+            {
+                activeIconSlot = row.Index;
                 resourceDropdownCostIndex = -1;
                 activeIconSizeField = IconSizeField.None;
-                effectScroll = GetMaximumEffectScroll(panel);
-                return true;
+                activeTintLayer = activeTintChannel = -1;
             }
-
-            y += EffectHeaderSpacing;
-            for (int i = newToken.IconLayers.Count - 1; i >= 0; i--)
-            {
-                Rectangle layerBounds = GetLayerItemBounds(panel, y);
-                if (newToken.IconLayers.Count > 1 && GetLayerRemoveBounds(layerBounds).Contains(mousePosition))
-                {
-                    RemoveIconLayer(i);
-                    return true;
-                }
-
-                if (GetLayerWidthBounds(layerBounds).Contains(mousePosition))
-                {
-                    SelectIconSizeField(i, IconSizeField.Width);
-                    return true;
-                }
-
-                if (GetLayerHeightBounds(layerBounds).Contains(mousePosition))
-                {
-                    SelectIconSizeField(i, IconSizeField.Height);
-                    return true;
-                }
-
-                if (layerBounds.Contains(mousePosition))
-                {
-                    activeIconSlot = i;
-                    resourceDropdownCostIndex = -1;
-                    activeIconSizeField = IconSizeField.None;
-                    return true;
-                }
-                y += EffectHeaderSpacing;
-            }
-
-            return false;
-        }
-
-        private void RemoveIconLayer(int index)
-        {
-            if (newToken.IconLayers.Count <= 1)
-                return;
-
-            newToken.IconLayers.RemoveAt(index);
-            activeIconSlot = Math.Clamp(activeIconSlot, 0, newToken.IconLayers.Count - 1);
-            activeIconSizeField = IconSizeField.None;
-            iconSizeText = string.Empty;
-            replaceIconSizeText = false;
         }
 
         private void UpdateIconSelect(GameTime gameTime)
@@ -248,7 +136,6 @@ namespace SkillTreeCreationTool
                 scroll = Math.Clamp(scroll + Input.GetMouseScrollDelta() * 20, 0, 100);
                 LayoutIconSelects();
             }
-
             if (Input.IsMouseInPresentationBounds)
                 foreach (IconSelect icon in iconSelects)
                     icon.Update(gameTime);

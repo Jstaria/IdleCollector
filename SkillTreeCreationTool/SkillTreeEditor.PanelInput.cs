@@ -1,7 +1,6 @@
 using IdleCollector;
 using IdleEngine;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Globalization;
@@ -16,279 +15,186 @@ namespace SkillTreeCreationTool
             if (newToken == null)
                 return;
 
-            Rectangle panel = GetEffectPanelBounds();
-            
-            Point mousePosition = (Input.GetMouseScreenPos().ToVector2() * Renderer.UIScaler.ToVector2()).ToPoint();
-            int maximumScroll = GetMaximumEffectScroll(panel);
-            bool mouseInPresentation = Input.IsMouseInPresentationBounds;
-            if (mouseInPresentation && panel.Contains(mousePosition))
-                effectScroll = Math.Clamp(effectScroll - Input.GetMouseScrollDelta() * 36, 0, maximumScroll);
-            else
-                effectScroll = Math.Clamp(effectScroll, 0, maximumScroll);
-
-            if (mouseInPresentation && panel.Contains(mousePosition) && Input.IsLeftButtonDownOnce())
-                HandleEffectEditorClick(panel, mousePosition);
-
+            PanelLayout layout = GetPanelLayout();
+            Point mouse = (Input.GetMouseScreenPos().ToVector2() * Renderer.UIScaler.ToVector2()).ToPoint();
+            bool mouseOverPanel = Input.IsMouseInPresentationBounds && layout.Bounds.Contains(mouse);
+            int previousScroll = effectScroll;
+            effectScroll = Math.Clamp(effectScroll - (mouseOverPanel ? Input.GetMouseScrollDelta() * 36 : 0), 0, layout.MaximumScroll);
+            if (mouseOverPanel && Input.IsLeftButtonDownOnce())
+                HandleEffectEditorClick(previousScroll == effectScroll ? layout : GetPanelLayout(), mouse);
             UpdateEffectFieldText();
         }
 
-        private int GetMaximumEffectScroll(Rectangle panel)
+        private void HandleEffectEditorClick(PanelLayout layout, Point mouse)
         {
-            SpriteFont font = ResourceAtlas.GetFont("EffectEditor");
-            int contentHeight = EffectHeaderSpacing;
-            contentHeight += newToken.ResourceCosts.Count * ((EffectFieldHeight + EffectFieldSpacing) * 2 + 4);
-            contentHeight += EffectHeaderSpacing;
-            for (int i = 0; i < newToken.Effects.Count; i++)
-            {
-                contentHeight += EffectHeaderSpacing;
-                if (!expandedEffects.Contains(i))
-                    continue;
-
-                foreach ((EffectField field, _) in effectFields)
-                    contentHeight += GetEffectFieldHeight(font, panel, field, GetEffectDisplayValue(newToken.Effects[i], field)) + EffectFieldSpacing;
-                contentHeight += 4;
-            }
-
-            contentHeight += EffectHeaderSpacing * (1 + newToken.IconLayers.Count);
-            return Math.Max(0, contentHeight - (panel.Height - 66));
-        }
-
-        private void HandleEffectEditorClick(Rectangle panel, Point mousePosition)
-        {
-            if (TrySelectResourceDropdown(panel, mousePosition))
+            if (TrySelectResourceDropdown(layout, mouse))
                 return;
-
-            if (GetUnlockedBounds(panel).Contains(mousePosition))
+            if (GetUnlockedBounds(layout.Bounds).Contains(mouse))
             {
                 unlockedInEditor = !unlockedInEditor;
                 return;
             }
-
-            if (GetPortalSizeBounds(panel).Contains(mousePosition))
+            if (GetPortalSizeBounds(layout.Bounds).Contains(mouse))
             {
                 SelectIconSizeField(-1, IconSizeField.Portal);
                 return;
             }
 
-            Rectangle addCostButton = new Rectangle(panel.Right - 48, panel.Y + 66 - effectScroll, 38, 38);
-            if (addCostButton.Contains(mousePosition))
+            foreach (PanelRow row in layout.Rows)
             {
-                skillTree.AddResourceCost(newToken.TokenID, resourceOptions.FirstOrDefault() ?? string.Empty, 0);
-                resourceDropdownCostIndex = newToken.ResourceCosts.Count - 1;
-                activeCostIndex = -1;
-                activeCostField = CostField.None;
-                return;
-            }
-
-            int y = panel.Y + EffectHeaderSpacing - effectScroll + EffectHeaderSpacing;
-            for (int i = 0; i < newToken.ResourceCosts.Count; i++)
-            {
-                if (GetCostRemoveBounds(panel, y).Contains(mousePosition))
-                {
-                    RemoveCost(i);
-                    return;
-                }
-
-                if (TrySelectCostField(panel, ref y, i, mousePosition, CostField.Resource) ||
-                    TrySelectCostField(panel, ref y, i, mousePosition, CostField.Amount))
-                    return;
-                y += 4;
-            }
-
-            Rectangle effectsHeader = new Rectangle(panel.X + 10, y, panel.Width - 20, EffectHeaderHeight);
-            Rectangle addEffectButton = new Rectangle(effectsHeader.Right - 48, effectsHeader.Y + 6, 38, 38);
-            if (addEffectButton.Contains(mousePosition))
-            {
-                skillTree.AddEffect(newToken.TokenID, new SkillEffectDefinition());
-                int index = newToken.Effects.Count - 1;
-                expandedEffects.Add(index);
-                SelectEffectField(index, EffectField.Key);
-                return;
-            }
-
-            y += EffectHeaderSpacing;
-            for (int i = 0; i < newToken.Effects.Count; i++)
-            {
-                Rectangle header = new Rectangle(panel.X + 10, y, panel.Width - 20, EffectHeaderHeight);
-                if (GetEffectRemoveBounds(header).Contains(mousePosition))
-                {
-                    RemoveEffect(i);
-                    return;
-                }
-
-                if (header.Contains(mousePosition))
-                {
-                    if (!expandedEffects.Add(i))
-                        expandedEffects.Remove(i);
-                    activeEffectIndex = -1;
-                    activeEffectField = EffectField.None;
-                    activeIconSizeField = IconSizeField.None;
-                    return;
-                }
-
-                y += EffectHeaderSpacing;
-                if (!expandedEffects.Contains(i))
+                if (!row.Bounds.Contains(mouse))
                     continue;
-
-                foreach ((EffectField field, _) in effectFields)
-                    if (TrySelectEffectField(panel, ref y, i, mousePosition, field))
-                        return;
-                y += 4;
+                switch (row.Kind)
+                {
+                    case PanelRowKind.Costs:
+                    case PanelRowKind.Effects:
+                    case PanelRowKind.Layers:
+                        if (SkillTreeEditorHeaderDropdown.GetAddButtonBounds(row.Bounds).Contains(mouse))
+                            AddPanelItem(row.Kind);
+                        break;
+                    case PanelRowKind.Resource:
+                        if (GetCostRemoveBounds(row.Bounds).Contains(mouse))
+                            RemoveCost(row.Index);
+                        else
+                        {
+                            resourceDropdownCostIndex = row.Index;
+                            ClearCostSelection();
+                        }
+                        break;
+                    case PanelRowKind.CostAmount:
+                        resourceDropdownCostIndex = -1;
+                        SelectCostField(row.Index, CostField.Amount);
+                        break;
+                    case PanelRowKind.Effect:
+                        if (SkillTreeEditorHeaderDropdown.GetRemoveButtonBounds(row.Bounds).Contains(mouse))
+                            RemoveEffect(row.Index);
+                        else
+                        {
+                            if (!expandedEffects.Add(row.Index))
+                                expandedEffects.Remove(row.Index);
+                            ClearEffectSelection();
+                            activeIconSizeField = IconSizeField.None;
+                        }
+                        break;
+                    case PanelRowKind.EffectField:
+                        SelectEffectField(row.Index, row.Field);
+                        break;
+                    case PanelRowKind.Layer:
+                        HandleLayerRowClick(row, mouse);
+                        break;
+                    case PanelRowKind.LayerTint:
+                        HandleTintClick(row, mouse);
+                        break;
+                }
+                return;
             }
-
-            HandleIconLayerClick(panel, ref y, mousePosition);
         }
+
+        private void AddPanelItem(PanelRowKind kind)
+        {
+            switch (kind)
+            {
+                case PanelRowKind.Costs:
+                    skillTree.AddResourceCost(newToken.TokenID, resourceOptions.FirstOrDefault() ?? string.Empty, 0);
+                    resourceDropdownCostIndex = newToken.ResourceCosts.Count - 1;
+                    ClearCostSelection();
+                    break;
+                case PanelRowKind.Effects:
+                    skillTree.AddEffect(newToken.TokenID, new SkillEffectDefinition());
+                    int index = newToken.Effects.Count - 1;
+                    expandedEffects.Add(index);
+                    SelectEffectField(index, EffectField.Key);
+                    break;
+                case PanelRowKind.Layers:
+                    newToken.IconLayers.Add(new IconLayer());
+                    activeIconSlot = newToken.IconLayers.Count - 1;
+                    resourceDropdownCostIndex = -1;
+                    activeIconSizeField = IconSizeField.None;
+                    activeTintLayer = activeTintChannel = -1;
+                    effectScroll = GetPanelLayout().MaximumScroll;
+                    break;
+            }
+        }
+
+        private void ClearCostSelection() { activeCostIndex = -1; activeCostField = CostField.None; }
+        private void ClearEffectSelection() { activeEffectIndex = -1; activeEffectField = EffectField.None; }
 
         private void RemoveCost(int index)
         {
             newToken.ResourceCosts.RemoveAt(index);
-            activeCostIndex = -1;
-            activeCostField = CostField.None;
+            ClearCostSelection();
             resourceDropdownCostIndex = -1;
         }
 
         private void RemoveEffect(int index)
         {
             newToken.Effects.RemoveAt(index);
-            int[] expanded = expandedEffects.Where(effectIndex => effectIndex != index)
-                .Select(effectIndex => effectIndex > index ? effectIndex - 1 : effectIndex)
-                .ToArray();
+            int[] expanded = expandedEffects.Where(i => i != index).Select(i => i > index ? i - 1 : i).ToArray();
             expandedEffects.Clear();
-            foreach (int effectIndex in expanded)
-                expandedEffects.Add(effectIndex);
-
-            activeEffectIndex = -1;
-            activeEffectField = EffectField.None;
+            expandedEffects.UnionWith(expanded);
+            ClearEffectSelection();
         }
 
-        private bool TrySelectResourceDropdown(Rectangle panel, Point mousePosition)
+        private bool TrySelectResourceDropdown(PanelLayout layout, Point mouse)
         {
             if (resourceDropdownCostIndex < 0)
                 return false;
 
-            Rectangle bounds = GetResourceDropdownBounds(panel, resourceDropdownCostIndex);
-            if (!bounds.Contains(mousePosition))
-            {
-                resourceDropdownCostIndex = -1;
-                return false;
-            }
-
-            int optionIndex = (mousePosition.Y - bounds.Y) / EffectFieldHeight;
-            if (optionIndex >= 0 && optionIndex < resourceOptions.Count)
-                newToken.ResourceCosts[resourceDropdownCostIndex].Resource = resourceOptions[optionIndex];
-
+            Rectangle bounds = layout.GetResourceDropdownBounds(resourceDropdownCostIndex, resourceOptions.Count);
+            bool selected = bounds.Contains(mouse);
+            int index = (mouse.Y - bounds.Y) / EffectFieldHeight;
+            if (selected && index >= 0 && index < resourceOptions.Count)
+                newToken.ResourceCosts[resourceDropdownCostIndex].Resource = resourceOptions[index];
             resourceDropdownCostIndex = -1;
-            return true;
+            return selected;
         }
 
-        private bool TrySelectCostField(Rectangle panel, ref int y, int costIndex, Point mousePosition, CostField field)
+        private void SelectEffectField(int index, EffectField field)
         {
-            Rectangle bounds = new Rectangle(panel.X + 165, y, panel.Width - 177, EffectFieldHeight);
-            y += EffectFieldHeight + EffectFieldSpacing;
-            if (!bounds.Contains(mousePosition))
-                return false;
-
-            if (field == CostField.Resource)
-            {
-                resourceDropdownCostIndex = costIndex;
-                activeCostIndex = -1;
-                activeCostField = CostField.None;
-            }
-            else
-            {
-                resourceDropdownCostIndex = -1;
-                SelectCostField(costIndex, field);
-            }
-            return true;
-        }
-
-        private bool TrySelectEffectField(Rectangle panel, ref int y, int effectIndex, Point mousePosition, EffectField field)
-        {
-            string value = GetEffectDisplayValue(newToken.Effects[effectIndex], field);
-            int fieldHeight = GetEffectFieldHeight(ResourceAtlas.GetFont("EffectEditor"), panel, field, value);
-            Rectangle bounds = new Rectangle(panel.X + 165, y, panel.Width - 177, fieldHeight);
-            y += fieldHeight + EffectFieldSpacing;
-            if (!bounds.Contains(mousePosition))
-                return false;
-
-            SelectEffectField(effectIndex, field);
-            return true;
-        }
-
-        private void SelectEffectField(int effectIndex, EffectField field)
-        {
-            activeEffectIndex = effectIndex;
+            activeTintLayer = activeTintChannel = -1;
+            activeEffectIndex = index;
             activeEffectField = field;
-            activeCostIndex = -1;
-            activeCostField = CostField.None;
+            ClearCostSelection();
             activeIconSizeField = IconSizeField.None;
-            activeAmountText = field == EffectField.Amount
-                ? newToken.Effects[effectIndex].Amount.ToString(CultureInfo.InvariantCulture)
-                : string.Empty;
+            activeAmountText = field == EffectField.Amount ? newToken.Effects[index].Amount.ToString(CultureInfo.InvariantCulture) : string.Empty;
         }
 
-        private void SelectCostField(int costIndex, CostField field)
+        private void SelectCostField(int index, CostField field)
         {
-            activeCostIndex = costIndex;
+            activeTintLayer = activeTintChannel = -1;
+            activeCostIndex = index;
             activeCostField = field;
-            activeEffectIndex = -1;
-            activeEffectField = EffectField.None;
+            ClearEffectSelection();
             activeIconSizeField = IconSizeField.None;
-            activeCostAmountText = field == CostField.Amount
-                ? newToken.ResourceCosts[costIndex].Amount.ToString(CultureInfo.InvariantCulture)
-                : string.Empty;
+            activeCostAmountText = field == CostField.Amount ? newToken.ResourceCosts[index].Amount.ToString(CultureInfo.InvariantCulture) : string.Empty;
         }
 
         private void UpdateEffectFieldText()
         {
-            string typedText = Game1.ConsumeTextInput();
-            if (activeIconSizeField != IconSizeField.None)
+            string input = Game1.ConsumeTextInput();
+            bool backspace = Input.IsButtonDownOnce(Keys.Back);
+            if (activeTintLayer >= 0 && activeTintLayer < newToken.IconLayers.Count && activeTintChannel >= 0)
+                UpdateTint(input, backspace);
+            else if (activeIconSizeField != IconSizeField.None)
+                UpdateIconSize(input, backspace);
+            else if (activeCostIndex >= 0 && activeCostIndex < newToken.ResourceCosts.Count)
+                UpdateCostFieldText(input, backspace);
+            else if (activeEffectIndex >= 0 && activeEffectIndex < newToken.Effects.Count)
             {
-                UpdateIconSize(typedText);
-                return;
+                SkillEffectDefinition effect = newToken.Effects[activeEffectIndex];
+                string value = activeEffectField == EffectField.Amount ? activeAmountText : GetEffectDisplayValue(effect, activeEffectField);
+                int limit = activeEffectField == EffectField.Description ? 240 : 80;
+                SetEffectFieldValue(effect, activeEffectField, SkillTreeEditorTextInput.Edit(value, input, backspace, limit));
             }
-
-            if (activeCostIndex >= 0 && activeCostIndex < newToken.ResourceCosts.Count)
-            {
-                UpdateCostFieldText(typedText);
-                return;
-            }
-
-            if (activeEffectIndex < 0 || activeEffectIndex >= newToken.Effects.Count)
-                return;
-
-            SkillEffectDefinition effect = newToken.Effects[activeEffectIndex];
-            string value = activeEffectField == EffectField.Amount
-                ? activeAmountText
-                : GetEffectDisplayValue(effect, activeEffectField);
-            foreach (char character in typedText)
-            {
-                int maximumLength = activeEffectField == EffectField.Description ? 240 : 80;
-                if (value.Length < maximumLength)
-                    value += character;
-            }
-
-            if (Input.IsButtonDownOnce(Keys.Back) && value.Length > 0)
-                value = value[..^1];
-
-            SetEffectFieldValue(effect, activeEffectField, value);
         }
 
-        private void UpdateCostFieldText(string typedText)
+        private void UpdateCostFieldText(string input, bool backspace)
         {
             ResourceCost cost = newToken.ResourceCosts[activeCostIndex];
-            string value = activeCostField == CostField.Amount ? activeCostAmountText : cost.Resource;
-            foreach (char character in typedText)
-            {
-                bool valid = activeCostField == CostField.Amount ? char.IsDigit(character) : !char.IsControl(character);
-                if (valid && value.Length < 40)
-                    value += character;
-            }
-
-            if (Input.IsButtonDownOnce(Keys.Back) && value.Length > 0)
-                value = value[..^1];
-
-            if (activeCostField == CostField.Resource)
+            bool numeric = activeCostField == CostField.Amount;
+            string value = SkillTreeEditorTextInput.Edit(numeric ? activeCostAmountText : cost.Resource, input, backspace, 40,
+                numeric ? char.IsDigit : character => !char.IsControl(character));
+            if (!numeric)
                 cost.Resource = value;
             else
             {
@@ -298,50 +204,31 @@ namespace SkillTreeCreationTool
             }
         }
 
-        private void UpdateIconSize(string typedText)
+        private void UpdateIconSize(string input, bool backspace)
         {
-            foreach (char character in typedText)
-            {
-                if (!char.IsDigit(character))
-                    continue;
-                if (replaceIconSizeText)
-                {
-                    iconSizeText = string.Empty;
-                    replaceIconSizeText = false;
-                }
-                if (iconSizeText.Length < 4)
-                    iconSizeText += character;
-            }
-
-            if (Input.IsButtonDownOnce(Keys.Back) && iconSizeText.Length > 0)
-            {
-                replaceIconSizeText = false;
-                iconSizeText = iconSizeText[..^1];
-            }
-
+            iconSizeText = SkillTreeEditorTextInput.Edit(iconSizeText, input, backspace, 4, ref replaceIconSizeText, char.IsDigit);
             if (!int.TryParse(iconSizeText, NumberStyles.Integer, CultureInfo.InvariantCulture, out int size))
                 return;
-
-            if (activeIconSizeField == IconSizeField.Width)
-                SetIconWidthForSlot(activeIconSlot, Math.Max(1, size));
-            else if (activeIconSizeField == IconSizeField.Height)
-                SetIconHeightForSlot(activeIconSlot, Math.Max(1, size));
-            else
-                newToken.PortalSize = Math.Max(1, size);
+            size = Math.Max(1, size);
+            switch (activeIconSizeField)
+            {
+                case IconSizeField.Width: GetActiveIconLayer().Width = size; break;
+                case IconSizeField.Height: GetActiveIconLayer().Height = size; break;
+                case IconSizeField.Portal: newToken.PortalSize = size; break;
+            }
         }
 
-        private void SelectIconSizeField(int layerIndex, IconSizeField field)
+        private void SelectIconSizeField(int index, IconSizeField field)
         {
+            activeTintLayer = activeTintChannel = -1;
             activeIconSizeField = field;
             if (field != IconSizeField.Portal)
-                activeIconSlot = layerIndex;
-
+                activeIconSlot = index;
             int value = field == IconSizeField.Portal ? newToken.PortalSize :
                 field == IconSizeField.Width ? GetActiveIconLayer().Width : GetActiveIconLayer().Height;
             iconSizeText = value.ToString(CultureInfo.InvariantCulture);
             replaceIconSizeText = true;
-            activeEffectIndex = -1;
-            activeEffectField = EffectField.None;
+            ClearEffectSelection();
         }
 
         private static string GetEffectDisplayValue(SkillEffectDefinition effect, EffectField field) => field switch
@@ -357,19 +244,13 @@ namespace SkillTreeCreationTool
         {
             switch (field)
             {
-                case EffectField.Key:
-                    effect.Key = value;
-                    break;
-                case EffectField.Value:
-                    effect.Value = value;
-                    break;
+                case EffectField.Key: effect.Key = value; break;
+                case EffectField.Value: effect.Value = value; break;
+                case EffectField.Description: effect.SkillEffectDescription = value; break;
                 case EffectField.Amount:
                     activeAmountText = value;
                     if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float amount))
                         effect.Amount = amount;
-                    break;
-                case EffectField.Description:
-                    effect.SkillEffectDescription = value;
                     break;
             }
         }

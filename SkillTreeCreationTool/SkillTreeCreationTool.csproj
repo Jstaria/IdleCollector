@@ -11,11 +11,6 @@
 		<ApplicationIcon>Icon.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Remove="Content\**" />
-		<EmbeddedResource Remove="Content\**" />
-		<None Remove="Content\**" />
-	</ItemGroup>
-	<ItemGroup>
 		<None Remove="Icon.ico" />
 		<None Remove="Icon.bmp" />
 	</ItemGroup>
@@ -48,15 +43,6 @@
 			<ContentToCopy Include="..\IdleCollector\Content\**\*" />
 		</ItemGroup>
 
-		<Copy
-			SourceFiles="@(ContentToCopy)"
-			DestinationFiles="@(ContentToCopy->'Content\%(RecursiveDir)%(Filename)%(Extension)')"
-			SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(ContentToCopy)" DestinationFiles="@(ContentToCopy->'Content\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
 	</Target>
-	<ItemGroup>
-		<NPLContentReferences Remove="Content\**" />
-	</ItemGroup>
-	<ItemGroup>
-		<MGCBContentReferences Remove="Content\**" />
-	</ItemGroup>
 </Project>

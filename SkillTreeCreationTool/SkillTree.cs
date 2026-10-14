@@ -180,7 +180,9 @@ namespace SkillTreeCreationTool
                 for (int layerIndex = 0; layerIndex < token.IconLayers.Count; layerIndex++)
                 {
                     IconLayer layer = token.IconLayers[layerIndex];
-                    DrawTokenIcon(sb, layer.Icon, layer.Width, layer.Height, position, drawColor, .5f + layerIndex * .01f);
+                    Color tint = Color.FromNonPremultiplied(layer.Tint.ToVector4());
+                    Color layerColor = new Color(tint.ToVector4() * drawColor.ToVector4());
+                    DrawTokenIcon(sb, layer.Icon, layer.Width, layer.Height, position, layerColor, .5f + layerIndex * .01f);
                 }
 
             }

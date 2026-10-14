@@ -104,6 +104,7 @@ namespace SkillTreeCreationTool
             activeIconSlot = 0;
             iconSizeText = string.Empty;
             replaceIconSizeText = false;
+            expandedTintLayer = activeTintLayer = activeTintChannel = -1;
 
             updateFunction = UpdateEdit;
             drawFunction = DrawEdit;

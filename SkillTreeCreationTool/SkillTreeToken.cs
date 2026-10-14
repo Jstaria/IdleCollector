@@ -22,6 +22,7 @@ namespace SkillTreeCreationTool
         public string Icon { get; set; } = string.Empty;
         public int Width { get; set; }
         public int Height { get; set; }
+        public Color Tint { get; set; } = Color.White;
     }
 
     public class SkillTreeToken
