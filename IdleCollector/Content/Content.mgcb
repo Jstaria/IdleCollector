@@ -114,9 +114,6 @@
 #begin SaveData/ResourceData.json
 /copy:SaveData/ResourceData.json
 
-#begin SaveData/SkillTree.json
-/copy:SaveData/SkillTree.json
-
 #begin SaveData/SpawnData.json
 /copy:SaveData/SpawnData.json
 
@@ -1372,3 +1369,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/Icons/back9.png
+
+#begin SaveData/SkillTree.json
+/copy:SaveData/SkillTree.json

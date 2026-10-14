@@ -43,6 +43,7 @@ namespace IdleCollector
         private GameTime gameTime;
         [JsonRequired] private string GameScene = "Game Scene";
         [JsonRequired] private string GardenScene = "Garden Scene";
+        [JsonRequired] private string SkillTreeScene = "SkillTreeScene";
 
         [JsonIgnore] public float LayerDepth { get; set; }
         [JsonIgnore] public UpdateType Type { get; set; }
@@ -59,6 +60,7 @@ namespace IdleCollector
         }
         #endregion
 
+        private SkillTree skillTree;
         private WorldManager worldManager;
         private ResourceManager resourceManager;
         private Trail trail;
@@ -131,8 +133,26 @@ namespace IdleCollector
             SetupPlayer();
             SetupOptions();
             SetupPause();
+            SetupSkillTree();
 
             SetupDebug();
+        }
+
+        private void SetupSkillTree()
+        {
+            SceneManager.AddScene(SkillTreeScene);
+            skillTree = new SkillTree();
+            skillTree.CollectToken(Point.Zero);
+            SceneManager.AddToScene(SkillTreeScene, skillTree);
+
+            Updater.AddToUpdate(UpdateType.Standard, (gt) => {
+                if (Input.IsButtonDownOnce(Keys.O))
+                {
+                    if (SceneManager.CurrentSceneName == SkillTreeScene)
+                        SceneManager.SwapPrevScene();
+                    else SceneManager.SwapScene(SkillTreeScene);
+                }
+            });
         }
 
         private void SetupGameScene(string sceneName)

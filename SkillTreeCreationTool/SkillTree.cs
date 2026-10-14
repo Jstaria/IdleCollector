@@ -36,7 +36,7 @@ namespace SkillTreeCreationTool
         [JsonIgnore] private Dictionary<Point, SkillTreeToken> tokenPositions;
         [JsonIgnore] private readonly Dictionary<(int Parent, int Child), LinkParticleSystem> linkParticles = new();
         [JsonIgnore] public LinkParticleSettings LinkParticleSettings { get; } = new();
-        [JsonIgnore] internal SkillTreeShockwave Shockwave { get; set; }
+        [JsonIgnore] private SkillTreeShockwave Shockwave { get; }
         [JsonIgnore] private ParticleSystem unlockBurstParticles;
         [JsonIgnore] private Vector2 unlockBurstPosition;
 
@@ -95,6 +95,8 @@ namespace SkillTreeCreationTool
             Renderer.AddToSceneEarlyDraw(SkillTreeScene, linkPulseRenderable);
 
             unlockBurstParticles = CreateUnlockBurstParticles();
+            Shockwave = new SkillTreeShockwave();
+            Renderer.AddPostProcess("SkillTreeShockwave", Shockwave);
             instance = this;
         }
 
@@ -711,6 +713,19 @@ namespace SkillTreeCreationTool
         public void SaveSkillTree()
         {
             FileIO.WriteJsonTo(this, "Content/SaveData/SkillTree", Newtonsoft.Json.Formatting.Indented);
+
+            System.IO.DirectoryInfo directory = new System.IO.DirectoryInfo(AppContext.BaseDirectory);
+            while (directory != null)
+            {
+                string projectDirectory = System.IO.Path.Combine(directory.FullName, "IdleCollector");
+                if (System.IO.File.Exists(System.IO.Path.Combine(projectDirectory, "IdleCollector.csproj")))
+                {
+                    string path = System.IO.Path.Combine(projectDirectory, "Content", "SaveData", "SkillTree");
+                    FileIO.WriteJsonTo(this, path, Newtonsoft.Json.Formatting.Indented);
+                    return;
+                }
+                directory = directory.Parent;
+            }
         }
 
         public void ResetSkillTree()

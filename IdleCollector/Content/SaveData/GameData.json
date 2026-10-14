@@ -2,5 +2,6 @@
   "OptionsScene": "Options Scene",
   "GameScene": "Game Scene",
   "GardenScene": "Garden Scene",
+  "SkillTreeScene": "SkillTreeScene",
   "saveDelay": 30.0
 }

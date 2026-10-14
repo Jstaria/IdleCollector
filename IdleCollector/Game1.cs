@@ -84,6 +84,7 @@ namespace IdleCollector
         {
             ResourceAtlas.LoadTilemap(Content, "Content/SaveData/atlasKeys.txt", "Textures/atlas");
             ResourceAtlas.LoadTextures(Content, "Content/Textures/", "Textures");
+            ResourceAtlas.LoadTextures(Content, "Content/Textures/Icons/", "Icons");
             ResourceAtlas.LoadFonts(Content, "Content/Fonts/", "Fonts");
             ResourceAtlas.LoadSongs(Content, "Content/Audio/", "Audio");
             ResourceAtlas.LoadSoundEffects(Content, "Content/SoundEffects/", "SoundEffects");
