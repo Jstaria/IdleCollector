@@ -1010,18 +1010,6 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Icons/cactusIcon.png
 
-#begin Textures/Icons/default-icon.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Textures/Icons/default-icon.png
-
 #begin Textures/Icons/flowerIcon.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1372,3 +1360,27 @@
 
 #begin SaveData/SkillTree.json
 /copy:SaveData/SkillTree.json
+
+#begin Textures/Icons/GUI_TextBox2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/GUI_TextBox2.png
+
+#begin Textures/Icons/default-icon.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Icons/default-icon.png

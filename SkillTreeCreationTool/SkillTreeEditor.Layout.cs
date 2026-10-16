@@ -4,12 +4,13 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace SkillTreeCreationTool
 {
     public partial class SkillTreeEditor
     {
-        private enum PanelRowKind { Costs, Resource, CostAmount, Effects, Effect, EffectField, Layers, Layer, LayerTint }
+        private enum PanelRowKind { Description, Costs, Resource, CostAmount, Effects, Effect, EffectField, Layers, Layer, LayerTint }
 
         private readonly record struct PanelRow(PanelRowKind Kind, Rectangle Bounds, int Index = -1,
             EffectField Field = EffectField.None, string Label = "", string Value = "");
@@ -45,6 +46,13 @@ namespace SkillTreeCreationTool
                 rows.Add(new PanelRow(kind, new Rectangle(panel.X + 165, y, panel.Width - 177, height), index, field, label, value));
                 y += height + EffectFieldSpacing;
             }
+
+            string description = WrapText(font, newToken.Description ?? string.Empty, panel.Width - 34);
+            int descriptionLines = description.Count(character => character == '\n') + 1;
+            rows.Add(new PanelRow(PanelRowKind.Description,
+                new Rectangle(panel.X + 10, y + font.LineSpacing, panel.Width - 20,
+                    Math.Max(112, descriptionLines * font.LineSpacing + 16)), Label: "Desc", Value: description));
+            y = rows[0].Bounds.Bottom + EffectFieldSpacing;
 
             Header(PanelRowKind.Costs, "Costs");
             for (int i = 0; i < newToken.ResourceCosts.Count; i++)

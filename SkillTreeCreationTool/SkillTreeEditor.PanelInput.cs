@@ -27,6 +27,7 @@ namespace SkillTreeCreationTool
 
         private void HandleEffectEditorClick(PanelLayout layout, Point mouse)
         {
+            editingTokenDescription = false;
             if (TrySelectResourceDropdown(layout, mouse))
                 return;
             if (GetUnlockedBounds(layout.Bounds).Contains(mouse))
@@ -46,6 +47,13 @@ namespace SkillTreeCreationTool
                     continue;
                 switch (row.Kind)
                 {
+                    case PanelRowKind.Description:
+                        editingTokenDescription = true;
+                        ClearCostSelection();
+                        ClearEffectSelection();
+                        activeIconSizeField = IconSizeField.None;
+                        activeTintLayer = activeTintChannel = -1;
+                        break;
                     case PanelRowKind.Costs:
                     case PanelRowKind.Effects:
                     case PanelRowKind.Layers:
@@ -173,7 +181,9 @@ namespace SkillTreeCreationTool
         {
             string input = Game1.ConsumeTextInput();
             bool backspace = Input.IsButtonDownOnce(Keys.Back);
-            if (activeTintLayer >= 0 && activeTintLayer < newToken.IconLayers.Count && activeTintChannel >= 0)
+            if (editingTokenDescription)
+                newToken.Description = SkillTreeEditorTextInput.Edit(newToken.Description ?? string.Empty, input, backspace, 2000);
+            else if (activeTintLayer >= 0 && activeTintLayer < newToken.IconLayers.Count && activeTintChannel >= 0)
                 UpdateTint(input, backspace);
             else if (activeIconSizeField != IconSizeField.None)
                 UpdateIconSize(input, backspace);

@@ -142,7 +142,6 @@ namespace IdleCollector
         {
             SceneManager.AddScene(SkillTreeScene);
             skillTree = new SkillTree();
-            skillTree.CollectToken(Point.Zero);
             SceneManager.AddToScene(SkillTreeScene, skillTree);
 
             Updater.AddToUpdate(UpdateType.Standard, (gt) => {

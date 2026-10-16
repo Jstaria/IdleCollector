@@ -99,7 +99,6 @@ namespace SkillTreeCreationTool
             LoadPostProcesses();
 
             skillTree = new SkillTree();
-            skillTree.CollectToken(Point.Zero);
             SceneManager.AddToScene(skillTree);
 
             skillTreeEditor = new SkillTreeEditor(skillTree);

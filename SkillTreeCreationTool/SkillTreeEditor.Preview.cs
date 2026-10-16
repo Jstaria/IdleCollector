@@ -40,6 +40,8 @@ namespace SkillTreeCreationTool
             if (!Input.IsMouseInPresentationBounds)
                 return;
 
+            ToggleHoveredToken();
+
             if (Input.IsLeftButtonDownOnce())
             {
                 Point gridPosition = skillTree.GetGridPosition();
@@ -69,6 +71,37 @@ namespace SkillTreeCreationTool
             parentTokens.RemoveAll(token => !skillTree.CheckForToken(token.GridPosition));
         }
 
+        private void ToggleHoveredToken()
+        {
+            if (!Input.IsMouseInPresentationBounds || !Input.IsButtonDownOnce(Keys.U))
+                return;
+
+            if (skillTree.editing)
+            {
+                Point mouse = Input.GetMouseScreenPos() * Renderer.UIScaler;
+                if (GetEffectPanelBounds().Contains(mouse) || GetIconSelectBounds().Contains(mouse) ||
+                    editingTokenDescription || activeEffectField != EffectField.None || activeCostField != CostField.None ||
+                    activeIconSizeField != IconSizeField.None || activeTintChannel >= 0)
+                    return;
+            }
+
+            if (!skillTree.TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken token))
+                return;
+
+            if (skillTree.editing && token == newToken)
+            {
+                bool unlock = !unlockedInEditor;
+                token.IsCollected = false;
+                if (unlock)
+                    skillTree.UnlockToken(token.TokenID);
+                unlockedInEditor = editedTokenWasCollected = unlock;
+            }
+            else if (token.IsCollected)
+                token.IsCollected = false;
+            else
+                skillTree.UnlockToken(token.TokenID);
+        }
+
         private void ToggleParentToken(SkillTreeToken token)
         {
             if (!parentTokens.Remove(token))
@@ -88,6 +121,7 @@ namespace SkillTreeCreationTool
         private void BeginEditing(SkillTreeToken token, Point gridPosition, bool wasCreated = false)
         {
             newToken = token;
+            editingTokenDescription = false;
             GetActiveIconLayer();
             editedTokenWasCollected = token.IsCollected;
             unlockedInEditor = token.IsCollected;

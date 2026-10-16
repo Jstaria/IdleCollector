@@ -52,6 +52,10 @@ namespace SkillTreeCreationTool
             {
                 switch (row.Kind)
                 {
+                    case PanelRowKind.Description:
+                        DrawField(sb, font, row.Bounds, row.Label, row.Value, editingTokenDescription,
+                            new Vector2(row.Bounds.X + 4, row.Bounds.Y - font.LineSpacing), Color.LightGray);
+                        break;
                     case PanelRowKind.Costs:
                     case PanelRowKind.Effects:
                     case PanelRowKind.Layers:

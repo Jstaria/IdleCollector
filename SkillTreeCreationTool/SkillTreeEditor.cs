@@ -57,6 +57,7 @@ namespace SkillTreeCreationTool
         private int activeTintChannel = -1;
         private string tintText = string.Empty;
         private bool replaceTintText;
+        private bool editingTokenDescription;
 
         private enum EffectField
         {
@@ -91,8 +92,14 @@ namespace SkillTreeCreationTool
             LoadResourceOptions();
         }
 
-        public void Draw(SpriteBatch sb) => drawFunction?.Invoke(sb);
-        public void DrawUi(SpriteBatch sb) { if (skillTree.editing) DrawEffectEditor(sb); }
+        public void Draw(SpriteBatch sb) { if (!skillTree.editing) drawFunction?.Invoke(sb); }
+        public void DrawUi(SpriteBatch sb)
+        {
+            if (!skillTree.editing)
+                return;
+            DrawEdit(sb);
+            DrawEffectEditor(sb);
+        }
 
         public void SlowUpdate(GameTime gameTime) { }
         public void StandardUpdate(GameTime gameTime) => updateFunction?.Invoke(gameTime);

@@ -29,7 +29,7 @@ namespace SkillTreeCreationTool
             ButtonConfig config = new ButtonConfig();
             config.bounds = new Rectangle(Point.Zero, size);
             config.textures = new Texture2D[] { icon };
-            config.useWorldCoord = true;
+            config.useWorldCoord = false;
 
             button = new Button(Game1.Instance, config);
         }

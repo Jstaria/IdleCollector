@@ -15,10 +15,11 @@ namespace SkillTreeCreationTool
         {
             foreach (string icon in ResourceAtlas.TextureCache.Keys.OrderBy(key => key))
             {
-                IconSelect iconSelect = new IconSelect(icon, ResourceAtlas.TextureCache[icon], new Point(IconCellSize));
+                IconSelect iconSelect = new IconSelect(icon, ResourceAtlas.TextureCache[icon], new Point(IconCellSize) * Renderer.UIScaler);
                 iconSelect.button.OnClick += () =>
                 {
                     IconLayer layer = GetActiveIconLayer();
+                    editingTokenDescription = false;
                     layer.Icon = icon;
                     layer.Width = iconSelect.icon.Width;
                     layer.Height = iconSelect.icon.Height;
@@ -33,6 +34,7 @@ namespace SkillTreeCreationTool
 
         private void UpdateEdit(GameTime gameTime)
         {
+            ToggleHoveredToken();
             UpdateIconSelect(gameTime);
             UpdateEffectEditor();
         }
@@ -46,9 +48,9 @@ namespace SkillTreeCreationTool
 
         private void LayoutIconSelects()
         {
-            Point camera = Renderer.CurrentCamera.Position;
+            Point cellSize = new Point(IconCellSize) * Renderer.UIScaler;
             for (int i = 0; i < iconSelects.Count; i++)
-                iconSelects[i].position = new Point(i % IconsPerRow * IconCellSize - camera.X, i / IconsPerRow * IconCellSize - camera.Y - scroll);
+                iconSelects[i].position = new Point(i % IconsPerRow * cellSize.X, i / IconsPerRow * cellSize.Y - scroll);
         }
 
         private Rectangle GetIconSelectBounds()
@@ -131,9 +133,11 @@ namespace SkillTreeCreationTool
         {
             LayoutIconSelects();
             Rectangle iconBounds = GetIconSelectBounds();
-            if (Input.IsMouseInPresentationBounds && iconBounds.Contains(Input.GetMousePos()) && iconBounds.Height >= Renderer.RenderSize.Y)
+            Point mouse = Input.GetMouseScreenPos() * Renderer.UIScaler;
+            if (Input.IsMouseInPresentationBounds && iconBounds.Contains(mouse) && iconBounds.Height >= Renderer.UIBounds.Height)
             {
-                scroll = Math.Clamp(scroll + Input.GetMouseScrollDelta() * 20, 0, 100);
+                scroll = Math.Clamp(scroll + Input.GetMouseScrollDelta() * 20 * Renderer.UIScaler.Y,
+                    0, Math.Max(0, iconBounds.Height - Renderer.UIBounds.Height));
                 LayoutIconSelects();
             }
             if (Input.IsMouseInPresentationBounds)

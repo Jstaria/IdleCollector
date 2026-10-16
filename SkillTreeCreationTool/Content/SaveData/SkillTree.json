@@ -1,13 +1,13 @@
 {
   "GridSpacing": 16,
-  "IconSize": 32,
-  "DefaultIcon": "default-icon",
-  "TokenID": 53,
+  "IconSize": 60,
+  "DefaultIcon": "back10",
+  "TokenID": 43,
   "treeTokens": {
     "0": {
       "IconLayers": [
         {
-          "Icon": "back19",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
@@ -18,42 +18,94 @@
           }
         }
       ],
+      "Description": "",
       "PortalSize": 32,
       "Depth": 0,
       "TokenID": 0,
       "GridPosition": {
-        "X": 0,
-        "Y": 0
+        "X": 1,
+        "Y": -1
       },
       "ParentTokenIDs": [],
       "ChildTokenIDs": [
-        3,
-        4,
-        5,
         6,
-        7,
-        8,
-        21,
-        22
+        7
       ],
       "ResourceCosts": [],
-      "Effects": [
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "1": {
+      "IconLayers": [
         {
-          "Key": "This is a test",
-          "Value": "Cactus",
-          "Amount": 99.0,
-          "SkillEffectDescription": "This is a test"
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
         }
       ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 0,
+      "TokenID": 1,
+      "GridPosition": {
+        "X": -1,
+        "Y": -1
+      },
+      "ParentTokenIDs": [],
+      "ChildTokenIDs": [
+        8,
+        9
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "2": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 0,
+      "TokenID": 2,
+      "GridPosition": {
+        "X": -1,
+        "Y": 1
+      },
+      "ParentTokenIDs": [],
+      "ChildTokenIDs": [
+        10,
+        11
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
       "IsCollected": true,
       "IsCollectable": true
     },
     "3": {
       "IconLayers": [
         {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
           "Tint": {
             "B": 255,
             "G": 255,
@@ -62,31 +114,30 @@
           }
         }
       ],
+      "Description": "",
       "PortalSize": 32,
-      "Depth": 1,
+      "Depth": 0,
       "TokenID": 3,
       "GridPosition": {
-        "X": 0,
-        "Y": -5
+        "X": 1,
+        "Y": 1
       },
-      "ParentTokenIDs": [
-        0
-      ],
+      "ParentTokenIDs": [],
       "ChildTokenIDs": [
-        17,
-        18
+        4,
+        5
       ],
       "ResourceCosts": [],
       "Effects": [],
-      "IsCollected": false,
+      "IsCollected": true,
       "IsCollectable": true
     },
     "4": {
       "IconLayers": [
         {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
           "Tint": {
             "B": 255,
             "G": 255,
@@ -95,31 +146,32 @@
           }
         }
       ],
+      "Description": "",
       "PortalSize": 32,
       "Depth": 1,
       "TokenID": 4,
       "GridPosition": {
-        "X": -2,
-        "Y": -3
+        "X": 3,
+        "Y": 1
       },
       "ParentTokenIDs": [
-        0
+        3
       ],
       "ChildTokenIDs": [
-        19,
-        20
+        13,
+        34
       ],
       "ResourceCosts": [],
       "Effects": [],
-      "IsCollected": false,
+      "IsCollected": true,
       "IsCollectable": true
     },
     "5": {
       "IconLayers": [
         {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
           "Tint": {
             "B": 255,
             "G": 255,
@@ -128,97 +180,100 @@
           }
         }
       ],
+      "Description": "",
       "PortalSize": 32,
       "Depth": 1,
       "TokenID": 5,
       "GridPosition": {
-        "X": 2,
+        "X": 1,
+        "Y": 3
+      },
+      "ParentTokenIDs": [
+        3
+      ],
+      "ChildTokenIDs": [
+        13,
+        36
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "6": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 6,
+      "GridPosition": {
+        "X": 3,
+        "Y": -1
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        14,
+        18
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "7": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 7,
+      "GridPosition": {
+        "X": 1,
         "Y": -3
       },
       "ParentTokenIDs": [
         0
       ],
       "ChildTokenIDs": [
-        15,
-        16
+        14,
+        20
       ],
       "ResourceCosts": [],
       "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": true
-    },
-    "6": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 1,
-      "TokenID": 6,
-      "GridPosition": {
-        "X": 0,
-        "Y": 5
-      },
-      "ParentTokenIDs": [
-        0
-      ],
-      "ChildTokenIDs": [
-        11,
-        12
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": true
-    },
-    "7": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 1,
-      "TokenID": 7,
-      "GridPosition": {
-        "X": -2,
-        "Y": 3
-      },
-      "ParentTokenIDs": [
-        0
-      ],
-      "ChildTokenIDs": [
-        13,
-        14
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
+      "IsCollected": true,
       "IsCollectable": true
     },
     "8": {
       "IconLayers": [
         {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
           "Tint": {
             "B": 255,
             "G": 255,
@@ -227,31 +282,32 @@
           }
         }
       ],
+      "Description": "",
       "PortalSize": 32,
       "Depth": 1,
       "TokenID": 8,
       "GridPosition": {
-        "X": 2,
-        "Y": 3
+        "X": -1,
+        "Y": -3
       },
       "ParentTokenIDs": [
-        0
+        1
       ],
       "ChildTokenIDs": [
-        9,
-        10
+        15,
+        24
       ],
       "ResourceCosts": [],
       "Effects": [],
-      "IsCollected": false,
+      "IsCollected": true,
       "IsCollectable": true
     },
     "9": {
       "IconLayers": [
         {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
           "Tint": {
             "B": 255,
             "G": 255,
@@ -260,30 +316,32 @@
           }
         }
       ],
+      "Description": "",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 1,
       "TokenID": 9,
       "GridPosition": {
-        "X": 5,
-        "Y": 4
+        "X": -3,
+        "Y": -1
       },
       "ParentTokenIDs": [
-        8
+        1
       ],
       "ChildTokenIDs": [
-        22
+        15,
+        26
       ],
       "ResourceCosts": [],
       "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
+      "IsCollected": true,
+      "IsCollectable": true
     },
     "10": {
       "IconLayers": [
         {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
           "Tint": {
             "B": 255,
             "G": 255,
@@ -292,28 +350,32 @@
           }
         }
       ],
+      "Description": "",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 1,
       "TokenID": 10,
       "GridPosition": {
-        "X": 3,
-        "Y": 6
+        "X": -3,
+        "Y": 1
       },
       "ParentTokenIDs": [
-        8
+        2
       ],
-      "ChildTokenIDs": [],
+      "ChildTokenIDs": [
+        16,
+        29
+      ],
       "ResourceCosts": [],
       "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
+      "IsCollected": true,
+      "IsCollectable": true
     },
     "11": {
       "IconLayers": [
         {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
           "Tint": {
             "B": 255,
             "G": 255,
@@ -322,555 +384,28 @@
           }
         }
       ],
+      "Description": "",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 1,
       "TokenID": 11,
       "GridPosition": {
-        "X": 2,
-        "Y": 8
+        "X": -1,
+        "Y": 3
       },
       "ParentTokenIDs": [
-        6
+        2
       ],
-      "ChildTokenIDs": [],
+      "ChildTokenIDs": [
+        16,
+        31
+      ],
       "ResourceCosts": [],
       "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "12": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 12,
-      "GridPosition": {
-        "X": -2,
-        "Y": 8
-      },
-      "ParentTokenIDs": [
-        6
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
+      "IsCollected": true,
+      "IsCollectable": true
     },
     "13": {
       "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 13,
-      "GridPosition": {
-        "X": -3,
-        "Y": 6
-      },
-      "ParentTokenIDs": [
-        7
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "14": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 14,
-      "GridPosition": {
-        "X": -5,
-        "Y": 4
-      },
-      "ParentTokenIDs": [
-        7
-      ],
-      "ChildTokenIDs": [
-        21
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "15": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 15,
-      "GridPosition": {
-        "X": 5,
-        "Y": -4
-      },
-      "ParentTokenIDs": [
-        5
-      ],
-      "ChildTokenIDs": [
-        22
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "16": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 16,
-      "GridPosition": {
-        "X": 3,
-        "Y": -6
-      },
-      "ParentTokenIDs": [
-        5
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "17": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 17,
-      "GridPosition": {
-        "X": 2,
-        "Y": -8
-      },
-      "ParentTokenIDs": [
-        3
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "18": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 18,
-      "GridPosition": {
-        "X": -2,
-        "Y": -8
-      },
-      "ParentTokenIDs": [
-        3
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "19": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 19,
-      "GridPosition": {
-        "X": -3,
-        "Y": -6
-      },
-      "ParentTokenIDs": [
-        4
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "20": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 20,
-      "GridPosition": {
-        "X": -5,
-        "Y": -4
-      },
-      "ParentTokenIDs": [
-        4
-      ],
-      "ChildTokenIDs": [
-        21
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "21": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 1,
-      "TokenID": 21,
-      "GridPosition": {
-        "X": -4,
-        "Y": 0
-      },
-      "ParentTokenIDs": [
-        20,
-        14,
-        0
-      ],
-      "ChildTokenIDs": [
-        29,
-        30
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "22": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 1,
-      "TokenID": 22,
-      "GridPosition": {
-        "X": 4,
-        "Y": 0
-      },
-      "ParentTokenIDs": [
-        0,
-        15,
-        9
-      ],
-      "ChildTokenIDs": [
-        26,
-        27
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "26": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 26,
-      "GridPosition": {
-        "X": 7,
-        "Y": 1
-      },
-      "ParentTokenIDs": [
-        22
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "27": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 27,
-      "GridPosition": {
-        "X": 7,
-        "Y": -1
-      },
-      "ParentTokenIDs": [
-        22
-      ],
-      "ChildTokenIDs": [
-        40
-      ],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "29": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 29,
-      "GridPosition": {
-        "X": -7,
-        "Y": -1
-      },
-      "ParentTokenIDs": [
-        21
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "30": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 2,
-      "TokenID": 30,
-      "GridPosition": {
-        "X": -7,
-        "Y": 1
-      },
-      "ParentTokenIDs": [
-        21
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "40": {
-      "IconLayers": [
-        {
-          "Icon": "default-icon",
-          "Width": 32,
-          "Height": 32,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        }
-      ],
-      "PortalSize": 32,
-      "Depth": 3,
-      "TokenID": 40,
-      "GridPosition": {
-        "X": 20,
-        "Y": -1
-      },
-      "ParentTokenIDs": [
-        27
-      ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
-      "IsCollected": false,
-      "IsCollectable": false
-    },
-    "49": {
-      "IconLayers": [
-        {
-          "Icon": "back29",
-          "Width": 60,
-          "Height": 60,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        },
-        {
-          "Icon": "back13",
-          "Width": 60,
-          "Height": 60,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        },
-        {
-          "Icon": "back18",
-          "Width": 60,
-          "Height": 60,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        },
         {
           "Icon": "back8",
           "Width": 60,
@@ -883,46 +418,28 @@
           }
         }
       ],
-      "PortalSize": 0,
-      "Depth": 0,
-      "TokenID": 49,
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 13,
       "GridPosition": {
-        "X": -5,
-        "Y": -12
+        "X": 4,
+        "Y": 4
       },
-      "ParentTokenIDs": [],
+      "ParentTokenIDs": [
+        4,
+        5
+      ],
       "ChildTokenIDs": [],
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": true,
       "IsCollectable": true
     },
-    "50": {
+    "14": {
       "IconLayers": [
         {
-          "Icon": "back27",
-          "Width": 60,
-          "Height": 60,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        },
-        {
-          "Icon": "back16",
-          "Width": 60,
-          "Height": 60,
-          "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
-            "A": 255
-          }
-        },
-        {
-          "Icon": "back15",
+          "Icon": "back8",
           "Width": 60,
           "Height": 60,
           "Tint": {
@@ -933,14 +450,738 @@
           }
         }
       ],
-      "PortalSize": 0,
-      "Depth": 0,
-      "TokenID": 50,
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 14,
+      "GridPosition": {
+        "X": 4,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        7,
+        6
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "15": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 15,
+      "GridPosition": {
+        "X": -4,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        8,
+        9
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "16": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 16,
+      "GridPosition": {
+        "X": -4,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        10,
+        11
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "18": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 18,
+      "GridPosition": {
+        "X": 5,
+        "Y": -1
+      },
+      "ParentTokenIDs": [
+        6
+      ],
+      "ChildTokenIDs": [
+        19
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "19": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 19,
+      "GridPosition": {
+        "X": 6,
+        "Y": -3
+      },
+      "ParentTokenIDs": [
+        18
+      ],
+      "ChildTokenIDs": [
+        22
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "20": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 20,
+      "GridPosition": {
+        "X": 1,
+        "Y": -5
+      },
+      "ParentTokenIDs": [
+        7
+      ],
+      "ChildTokenIDs": [
+        21
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "21": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 21,
+      "GridPosition": {
+        "X": 3,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        20
+      ],
+      "ChildTokenIDs": [
+        22
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "22": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 22,
+      "GridPosition": {
+        "X": 7,
+        "Y": -7
+      },
+      "ParentTokenIDs": [
+        21,
+        19
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "24": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 24,
       "GridPosition": {
         "X": -1,
-        "Y": -9
+        "Y": -5
       },
-      "ParentTokenIDs": [],
+      "ParentTokenIDs": [
+        8
+      ],
+      "ChildTokenIDs": [
+        25
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "25": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 25,
+      "GridPosition": {
+        "X": -3,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        24
+      ],
+      "ChildTokenIDs": [
+        28
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "26": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 26,
+      "GridPosition": {
+        "X": -5,
+        "Y": -1
+      },
+      "ParentTokenIDs": [
+        9
+      ],
+      "ChildTokenIDs": [
+        27
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "27": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 27,
+      "GridPosition": {
+        "X": -6,
+        "Y": -3
+      },
+      "ParentTokenIDs": [
+        26
+      ],
+      "ChildTokenIDs": [
+        28
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "28": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 28,
+      "GridPosition": {
+        "X": -7,
+        "Y": -7
+      },
+      "ParentTokenIDs": [
+        27,
+        25
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "29": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 29,
+      "GridPosition": {
+        "X": -5,
+        "Y": 1
+      },
+      "ParentTokenIDs": [
+        10
+      ],
+      "ChildTokenIDs": [
+        30
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "30": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 30,
+      "GridPosition": {
+        "X": -6,
+        "Y": 3
+      },
+      "ParentTokenIDs": [
+        29
+      ],
+      "ChildTokenIDs": [
+        33
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "31": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 31,
+      "GridPosition": {
+        "X": -1,
+        "Y": 5
+      },
+      "ParentTokenIDs": [
+        11
+      ],
+      "ChildTokenIDs": [
+        32
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "32": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 32,
+      "GridPosition": {
+        "X": -3,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        31
+      ],
+      "ChildTokenIDs": [
+        33
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "33": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 33,
+      "GridPosition": {
+        "X": -7,
+        "Y": 7
+      },
+      "ParentTokenIDs": [
+        32,
+        30
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "34": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 34,
+      "GridPosition": {
+        "X": 5,
+        "Y": 1
+      },
+      "ParentTokenIDs": [
+        4
+      ],
+      "ChildTokenIDs": [
+        35
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "35": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 35,
+      "GridPosition": {
+        "X": 6,
+        "Y": 3
+      },
+      "ParentTokenIDs": [
+        34
+      ],
+      "ChildTokenIDs": [
+        38
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "36": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 36,
+      "GridPosition": {
+        "X": 1,
+        "Y": 5
+      },
+      "ParentTokenIDs": [
+        5
+      ],
+      "ChildTokenIDs": [
+        37
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "37": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 37,
+      "GridPosition": {
+        "X": 3,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        36
+      ],
+      "ChildTokenIDs": [
+        38
+      ],
+      "ResourceCosts": [],
+      "Effects": [],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "38": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "Description": "",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 38,
+      "GridPosition": {
+        "X": 7,
+        "Y": 7
+      },
+      "ParentTokenIDs": [
+        37,
+        35
+      ],
       "ChildTokenIDs": [],
       "ResourceCosts": [],
       "Effects": [],

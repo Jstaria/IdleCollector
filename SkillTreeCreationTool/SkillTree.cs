@@ -27,7 +27,7 @@ namespace SkillTreeCreationTool
         [JsonRequired] public int GridSpacing = 100;
         [JsonRequired] public int IconSize = 50;
         [JsonIgnore] public Point IconSizePoint;
-        [JsonRequired] public string DefaultIcon = "default-icon";
+        [JsonRequired] public string DefaultIcon = "back10";
         [JsonRequired] public int TokenID = 0;
         [JsonIgnore] public Vector2 iconOrigin;
         [JsonIgnore] public Texture2D iconTexture;
@@ -168,50 +168,8 @@ namespace SkillTreeCreationTool
             DrawHoveredTokenPortal(sb);
             //DrawHoveredTokenRing(sb);
 
-            var tokens = treeTokens.Values.ToList();
-
-            for (int i = 0; i < treeTokens.Values.Count; i++)
-            {
-                SkillTreeToken token = tokens[i];
-
-                Color drawColor =
-                    token.IsCollected ? Color.White :
-                    token.IsCollectable ? Color.White * .25f : Color.White * .05f;
-
-                Vector2 position = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-                for (int layerIndex = 0; layerIndex < token.IconLayers.Count; layerIndex++)
-                {
-                    IconLayer layer = token.IconLayers[layerIndex];
-                    Color tint = Color.FromNonPremultiplied(layer.Tint.ToVector4());
-                    Color layerColor = new Color(tint.ToVector4() * drawColor.ToVector4());
-                    DrawTokenIcon(sb, layer.Icon, layer.Width, layer.Height, position, layerColor, .5f + layerIndex * .01f);
-                }
-
-            }
-        }
-
-        private void DrawTokenIcon(
-            SpriteBatch sb,
-            string iconName,
-            int width,
-            int height,
-            Vector2 position,
-            Color drawColor,
-            float layerDepth)
-        {
-            if (string.IsNullOrEmpty(iconName) || width <= 0 || height <= 0)
-                return;
-
-            Texture2D tex = ResourceAtlas.GetTexture(iconName);
-            if (tex == null)
-                return;
-
-            Vector2 iconSize = new Vector2(width, height) * zoom;
-            Rectangle tokenRect = new Rectangle(
-                (position - iconSize / 2f).ToPoint(),
-                iconSize.ToPoint());
-
-            sb.Draw(tex, tokenRect, null, drawColor, 0f, Vector2.Zero, SpriteEffects.None, layerDepth);
+            foreach (SkillTreeToken token in treeTokens.Values)
+                token.DrawIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
         }
 
         private void DrawHoveredTokenRing(SpriteBatch sb)
@@ -241,8 +199,7 @@ namespace SkillTreeCreationTool
                 return;
 
             Vector2 center = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-            int largestIconDimension = token.IconLayers.Max(layer => Math.Max(layer.Width, layer.Height));
-            float portalSize = token.PortalSize > 0 ? token.PortalSize : largestIconDimension;
+            float portalSize = GetPortalSize(token);
             float radius = Math.Max(1f, portalSize * zoom * .75f);
             Color color = GetHoverEffectColor(token);
             Effect effect = ResourceAtlas.GetEffect("SkillTreeHoverPortal");
@@ -337,6 +294,9 @@ namespace SkillTreeCreationTool
 
         public void StandardUpdate(GameTime gameTime)
         {
+            foreach (SkillTreeToken token in treeTokens.Values)
+                token.UpdateIconAnimation((float)gameTime.ElapsedGameTime.TotalSeconds);
+
             unlockBurstParticles.SetBoundsSize(zoom);
 
             time = (float)gameTime.TotalGameTime.TotalSeconds;
@@ -414,17 +374,21 @@ namespace SkillTreeCreationTool
                 hoverAuraTokenId = -1;
         }
 
+        private static int GetPortalSize(SkillTreeToken token) => token.PortalSize > 0
+            ? token.PortalSize
+            : 32;
+
         public bool TryGetTokenAt(Vector2 mousePosition, out SkillTreeToken hitToken)
         {
             foreach (SkillTreeToken token in treeTokens.Values.OrderByDescending(token => token.Depth))
             {
                 EnsureIconLayers(token);
-                int largestDimension = token.IconLayers.Max(layer => Math.Max(layer.Width, layer.Height));
-                if (largestDimension <= 0)
+                int hitboxSize = GetPortalSize(token);
+                if (hitboxSize <= 0)
                     continue;
 
                 Vector2 center = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-                float halfSize = largestDimension * zoom / 2f;
+                float halfSize = hitboxSize * zoom / 2f;
                 Rectangle bounds = new Rectangle((center - Vector2.One * halfSize).ToPoint(), new Point((int)(halfSize * 2f)));
                 if (bounds.Contains(mousePosition))
                 {
@@ -546,7 +510,8 @@ namespace SkillTreeCreationTool
 
         public void CollectToken(Point gridPosition)
         {
-            UnlockToken(tokenPositions[gridPosition].TokenID);
+            if (tokenPositions.TryGetValue(gridPosition, out SkillTreeToken token))
+                UnlockToken(token.TokenID);
         }
 
         public void AddToken(Vector2 worldPosition)
