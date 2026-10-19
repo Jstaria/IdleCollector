@@ -37,7 +37,7 @@ namespace SkillTreeCreationTool
         [JsonIgnore] private readonly Dictionary<(int Parent, int Child), LinkParticleSystem> linkParticles = new();
         [JsonIgnore] public LinkParticleSettings LinkParticleSettings { get; } = new();
         [JsonIgnore] private SkillTreeShockwave Shockwave { get; }
-        [JsonIgnore] private ParticleSystem unlockBurstParticles;
+        [JsonIgnore] private readonly ParticleSystemGroup unlockParticles = new();
         [JsonIgnore] private Vector2 unlockBurstPosition;
 
         [JsonIgnore] public float LayerDepth { get; set; }
@@ -94,7 +94,8 @@ namespace SkillTreeCreationTool
                 () => time);
             Renderer.AddToSceneEarlyDraw(SkillTreeScene, linkPulseRenderable);
 
-            unlockBurstParticles = CreateUnlockBurstParticles();
+            unlockParticles.Add(CreateUnlockBurstParticles());
+            unlockParticles.Add(CreateUnlockFlashParticles());
             Shockwave = new SkillTreeShockwave();
             Renderer.AddPostProcess("SkillTreeShockwave", Shockwave);
             instance = this;
@@ -161,11 +162,11 @@ namespace SkillTreeCreationTool
         {
             //DrawDebug(sb);
 
-            unlockBurstParticles.Draw(sb);
+            DrawHoveredTokenPortal(sb);
+            unlockParticles.Draw(sb);
             foreach (LinkParticleSystem particles in linkParticles.Values)
                 particles.Draw(sb, zoom);
 
-            DrawHoveredTokenPortal(sb);
             //DrawHoveredTokenRing(sb);
 
             foreach (SkillTreeToken token in treeTokens.Values)
@@ -284,7 +285,7 @@ namespace SkillTreeCreationTool
 
         public void SlowUpdate(GameTime gameTime)
         {
-            unlockBurstParticles.SlowUpdate(gameTime);
+            unlockParticles.SlowUpdate(gameTime);
             foreach (SkillTreeToken token in treeTokens.Values)
                 token.IsCollectable = token.ParentTokenIDs.Count == 0 ||
                     token.ParentTokenIDs.All(parentId =>
@@ -297,13 +298,14 @@ namespace SkillTreeCreationTool
             foreach (SkillTreeToken token in treeTokens.Values)
                 token.UpdateIconAnimation((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            unlockBurstParticles.SetBoundsSize(zoom);
+            foreach (ParticleSystem particles in unlockParticles.Systems)
+                particles.SetBoundsSize(zoom);
 
             time = (float)gameTime.TotalGameTime.TotalSeconds;
             UpdateHoverAura((float)gameTime.ElapsedGameTime.TotalSeconds);
             if (Shockwave != null)
                 Shockwave.Time = time;
-            unlockBurstParticles.StandardUpdate(gameTime);
+            unlockParticles.StandardUpdate(gameTime);
             UpdateLinkParticles(gameTime);
 
             zoomTarget = Math.Clamp(zoomTarget, 0.5f, 2f);
@@ -401,7 +403,34 @@ namespace SkillTreeCreationTool
             return false;
         }
 
-        public void ControlledUpdate(GameTime gameTime) => unlockBurstParticles.ControlledUpdate(gameTime);
+        public void ControlledUpdate(GameTime gameTime) => unlockParticles.ControlledUpdate(gameTime);
+
+        private ParticleSystem CreateUnlockFlashParticles()
+        {
+            return new ParticleSystem(new ParticleSystemStats
+            {
+                SpawnBounds = new[] { new[] { new Rectangle(0, 0, 1, 1) } },
+                TrackPosition = () => unlockBurstPosition,
+                TrackLayerDepth = () => .7f,
+                ParticleLifeSpan = new[] { .2f },
+                ParticleDespawnDistance = 1000f,
+                MaxParticleCount = 16,
+                ParticleStartColor = new[] { Color.White * .8f },
+                ParticleEndColor = new[] { Color.Transparent },
+                ParticleTextureKeys = new[] { "star2" },
+                ParticleSize = new[] { .5f, 1f },
+                ParticleSpeed = new[] { 0f },
+                StartingVelocity = new[] { Vector2.Zero },
+                ActingForce = _ => Vector2.Zero,
+                ParticleRotation = new[] { 0f, MathHelper.PiOver2 },
+                ParticleRotationSpeed = _ => 0f,
+                ParticleColorDecayRate = t => MathHelper.SmoothStep(0f, 1f, t),
+                ParticleSizeDecayRate = t => (1f + .35f * t) * zoom,
+                EmitRate = new[] { 0f },
+                EmitCount = new[] { 2 },
+                ResetParticlesAfterDeath = false
+            });
+        }
 
         private ParticleSystem CreateUnlockBurstParticles()
         {
@@ -414,7 +443,7 @@ namespace SkillTreeCreationTool
                 SegmentsPerSecond = 24f,
                 SegmentsRemovedPerSecond = 18f,
                 SegmentColor = _ => Color.White * .7f,
-                TrackLayerDepth = () => .4f
+                TrackLayerDepth = () => .71f
             };
 
             ParticleSystemStats stats = new ParticleSystemStats
@@ -427,7 +456,7 @@ namespace SkillTreeCreationTool
                 ParticleLifeSpan = new[] { .5175f, .73f },
                 TrackPosition = () => unlockBurstPosition,
                 ParticleDespawnDistance = 1000f,
-                TrackLayerDepth = () => .24f,
+                TrackLayerDepth = () => .72f,
                 MaxParticleCount = 80,
                 ParticleStartColor = new[] { Color.White },
                 ParticleEndColor = new[] { Color.Transparent },
@@ -458,7 +487,7 @@ namespace SkillTreeCreationTool
             token.Collect();
             Shockwave?.Add(GetWorldPosition(token.GridPosition).ToVector2() * zoom);
             unlockBurstPosition = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-            unlockBurstParticles.EmitParticles();
+            unlockParticles.EmitParticles();
         }
 
         private void UpdateLinkParticles(GameTime gameTime)

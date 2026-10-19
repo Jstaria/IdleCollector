@@ -32,6 +32,8 @@ namespace SkillTreeCreationTool
         [JsonIgnore] private float revealProgress;
         [JsonIgnore] private readonly Spring revealScaleSpring = new Spring(38f, .65f, 1f) { Position = 0f };
         [JsonIgnore] private readonly Spring unlockScaleSpring = new Spring(22f, .85f, 1f);
+        [JsonIgnore] private readonly Spring unlockDepthSpring = new Spring(18f, 1f, 0f);
+        [JsonIgnore] private float unlockDepthHold;
         [JsonIgnore] private float springElapsed;
 
         public List<IconLayer> IconLayers { get; set; } = new();
@@ -73,15 +75,20 @@ namespace SkillTreeCreationTool
                 revealScaleSpring.Position = revealScaleSpring.Velocity = 0f;
                 unlockScaleSpring.Position = 1f;
                 unlockScaleSpring.Velocity = 0f;
+                unlockDepthHold = 0f;
+                unlockDepthSpring.Position = unlockDepthSpring.Velocity = unlockDepthSpring.RestPosition = 0f;
                 return;
             }
 
             revealProgress = Math.Min(1f, revealProgress + elapsedSeconds / RevealDuration);
+            unlockDepthHold = Math.Max(0f, unlockDepthHold - elapsedSeconds);
+            unlockDepthSpring.RestPosition = unlockDepthHold > 0f ? 1f : 0f;
             springElapsed += elapsedSeconds;
             while (springElapsed >= SpringTimeStep)
             {
                 revealScaleSpring.Update();
                 unlockScaleSpring.Update();
+                unlockDepthSpring.Update();
                 springElapsed -= SpringTimeStep;
             }
         }
@@ -111,7 +118,9 @@ namespace SkillTreeCreationTool
                 Color layerColor = new Color(tint.ToVector4() * drawColor.ToVector4());
                 Vector2 iconSize = new Vector2(layer.Width, layer.Height) * zoom * revealScale;
                 Rectangle bounds = new Rectangle((position - iconSize / 2f).ToPoint(), iconSize.ToPoint());
-                sb.Draw(texture, bounds, null, layerColor, 0f, Vector2.Zero, SpriteEffects.None, .5f + layerIndex * .01f);
+                float layerStep = Math.Min(.01f, .08f / Math.Max(1, IconLayers.Count - 1));
+                float depth = .5f + .4f * Math.Clamp(unlockDepthSpring.Position, 0f, 1f) + layerIndex * layerStep;
+                sb.Draw(texture, bounds, null, layerColor, 0f, Vector2.Zero, SpriteEffects.None, depth);
             }
         }
 
@@ -128,6 +137,10 @@ namespace SkillTreeCreationTool
 
             IsCollected = true;
             unlockScaleSpring.Nudge(-6f);
+            // Lift immediately so even the first flash frame stays behind this icon.
+            unlockDepthHold = 1f;
+            unlockDepthSpring.Position = unlockDepthSpring.RestPosition = 1f;
+            unlockDepthSpring.Velocity = 0f;
         }
     }
 }
