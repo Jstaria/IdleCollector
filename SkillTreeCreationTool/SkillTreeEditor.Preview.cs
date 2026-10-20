@@ -54,13 +54,10 @@ namespace SkillTreeCreationTool
             if (Input.IsRightButtonDownOnce() && skillTree.TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken editToken))
                 BeginEditing(editToken, editToken.GridPosition);
 
-            if (Input.IsMiddleButtonDownOnce() && skillTree.TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken middleToken))
-            {
-                if (Input.IsButtonDown(Keys.LeftControl) || Input.IsButtonDown(Keys.RightControl))
-                    skillTree.UnlockToken(middleToken.TokenID);
-                else
-                    DeleteTokens(new[] { middleToken });
-            }
+            if (Input.IsMiddleButtonDownOnce() &&
+                (Input.IsButtonDown(Keys.LeftControl) || Input.IsButtonDown(Keys.RightControl)) &&
+                skillTree.TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken middleToken))
+                DeleteTokens(new[] { middleToken });
         }
 
         private void DeleteTokens(IEnumerable<SkillTreeToken> tokens)

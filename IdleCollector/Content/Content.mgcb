@@ -1433,6 +1433,17 @@
 /processorParam:TextureFormat=Color
 /build:Textures/wave.png
 
+#begin Effects/SkillTreeUnlockWisp.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeUnlockWisp.fx
+
+#begin Effects/SkillTreeHoverHighlight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/SkillTreeHoverHighlight.fx
+
 #begin Textures/wave1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1444,3 +1455,8 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/wave1.png
+
+#begin Effects/SkillTreeHoverHighlight.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeHoverHighlight.fx

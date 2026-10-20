@@ -37,7 +37,9 @@ namespace SkillTreeCreationTool
         [JsonIgnore] private readonly Dictionary<(int Parent, int Child), LinkParticleSystem> linkParticles = new();
         [JsonIgnore] public LinkParticleSettings LinkParticleSettings { get; } = new();
         [JsonIgnore] private SkillTreeShockwave Shockwave { get; }
+        [JsonIgnore] private readonly SkillTreeHoverHighlight hoverHighlight;
         [JsonIgnore] private readonly ParticleSystemGroup unlockParticles = new();
+        [JsonIgnore] private readonly List<TokenUnlockWisp> unlockWisps = new();
         [JsonIgnore] private Vector2 unlockBurstPosition;
 
         [JsonIgnore] public float LayerDepth { get; set; }
@@ -46,6 +48,7 @@ namespace SkillTreeCreationTool
 
         private Point mouseStart;
         private Point cameraStart;
+        private bool draggingCamera;
         private Point lastCameraPosition;
 
         private BasicEffectRenderable _renderable;
@@ -100,6 +103,10 @@ namespace SkillTreeCreationTool
             unlockParticles.Add(CreateUnlockFlashParticles(.55f));
             Shockwave = new SkillTreeShockwave();
             Renderer.AddPostProcess("SkillTreeShockwave", Shockwave);
+            hoverHighlight = new SkillTreeHoverHighlight(
+                token => GetWorldPosition(token.GridPosition).ToVector2() * zoom,
+                () => zoom, SkillTreeScene);
+            Renderer.AddPostProcess("SkillTreeHoverHighlight", hoverHighlight);
             instance = this;
         }
 
@@ -164,15 +171,39 @@ namespace SkillTreeCreationTool
         {
             //DrawDebug(sb);
 
-            DrawHoveredTokenPortal(sb);
-            unlockParticles.Draw(sb);
+            //DrawHoveredTokenPortal(sb);
             foreach (LinkParticleSystem particles in linkParticles.Values)
                 particles.Draw(sb, zoom);
+
+            DrawUnlockWisps(sb);
+            unlockParticles.Draw(sb);
 
             //DrawHoveredTokenRing(sb);
 
             foreach (SkillTreeToken token in treeTokens.Values)
-                token.DrawIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
+                if (unlockWisps.Count == 0 || token.IsUnlockElevated)
+                    token.DrawIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
+        }
+
+        private void DrawUnlockWisps(SpriteBatch sb)
+        {
+            if (unlockWisps.Count == 0)
+                return;
+
+            foreach (SkillTreeToken token in treeTokens.Values)
+                if (!token.IsUnlockElevated)
+                    token.DrawIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
+
+            sb.End();
+            Effect effect = ResourceAtlas.GetEffect("SkillTreeUnlockWisp");
+            sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
+                DepthStencilState.None, RasterizerState.CullNone, effect, Renderer.CurrentCamera.Transform);
+            foreach (TokenUnlockWisp wisp in unlockWisps)
+                wisp.Draw(sb, effect, zoom);
+            sb.End();
+            Renderer.ResetBeginDraw(sb, drawSpace: DrawSpace.World);
+            foreach (TokenUnlockWisp wisp in unlockWisps)
+                wisp.DrawDust(sb);
         }
 
         private void DrawHoveredTokenRing(SpriteBatch sb)
@@ -308,21 +339,39 @@ namespace SkillTreeCreationTool
             if (Shockwave != null)
                 Shockwave.Time = time;
             unlockParticles.StandardUpdate(gameTime);
+            for (int i = unlockWisps.Count - 1; i >= 0; i--)
+            {
+                TokenUnlockWisp wisp = unlockWisps[i];
+                wisp.Update(gameTime, zoom);
+                if (wisp.Finished)
+                {
+                    unlockWisps.RemoveAt(i);
+                }
+            }
             UpdateLinkParticles(gameTime);
 
             zoomTarget = Math.Clamp(zoomTarget, 0.5f, 2f);
             zoom = MathHelper.Lerp(zoom, zoomTarget, .25f);
 
-            if (editing) return;
-
-            if (Input.IsMouseInPresentationBounds && Input.IsRightButtonDownOnce())
+            if (editing)
             {
+                draggingCamera = false;
+                return;
+            }
+
+            bool controlDown = Input.IsButtonDown(Keys.LeftControl) || Input.IsButtonDown(Keys.RightControl);
+            if (!Input.IsMiddleButtonDown() || controlDown)
+                draggingCamera = false;
+
+            if (Input.IsMouseInPresentationBounds && Input.IsMiddleButtonDownOnce() && !controlDown)
+            {
+                draggingCamera = true;
                 mouseStart = (Input.GetMouseScreenPos().ToVector2() / zoom).ToPoint();
                 cameraStart = GetCurrentCameraTargetPosition();
                 lastCameraPosition = cameraStart;
             }
 
-            if (Input.IsMouseInPresentationBounds && Input.IsRightButtonDown())
+            if (Input.IsMouseInPresentationBounds && draggingCamera && Input.IsMiddleButtonDown())
             {
                 Point mouseCurrent = (Input.GetMouseScreenPos().ToVector2() / zoom).ToPoint();
                 Point delta = mouseStart - mouseCurrent;
@@ -361,6 +410,7 @@ namespace SkillTreeCreationTool
                 ? token.TokenID
                 : -1;
             float targetAlpha = hoveredTokenId >= 0 ? 1f : 0f;
+            hoverHighlight.Update(hoveredTokenId >= 0 ? treeTokens[hoveredTokenId] : null, elapsedSeconds);
 
             if (hoveredTokenId >= 0 && hoveredTokenId != hoverAuraTokenId)
             {
@@ -405,7 +455,12 @@ namespace SkillTreeCreationTool
             return false;
         }
 
-        public void ControlledUpdate(GameTime gameTime) => unlockParticles.ControlledUpdate(gameTime);
+        public void ControlledUpdate(GameTime gameTime)
+        {
+            unlockParticles.ControlledUpdate(gameTime);
+            foreach (TokenUnlockWisp wisp in unlockWisps)
+                wisp.ControlledUpdate(gameTime);
+        }
 
         private ParticleSystem CreateUnlockFlashParticles(float size, int amt = 1)
         {
@@ -447,7 +502,7 @@ namespace SkillTreeCreationTool
                 MaxParticleCount = 16,
                 ParticleStartColor = new[] { Color.White * .65f },
                 ParticleEndColor = new[] { Color.Transparent },
-                ParticleTextureKeys = new[] { "wave" },
+                ParticleTextureKeys = new[] { "wave1" },
                 ParticleSize = new[] { 1f },
                 ParticleSpeed = new[] { 0f },
                 StartingVelocity = new[] { Vector2.Zero },
@@ -522,6 +577,9 @@ namespace SkillTreeCreationTool
             Shockwave?.Add(GetWorldPosition(token.GridPosition).ToVector2() * zoom);
             unlockBurstPosition = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
             unlockParticles.EmitParticles();
+            Vector2 position = GetWorldPosition(token.GridPosition).ToVector2();
+            float radius = Math.Max(GetPortalSize(token), token.IconLayers.Max(layer => Math.Max(layer.Width, layer.Height))) * .5f;
+            unlockWisps.Add(new TokenUnlockWisp(position, radius));
         }
 
         private void UpdateLinkParticles(GameTime gameTime)

@@ -35,6 +35,8 @@ namespace SkillTreeCreationTool
         [JsonIgnore] private readonly Spring unlockDepthSpring = new Spring(18f, 1f, 0f);
         [JsonIgnore] private float unlockDepthHold;
         [JsonIgnore] private float springElapsed;
+        [JsonIgnore] internal bool IsUnlockElevated => unlockDepthHold > 0f;
+        [JsonIgnore] internal float IconDrawScale => revealScaleSpring.Position * unlockScaleSpring.Position;
 
         public List<IconLayer> IconLayers { get; set; } = new();
         public string Description { get; set; } = string.Empty;
@@ -93,17 +95,17 @@ namespace SkillTreeCreationTool
             }
         }
 
-        public void DrawIcon(SpriteBatch sb, Vector2 position, float zoom)
+        public void DrawIcon(SpriteBatch sb, Vector2 position, float zoom, bool highlightMask = false, float opacity = 1f)
         {
             if (!IsCollectable && !IsCollected)
                 return;
 
-            float revealScale = revealScaleSpring.Position * unlockScaleSpring.Position;
+            float revealScale = IconDrawScale;
             if (revealScale <= 0f)
                 return;
 
             float revealAlpha = MathHelper.SmoothStep(0f, 1f, revealProgress);
-            Color drawColor = (IsCollected ? Color.White : Color.White * .25f) * revealAlpha;
+            Color drawColor = (highlightMask ? Color.White : IsCollected ? Color.White : Color.White * .25f) * (revealAlpha * opacity);
             for (int layerIndex = 0; layerIndex < IconLayers.Count; layerIndex++)
             {
                 IconLayer layer = IconLayers[layerIndex];
@@ -136,9 +138,13 @@ namespace SkillTreeCreationTool
                 return;
 
             IsCollected = true;
-            unlockScaleSpring.Nudge(-6f);
+            revealScaleSpring.Position = revealScaleSpring.RestPosition = 1f;
+            revealScaleSpring.Velocity = 0f;
+            unlockScaleSpring.SetValues(18f, 1f);
+            unlockScaleSpring.Position = 1.65f;
+            unlockScaleSpring.Velocity = 0f;
             // Lift immediately so even the first flash frame stays behind this icon.
-            unlockDepthHold = 1f;
+            unlockDepthHold = TokenUnlockWisp.BurnDuration + TokenUnlockWisp.FadeDuration;
             unlockDepthSpring.Position = unlockDepthSpring.RestPosition = 1f;
             unlockDepthSpring.Velocity = 0f;
         }

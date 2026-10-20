@@ -144,7 +144,8 @@ namespace SkillTreeCreationTool
                 foreach (IconSelect icon in iconSelects)
                     icon.Update(gameTime);
 
-            if (Input.IsButtonDownOnce(Keys.Escape))
+            if (Input.IsButtonDownOnce(Keys.Escape) ||
+                (Input.IsMouseInPresentationBounds && Input.IsRightButtonDownOnce()))
                 CancelEditing();
             else if (Input.IsButtonDownOnce(Keys.Enter))
                 EndEditing();
