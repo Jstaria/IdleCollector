@@ -26,6 +26,7 @@ namespace IdleEngine
     {
         public Vector2[] StartingVelocity;
         public GetVector TrackStartingVelocity;
+        public Func<Vector2, Vector2> StartingVelocityFromPosition;
         public Rectangle[][] SpawnBounds;
         public int CurrentBounds;
         public bool UseRandomBounds;
@@ -234,7 +235,13 @@ namespace IdleEngine
                 if (stats.ParticleRotationSpeed != null)
                     particleStats.RotationSpeed = stats.ParticleRotationSpeed;
 
-                if (stats.TrackStartingVelocity != null)
+                if (stats.StartingVelocityFromPosition != null)
+                {
+                    Vector2 spawnPosition = particleStats.Position.Invoke();
+                    particleStats.Position = () => spawnPosition;
+                    particleStats.StartingVelocity = stats.StartingVelocityFromPosition(spawnPosition);
+                }
+                else if (stats.TrackStartingVelocity != null)
                     particleStats.StartingVelocity = stats.TrackStartingVelocity.Invoke();
                 else if (stats.StartingVelocity != null)
                     particleStats.StartingVelocity = stats.StartingVelocity.Length == 1

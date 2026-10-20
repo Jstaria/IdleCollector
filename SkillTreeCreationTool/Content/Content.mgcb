@@ -1420,3 +1420,37 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/star2.png
+
+#begin Textures/wave.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/wave.png
+
+#begin Textures/wave1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/wave1.png
+
+#begin Effects/SkillTreeHoverAura.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeHoverAura.fx
+
+#begin Effects/SkillTreeHoverPortal.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeHoverPortal.fx

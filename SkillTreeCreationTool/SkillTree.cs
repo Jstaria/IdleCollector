@@ -95,7 +95,9 @@ namespace SkillTreeCreationTool
             Renderer.AddToSceneEarlyDraw(SkillTreeScene, linkPulseRenderable);
 
             unlockParticles.Add(CreateUnlockBurstParticles());
-            unlockParticles.Add(CreateUnlockFlashParticles());
+            unlockParticles.Add(CreateUnlockWaveParticles());
+            unlockParticles.Add(CreateUnlockFlashParticles(.75f));
+            unlockParticles.Add(CreateUnlockFlashParticles(.55f));
             Shockwave = new SkillTreeShockwave();
             Renderer.AddPostProcess("SkillTreeShockwave", Shockwave);
             instance = this;
@@ -405,20 +407,20 @@ namespace SkillTreeCreationTool
 
         public void ControlledUpdate(GameTime gameTime) => unlockParticles.ControlledUpdate(gameTime);
 
-        private ParticleSystem CreateUnlockFlashParticles()
+        private ParticleSystem CreateUnlockFlashParticles(float size, int amt = 1)
         {
             return new ParticleSystem(new ParticleSystemStats
             {
                 SpawnBounds = new[] { new[] { new Rectangle(0, 0, 1, 1) } },
                 TrackPosition = () => unlockBurstPosition,
                 TrackLayerDepth = () => .7f,
-                ParticleLifeSpan = new[] { .2f },
+                ParticleLifeSpan = new[] { .15f },
                 ParticleDespawnDistance = 1000f,
                 MaxParticleCount = 16,
                 ParticleStartColor = new[] { Color.White * .8f },
                 ParticleEndColor = new[] { Color.Transparent },
                 ParticleTextureKeys = new[] { "star2" },
-                ParticleSize = new[] { .5f, 1f },
+                ParticleSize = new[] { size },
                 ParticleSpeed = new[] { 0f },
                 StartingVelocity = new[] { Vector2.Zero },
                 ActingForce = _ => Vector2.Zero,
@@ -427,7 +429,35 @@ namespace SkillTreeCreationTool
                 ParticleColorDecayRate = t => MathHelper.SmoothStep(0f, 1f, t),
                 ParticleSizeDecayRate = t => (1f + .35f * t) * zoom,
                 EmitRate = new[] { 0f },
-                EmitCount = new[] { 2 },
+                EmitCount = new[] { amt },
+                ResetParticlesAfterDeath = false
+            });
+        }
+
+        private ParticleSystem CreateUnlockWaveParticles()
+        {
+            float textureWidth = ResourceAtlas.GetTexture("wave").Width;
+            return new ParticleSystem(new ParticleSystemStats
+            {
+                SpawnBounds = new[] { new[] { new Rectangle(0, 0, 1, 1) } },
+                TrackPosition = () => unlockBurstPosition,
+                TrackLayerDepth = () => .73f,
+                ParticleLifeSpan = new[] { .65f },
+                ParticleDespawnDistance = 1000f,
+                MaxParticleCount = 16,
+                ParticleStartColor = new[] { Color.White * .65f },
+                ParticleEndColor = new[] { Color.Transparent },
+                ParticleTextureKeys = new[] { "wave" },
+                ParticleSize = new[] { 1f },
+                ParticleSpeed = new[] { 0f },
+                StartingVelocity = new[] { Vector2.Zero },
+                ActingForce = _ => Vector2.Zero,
+                ParticleRotation = new[] { 0f },
+                ParticleRotationSpeed = _ => 0f,
+                ParticleColorDecayRate = t => MathHelper.SmoothStep(0f, 1f, t),
+                ParticleSizeDecayRate = t => /*(4f + 120f * (1f - MathF.Exp(-9f * t)))*/MathF.Sin(MathF.Pow(t,.333f)) * zoom,
+                EmitRate = new[] { 0f },
+                EmitCount = new[] { 1 },
                 ResetParticlesAfterDeath = false
             });
         }
@@ -461,16 +491,20 @@ namespace SkillTreeCreationTool
                 ParticleStartColor = new[] { Color.White },
                 ParticleEndColor = new[] { Color.Transparent },
                 ParticleTextureKeys = new[] { "square" },
-                ParticleSpeed = new[] { .1f, .5f },
+                ParticleSpeed = new[] { .7f, 2.2f },
                 ParticleSize = new[] { .05f, .1f },
                 EmitRate = new[] { 0f },
                 EmitCount = new[] { 28 },
                 ParticleRotation = new[] { 0f, MathF.PI * 2 },
                 ParticleRotationSpeed = _ => 0f,
-                ParticleColorDecayRate = t => t,
+                ParticleColorDecayRate = t => Math.Min(1f, t * 2f),
                 ParticleSizeDecayRate = t => (1f - t) * zoom,
-                TrackStartingVelocity = () => { return RandomHelper.Instance.GetVector2(new Vector2(-2.5f), new Vector2(2.5f)) * zoom; },
-                ActingForce = _ => RandomHelper.Instance.GetVector2(new Vector2(-.8f), new Vector2(.8f)) * zoom /*+ Vector2.UnitY * .015f*/,
+                StartingVelocityFromPosition = position =>
+                {
+                    Vector2 direction = position - unlockBurstPosition;
+                    return direction.LengthSquared() > .0001f ? Vector2.Normalize(direction) * zoom : Vector2.UnitX * zoom;
+                },
+                ActingForce = _ => Vector2.Zero,
                 ResetParticlesAfterDeath = false,
                 Trail = trail
             };
