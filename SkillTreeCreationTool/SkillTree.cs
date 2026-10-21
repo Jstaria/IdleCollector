@@ -1,4 +1,4 @@
-﻿using IdleCollector;
+using IdleCollector;
 using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,6 +23,8 @@ namespace SkillTreeCreationTool
         private const float LinkLineThickness = 30f;
         private const float LinkPulseTravelTime = 3f;
         private const float HoverAuraRadius = 32f;
+        private static readonly Point DescriptionBoxInset = new Point(24, 28);
+        private static readonly Vector2 DescriptionTextPadding = new Vector2(12f, 10f);
 
         [JsonRequired] public int GridSpacing = 100;
         [JsonRequired] public int IconSize = 50;
@@ -58,6 +60,10 @@ namespace SkillTreeCreationTool
         [JsonIgnore] private int hoverAuraTokenId = -1;
         [JsonIgnore] private float hoverAuraAlpha;
         [JsonIgnore] private Vector4 hoverAuraTimeOffsets;
+        [JsonIgnore] private CustomText hoverDescriptionText;
+        [JsonIgnore] private Rectangle hoverDescriptionBounds;
+        [JsonIgnore] private int hoverDescriptionTokenId = -1;
+        [JsonIgnore] private float hoverDescriptionAlpha;
         [JsonIgnore] public float zoom = 1;
         [JsonIgnore] public float zoomTarget = 1;
         [JsonIgnore] public bool editing = false;
@@ -107,6 +113,7 @@ namespace SkillTreeCreationTool
                 token => GetWorldPosition(token.GridPosition).ToVector2() * zoom,
                 () => zoom, SkillTreeScene);
             Renderer.AddPostProcess("SkillTreeHoverHighlight", hoverHighlight);
+            Renderer.AddToSceneUIDraw(SkillTreeScene, DrawDescriptionUi);
             instance = this;
         }
 
@@ -183,6 +190,8 @@ namespace SkillTreeCreationTool
             foreach (SkillTreeToken token in treeTokens.Values)
                 if (unlockWisps.Count == 0 || token.IsUnlockElevated)
                     token.DrawIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
+
+            DrawHoverDescription(sb);
         }
 
         private void DrawUnlockWisps(SpriteBatch sb)
@@ -411,6 +420,7 @@ namespace SkillTreeCreationTool
                 : -1;
             float targetAlpha = hoveredTokenId >= 0 ? 1f : 0f;
             hoverHighlight.Update(hoveredTokenId >= 0 ? treeTokens[hoveredTokenId] : null, elapsedSeconds);
+            UpdateHoverDescription(hoveredTokenId >= 0 ? treeTokens[hoveredTokenId] : null, elapsedSeconds);
 
             if (hoveredTokenId >= 0 && hoveredTokenId != hoverAuraTokenId)
             {
@@ -426,6 +436,106 @@ namespace SkillTreeCreationTool
             hoverAuraAlpha = MathHelper.Lerp(hoverAuraAlpha, targetAlpha, 1f - MathF.Exp(-5f * elapsedSeconds));
             if (hoverAuraAlpha <= .01f && targetAlpha == 0f)
                 hoverAuraTokenId = -1;
+        }
+
+        private void UpdateHoverDescription(SkillTreeToken hoveredToken, float elapsedSeconds)
+        {
+            SkillTreeToken activeHoverToken = !editing && hoveredToken != null && (hoveredToken.IsCollectable || hoveredToken.IsCollected)
+                ? hoveredToken
+                : null;
+            if (activeHoverToken != null && activeHoverToken.TokenID != hoverDescriptionTokenId)
+            {
+                hoverDescriptionTokenId = activeHoverToken.TokenID;
+                hoverDescriptionAlpha = 0f;
+            }
+
+            float targetAlpha = activeHoverToken != null ? 1f : 0f;
+            hoverDescriptionAlpha = MathHelper.Lerp(hoverDescriptionAlpha, targetAlpha, 1f - MathF.Exp(-8f * elapsedSeconds));
+            if (editing || (hoverDescriptionAlpha <= .01f && targetAlpha == 0f) ||
+                hoverDescriptionTokenId < 0 || !treeTokens.TryGetValue(hoverDescriptionTokenId, out SkillTreeToken displayToken) ||
+                (!displayToken.IsCollectable && !displayToken.IsCollected))
+            {
+                hoverDescriptionTokenId = -1;
+                hoverDescriptionAlpha = 0f;
+                return;
+            }
+
+            Texture2D boxTexture = ResourceAtlas.GetTexture("GUI_TextBox2");
+            Point boxSize = boxTexture.Bounds.Size;
+            Rectangle cameraBounds = Renderer.CameraBounds;
+            Vector2 tokenWorldPos = GetWorldPosition(displayToken.GridPosition).ToVector2() * zoom;
+            float tokenRadius = GetPortalSize(displayToken) * zoom * .5f;
+            int x = (int)MathF.Round(tokenWorldPos.X - boxSize.X / 2f);
+            int y = (int)MathF.Round(tokenWorldPos.Y - tokenRadius - boxSize.Y + 12f);
+            if (y < cameraBounds.Top + 4)
+                y = (int)MathF.Round(tokenWorldPos.Y + tokenRadius - 12f);
+
+            x = Math.Clamp(x, cameraBounds.Left + 4, cameraBounds.Right - boxSize.X - 4);
+            y = Math.Clamp(y, cameraBounds.Top + 4, cameraBounds.Bottom - boxSize.Y - 4);
+            hoverDescriptionBounds = new Rectangle(x, y, boxSize.X, boxSize.Y);
+
+            Vector2 worldInnerPosition = new Vector2(
+                hoverDescriptionBounds.X + DescriptionBoxInset.X,
+                hoverDescriptionBounds.Y + DescriptionBoxInset.Y);
+            Vector2 worldInnerDimension = new Vector2(
+                hoverDescriptionBounds.Width - DescriptionBoxInset.X * 2,
+                hoverDescriptionBounds.Height - DescriptionBoxInset.Y * 2);
+            Vector2 textPosition = Renderer.GetScreenPosition(worldInnerPosition);
+            Vector2 textDimension = worldInnerDimension * Renderer.UIScaler.ToVector2() * Renderer.CurrentCamera.Zoom;
+            string description = displayToken.Description ?? string.Empty;
+
+            if (hoverDescriptionText == null)
+            {
+                hoverDescriptionText = new CustomText(
+                    Game1.Instance,
+                    "Fonts/DePixelHalbfett",
+                    description,
+                    textPosition,
+                    textDimension,
+                    padding: DescriptionTextPadding,
+                    color: Color.White,
+                    shadowColor: Color.Black * .45f)
+                {
+                    CenterText = true
+                };
+                hoverDescriptionText.Refresh();
+            }
+            else
+            {
+                hoverDescriptionText.Position = textPosition;
+                if (hoverDescriptionText.Text != description ||
+                    hoverDescriptionText.Dimension != textDimension)
+                {
+                    hoverDescriptionText.Text = description;
+                    hoverDescriptionText.Dimension = textDimension;
+                    hoverDescriptionText.Refresh();
+                }
+            }
+
+            hoverDescriptionText.Color = Color.White * hoverDescriptionAlpha;
+            hoverDescriptionText.ShadowColor = Color.Black * (.45f * hoverDescriptionAlpha);
+            hoverDescriptionText.Update(elapsedSeconds);
+        }
+
+        private void DrawHoverDescription(SpriteBatch sb)
+        {
+            if (editing || hoverDescriptionTokenId < 0 || hoverDescriptionAlpha <= .01f || hoverDescriptionText == null ||
+                !treeTokens.TryGetValue(hoverDescriptionTokenId, out SkillTreeToken token) ||
+                (!token.IsCollectable && !token.IsCollected))
+                return;
+
+            sb.Draw(ResourceAtlas.GetTexture("GUI_TextBox2"), hoverDescriptionBounds, null,
+                Color.White * hoverDescriptionAlpha, 0f, Vector2.Zero, SpriteEffects.None, .94f);
+        }
+
+        private void DrawDescriptionUi(SpriteBatch sb)
+        {
+            if (editing || hoverDescriptionTokenId < 0 || hoverDescriptionAlpha <= .01f || hoverDescriptionText == null ||
+                !treeTokens.TryGetValue(hoverDescriptionTokenId, out SkillTreeToken token) ||
+                (!token.IsCollectable && !token.IsCollected))
+                return;
+
+            hoverDescriptionText.Draw();
         }
 
         private static int GetPortalSize(SkillTreeToken token) => token.PortalSize > 0

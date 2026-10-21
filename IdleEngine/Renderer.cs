@@ -1,4 +1,4 @@
-﻿
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -496,7 +496,12 @@ namespace IdleEngine
         /// <summary>
         /// Adds to a scene's draw ui loop, must swap scene to see effects
         /// </summary>
-        public static void AddToSceneUIDraw(string sceneName, OnDraw func) => UIDrawEvents[sceneName] += func;
+        public static void AddToSceneUIDraw(string sceneName, OnDraw func)
+        {
+            UIDrawEvents[sceneName] += func;
+            if (SceneManager.CurrentSceneName == sceneName)
+                UIDrawEvent = UIDrawEvents[sceneName];
+        }
         /// <summary>
         /// Adds to current scene's ui draw loop, does not require scene swap
         /// </summary>

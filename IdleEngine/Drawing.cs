@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -19,9 +19,11 @@ namespace IdleEngine
         private static Dictionary<KeyValuePair<float, float>, Texture2D> cachedCircles;
 
         public static Texture2D Pixel => pixel;
+        public static SpriteBatch SpriteBatch { get; private set; }
 
         public static void Initialize(SpriteBatch sb)
         {
+            SpriteBatch = sb;
             pixel = new Texture2D(sb.GraphicsDevice, 1, 1);
             pixel.SetData(new[] { Color.White });
 

@@ -1,4 +1,4 @@
-﻿/* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * *
 *  Author: Timeless Puck (2025)                       *
 *  This code is open and free to use for any purpose. *
 * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -20,6 +22,7 @@ public class CustomText
 
     private string[][] _noFxTexts;
     private FxText[] _fxTexts;
+    private float[] _lineWidths = Array.Empty<float>();
     private float _time;
     private int _lineCapacity;
     private int _currentLineIdx;
@@ -37,6 +40,10 @@ public class CustomText
     public Color ShadowColor { get; set; }
 
     public Vector2 ShadowOffset { get; set; }
+
+    public float LayerDepth { get; set; }
+
+    public bool CenterText { get; set; }
 
     public Vector2 Dimension { get; set; }
 
@@ -100,7 +107,9 @@ public class CustomText
     public CustomText(Game game, string fontName, string text, Vector2 position, Vector2 dimension, Vector2 offset = default, Vector2 padding = default,
         Vector2? scale = null, Color? color = null, Color? shadowColor = null, Vector2? shadowOffset = null, bool allowOverflow = false)
     {
-        Font = game.Content.Load<SpriteFont>(fontName);
+        Font = game != null
+            ? game.Content.Load<SpriteFont>(fontName)
+            : ResourceAtlas.GetFont(Path.GetFileNameWithoutExtension(fontName));
         ShadowColor = shadowColor ?? Color.Transparent;
         ShadowOffset = shadowOffset ?? new(-4f, 4f);
         Color = color ?? Color.White;
@@ -113,7 +122,7 @@ public class CustomText
         Scale = scale ?? Vector2.One;
 
         _lineHeight = Font.MeasureString(" ").Y;
-        _spriteBatch = game.Services.GetService<SpriteBatch>();
+        _spriteBatch = game?.Services.GetService<SpriteBatch>() ?? Drawing.SpriteBatch;
     }
 
     #region Private methods
@@ -370,7 +379,9 @@ public class CustomText
         for (int i = 0; i < fxText.Lines[lineIdx].Length; i++)
         {
             char c = fxText.Lines[lineIdx][i];
-            Color color = fxText.PaletteRotator?.NextColor ?? Color;
+            Color color = fxText.PaletteRotator != null
+                ? fxText.PaletteRotator.NextColor * (Color.A / 255f)
+                : Color;
             Vector2 origin = Vector2.Zero;
             float rotation = 0f;
 
@@ -398,9 +409,9 @@ public class CustomText
     {
         // Draw text shadow.
         if (ShadowColor != Color.Transparent)
-            _spriteBatch.DrawString(Font, text, position + ShadowOffset + Offset, shadowColor ?? ShadowColor, rotation, origin, 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(Font, text, position + ShadowOffset + Offset, shadowColor ?? ShadowColor, rotation, origin, 1f, SpriteEffects.None, LayerDepth);
 
-        _spriteBatch.DrawString(Font, text, position + Offset, color, rotation, origin, 1f, SpriteEffects.None, 0.01f);
+        _spriteBatch.DrawString(Font, text, position + Offset, color, rotation, origin, 1f, SpriteEffects.None, Math.Min(1f, LayerDepth + 0.01f));
     }
 
     private Vector2 DrawLines(string[] lines, Vector2 nextCharPos, FxText fxText = null)
@@ -410,7 +421,7 @@ public class CustomText
         // Draw the first line at the given nextCharPos.
         if (IsLineDrawable(_currentLineIdx) && lines[0] != string.Empty)
         {
-            Vector2 v = new(nextCharPos.X, Position.Y + Padding.Y + _lineHeight * (_currentLineIdx - StartingLineIdx));
+            Vector2 v = new(nextCharPos.X, GetLineY(_currentLineIdx));
 
             if (fxText != null)
                 DrawFxTextLine(fxText, 0, v);
@@ -421,12 +432,12 @@ public class CustomText
         // Then, draw the subsequent lines at their respective positions.
         for (int j = 1; j < lines.Length; j++)
         {
-            nextCharPos = new(Position.X + Padding.X, nextCharPos.Y + _lineHeight);
             _currentLineIdx++;
+            nextCharPos = new(GetLineStartX(_currentLineIdx), GetLineY(_currentLineIdx));
 
             if (IsLineDrawable(_currentLineIdx) && lines[j] != string.Empty)
             {
-                Vector2 v = new(nextCharPos.X, Position.Y + Padding.Y + _lineHeight * (_currentLineIdx - StartingLineIdx));
+                Vector2 v = new(nextCharPos.X, GetLineY(_currentLineIdx));
 
                 if (fxText != null)
                     DrawFxTextLine(fxText, j, v);
@@ -439,11 +450,24 @@ public class CustomText
         // if there's only one line, it started at initialLineStartX, otherwise, it started at the beginning of a line.
         if (lines[^1] != string.Empty)
         {
-            float lastLineStartX = (lines.Length == 1) ? initialLineStartX : Position.X + Padding.X;
+            float lastLineStartX = (lines.Length == 1) ? initialLineStartX : GetLineStartX(_currentLineIdx);
             nextCharPos = new(lastLineStartX + Font.MeasureString(lines[^1]).X, nextCharPos.Y);
         }
 
         return nextCharPos;
+    }
+
+    private float GetLineStartX(int lineIdx) => CenterText && lineIdx >= 0 && lineIdx < _lineWidths.Length
+        ? Position.X + (Dimension.X * Scale.X - _lineWidths[lineIdx]) * 0.5f
+        : Position.X + Padding.X;
+
+    private float GetLineY(int lineIdx)
+    {
+        int visibleLines = AllowOverflow ? LineCount : Math.Max(0, Math.Min(LineCount - StartingLineIdx, _lineCapacity));
+        float startY = CenterText
+            ? Position.Y + (Dimension.Y * Scale.Y - visibleLines * _lineHeight) * 0.5f
+            : Position.Y + Padding.Y;
+        return startY + _lineHeight * (lineIdx - StartingLineIdx);
     }
 
     private bool IsLineDrawable(int lineIdx) => AllowOverflow || ((lineIdx >= StartingLineIdx) && (lineIdx < StartingLineIdx + _lineCapacity));
@@ -456,7 +480,7 @@ public class CustomText
     {
         _currentLineIdx = 0;
 
-        Vector2 nextCharPos = Position + Padding;
+        Vector2 nextCharPos = new(GetLineStartX(0), GetLineY(0));
 
         // All no-fx texts are separated by an fx text.
         for (int i = 0; i < _noFxTexts.Length; i++)
@@ -498,6 +522,7 @@ public class CustomText
             fxText.Lines = output.Substring(fxText.StartIdx, fxText.Length).Split('\n');
 
         BuildNoFxTexts(output);
+        _lineWidths = output.Split('\n').Select(line => Font.MeasureString(line).X).ToArray();
 
         CountLines();
         StartingLineIdx = 0;

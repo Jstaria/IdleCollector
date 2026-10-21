@@ -1,4 +1,4 @@
-﻿using IdleCollector;
+using IdleCollector;
 using IdleEngine;
 using IdleEngine.PostProcesses;
 using Microsoft.Xna.Framework;
@@ -90,6 +90,7 @@ namespace SkillTreeCreationTool
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Services.AddService(_spriteBatch);
             Drawing.Initialize(_spriteBatch);
 
             ResourceAtlas.LoadTextures(Content, "Content/Textures/", "Textures");

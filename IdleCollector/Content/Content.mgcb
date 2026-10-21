@@ -1441,7 +1441,6 @@
 #begin Effects/SkillTreeHoverHighlight.fx
 /importer:EffectImporter
 /processor:EffectProcessor
-/processorParam:DebugMode=Auto
 /build:Effects/SkillTreeHoverHighlight.fx
 
 #begin Textures/wave1.png
@@ -1455,8 +1454,3 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/wave1.png
-
-#begin Effects/SkillTreeHoverHighlight.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/build:Effects/SkillTreeHoverHighlight.fx
