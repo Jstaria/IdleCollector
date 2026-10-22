@@ -1,4 +1,4 @@
-﻿using IdleEngine;
+using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -141,7 +141,10 @@ namespace IdleCollector
         private void SetupSkillTree()
         {
             SceneManager.AddScene(SkillTreeScene);
-            skillTree = new SkillTree();
+            skillTree = new SkillTree
+            {
+                TrySpendResources = ResourceManager.Instance.TrySpend
+            };
             SceneManager.AddToScene(SkillTreeScene, skillTree);
 
             Updater.AddToUpdate(UpdateType.Standard, (gt) => {

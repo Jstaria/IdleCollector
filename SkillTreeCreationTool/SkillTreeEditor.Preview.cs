@@ -44,6 +44,9 @@ namespace SkillTreeCreationTool
 
             if (Input.IsLeftButtonDownOnce())
             {
+                if (skillTree.IsMouseOverHoverDescription(Input.GetMousePos().ToVector2()))
+                    return;
+
                 Point gridPosition = skillTree.GetGridPosition();
                 if (skillTree.TryGetTokenAt(Input.GetMousePos().ToVector2(), out SkillTreeToken token))
                     ToggleParentToken(token);

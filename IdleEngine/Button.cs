@@ -1,4 +1,4 @@
-﻿using IdleEngine;
+using IdleEngine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
@@ -68,7 +68,7 @@ namespace IdleCollector
         public Spring ScaleSpring { get => scaleSpring; set => scaleSpring = value; }
         public Rectangle DrawBounds => drawBounds;
         public float LayerDepth { get; set; }
-        public Color Color { get; set; }
+        public Color Color { get; set; } = Color.White;
         public Vector2 Position
         {
             get => bounds.Location.ToVector2(); set
@@ -146,7 +146,7 @@ namespace IdleCollector
 
             RenderTarget2D target = active ? targets[0] : targets[1];
             Vector2 origin = rotationRadians == 0 ? Vector2.Zero : bounds.Size.ToVector2() / 2;
-            sb.Draw(target, drawBounds, null, Color.White, rotationRadians, origin, SpriteEffects.None, 0);
+            sb.Draw(target, drawBounds, null, Color, rotationRadians, origin, SpriteEffects.None, LayerDepth);
         }
 
         public void DrawRT(SpriteBatch sb)
@@ -235,9 +235,10 @@ namespace IdleCollector
 
         private void Init(Game gameInst)
         {
+            GraphicsDevice graphicsDevice = gameInst?.GraphicsDevice ?? Drawing.SpriteBatch.GraphicsDevice;
             targets = [
-                new RenderTarget2D(gameInst.GraphicsDevice, bounds.Size.X, bounds.Size.Y),
-                new RenderTarget2D(gameInst.GraphicsDevice, bounds.Size.X, bounds.Size.Y)
+                new RenderTarget2D(graphicsDevice, bounds.Size.X, bounds.Size.Y),
+                new RenderTarget2D(graphicsDevice, bounds.Size.X, bounds.Size.Y)
             ];
 
             Renderer.AddToDrawRT(DrawRT);
