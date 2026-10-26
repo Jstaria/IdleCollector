@@ -99,34 +99,43 @@ namespace SkillTreeCreationTool
         private void HandleLayerRowClick(PanelRow row, Point mousePosition)
         {
             if (newToken.IconLayers.Count > 1 && SkillTreeEditorHeaderDropdown.GetRemoveButtonBounds(row.Bounds).Contains(mousePosition))
-            {
-                newToken.IconLayers.RemoveAt(row.Index);
-                activeIconSlot = Math.Clamp(activeIconSlot, 0, newToken.IconLayers.Count - 1);
-                activeIconSizeField = IconSizeField.None;
-                activeTintLayer = activeTintChannel = expandedTintLayer = -1;
-                iconSizeText = string.Empty;
-                replaceIconSizeText = false;
-            }
+                RemoveLayer(row.Index);
             else if (GetLayerTintBounds(row.Bounds).Contains(mousePosition))
-            {
-                expandedTintLayer = expandedTintLayer == row.Index ? -1 : row.Index;
-                activeIconSlot = row.Index;
-                activeTintLayer = activeTintChannel = -1;
-                activeIconSizeField = IconSizeField.None;
-                ClearCostSelection();
-                ClearEffectSelection();
-            }
+                ToggleLayerTintEditor(row.Index);
             else if (GetLayerWidthBounds(row.Bounds).Contains(mousePosition))
                 SelectIconSizeField(row.Index, IconSizeField.Width);
             else if (GetLayerHeightBounds(row.Bounds).Contains(mousePosition))
                 SelectIconSizeField(row.Index, IconSizeField.Height);
             else
-            {
-                activeIconSlot = row.Index;
-                resourceDropdownCostIndex = -1;
-                activeIconSizeField = IconSizeField.None;
-                activeTintLayer = activeTintChannel = -1;
-            }
+                SelectLayer(row.Index);
+        }
+
+        private void RemoveLayer(int index)
+        {
+            newToken.IconLayers.RemoveAt(index);
+            activeIconSlot = Math.Clamp(activeIconSlot, 0, newToken.IconLayers.Count - 1);
+            activeIconSizeField = IconSizeField.None;
+            activeTintLayer = activeTintChannel = expandedTintLayer = -1;
+            iconSizeText = string.Empty;
+            replaceIconSizeText = false;
+        }
+
+        private void ToggleLayerTintEditor(int index)
+        {
+            expandedTintLayer = expandedTintLayer == index ? -1 : index;
+            activeIconSlot = index;
+            activeTintLayer = activeTintChannel = -1;
+            activeIconSizeField = IconSizeField.None;
+            ClearCostSelection();
+            ClearEffectSelection();
+        }
+
+        private void SelectLayer(int index)
+        {
+            activeIconSlot = index;
+            resourceDropdownCostIndex = -1;
+            activeIconSizeField = IconSizeField.None;
+            activeTintLayer = activeTintChannel = -1;
         }
 
         private void UpdateIconSelect(GameTime gameTime)

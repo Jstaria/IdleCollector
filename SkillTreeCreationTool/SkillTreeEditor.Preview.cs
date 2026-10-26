@@ -127,18 +127,7 @@ namespace SkillTreeCreationTool
             unlockedInEditor = token.IsCollected;
             token.IsCollected = true;
             createdTokenBeingEdited = wasCreated;
-            expandedEffects.Clear();
-            effectScroll = 0;
-            activeEffectIndex = -1;
-            activeEffectField = EffectField.None;
-            activeCostIndex = -1;
-            activeCostField = CostField.None;
-            resourceDropdownCostIndex = -1;
-            activeIconSizeField = IconSizeField.None;
-            activeIconSlot = 0;
-            iconSizeText = string.Empty;
-            replaceIconSizeText = false;
-            expandedTintLayer = activeTintLayer = activeTintChannel = -1;
+            ResetEditState();
 
             updateFunction = UpdateEdit;
             drawFunction = DrawEdit;
@@ -153,11 +142,32 @@ namespace SkillTreeCreationTool
             updateFunction = UpdatePreview;
             drawFunction = DrawPreview;
             skillTree.editing = false;
+            ApplyEditedTokenState(save);
+            createdTokenBeingEdited = false;
+        }
+
+        private void ResetEditState()
+        {
+            expandedEffects.Clear();
+            effectScroll = 0;
+            activeEffectIndex = -1;
+            activeEffectField = EffectField.None;
+            activeCostIndex = -1;
+            activeCostField = CostField.None;
+            resourceDropdownCostIndex = -1;
+            activeIconSizeField = IconSizeField.None;
+            activeIconSlot = 0;
+            iconSizeText = string.Empty;
+            replaceIconSizeText = false;
+            expandedTintLayer = activeTintLayer = activeTintChannel = -1;
+        }
+
+        private void ApplyEditedTokenState(bool save)
+        {
             if (save && unlockedInEditor && !newToken.IsCollected)
                 skillTree.UnlockToken(newToken.TokenID);
             else
                 newToken.IsCollected = save ? unlockedInEditor : editedTokenWasCollected;
-            createdTokenBeingEdited = false;
         }
 
         private void CancelEditing()

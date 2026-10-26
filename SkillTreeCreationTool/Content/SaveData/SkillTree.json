@@ -31,9 +31,14 @@
         6,
         7
       ],
-      "ResourceCosts": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 100
+        }
+      ],
       "Effects": [],
-      "IsCollected": true,
+      "IsCollected": false,
       "IsCollectable": true
     },
     "1": {
@@ -232,7 +237,7 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": true,
-      "IsCollectable": true
+      "IsCollectable": false
     },
     "7": {
       "IconLayers": [
@@ -266,7 +271,7 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": true,
-      "IsCollectable": true
+      "IsCollectable": false
     },
     "8": {
       "IconLayers": [

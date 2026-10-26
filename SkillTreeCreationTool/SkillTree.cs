@@ -30,6 +30,8 @@ namespace SkillTreeCreationTool
         private static readonly Vector2 DescriptionTextPadding = new Vector2(12f, 10f);
         private static readonly Point UnlockButtonSize = new Point(48, 12);
         private const int CostIconWorldSize = 14;
+        private const int UnlockButtonMargin = 1;
+        private const int DescriptionBottomOffset = 4;
 
         [JsonRequired] public int GridSpacing = 100;
         [JsonRequired] public int IconSize = 50;
@@ -68,7 +70,10 @@ namespace SkillTreeCreationTool
         [JsonIgnore] private CustomText hoverDescriptionText;
         [JsonIgnore] private Button unlockButton;
         [JsonIgnore] private Rectangle hoverDescriptionBounds;
+        [JsonIgnore] private Rectangle hoverDescriptionScreenBounds;
+        [JsonIgnore] private float hoverDescriptionScreenScale;
         [JsonIgnore] private Rectangle hoverUnlockButtonBounds;
+        [JsonIgnore] private bool descriptionScreenPositionLocked;
         [JsonIgnore] private int selectedDescriptionTokenId = -1;
         [JsonIgnore] private int hoverDescriptionTokenId = -1;
         [JsonIgnore] private float hoverDescriptionAlpha;
@@ -132,13 +137,28 @@ namespace SkillTreeCreationTool
                 fontColor = Color.White,
                 shadowColor = Color.Black * .45f,
                 textOffset = new Vector2(2f, 4f),
-                OnClick = () =>
-                {
-                    if (hoverDescriptionTokenId >= 0 && treeTokens.TryGetValue(hoverDescriptionTokenId, out SkillTreeToken token))
-                        TryPurchaseToken(token);
-                }
+                rotSpringAngFeq = 40f,
+                rotSpringDampRatio = 1f,
+                scaleSpringAngFeq = 40f,
+                scaleSpringDampRatio = .375f,
+                OnHover = GrowUnlockButton,
+                OnClick = ClickUnlockButton
             });
+            unlockButton.LayerDepth = .97f;
             instance = this;
+        }
+
+        private void GrowUnlockButton()
+        {
+            unlockButton.ScaleSpring.RestPosition = 1.1f;
+            unlockButton.ClampSpringVelocity(unlockButton.ScaleSpring);
+        }
+
+        private void ClickUnlockButton()
+        {
+            unlockButton.ScaleSpring.Nudge(-10f);
+            if (hoverDescriptionTokenId >= 0 && treeTokens.TryGetValue(hoverDescriptionTokenId, out SkillTreeToken token))
+                TryPurchaseToken(token);
         }
 
         private void SetFamilyTokens()
@@ -215,7 +235,6 @@ namespace SkillTreeCreationTool
                 if (unlockWisps.Count == 0 || token.IsUnlockElevated)
                     token.DrawIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
 
-            DrawHoverDescription(sb);
         }
 
         private void DrawUnlockWisps(SpriteBatch sb)
@@ -445,8 +464,10 @@ namespace SkillTreeCreationTool
                 : -1;
 
             float targetAlpha = hoveredTokenId >= 0 ? 1f : 0f;
-            hoverHighlight.Update(hoveredTokenId >= 0 ? treeTokens[hoveredTokenId] : null, elapsedSeconds);
             UpdateHoverDescription(gameTime);
+            SkillTreeToken hoveredToken = hoveredTokenId >= 0 ? treeTokens[hoveredTokenId] : null;
+            SkillTreeToken selectedToken = GetSelectedDescriptionToken();
+            hoverHighlight.Update(hoveredToken, selectedToken, elapsedSeconds);
 
             if (hoveredTokenId >= 0 && hoveredTokenId != hoverAuraTokenId)
             {
@@ -462,6 +483,14 @@ namespace SkillTreeCreationTool
             hoverAuraAlpha = MathHelper.Lerp(hoverAuraAlpha, targetAlpha, 1f - MathF.Exp(-5f * elapsedSeconds));
             if (hoverAuraAlpha <= .01f && targetAlpha == 0f)
                 hoverAuraTokenId = -1;
+        }
+
+        private SkillTreeToken GetSelectedDescriptionToken()
+        {
+            return selectedDescriptionTokenId >= 0 &&
+                treeTokens.TryGetValue(selectedDescriptionTokenId, out SkillTreeToken token)
+                ? token
+                : null;
         }
 
         private void UpdateHoverDescription(GameTime gameTime)
@@ -492,14 +521,12 @@ namespace SkillTreeCreationTool
                 }
             }
 
-            SkillTreeToken activeToken = !editing && selectedDescriptionTokenId >= 0 &&
-                treeTokens.TryGetValue(selectedDescriptionTokenId, out SkillTreeToken selectedToken)
-                ? selectedToken
-                : null;
+            SkillTreeToken activeToken = editing ? null : GetSelectedDescriptionToken();
             if (activeToken != null && activeToken.TokenID != hoverDescriptionTokenId)
             {
                 hoverDescriptionTokenId = activeToken.TokenID;
                 hoverDescriptionAlpha = 0f;
+                descriptionScreenPositionLocked = false;
             }
 
             float targetAlpha = activeToken != null ? 1f : 0f;
@@ -510,40 +537,22 @@ namespace SkillTreeCreationTool
                 selectedDescriptionTokenId = -1;
                 hoverDescriptionTokenId = -1;
                 hoverDescriptionAlpha = 0f;
+                descriptionScreenPositionLocked = false;
                 return;
             }
 
-            Texture2D boxTexture = ResourceAtlas.GetTexture("GUI_TextBox2");
-            Point boxSize = boxTexture.Bounds.Size;
-            Rectangle cameraBounds = Renderer.CameraBounds;
-            Vector2 tokenWorldPos = GetWorldPosition(displayToken.GridPosition).ToVector2() * zoom;
-            float tokenRadius = GetPortalSize(displayToken) * zoom * .5f;
-            int x = (int)MathF.Round(tokenWorldPos.X - boxSize.X / 2f);
-            int y = (int)MathF.Round(tokenWorldPos.Y - tokenRadius - boxSize.Y + 12f);
-            if (y < cameraBounds.Top + 4)
-                y = (int)MathF.Round(tokenWorldPos.Y + tokenRadius - 12f);
-
-            x = Math.Clamp(x, cameraBounds.Left + 4, cameraBounds.Right - boxSize.X - 4);
-            y = Math.Clamp(y, cameraBounds.Top + 4, cameraBounds.Bottom - boxSize.Y - 4);
-            hoverDescriptionBounds = new Rectangle(x, y, boxSize.X, boxSize.Y);
-            hoverUnlockButtonBounds = new Rectangle(
-                hoverDescriptionBounds.Center.X - UnlockButtonSize.X / 2,
-                hoverDescriptionBounds.Bottom - DescriptionBoxInset.Y - UnlockButtonSize.Y - 2,
-                UnlockButtonSize.X,
-                UnlockButtonSize.Y);
-
             bool showUnlockButton = displayToken.IsCollectable && !displayToken.IsCollected;
             bool hasCosts = displayToken.ResourceCosts != null && displayToken.ResourceCosts.Count > 0;
-            int bottomReservedWorld = (showUnlockButton ? UnlockButtonSize.Y + 4 : 0) + (hasCosts ? CostIconWorldSize + 4 : 0);
+            UpdateDescriptionPanelBounds();
 
-            Vector2 worldInnerPosition = new Vector2(
-                hoverDescriptionBounds.X + DescriptionBoxInset.X,
-                hoverDescriptionBounds.Y + DescriptionBoxInset.Y);
-            Vector2 worldInnerDimension = new Vector2(
-                hoverDescriptionBounds.Width - DescriptionBoxInset.X * 2,
-                Math.Max(16, hoverDescriptionBounds.Height - DescriptionBoxInset.Y * 2 - bottomReservedWorld));
-            Vector2 textPosition = Renderer.GetScreenPosition(worldInnerPosition);
-            Vector2 textDimension = worldInnerDimension * Renderer.UIScaler.ToVector2() * Renderer.CurrentCamera.Zoom;
+            int bottomReservedWorld = hasCosts ? CostIconWorldSize + 4 : 0;
+
+            Vector2 textPosition = hoverDescriptionScreenBounds.Location.ToVector2() +
+                DescriptionBoxInset.ToVector2() * hoverDescriptionScreenScale;
+            Vector2 textDimension = new(
+                hoverDescriptionScreenBounds.Width - DescriptionBoxInset.X * 2 * hoverDescriptionScreenScale,
+                Math.Max(16f * hoverDescriptionScreenScale,
+                    hoverDescriptionScreenBounds.Height - (DescriptionBoxInset.Y * 2 + bottomReservedWorld) * hoverDescriptionScreenScale));
             string description = displayToken.Description ?? string.Empty;
 
             if (hoverDescriptionText == null)
@@ -558,7 +567,8 @@ namespace SkillTreeCreationTool
                     color: Color.White,
                     shadowColor: Color.Black * .45f)
                 {
-                    CenterText = true
+                    CenterText = true,
+                    LayerDepth = .96f
                 };
                 hoverDescriptionText.Refresh();
             }
@@ -578,10 +588,63 @@ namespace SkillTreeCreationTool
             hoverDescriptionText.ShadowColor = Color.Black * (.45f * hoverDescriptionAlpha);
             hoverDescriptionText.Update(elapsedSeconds);
 
-            unlockButton.Position = Renderer.GetScreenPosition(hoverUnlockButtonBounds.Location.ToVector2());
+            unlockButton.Position = GetUnlockButtonPosition();
             unlockButton.Color = Color.White * hoverDescriptionAlpha;
             if (showUnlockButton)
+            {
                 unlockButton.StandardUpdate(gameTime);
+                unlockButton.Position = GetUnlockButtonPosition();
+            }
+        }
+
+        private Vector2 GetUnlockButtonPosition()
+        {
+            Vector2 buttonSize = (UnlockButtonSize * Renderer.UIScaler).ToVector2();
+            Vector2 restingPosition = new(
+                hoverDescriptionScreenBounds.Center.X - buttonSize.X / 2f,
+                hoverDescriptionScreenBounds.Bottom - 120 + UnlockButtonMargin * hoverDescriptionScreenScale);
+            float scaleOffset = (unlockButton.ScaleSpring.Position - 1f) * .5f;
+            return restingPosition - buttonSize * scaleOffset;
+        }
+
+        private void UpdateDescriptionPanelBounds()
+        {
+            if (!descriptionScreenPositionLocked)
+                PlaceDescriptionAtScreenBottom();
+            else
+                RestoreDescriptionWorldBounds();
+
+            hoverUnlockButtonBounds = new Rectangle(
+                hoverDescriptionBounds.Center.X - UnlockButtonSize.X / 2,
+                hoverDescriptionBounds.Bottom + UnlockButtonMargin,
+                UnlockButtonSize.X,
+                UnlockButtonSize.Y);
+        }
+
+        private void PlaceDescriptionAtScreenBottom()
+        {
+            Texture2D boxTexture = ResourceAtlas.GetTexture("GUI_TextBox2");
+            Vector2 uiScale = Renderer.UIScaler.ToVector2();
+            hoverDescriptionScreenScale = uiScale.X * Renderer.CurrentCamera.Zoom;
+            Point screenSize = (boxTexture.Bounds.Size.ToVector2() * hoverDescriptionScreenScale).ToPoint();
+            int x = Renderer.UIBounds.Center.X - screenSize.X / 2;
+            int y = Renderer.UIBounds.Bottom - screenSize.Y - (int)(DescriptionBottomOffset * hoverDescriptionScreenScale);
+            hoverDescriptionScreenBounds = new Rectangle(x, y, screenSize.X, screenSize.Y);
+            descriptionScreenPositionLocked = true;
+            RestoreDescriptionWorldBounds();
+        }
+
+        private void RestoreDescriptionWorldBounds()
+        {
+            Vector2 uiScale = Renderer.UIScaler.ToVector2();
+            Vector2 renderPosition = new(
+                hoverDescriptionScreenBounds.X / uiScale.X,
+                hoverDescriptionScreenBounds.Y / uiScale.Y);
+            Vector2 worldPosition = Vector2.Transform(renderPosition, Matrix.Invert(Renderer.CurrentCamera.Transform));
+            Vector2 worldSize = new(
+                hoverDescriptionScreenBounds.Width / (uiScale.X * Renderer.CurrentCamera.Zoom),
+                hoverDescriptionScreenBounds.Height / (uiScale.Y * Renderer.CurrentCamera.Zoom));
+            hoverDescriptionBounds = new Rectangle(worldPosition.ToPoint(), worldSize.ToPoint());
         }
 
         public bool IsMouseOverHoverDescription(Vector2 worldMousePosition)
@@ -615,95 +678,65 @@ namespace SkillTreeCreationTool
             UnlockToken(token.TokenID);
         }
 
-        private void DrawHoverDescription(SpriteBatch sb)
-        {
-            if (editing || hoverDescriptionTokenId < 0 || hoverDescriptionAlpha <= .01f || hoverDescriptionText == null ||
-                !treeTokens.TryGetValue(hoverDescriptionTokenId, out SkillTreeToken token))
-                return;
-
-            sb.Draw(ResourceAtlas.GetTexture("GUI_TextBox2"), hoverDescriptionBounds, null,
-                Color.White * hoverDescriptionAlpha, 0f, Vector2.Zero, SpriteEffects.None, .94f);
-            DrawHoverCostIcons(sb, token);
-        }
-
-        private void DrawHoverCostIcons(SpriteBatch sb, SkillTreeToken token)
-        {
-            if (token.ResourceCosts == null || token.ResourceCosts.Count == 0)
-                return;
-
-            SpriteFont font = ResourceAtlas.GetFont("DePixelHalbfett");
-            Vector2 uiScale = Renderer.UIScaler.ToVector2() * Renderer.CurrentCamera.Zoom;
-            int costY = (token.IsCollectable && !token.IsCollected)
-                ? hoverUnlockButtonBounds.Y - CostIconWorldSize - 3
-                : hoverDescriptionBounds.Bottom - DescriptionBoxInset.Y - CostIconWorldSize - 2;
-            int spacing = 8;
-            int totalWidth = 0;
-            int[] itemWidths = new int[token.ResourceCosts.Count];
-            for (int i = 0; i < token.ResourceCosts.Count; i++)
-            {
-                string amountText = token.ResourceCosts[i].Amount.ToString();
-                int textWorldWidth = (int)MathF.Ceiling(font.MeasureString(amountText).X / Math.Max(1f, uiScale.X));
-                itemWidths[i] = CostIconWorldSize + 2 + textWorldWidth;
-                totalWidth += itemWidths[i] + (i > 0 ? spacing : 0);
-            }
-
-            int currentX = hoverDescriptionBounds.Center.X - totalWidth / 2;
-            for (int i = 0; i < token.ResourceCosts.Count; i++)
-            {
-                ResourceCost cost = token.ResourceCosts[i];
-                Texture2D icon = GetResourceIconTexture(cost.Resource);
-                if (icon != null)
-                {
-                    Rectangle iconBounds = new Rectangle(currentX, costY, CostIconWorldSize, CostIconWorldSize);
-                    sb.Draw(icon, iconBounds, null, GetResourceColor(cost.Resource) * hoverDescriptionAlpha, 0f, Vector2.Zero, SpriteEffects.None, .95f);
-                }
-                currentX += itemWidths[i] + spacing;
-            }
-        }
-
         private void DrawDescriptionUi(SpriteBatch sb)
         {
             if (editing || hoverDescriptionTokenId < 0 || hoverDescriptionAlpha <= .01f || hoverDescriptionText == null ||
                 !treeTokens.TryGetValue(hoverDescriptionTokenId, out SkillTreeToken token))
                 return;
 
+            DrawDescriptionPanel(sb);
             hoverDescriptionText.Draw();
+            DrawResourceCosts(sb, token);
             if (token.IsCollectable && !token.IsCollected)
                 unlockButton.Draw(sb);
-            DrawHoverCostAmountsUi(sb, token);
         }
 
-        private void DrawHoverCostAmountsUi(SpriteBatch sb, SkillTreeToken token)
+        private void DrawDescriptionPanel(SpriteBatch sb)
+        {
+            sb.Draw(ResourceAtlas.GetTexture("GUI_TextBox2"), hoverDescriptionScreenBounds, null,
+                Color.White * hoverDescriptionAlpha, 0f, Vector2.Zero, SpriteEffects.None, .94f);
+        }
+
+        private void DrawResourceCosts(SpriteBatch sb, SkillTreeToken token)
         {
             if (token.ResourceCosts == null || token.ResourceCosts.Count == 0)
                 return;
 
             SpriteFont font = ResourceAtlas.GetFont("DePixelHalbfett");
-            Vector2 uiScale = Renderer.UIScaler.ToVector2() * Renderer.CurrentCamera.Zoom;
-            int costY = (token.IsCollectable && !token.IsCollected)
-                ? hoverUnlockButtonBounds.Y - CostIconWorldSize - 3
-                : hoverDescriptionBounds.Bottom - DescriptionBoxInset.Y - CostIconWorldSize - 2;
-            int spacing = 8;
+            float screenScale = hoverDescriptionScreenScale;
+            int costIconSize = (int)MathF.Round(CostIconWorldSize * screenScale);
+            int costY = hoverDescriptionScreenBounds.Bottom - (int)MathF.Round((DescriptionBoxInset.Y + CostIconWorldSize + 6) * screenScale);
+            int spacing = (int)MathF.Round(8f * screenScale);
+            int textGap = (int)MathF.Round(2f * screenScale);
             int totalWidth = 0;
             int[] itemWidths = new int[token.ResourceCosts.Count];
             for (int i = 0; i < token.ResourceCosts.Count; i++)
             {
                 string amountText = token.ResourceCosts[i].Amount.ToString();
-                int textWorldWidth = (int)MathF.Ceiling(font.MeasureString(amountText).X / Math.Max(1f, uiScale.X));
-                itemWidths[i] = CostIconWorldSize + 2 + textWorldWidth;
+                int textWidth = (int)MathF.Ceiling(font.MeasureString(amountText).X);
+                itemWidths[i] = costIconSize + textGap + textWidth;
                 totalWidth += itemWidths[i] + (i > 0 ? spacing : 0);
             }
 
-            int currentX = hoverDescriptionBounds.Center.X - totalWidth / 2;
+            int currentX = hoverDescriptionScreenBounds.Center.X - totalWidth / 2;
             for (int i = 0; i < token.ResourceCosts.Count; i++)
             {
                 ResourceCost cost = token.ResourceCosts[i];
                 string amountText = cost.Amount.ToString();
+                Texture2D icon = GetResourceIconTexture(cost.Resource);
+                if (icon != null)
+                {
+                    Rectangle iconBounds = new Rectangle(currentX, costY, costIconSize, costIconSize);
+                    sb.Draw(icon, iconBounds, null, GetResourceColor(cost.Resource) * hoverDescriptionAlpha,
+                        0f, Vector2.Zero, SpriteEffects.None, .95f);
+                }
+
                 Vector2 textMeasurement = font.MeasureString(amountText);
-                Vector2 worldTextAnchor = new Vector2(currentX + CostIconWorldSize + 2, costY + CostIconWorldSize * .5f);
-                Vector2 uiTextPos = Renderer.GetScreenPosition(worldTextAnchor) - new Vector2(0f, textMeasurement.Y * .5f);
-                sb.DrawString(font, amountText, uiTextPos + new Vector2(-2f, 2f), Color.Black * (.45f * hoverDescriptionAlpha));
-                sb.DrawString(font, amountText, uiTextPos, Color.White * hoverDescriptionAlpha);
+                Vector2 uiTextPos = new Vector2(currentX + costIconSize + textGap, costY + costIconSize * .5f - textMeasurement.Y * .5f);
+                sb.DrawString(font, amountText, uiTextPos + new Vector2(-2f, 2f), Color.Black * (.45f * hoverDescriptionAlpha),
+                    0f, Vector2.Zero, 1f, SpriteEffects.None, .96f);
+                sb.DrawString(font, amountText, uiTextPos, Color.White * hoverDescriptionAlpha,
+                    0f, Vector2.Zero, 1f, SpriteEffects.None, .96f);
                 currentX += itemWidths[i] + spacing;
             }
         }

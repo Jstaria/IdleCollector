@@ -49,39 +49,48 @@ namespace SkillTreeCreationTool
             DrawUnlockedField(sb, font, panel);
 
             foreach (PanelRow row in layout.Rows)
-            {
-                switch (row.Kind)
-                {
-                    case PanelRowKind.Description:
-                        DrawField(sb, font, row.Bounds, row.Label, row.Value, editingTokenDescription,
-                            new Vector2(row.Bounds.X + 4, row.Bounds.Y - font.LineSpacing), Color.LightGray);
-                        break;
-                    case PanelRowKind.Costs:
-                    case PanelRowKind.Effects:
-                    case PanelRowKind.Layers:
-                        headerDropdown.Draw(sb, font, row.Bounds, row.Label, addButton: true);
-                        break;
-                    case PanelRowKind.Effect:
-                        headerDropdown.Draw(sb, font, row.Bounds, row.Label, expandedEffects.Contains(row.Index), expandable: true);
-                        SkillTreeEditorHeaderDropdown.DrawRemoveButton(sb, font, SkillTreeEditorHeaderDropdown.GetRemoveButtonBounds(row.Bounds));
-                        break;
-                    case PanelRowKind.Layer:
-                        DrawLayerRow(sb, font, row);
-                        break;
-                    case PanelRowKind.LayerTint:
-                        DrawLayerTint(sb, font, row);
-                        break;
-                    default:
-                        if (row.Kind == PanelRowKind.Resource)
-                            SkillTreeEditorHeaderDropdown.DrawRemoveButton(sb, font, GetCostRemoveBounds(row.Bounds));
-                        bool selected = row.Kind == PanelRowKind.EffectField
-                            ? activeEffectIndex == row.Index && activeEffectField == row.Field
-                            : activeCostIndex == row.Index && activeCostField == (row.Kind == PanelRowKind.Resource ? CostField.Resource : CostField.Amount);
-                        DrawField(sb, font, row.Bounds, row.Label, row.Value, selected, new Vector2(panel.X + 14, row.Bounds.Y), Color.LightGray);
-                        break;
-                }
-            }
+                DrawPanelRow(sb, font, panel, row);
             DrawResourceDropdown(sb, font, layout);
+        }
+
+        private void DrawPanelRow(SpriteBatch sb, SpriteFont font, Rectangle panel, PanelRow row)
+        {
+            switch (row.Kind)
+            {
+                case PanelRowKind.Description:
+                    DrawField(sb, font, row.Bounds, row.Label, row.Value, editingTokenDescription,
+                        new Vector2(row.Bounds.X + 4, row.Bounds.Y - font.LineSpacing), Color.LightGray);
+                    return;
+                case PanelRowKind.Costs:
+                case PanelRowKind.Effects:
+                case PanelRowKind.Layers:
+                    headerDropdown.Draw(sb, font, row.Bounds, row.Label, addButton: true);
+                    return;
+                case PanelRowKind.Effect:
+                    headerDropdown.Draw(sb, font, row.Bounds, row.Label, expandedEffects.Contains(row.Index), expandable: true);
+                    SkillTreeEditorHeaderDropdown.DrawRemoveButton(sb, font, SkillTreeEditorHeaderDropdown.GetRemoveButtonBounds(row.Bounds));
+                    return;
+                case PanelRowKind.Layer:
+                    DrawLayerRow(sb, font, row);
+                    return;
+                case PanelRowKind.LayerTint:
+                    DrawLayerTint(sb, font, row);
+                    return;
+            }
+
+            if (row.Kind == PanelRowKind.Resource)
+                SkillTreeEditorHeaderDropdown.DrawRemoveButton(sb, font, GetCostRemoveBounds(row.Bounds));
+            DrawField(sb, font, row.Bounds, row.Label, row.Value, IsPanelRowSelected(row),
+                new Vector2(panel.X + 14, row.Bounds.Y), Color.LightGray);
+        }
+
+        private bool IsPanelRowSelected(PanelRow row)
+        {
+            if (row.Kind == PanelRowKind.EffectField)
+                return activeEffectIndex == row.Index && activeEffectField == row.Field;
+
+            CostField field = row.Kind == PanelRowKind.Resource ? CostField.Resource : CostField.Amount;
+            return activeCostIndex == row.Index && activeCostField == field;
         }
 
         private static void DrawField(SpriteBatch sb, SpriteFont font, Rectangle bounds, string label, string value,

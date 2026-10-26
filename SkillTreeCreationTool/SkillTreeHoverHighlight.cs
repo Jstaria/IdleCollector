@@ -27,9 +27,25 @@ namespace SkillTreeCreationTool
             effect = ResourceAtlas.GetEffect("SkillTreeHoverHighlight");
         }
 
-        public void Update(SkillTreeToken hoveredToken, float elapsedSeconds)
+        public void Update(SkillTreeToken hoveredToken, SkillTreeToken selectedToken, float elapsedSeconds)
         {
-            if (hoveredToken != null && !highlights.Exists(item => item.Token == hoveredToken))
+            EnsureHighlight(hoveredToken);
+            EnsureHighlight(selectedToken);
+
+            float blend = 1f - MathF.Exp(-5f * elapsedSeconds);
+            for (int i = highlights.Count - 1; i >= 0; i--)
+            {
+                HoverHighlight item = highlights[i];
+                bool shouldHighlight = item.Token == hoveredToken || item.Token == selectedToken;
+                item.Alpha = MathHelper.Lerp(item.Alpha, shouldHighlight ? 1f : 0f, blend);
+                if (!shouldHighlight && item.Alpha <= .01f)
+                    highlights.RemoveAt(i);
+            }
+        }
+
+        private void EnsureHighlight(SkillTreeToken token)
+        {
+            if (token != null && !highlights.Exists(item => item.Token == token))
             {
                 if (highlights.Count == 3)
                 {
@@ -39,17 +55,7 @@ namespace SkillTreeCreationTool
                             weakest = item;
                     highlights.Remove(weakest);
                 }
-                highlights.Add(new HoverHighlight(hoveredToken));
-            }
-
-            float blend = 1f - MathF.Exp(-5f * elapsedSeconds);
-            for (int i = highlights.Count - 1; i >= 0; i--)
-            {
-                HoverHighlight item = highlights[i];
-                bool hovered = item.Token == hoveredToken;
-                item.Alpha = MathHelper.Lerp(item.Alpha, hovered ? 1f : 0f, blend);
-                if (!hovered && item.Alpha <= .01f)
-                    highlights.RemoveAt(i);
+                highlights.Add(new HoverHighlight(token));
             }
         }
 
