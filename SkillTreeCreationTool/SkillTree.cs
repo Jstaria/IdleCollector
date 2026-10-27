@@ -43,6 +43,7 @@ namespace SkillTreeCreationTool
         [JsonProperty] private Dictionary<int, SkillTreeToken> treeTokens;
         [JsonIgnore] private Dictionary<Point, SkillTreeToken> tokenPositions;
         [JsonIgnore] private readonly Dictionary<(int Parent, int Child), LinkParticleSystem> linkParticles = new();
+        [JsonIgnore] private readonly List<ConstellationBranch> constellationBranches = new();
         [JsonIgnore] public LinkParticleSettings LinkParticleSettings { get; } = new();
         [JsonIgnore] private SkillTreeShockwave Shockwave { get; }
         [JsonIgnore] private readonly SkillTreeHoverHighlight hoverHighlight;
@@ -81,6 +82,12 @@ namespace SkillTreeCreationTool
         [JsonIgnore] public float zoomTarget = 1;
         [JsonIgnore] public bool editing = false;
         [JsonIgnore] public Func<IReadOnlyDictionary<string, int>, bool> TrySpendResources { get; set; }
+
+        private sealed class ConstellationBranch
+        {
+            public HashSet<int> TokenIds { get; } = new();
+            public HashSet<(int Parent, int Child)> Links { get; } = new();
+        }
 
 
         public SkillTree()
@@ -191,6 +198,7 @@ namespace SkillTreeCreationTool
             }
 
             RefreshTokenDepths();
+            RebuildConstellationBranches();
         }
 
         private void EnsureIconLayers(SkillTreeToken token)
@@ -341,20 +349,20 @@ namespace SkillTreeCreationTool
 
         private float GetConstellationGlowOpacity()
         {
-            return ShouldShowConstellation() && AreAllTokensUnlocked() ? 1f : 0f;
-        }
-
-        private bool AreAllTokensUnlocked()
-        {
-            return treeTokens.Count > 0 &&
-                treeTokens.Values.All(token => token.IsCollected);
+            return IsConstellationActive() ? 1f : 0f;
         }
 
         private void UpdateConstellationFade()
         {
-            bool shouldFade = ShouldShowConstellation() && AreAllTokensUnlocked();
+            bool shouldFade = ShouldShowConstellation();
+            HashSet<int> completedBranchTokens = GetCompletedBranchTokenIds();
             foreach (SkillTreeToken token in treeTokens.Values)
-                token.SetConstellationFadeActive(shouldFade);
+                token.SetConstellationFadeActive(shouldFade && completedBranchTokens.Contains(token.TokenID));
+        }
+
+        private bool IsConstellationActive()
+        {
+            return ShouldShowConstellation() && GetCompletedBranchTokenIds().Count > 0;
         }
 
         private bool ShouldShowConstellation()
@@ -363,13 +371,104 @@ namespace SkillTreeCreationTool
                 zoomTarget <= zoom;
         }
 
+        private HashSet<int> GetCompletedBranchTokenIds()
+        {
+            HashSet<int> completedTokens = new();
+            foreach (ConstellationBranch branch in constellationBranches)
+            {
+                if (branch.TokenIds.All(tokenId =>
+                    treeTokens.TryGetValue(tokenId, out SkillTreeToken token) && token.IsCollected))
+                    completedTokens.UnionWith(branch.TokenIds);
+            }
+            return completedTokens;
+        }
+
+        private void RebuildConstellationBranches()
+        {
+            constellationBranches.Clear();
+            Dictionary<int, HashSet<int>> rootIdsByToken = BuildRootIdsByToken();
+            foreach (SkillTreeToken root in treeTokens.Values.Where(token => IsConstellationBranchRoot(token, rootIdsByToken)))
+            {
+                ConstellationBranch branch = new();
+                AddTokensToBranch(root, branch, rootIdsByToken);
+                constellationBranches.Add(branch);
+            }
+        }
+
+        private Dictionary<int, HashSet<int>> BuildRootIdsByToken()
+        {
+            Dictionary<int, HashSet<int>> rootIdsByToken = new();
+            foreach (SkillTreeToken token in treeTokens.Values)
+                GetRootIds(token, rootIdsByToken, new HashSet<int>());
+            return rootIdsByToken;
+        }
+
+        private HashSet<int> GetRootIds(SkillTreeToken token, Dictionary<int, HashSet<int>> rootIdsByToken,
+            HashSet<int> visitedTokens)
+        {
+            if (rootIdsByToken.TryGetValue(token.TokenID, out HashSet<int> cachedRootIds))
+                return cachedRootIds;
+            if (!visitedTokens.Add(token.TokenID))
+                return new HashSet<int>();
+
+            HashSet<int> rootIds = new();
+            if (token.ParentTokenIDs.Count == 0)
+            {
+                rootIds.Add(token.TokenID);
+            }
+            else
+            {
+                foreach (int parentId in token.ParentTokenIDs)
+                    if (treeTokens.TryGetValue(parentId, out SkillTreeToken parent))
+                        rootIds.UnionWith(GetRootIds(parent, rootIdsByToken, new HashSet<int>(visitedTokens)));
+            }
+
+            rootIdsByToken[token.TokenID] = rootIds;
+            return rootIds;
+        }
+
+        private bool IsConstellationBranchRoot(SkillTreeToken token, Dictionary<int, HashSet<int>> rootIdsByToken)
+        {
+            if (token.ParentTokenIDs.Count == 0)
+                return true;
+
+            HashSet<int> tokenRootIds = rootIdsByToken[token.TokenID];
+            return token.ParentTokenIDs.Any(parentId =>
+                treeTokens.TryGetValue(parentId, out SkillTreeToken parent) &&
+                rootIdsByToken[parent.TokenID].Count < tokenRootIds.Count);
+        }
+
+        private void AddTokensToBranch(SkillTreeToken token, ConstellationBranch branch,
+            Dictionary<int, HashSet<int>> rootIdsByToken)
+        {
+            if (!branch.TokenIds.Add(token.TokenID))
+                return;
+
+            foreach (int childId in token.ChildTokenIDs)
+            {
+                if (treeTokens.TryGetValue(childId, out SkillTreeToken child))
+                {
+                    if (IsConstellationBranchRoot(child, rootIdsByToken))
+                        continue;
+
+                    branch.Links.Add((token.TokenID, child.TokenID));
+                    AddTokensToBranch(child, branch, rootIdsByToken);
+                }
+            }
+        }
+
         private void DrawConstellationMask(SpriteBatch sb)
         {
-            foreach (SkillTreeToken child in treeTokens.Values)
+            foreach (ConstellationBranch branch in constellationBranches)
             {
-                foreach (int parentId in child.ParentTokenIDs)
+                if (!branch.TokenIds.All(tokenId =>
+                    treeTokens.TryGetValue(tokenId, out SkillTreeToken token) && token.IsCollected))
+                    continue;
+
+                foreach ((int parentId, int childId) in branch.Links)
                 {
-                    if (!treeTokens.TryGetValue(parentId, out SkillTreeToken parent))
+                    if (!treeTokens.TryGetValue(parentId, out SkillTreeToken parent) ||
+                        !treeTokens.TryGetValue(childId, out SkillTreeToken child))
                         continue;
 
                     Vector2 start = GetWorldPosition(parent.GridPosition).ToVector2() * zoom;
@@ -1047,6 +1146,7 @@ namespace SkillTreeCreationTool
             treeTokens.Add(id, token);
             tokenPositions.Add(gridPosition, token);
             TokenID++;
+            RebuildConstellationBranches();
 
             return token;
         }
@@ -1116,6 +1216,7 @@ namespace SkillTreeCreationTool
             parentToken.ChildTokens.Add(childToken);
             childToken.ParentTokens.Add(parentToken);
             RefreshTokenDepths();
+            RebuildConstellationBranches();
         }
 
         private void RefreshTokenDepths()
@@ -1209,6 +1310,7 @@ namespace SkillTreeCreationTool
         {
             treeTokens = new();
             tokenPositions = new();
+            constellationBranches.Clear();
         }
     }
 }
