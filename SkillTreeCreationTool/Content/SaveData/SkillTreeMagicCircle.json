@@ -1,0 +1,5052 @@
+{
+  "GridSpacing": 16,
+  "IconSize": 60,
+  "DefaultIcon": "back10",
+  "TokenID": 112,
+  "treeTokens": {
+    "0": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "North Sigil channels the root ring of the ritual circle.",
+      "PortalSize": 38,
+      "Depth": 0,
+      "TokenID": 0,
+      "GridPosition": {
+        "X": 0,
+        "Y": -2
+      },
+      "ParentTokenIDs": [],
+      "ChildTokenIDs": [
+        6,
+        7
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Anchor",
+          "Value": "Circle",
+          "Amount": 1.0,
+          "SkillEffectDescription": "North Sigil strengthens the circle through anchor."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "1": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "West Sigil channels the root ring of the ritual circle.",
+      "PortalSize": 38,
+      "Depth": 0,
+      "TokenID": 1,
+      "GridPosition": {
+        "X": -2,
+        "Y": 0
+      },
+      "ParentTokenIDs": [],
+      "ChildTokenIDs": [
+        8,
+        9
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Anchor",
+          "Value": "Circle",
+          "Amount": 1.0,
+          "SkillEffectDescription": "West Sigil strengthens the circle through anchor."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "2": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "South Sigil channels the root ring of the ritual circle.",
+      "PortalSize": 38,
+      "Depth": 0,
+      "TokenID": 2,
+      "GridPosition": {
+        "X": 0,
+        "Y": 2
+      },
+      "ParentTokenIDs": [],
+      "ChildTokenIDs": [
+        10,
+        11
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Anchor",
+          "Value": "Circle",
+          "Amount": 1.0,
+          "SkillEffectDescription": "South Sigil strengthens the circle through anchor."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "3": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "East Sigil channels the root ring of the ritual circle.",
+      "PortalSize": 38,
+      "Depth": 0,
+      "TokenID": 3,
+      "GridPosition": {
+        "X": 2,
+        "Y": 0
+      },
+      "ParentTokenIDs": [],
+      "ChildTokenIDs": [
+        4,
+        5
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Anchor",
+          "Value": "Circle",
+          "Amount": 1.0,
+          "SkillEffectDescription": "East Sigil strengthens the circle through anchor."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "4": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "Description": "Ember Arc channels the inner ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 4,
+      "GridPosition": {
+        "X": 4,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        3
+      ],
+      "ChildTokenIDs": [
+        13,
+        34
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 250
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Attunement",
+          "Value": "Cactus",
+          "Amount": 0.1,
+          "SkillEffectDescription": "Ember Arc strengthens the circle through attunement."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "5": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "Description": "Verdant Arc channels the inner ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 5,
+      "GridPosition": {
+        "X": 2,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        3
+      ],
+      "ChildTokenIDs": [
+        13,
+        36
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 350
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Attunement",
+          "Value": "Flower",
+          "Amount": 0.1,
+          "SkillEffectDescription": "Verdant Arc strengthens the circle through attunement."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "6": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "Description": "Gale Arc channels the inner ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 6,
+      "GridPosition": {
+        "X": 4,
+        "Y": -2
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        14,
+        18
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 450
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Attunement",
+          "Value": "Grass",
+          "Amount": 0.1,
+          "SkillEffectDescription": "Gale Arc strengthens the circle through attunement."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "7": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "Description": "Tide Arc channels the inner ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 7,
+      "GridPosition": {
+        "X": 2,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        0
+      ],
+      "ChildTokenIDs": [
+        14,
+        20
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 550
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Attunement",
+          "Value": "Cactus",
+          "Amount": 0.1,
+          "SkillEffectDescription": "Tide Arc strengthens the circle through attunement."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "8": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "Description": "Dusk Arc channels the inner ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 8,
+      "GridPosition": {
+        "X": -2,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        1
+      ],
+      "ChildTokenIDs": [
+        15,
+        24
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 250
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Attunement",
+          "Value": "Flower",
+          "Amount": 0.1,
+          "SkillEffectDescription": "Dusk Arc strengthens the circle through attunement."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "9": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "Description": "Stone Arc channels the inner ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 9,
+      "GridPosition": {
+        "X": -4,
+        "Y": -2
+      },
+      "ParentTokenIDs": [
+        1
+      ],
+      "ChildTokenIDs": [
+        15,
+        26
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 350
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Attunement",
+          "Value": "Grass",
+          "Amount": 0.1,
+          "SkillEffectDescription": "Stone Arc strengthens the circle through attunement."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "10": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "Description": "Ash Arc channels the inner ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 10,
+      "GridPosition": {
+        "X": -4,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        2
+      ],
+      "ChildTokenIDs": [
+        16,
+        29
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 450
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Attunement",
+          "Value": "Cactus",
+          "Amount": 0.1,
+          "SkillEffectDescription": "Ash Arc strengthens the circle through attunement."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "11": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "Description": "Bloom Arc channels the inner ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 11,
+      "GridPosition": {
+        "X": -2,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        2
+      ],
+      "ChildTokenIDs": [
+        16,
+        31
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 550
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Attunement",
+          "Value": "Flower",
+          "Amount": 0.1,
+          "SkillEffectDescription": "Bloom Arc strengthens the circle through attunement."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "13": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southeast Convergence channels the merge ring of the ritual circle.",
+      "PortalSize": 38,
+      "Depth": 2,
+      "TokenID": 13,
+      "GridPosition": {
+        "X": 6,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        4,
+        5
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 700
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Convergence",
+          "Value": "Sigil",
+          "Amount": 0.2,
+          "SkillEffectDescription": "Southeast Convergence strengthens the circle through convergence."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "14": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northeast Convergence channels the merge ring of the ritual circle.",
+      "PortalSize": 38,
+      "Depth": 2,
+      "TokenID": 14,
+      "GridPosition": {
+        "X": 6,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        6,
+        7
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Convergence",
+          "Value": "Sigil",
+          "Amount": 0.2,
+          "SkillEffectDescription": "Northeast Convergence strengthens the circle through convergence."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "15": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northwest Convergence channels the merge ring of the ritual circle.",
+      "PortalSize": 38,
+      "Depth": 2,
+      "TokenID": 15,
+      "GridPosition": {
+        "X": -6,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        8,
+        9
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Convergence",
+          "Value": "Sigil",
+          "Amount": 0.2,
+          "SkillEffectDescription": "Northwest Convergence strengthens the circle through convergence."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "16": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southwest Convergence channels the merge ring of the ritual circle.",
+      "PortalSize": 38,
+      "Depth": 2,
+      "TokenID": 16,
+      "GridPosition": {
+        "X": -6,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        10,
+        11
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Convergence",
+          "Value": "Sigil",
+          "Amount": 0.2,
+          "SkillEffectDescription": "Southwest Convergence strengthens the circle through convergence."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "18": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Comet Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 18,
+      "GridPosition": {
+        "X": 8,
+        "Y": -3
+      },
+      "ParentTokenIDs": [
+        6
+      ],
+      "ChildTokenIDs": [
+        19
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Comet Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "19": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Solar Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 19,
+      "GridPosition": {
+        "X": 10,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        18
+      ],
+      "ChildTokenIDs": [
+        22
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Solar Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "20": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Moon Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 20,
+      "GridPosition": {
+        "X": 3,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        7
+      ],
+      "ChildTokenIDs": [
+        21
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Moon Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "21": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Aurora Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 21,
+      "GridPosition": {
+        "X": 6,
+        "Y": -10
+      },
+      "ParentTokenIDs": [
+        20
+      ],
+      "ChildTokenIDs": [
+        22
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Aurora Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "22": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northeast Crown channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 22,
+      "GridPosition": {
+        "X": 10,
+        "Y": -10
+      },
+      "ParentTokenIDs": [
+        19,
+        21
+      ],
+      "ChildTokenIDs": [
+        39,
+        42
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Northeast Crown strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "24": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Veil Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 24,
+      "GridPosition": {
+        "X": -3,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        8
+      ],
+      "ChildTokenIDs": [
+        25
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Veil Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "25": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Frost Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 25,
+      "GridPosition": {
+        "X": -6,
+        "Y": -10
+      },
+      "ParentTokenIDs": [
+        24
+      ],
+      "ChildTokenIDs": [
+        28
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Frost Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "26": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Echo Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 26,
+      "GridPosition": {
+        "X": -8,
+        "Y": -3
+      },
+      "ParentTokenIDs": [
+        9
+      ],
+      "ChildTokenIDs": [
+        27
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Echo Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "27": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Obsidian Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 27,
+      "GridPosition": {
+        "X": -10,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        26
+      ],
+      "ChildTokenIDs": [
+        28
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Obsidian Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "28": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northwest Crown channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 28,
+      "GridPosition": {
+        "X": -10,
+        "Y": -10
+      },
+      "ParentTokenIDs": [
+        25,
+        27
+      ],
+      "ChildTokenIDs": [
+        39,
+        40
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Northwest Crown strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "29": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Cinder Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 29,
+      "GridPosition": {
+        "X": -8,
+        "Y": 3
+      },
+      "ParentTokenIDs": [
+        10
+      ],
+      "ChildTokenIDs": [
+        30
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Cinder Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "30": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Root Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 30,
+      "GridPosition": {
+        "X": -10,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        29
+      ],
+      "ChildTokenIDs": [
+        33
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Root Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "31": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Petal Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 31,
+      "GridPosition": {
+        "X": -3,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        11
+      ],
+      "ChildTokenIDs": [
+        32
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Petal Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "32": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Dawn Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 32,
+      "GridPosition": {
+        "X": -6,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        31
+      ],
+      "ChildTokenIDs": [
+        33
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Dawn Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "33": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southwest Crown channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 33,
+      "GridPosition": {
+        "X": -10,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        30,
+        32
+      ],
+      "ChildTokenIDs": [
+        40,
+        41
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Southwest Crown strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "34": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Rune Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 34,
+      "GridPosition": {
+        "X": 8,
+        "Y": 3
+      },
+      "ParentTokenIDs": [
+        4
+      ],
+      "ChildTokenIDs": [
+        35
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Rune Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "35": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Flare Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 35,
+      "GridPosition": {
+        "X": 10,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        34
+      ],
+      "ChildTokenIDs": [
+        38
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Flare Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "36": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Grove Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 36,
+      "GridPosition": {
+        "X": 3,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        5
+      ],
+      "ChildTokenIDs": [
+        37
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Grove Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "37": {
+      "IconLayers": [
+        {
+          "Icon": "back10",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Halo Thread channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 37,
+      "GridPosition": {
+        "X": 6,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        36
+      ],
+      "ChildTokenIDs": [
+        38
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Halo Thread strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "38": {
+      "IconLayers": [
+        {
+          "Icon": "back8",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southeast Crown channels the outer ring of the ritual circle.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 38,
+      "GridPosition": {
+        "X": 10,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        35,
+        37
+      ],
+      "ChildTokenIDs": [
+        41,
+        42
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Invocation",
+          "Value": "Astral",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Southeast Crown strengthens the circle through invocation."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "39": {
+      "IconLayers": [
+        {
+          "Icon": "back9",
+          "Width": 72,
+          "Height": 72,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northern Grand Seal completes the outer ring of the magic circle.",
+      "PortalSize": 42,
+      "Depth": 5,
+      "TokenID": 39,
+      "GridPosition": {
+        "X": 0,
+        "Y": -13
+      },
+      "ParentTokenIDs": [
+        22,
+        28
+      ],
+      "ChildTokenIDs": [
+        43,
+        44,
+        45,
+        55
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1500
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ascension",
+          "Value": "North",
+          "Amount": 0.5,
+          "SkillEffectDescription": "Northern Grand Seal amplifies north energy through the completed circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "40": {
+      "IconLayers": [
+        {
+          "Icon": "back9",
+          "Width": 72,
+          "Height": 72,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Western Grand Seal completes the outer ring of the magic circle.",
+      "PortalSize": 42,
+      "Depth": 5,
+      "TokenID": 40,
+      "GridPosition": {
+        "X": -13,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        28,
+        33
+      ],
+      "ChildTokenIDs": [
+        43,
+        52,
+        53,
+        54
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ascension",
+          "Value": "West",
+          "Amount": 0.5,
+          "SkillEffectDescription": "Western Grand Seal amplifies west energy through the completed circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "41": {
+      "IconLayers": [
+        {
+          "Icon": "back9",
+          "Width": 72,
+          "Height": 72,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southern Grand Seal completes the outer ring of the magic circle.",
+      "PortalSize": 42,
+      "Depth": 5,
+      "TokenID": 41,
+      "GridPosition": {
+        "X": 0,
+        "Y": 13
+      },
+      "ParentTokenIDs": [
+        33,
+        38
+      ],
+      "ChildTokenIDs": [
+        43,
+        49,
+        50,
+        51
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1500
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ascension",
+          "Value": "South",
+          "Amount": 0.5,
+          "SkillEffectDescription": "Southern Grand Seal amplifies south energy through the completed circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "42": {
+      "IconLayers": [
+        {
+          "Icon": "back9",
+          "Width": 72,
+          "Height": 72,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Eastern Grand Seal completes the outer ring of the magic circle.",
+      "PortalSize": 42,
+      "Depth": 5,
+      "TokenID": 42,
+      "GridPosition": {
+        "X": 13,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        38,
+        22
+      ],
+      "ChildTokenIDs": [
+        43,
+        46,
+        47,
+        48
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 2000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ascension",
+          "Value": "East",
+          "Amount": 0.5,
+          "SkillEffectDescription": "Eastern Grand Seal amplifies east energy through the completed circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "43": {
+      "IconLayers": [
+        {
+          "Icon": "back12",
+          "Width": 84,
+          "Height": 84,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "The Astral Heart completes the outer ring of the magic circle.",
+      "PortalSize": 50,
+      "Depth": 6,
+      "TokenID": 43,
+      "GridPosition": {
+        "X": 0,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        39,
+        40,
+        41,
+        42
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 3000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Transcendence",
+          "Value": "Circle",
+          "Amount": 1.0,
+          "SkillEffectDescription": "The Astral Heart amplifies circle energy through the completed circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "44": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Zenith Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 44,
+      "GridPosition": {
+        "X": 0,
+        "Y": -16
+      },
+      "ParentTokenIDs": [
+        39
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Astral",
+          "Amount": 0.4,
+          "SkillEffectDescription": "Zenith Rune binds astral energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "45": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northeast Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 45,
+      "GridPosition": {
+        "X": 8,
+        "Y": -14
+      },
+      "ParentTokenIDs": [
+        39
+      ],
+      "ChildTokenIDs": [
+        56
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Gale",
+          "Amount": 0.4,
+          "SkillEffectDescription": "Northeast Rune binds gale energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "46": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "East-Northeast Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 46,
+      "GridPosition": {
+        "X": 14,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        42
+      ],
+      "ChildTokenIDs": [
+        56
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Ember",
+          "Amount": 0.4,
+          "SkillEffectDescription": "East-Northeast Rune binds ember energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "47": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Eastern Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 47,
+      "GridPosition": {
+        "X": 16,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        42
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1500
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Radiance",
+          "Amount": 0.4,
+          "SkillEffectDescription": "Eastern Rune binds radiance energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "48": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "East-Southeast Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 48,
+      "GridPosition": {
+        "X": 14,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        42
+      ],
+      "ChildTokenIDs": [
+        57
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Bloom",
+          "Amount": 0.4,
+          "SkillEffectDescription": "East-Southeast Rune binds bloom energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "49": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southeast Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 49,
+      "GridPosition": {
+        "X": 8,
+        "Y": 14
+      },
+      "ParentTokenIDs": [
+        41
+      ],
+      "ChildTokenIDs": [
+        57
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Tide",
+          "Amount": 0.4,
+          "SkillEffectDescription": "Southeast Rune binds tide energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "50": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Nadir Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 50,
+      "GridPosition": {
+        "X": 0,
+        "Y": 16
+      },
+      "ParentTokenIDs": [
+        41
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Verdance",
+          "Amount": 0.4,
+          "SkillEffectDescription": "Nadir Rune binds verdance energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "51": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southwest Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 51,
+      "GridPosition": {
+        "X": -8,
+        "Y": 14
+      },
+      "ParentTokenIDs": [
+        41
+      ],
+      "ChildTokenIDs": [
+        58
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Stone",
+          "Amount": 0.4,
+          "SkillEffectDescription": "Southwest Rune binds stone energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "52": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "West-Southwest Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 52,
+      "GridPosition": {
+        "X": -14,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        40
+      ],
+      "ChildTokenIDs": [
+        58
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Root",
+          "Amount": 0.4,
+          "SkillEffectDescription": "West-Southwest Rune binds root energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "53": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Western Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 53,
+      "GridPosition": {
+        "X": -16,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        40
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 1500
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Echo",
+          "Amount": 0.4,
+          "SkillEffectDescription": "Western Rune binds echo energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "54": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "West-Northwest Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 54,
+      "GridPosition": {
+        "X": -14,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        40
+      ],
+      "ChildTokenIDs": [
+        59
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 1400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Dusk",
+          "Amount": 0.4,
+          "SkillEffectDescription": "West-Northwest Rune binds dusk energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "55": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 64,
+          "Height": 64,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northwest Rune traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 34,
+      "Depth": 5,
+      "TokenID": 55,
+      "GridPosition": {
+        "X": -8,
+        "Y": -14
+      },
+      "ParentTokenIDs": [
+        39
+      ],
+      "ChildTokenIDs": [
+        59
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 1300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Veil",
+          "Amount": 0.4,
+          "SkillEffectDescription": "Northwest Rune binds veil energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "56": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 76,
+          "Height": 76,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northeast Gate traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 42,
+      "Depth": 6,
+      "TokenID": 56,
+      "GridPosition": {
+        "X": 13,
+        "Y": -13
+      },
+      "ParentTokenIDs": [
+        45,
+        46
+      ],
+      "ChildTokenIDs": [
+        60,
+        61
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 2100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Gale",
+          "Amount": 0.7,
+          "SkillEffectDescription": "Northeast Gate binds gale energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "57": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 76,
+          "Height": 76,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southeast Gate traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 42,
+      "Depth": 6,
+      "TokenID": 57,
+      "GridPosition": {
+        "X": 13,
+        "Y": 13
+      },
+      "ParentTokenIDs": [
+        48,
+        49
+      ],
+      "ChildTokenIDs": [
+        61,
+        62
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 2100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Bloom",
+          "Amount": 0.7,
+          "SkillEffectDescription": "Southeast Gate binds bloom energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "58": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 76,
+          "Height": 76,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southwest Gate traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 42,
+      "Depth": 6,
+      "TokenID": 58,
+      "GridPosition": {
+        "X": -13,
+        "Y": 13
+      },
+      "ParentTokenIDs": [
+        51,
+        52
+      ],
+      "ChildTokenIDs": [
+        62,
+        63
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 2100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Root",
+          "Amount": 0.7,
+          "SkillEffectDescription": "Southwest Gate binds root energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "59": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 76,
+          "Height": 76,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northwest Gate traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 42,
+      "Depth": 6,
+      "TokenID": 59,
+      "GridPosition": {
+        "X": -13,
+        "Y": -13
+      },
+      "ParentTokenIDs": [
+        54,
+        55
+      ],
+      "ChildTokenIDs": [
+        60,
+        63
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 2100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Veil",
+          "Amount": 0.7,
+          "SkillEffectDescription": "Northwest Gate binds veil energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "60": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 88,
+          "Height": 88,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "Crown of Zenith traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 48,
+      "Depth": 7,
+      "TokenID": 60,
+      "GridPosition": {
+        "X": 0,
+        "Y": -18
+      },
+      "ParentTokenIDs": [
+        56,
+        59
+      ],
+      "ChildTokenIDs": [
+        64
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 3200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Sky",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Crown of Zenith binds sky energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "61": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 88,
+          "Height": 88,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "Crown of Dawn traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 48,
+      "Depth": 7,
+      "TokenID": 61,
+      "GridPosition": {
+        "X": 18,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        56,
+        57
+      ],
+      "ChildTokenIDs": [
+        73
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 3200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Radiance",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Crown of Dawn binds radiance energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "62": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 88,
+          "Height": 88,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "Crown of Nadir traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 48,
+      "Depth": 7,
+      "TokenID": 62,
+      "GridPosition": {
+        "X": 0,
+        "Y": 18
+      },
+      "ParentTokenIDs": [
+        57,
+        58
+      ],
+      "ChildTokenIDs": [
+        82
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 3200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Verdance",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Crown of Nadir binds verdance energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "63": {
+      "IconLayers": [
+        {
+          "Icon": "back7",
+          "Width": 88,
+          "Height": 88,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "Description": "Crown of Dusk traces the outer celestial orbit of the grand magic circle.",
+      "PortalSize": 48,
+      "Depth": 7,
+      "TokenID": 63,
+      "GridPosition": {
+        "X": -18,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        58,
+        59
+      ],
+      "ChildTokenIDs": [
+        91
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 3200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Orbit",
+          "Value": "Echo",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Crown of Dusk binds echo energy into the expanded circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "64": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northern Spiral I extends the ritual in a widening polar spiral.",
+      "PortalSize": 34,
+      "Depth": 8,
+      "TokenID": 64,
+      "GridPosition": {
+        "X": 4,
+        "Y": -20
+      },
+      "ParentTokenIDs": [
+        60
+      ],
+      "ChildTokenIDs": [
+        65,
+        111
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 3600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 0.6,
+          "SkillEffectDescription": "Northern Spiral I carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "65": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northern Spiral II extends the ritual in a widening polar spiral.",
+      "PortalSize": 35,
+      "Depth": 9,
+      "TokenID": 65,
+      "GridPosition": {
+        "X": 9,
+        "Y": -21
+      },
+      "ParentTokenIDs": [
+        64
+      ],
+      "ChildTokenIDs": [
+        66
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 4500
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 0.65,
+          "SkillEffectDescription": "Northern Spiral II carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "66": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northern Spiral III extends the ritual in a widening polar spiral.",
+      "PortalSize": 36,
+      "Depth": 10,
+      "TokenID": 66,
+      "GridPosition": {
+        "X": 14,
+        "Y": -21
+      },
+      "ParentTokenIDs": [
+        65
+      ],
+      "ChildTokenIDs": [
+        67
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 5400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 0.7,
+          "SkillEffectDescription": "Northern Spiral III carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "67": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northern Spiral IV extends the ritual in a widening polar spiral.",
+      "PortalSize": 37,
+      "Depth": 11,
+      "TokenID": 67,
+      "GridPosition": {
+        "X": 19,
+        "Y": -19
+      },
+      "ParentTokenIDs": [
+        66
+      ],
+      "ChildTokenIDs": [
+        68
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 6300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 0.75,
+          "SkillEffectDescription": "Northern Spiral IV carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "68": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northern Spiral V extends the ritual in a widening polar spiral.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 68,
+      "GridPosition": {
+        "X": 25,
+        "Y": -16
+      },
+      "ParentTokenIDs": [
+        67
+      ],
+      "ChildTokenIDs": [
+        69
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 7200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Northern Spiral V carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "69": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northern Spiral VI extends the ritual in a widening polar spiral.",
+      "PortalSize": 39,
+      "Depth": 13,
+      "TokenID": 69,
+      "GridPosition": {
+        "X": 29,
+        "Y": -12
+      },
+      "ParentTokenIDs": [
+        68
+      ],
+      "ChildTokenIDs": [
+        70
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 8100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 0.85,
+          "SkillEffectDescription": "Northern Spiral VI carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "70": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northern Spiral VII extends the ritual in a widening polar spiral.",
+      "PortalSize": 40,
+      "Depth": 14,
+      "TokenID": 70,
+      "GridPosition": {
+        "X": 33,
+        "Y": -7
+      },
+      "ParentTokenIDs": [
+        69
+      ],
+      "ChildTokenIDs": [
+        71
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 9000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 0.9,
+          "SkillEffectDescription": "Northern Spiral VII carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "71": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northern Spiral VIII extends the ritual in a widening polar spiral.",
+      "PortalSize": 41,
+      "Depth": 15,
+      "TokenID": 71,
+      "GridPosition": {
+        "X": 36,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        70
+      ],
+      "ChildTokenIDs": [
+        72
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 9900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 0.95,
+          "SkillEffectDescription": "Northern Spiral VIII carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "72": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Northern Spiral IX extends the ritual in a widening polar spiral.",
+      "PortalSize": 42,
+      "Depth": 16,
+      "TokenID": 72,
+      "GridPosition": {
+        "X": 37,
+        "Y": 7
+      },
+      "ParentTokenIDs": [
+        71
+      ],
+      "ChildTokenIDs": [
+        100
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 10800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Northern",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Northern Spiral IX carries northern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "73": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Eastern Spiral I extends the ritual in a widening polar spiral.",
+      "PortalSize": 34,
+      "Depth": 8,
+      "TokenID": 73,
+      "GridPosition": {
+        "X": 20,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        61
+      ],
+      "ChildTokenIDs": [
+        74,
+        102
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 3600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 0.6,
+          "SkillEffectDescription": "Eastern Spiral I carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "74": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Eastern Spiral II extends the ritual in a widening polar spiral.",
+      "PortalSize": 35,
+      "Depth": 9,
+      "TokenID": 74,
+      "GridPosition": {
+        "X": 21,
+        "Y": 9
+      },
+      "ParentTokenIDs": [
+        73
+      ],
+      "ChildTokenIDs": [
+        75
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 4500
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 0.65,
+          "SkillEffectDescription": "Eastern Spiral II carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "75": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Eastern Spiral III extends the ritual in a widening polar spiral.",
+      "PortalSize": 36,
+      "Depth": 10,
+      "TokenID": 75,
+      "GridPosition": {
+        "X": 21,
+        "Y": 14
+      },
+      "ParentTokenIDs": [
+        74
+      ],
+      "ChildTokenIDs": [
+        76
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 5400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 0.7,
+          "SkillEffectDescription": "Eastern Spiral III carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "76": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Eastern Spiral IV extends the ritual in a widening polar spiral.",
+      "PortalSize": 37,
+      "Depth": 11,
+      "TokenID": 76,
+      "GridPosition": {
+        "X": 19,
+        "Y": 19
+      },
+      "ParentTokenIDs": [
+        75
+      ],
+      "ChildTokenIDs": [
+        77
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 6300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 0.75,
+          "SkillEffectDescription": "Eastern Spiral IV carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "77": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Eastern Spiral V extends the ritual in a widening polar spiral.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 77,
+      "GridPosition": {
+        "X": 16,
+        "Y": 25
+      },
+      "ParentTokenIDs": [
+        76
+      ],
+      "ChildTokenIDs": [
+        78
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 7200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Eastern Spiral V carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "78": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Eastern Spiral VI extends the ritual in a widening polar spiral.",
+      "PortalSize": 39,
+      "Depth": 13,
+      "TokenID": 78,
+      "GridPosition": {
+        "X": 12,
+        "Y": 29
+      },
+      "ParentTokenIDs": [
+        77
+      ],
+      "ChildTokenIDs": [
+        79
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 8100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 0.85,
+          "SkillEffectDescription": "Eastern Spiral VI carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "79": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Eastern Spiral VII extends the ritual in a widening polar spiral.",
+      "PortalSize": 40,
+      "Depth": 14,
+      "TokenID": 79,
+      "GridPosition": {
+        "X": 7,
+        "Y": 33
+      },
+      "ParentTokenIDs": [
+        78
+      ],
+      "ChildTokenIDs": [
+        80
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 9000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 0.9,
+          "SkillEffectDescription": "Eastern Spiral VII carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "80": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Eastern Spiral VIII extends the ritual in a widening polar spiral.",
+      "PortalSize": 41,
+      "Depth": 15,
+      "TokenID": 80,
+      "GridPosition": {
+        "X": 0,
+        "Y": 36
+      },
+      "ParentTokenIDs": [
+        79
+      ],
+      "ChildTokenIDs": [
+        81
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 9900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 0.95,
+          "SkillEffectDescription": "Eastern Spiral VIII carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "81": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Eastern Spiral IX extends the ritual in a widening polar spiral.",
+      "PortalSize": 42,
+      "Depth": 16,
+      "TokenID": 81,
+      "GridPosition": {
+        "X": -7,
+        "Y": 37
+      },
+      "ParentTokenIDs": [
+        80
+      ],
+      "ChildTokenIDs": [
+        103
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 10800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Eastern",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Eastern Spiral IX carries eastern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "82": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southern Spiral I extends the ritual in a widening polar spiral.",
+      "PortalSize": 34,
+      "Depth": 8,
+      "TokenID": 82,
+      "GridPosition": {
+        "X": -4,
+        "Y": 20
+      },
+      "ParentTokenIDs": [
+        62
+      ],
+      "ChildTokenIDs": [
+        83,
+        105
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 3600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 0.6,
+          "SkillEffectDescription": "Southern Spiral I carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "83": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southern Spiral II extends the ritual in a widening polar spiral.",
+      "PortalSize": 35,
+      "Depth": 9,
+      "TokenID": 83,
+      "GridPosition": {
+        "X": -9,
+        "Y": 21
+      },
+      "ParentTokenIDs": [
+        82
+      ],
+      "ChildTokenIDs": [
+        84
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 4500
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 0.65,
+          "SkillEffectDescription": "Southern Spiral II carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "84": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southern Spiral III extends the ritual in a widening polar spiral.",
+      "PortalSize": 36,
+      "Depth": 10,
+      "TokenID": 84,
+      "GridPosition": {
+        "X": -14,
+        "Y": 21
+      },
+      "ParentTokenIDs": [
+        83
+      ],
+      "ChildTokenIDs": [
+        85
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 5400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 0.7,
+          "SkillEffectDescription": "Southern Spiral III carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "85": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southern Spiral IV extends the ritual in a widening polar spiral.",
+      "PortalSize": 37,
+      "Depth": 11,
+      "TokenID": 85,
+      "GridPosition": {
+        "X": -19,
+        "Y": 19
+      },
+      "ParentTokenIDs": [
+        84
+      ],
+      "ChildTokenIDs": [
+        86
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 6300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 0.75,
+          "SkillEffectDescription": "Southern Spiral IV carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "86": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southern Spiral V extends the ritual in a widening polar spiral.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 86,
+      "GridPosition": {
+        "X": -25,
+        "Y": 16
+      },
+      "ParentTokenIDs": [
+        85
+      ],
+      "ChildTokenIDs": [
+        87
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 7200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Southern Spiral V carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "87": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southern Spiral VI extends the ritual in a widening polar spiral.",
+      "PortalSize": 39,
+      "Depth": 13,
+      "TokenID": 87,
+      "GridPosition": {
+        "X": -29,
+        "Y": 12
+      },
+      "ParentTokenIDs": [
+        86
+      ],
+      "ChildTokenIDs": [
+        88
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 8100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 0.85,
+          "SkillEffectDescription": "Southern Spiral VI carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "88": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southern Spiral VII extends the ritual in a widening polar spiral.",
+      "PortalSize": 40,
+      "Depth": 14,
+      "TokenID": 88,
+      "GridPosition": {
+        "X": -33,
+        "Y": 7
+      },
+      "ParentTokenIDs": [
+        87
+      ],
+      "ChildTokenIDs": [
+        89
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 9000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 0.9,
+          "SkillEffectDescription": "Southern Spiral VII carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "89": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southern Spiral VIII extends the ritual in a widening polar spiral.",
+      "PortalSize": 41,
+      "Depth": 15,
+      "TokenID": 89,
+      "GridPosition": {
+        "X": -36,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        88
+      ],
+      "ChildTokenIDs": [
+        90
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 9900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 0.95,
+          "SkillEffectDescription": "Southern Spiral VIII carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "90": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Southern Spiral IX extends the ritual in a widening polar spiral.",
+      "PortalSize": 42,
+      "Depth": 16,
+      "TokenID": 90,
+      "GridPosition": {
+        "X": -37,
+        "Y": -7
+      },
+      "ParentTokenIDs": [
+        89
+      ],
+      "ChildTokenIDs": [
+        106
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 10800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Southern",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Southern Spiral IX carries southern energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "91": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Western Spiral I extends the ritual in a widening polar spiral.",
+      "PortalSize": 34,
+      "Depth": 8,
+      "TokenID": 91,
+      "GridPosition": {
+        "X": -20,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        63
+      ],
+      "ChildTokenIDs": [
+        92,
+        108
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 3600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 0.6,
+          "SkillEffectDescription": "Western Spiral I carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "92": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Western Spiral II extends the ritual in a widening polar spiral.",
+      "PortalSize": 35,
+      "Depth": 9,
+      "TokenID": 92,
+      "GridPosition": {
+        "X": -21,
+        "Y": -9
+      },
+      "ParentTokenIDs": [
+        91
+      ],
+      "ChildTokenIDs": [
+        93
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 4500
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 0.65,
+          "SkillEffectDescription": "Western Spiral II carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "93": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Western Spiral III extends the ritual in a widening polar spiral.",
+      "PortalSize": 36,
+      "Depth": 10,
+      "TokenID": 93,
+      "GridPosition": {
+        "X": -21,
+        "Y": -14
+      },
+      "ParentTokenIDs": [
+        92
+      ],
+      "ChildTokenIDs": [
+        94
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 5400
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 0.7,
+          "SkillEffectDescription": "Western Spiral III carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "94": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Western Spiral IV extends the ritual in a widening polar spiral.",
+      "PortalSize": 37,
+      "Depth": 11,
+      "TokenID": 94,
+      "GridPosition": {
+        "X": -19,
+        "Y": -19
+      },
+      "ParentTokenIDs": [
+        93
+      ],
+      "ChildTokenIDs": [
+        95
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 6300
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 0.75,
+          "SkillEffectDescription": "Western Spiral IV carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "95": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Western Spiral V extends the ritual in a widening polar spiral.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 95,
+      "GridPosition": {
+        "X": -16,
+        "Y": -25
+      },
+      "ParentTokenIDs": [
+        94
+      ],
+      "ChildTokenIDs": [
+        96
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 7200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Western Spiral V carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "96": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Western Spiral VI extends the ritual in a widening polar spiral.",
+      "PortalSize": 39,
+      "Depth": 13,
+      "TokenID": 96,
+      "GridPosition": {
+        "X": -12,
+        "Y": -29
+      },
+      "ParentTokenIDs": [
+        95
+      ],
+      "ChildTokenIDs": [
+        97
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 8100
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 0.85,
+          "SkillEffectDescription": "Western Spiral VI carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "97": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Western Spiral VII extends the ritual in a widening polar spiral.",
+      "PortalSize": 40,
+      "Depth": 14,
+      "TokenID": 97,
+      "GridPosition": {
+        "X": -7,
+        "Y": -33
+      },
+      "ParentTokenIDs": [
+        96
+      ],
+      "ChildTokenIDs": [
+        98
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 9000
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 0.9,
+          "SkillEffectDescription": "Western Spiral VII carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "98": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Western Spiral VIII extends the ritual in a widening polar spiral.",
+      "PortalSize": 41,
+      "Depth": 15,
+      "TokenID": 98,
+      "GridPosition": {
+        "X": 0,
+        "Y": -36
+      },
+      "ParentTokenIDs": [
+        97
+      ],
+      "ChildTokenIDs": [
+        99
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 9900
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 0.95,
+          "SkillEffectDescription": "Western Spiral VIII carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "99": {
+      "IconLayers": [
+        {
+          "Icon": "back15",
+          "Width": 68,
+          "Height": 68,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "Description": "Western Spiral IX extends the ritual in a widening polar spiral.",
+      "PortalSize": 42,
+      "Depth": 16,
+      "TokenID": 99,
+      "GridPosition": {
+        "X": 7,
+        "Y": -37
+      },
+      "ParentTokenIDs": [
+        98
+      ],
+      "ChildTokenIDs": [
+        109
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 10800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Spiral",
+          "Value": "Western",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Western Spiral IX carries western energy through the outer spiral."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "100": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northeast Bridge I binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 100,
+      "GridPosition": {
+        "X": 33,
+        "Y": 7
+      },
+      "ParentTokenIDs": [
+        72
+      ],
+      "ChildTokenIDs": [
+        101
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 6200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Northeast Bridge I completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "101": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northeast Bridge II binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 101,
+      "GridPosition": {
+        "X": 28,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        100
+      ],
+      "ChildTokenIDs": [
+        102
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 6800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Northeast Bridge II completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "102": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northeast Conjunction binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 102,
+      "GridPosition": {
+        "X": 24,
+        "Y": 5
+      },
+      "ParentTokenIDs": [
+        101,
+        73
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 5600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Northeast Conjunction completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "103": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southeast Bridge I binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 103,
+      "GridPosition": {
+        "X": -7,
+        "Y": 33
+      },
+      "ParentTokenIDs": [
+        81
+      ],
+      "ChildTokenIDs": [
+        104
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 6200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Southeast Bridge I completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "104": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southeast Bridge II binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 104,
+      "GridPosition": {
+        "X": -6,
+        "Y": 28
+      },
+      "ParentTokenIDs": [
+        103
+      ],
+      "ChildTokenIDs": [
+        105
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 6800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Southeast Bridge II completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "105": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southeast Conjunction binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 105,
+      "GridPosition": {
+        "X": -5,
+        "Y": 24
+      },
+      "ParentTokenIDs": [
+        104,
+        82
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 5600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Southeast Conjunction completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "106": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southwest Bridge I binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 106,
+      "GridPosition": {
+        "X": -33,
+        "Y": -7
+      },
+      "ParentTokenIDs": [
+        90
+      ],
+      "ChildTokenIDs": [
+        107
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 6200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Southwest Bridge I completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "107": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southwest Bridge II binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 107,
+      "GridPosition": {
+        "X": -28,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        106
+      ],
+      "ChildTokenIDs": [
+        108
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 6800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Southwest Bridge II completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "108": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Southwest Conjunction binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 108,
+      "GridPosition": {
+        "X": -24,
+        "Y": -5
+      },
+      "ParentTokenIDs": [
+        107,
+        91
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 5600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Southwest Conjunction completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "109": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northwest Bridge I binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 109,
+      "GridPosition": {
+        "X": 7,
+        "Y": -33
+      },
+      "ParentTokenIDs": [
+        99
+      ],
+      "ChildTokenIDs": [
+        110
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 6200
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Northwest Bridge I completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "110": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northwest Bridge II binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 110,
+      "GridPosition": {
+        "X": 6,
+        "Y": -28
+      },
+      "ParentTokenIDs": [
+        109
+      ],
+      "ChildTokenIDs": [
+        111
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 6800
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Northwest Bridge II completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "111": {
+      "IconLayers": [
+        {
+          "Icon": "back16",
+          "Width": 70,
+          "Height": 70,
+          "Tint": {
+            "B": 255,
+            "G": 255,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "Description": "Northwest Conjunction binds two spiral arms into the outer ritual circuit.",
+      "PortalSize": 38,
+      "Depth": 12,
+      "TokenID": 111,
+      "GridPosition": {
+        "X": 5,
+        "Y": -24
+      },
+      "ParentTokenIDs": [
+        110,
+        64
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 5600
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Bridge",
+          "Value": "Orbit",
+          "Amount": 0.8,
+          "SkillEffectDescription": "Northwest Conjunction completes an inter-branch bridge in the expanded magic circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    }
+  },
+  "SkillTreeScene": "SkillTreeScene"
+}

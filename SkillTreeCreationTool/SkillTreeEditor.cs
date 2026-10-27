@@ -58,6 +58,9 @@ namespace SkillTreeCreationTool
         private int activeTintChannel = -1;
         private string tintText = string.Empty;
         private bool replaceTintText;
+        private int activeConstellationTintChannel = -1;
+        private string constellationTintText = string.Empty;
+        private bool replaceConstellationTintText;
         private bool editingTokenDescription;
         private bool constellationStarDropdownOpen;
 

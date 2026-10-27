@@ -65,6 +65,9 @@ namespace SkillTreeCreationTool
                 case PanelRowKind.ConstellationStar:
                     headerDropdown.Draw(sb, font, row.Bounds, row.Label, constellationStarDropdownOpen, expandable: true);
                     return;
+                case PanelRowKind.ConstellationTint:
+                    DrawConstellationTint(sb, font, row);
+                    return;
                 case PanelRowKind.Costs:
                 case PanelRowKind.Effects:
                 case PanelRowKind.Layers:

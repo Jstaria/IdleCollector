@@ -28,6 +28,7 @@ namespace SkillTreeCreationTool
         private void HandleEffectEditorClick(PanelLayout layout, Point mouse)
         {
             editingTokenDescription = false;
+            activeConstellationTintChannel = -1;
             if (TrySelectConstellationStarDropdown(layout, mouse))
                 return;
             if (TrySelectResourceDropdown(layout, mouse))
@@ -58,6 +59,9 @@ namespace SkillTreeCreationTool
                         break;
                     case PanelRowKind.ConstellationStar:
                         constellationStarDropdownOpen = !constellationStarDropdownOpen;
+                        break;
+                    case PanelRowKind.ConstellationTint:
+                        HandleConstellationTintClick(row, mouse);
                         break;
                     case PanelRowKind.Costs:
                     case PanelRowKind.Effects:
@@ -207,6 +211,8 @@ namespace SkillTreeCreationTool
             bool backspace = Input.IsButtonDownOnce(Keys.Back);
             if (editingTokenDescription)
                 newToken.Description = SkillTreeEditorTextInput.Edit(newToken.Description ?? string.Empty, input, backspace, 2000);
+            else if (activeConstellationTintChannel >= 0)
+                UpdateConstellationTint(input, backspace);
             else if (activeTintLayer >= 0 && activeTintLayer < newToken.IconLayers.Count && activeTintChannel >= 0)
                 UpdateTint(input, backspace);
             else if (activeIconSizeField != IconSizeField.None)

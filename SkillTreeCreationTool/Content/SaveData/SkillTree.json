@@ -1,13 +1,13 @@
 {
-  "GridSpacing": 16,
+  "GridSpacing": 32,
   "IconSize": 60,
   "DefaultIcon": "back10",
-  "TokenID": 44,
+  "TokenID": 97,
   "treeTokens": {
     "0": {
       "IconLayers": [
         {
-          "Icon": "back11",
+          "Icon": "back30",
           "Width": 60,
           "Height": 60,
           "Tint": {
@@ -19,26 +19,31 @@
         }
       ],
       "ConstellationStar": "star1",
-      "Description": "",
-      "PortalSize": 32,
+      "ConstellationColor": {
+        "B": 255,
+        "G": 255,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Silent Center: an isolated point outside all four branches.",
+      "PortalSize": 40,
       "Depth": 0,
       "TokenID": 0,
       "GridPosition": {
-        "X": 1,
-        "Y": -1
+        "X": 0,
+        "Y": 0
       },
       "ParentTokenIDs": [],
-      "ChildTokenIDs": [
-        6,
-        7
-      ],
-      "ResourceCosts": [
+      "ChildTokenIDs": [],
+      "ResourceCosts": [],
+      "Effects": [
         {
-          "Resource": "Grass",
-          "Amount": 100
+          "Key": "Stillness",
+          "Value": "Center",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Remains separate from every branch."
         }
       ],
-      "Effects": [],
       "IsCollected": true,
       "IsCollectable": true
     },
@@ -50,1182 +55,4964 @@
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
       "ConstellationStar": "star1",
-      "Description": "",
-      "PortalSize": 32,
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern root: the origin of its circle branch.",
+      "PortalSize": 36,
       "Depth": 0,
       "TokenID": 1,
       "GridPosition": {
-        "X": -1,
-        "Y": -1
+        "X": 0,
+        "Y": -2
       },
       "ParentTokenIDs": [],
       "ChildTokenIDs": [
-        8,
-        9
+        28,
+        29
       ],
       "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Anchors the northern circle branch."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "2": {
       "IconLayers": [
         {
-          "Icon": "back11",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star1",
-      "Description": "",
-      "PortalSize": 32,
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern root: the origin of its circle branch.",
+      "PortalSize": 36,
       "Depth": 0,
       "TokenID": 2,
       "GridPosition": {
-        "X": -1,
-        "Y": 1
+        "X": 2,
+        "Y": 0
       },
       "ParentTokenIDs": [],
       "ChildTokenIDs": [
-        10,
-        11
+        5,
+        6
       ],
       "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Anchors the eastern circle branch."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "3": {
       "IconLayers": [
         {
-          "Icon": "back11",
+          "Icon": "back13",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
-            "R": 255,
+            "B": 130,
+            "G": 230,
+            "R": 100,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star1",
-      "Description": "",
-      "PortalSize": 32,
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern root: the origin of its circle branch.",
+      "PortalSize": 36,
       "Depth": 0,
       "TokenID": 3,
       "GridPosition": {
-        "X": 1,
-        "Y": 1
+        "X": 0,
+        "Y": 2
       },
       "ParentTokenIDs": [],
       "ChildTokenIDs": [
-        4,
-        5
+        51,
+        52
       ],
       "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Anchors the southern circle branch."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "4": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back14",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 120,
+            "R": 210,
             "A": 255
           }
         }
       ],
       "ConstellationStar": "star",
-      "Description": "",
-      "PortalSize": 32,
-      "Depth": 1,
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western root: the origin of its circle branch.",
+      "PortalSize": 36,
+      "Depth": 0,
       "TokenID": 4,
       "GridPosition": {
-        "X": 3,
-        "Y": 1
+        "X": -2,
+        "Y": 0
       },
-      "ParentTokenIDs": [
-        3
-      ],
+      "ParentTokenIDs": [],
       "ChildTokenIDs": [
-        13,
-        34
+        74,
+        75,
+        77
       ],
       "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 1.0,
+          "SkillEffectDescription": "Anchors the western circle branch."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "5": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 5: channels sunfire and radiant force.",
       "PortalSize": 32,
       "Depth": 1,
       "TokenID": 5,
       "GridPosition": {
-        "X": 1,
-        "Y": 3
+        "X": 2,
+        "Y": -2
       },
       "ParentTokenIDs": [
-        3
+        2
       ],
       "ChildTokenIDs": [
-        13,
-        36
+        7,
+        8,
+        10
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 65
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.18,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "6": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 6: channels sunfire and radiant force.",
       "PortalSize": 32,
       "Depth": 1,
       "TokenID": 6,
       "GridPosition": {
-        "X": 3,
-        "Y": -1
+        "X": 4,
+        "Y": 0
       },
       "ParentTokenIDs": [
-        0
+        2
       ],
       "ChildTokenIDs": [
-        14,
-        18
+        9
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 65
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.18,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "7": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 7: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 1,
+      "Depth": 2,
       "TokenID": 7,
       "GridPosition": {
-        "X": 1,
-        "Y": -3
+        "X": 2,
+        "Y": -4
       },
       "ParentTokenIDs": [
-        0
+        5
       ],
       "ChildTokenIDs": [
-        14,
-        20
+        17
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "8": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 8: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 1,
+      "Depth": 2,
       "TokenID": 8,
       "GridPosition": {
-        "X": -1,
-        "Y": -3
+        "X": 4,
+        "Y": -2
       },
       "ParentTokenIDs": [
-        1
+        5
       ],
       "ChildTokenIDs": [
-        15,
-        24
+        11,
+        14
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "9": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 9: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 1,
+      "Depth": 2,
       "TokenID": 9,
       "GridPosition": {
-        "X": -3,
-        "Y": -1
+        "X": 6,
+        "Y": 0
       },
       "ParentTokenIDs": [
-        1
+        6
       ],
       "ChildTokenIDs": [
-        15,
-        26
+        11,
+        12
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "10": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 10: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 1,
+      "Depth": 2,
       "TokenID": 10,
       "GridPosition": {
-        "X": -3,
-        "Y": 1
+        "X": 4,
+        "Y": -4
       },
       "ParentTokenIDs": [
-        2
+        5
       ],
       "ChildTokenIDs": [
-        16,
-        29
+        13
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "11": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 11: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 1,
+      "Depth": 3,
       "TokenID": 11,
       "GridPosition": {
-        "X": -1,
-        "Y": 3
+        "X": 6,
+        "Y": -2
       },
       "ParentTokenIDs": [
-        2
+        8,
+        9
+      ],
+      "ChildTokenIDs": [
+        15
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "12": {
+      "IconLayers": [
+        {
+          "Icon": "back12",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 110,
+            "G": 210,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 12: channels sunfire and radiant force.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 12,
+      "GridPosition": {
+        "X": 8,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        9
       ],
       "ChildTokenIDs": [
         16,
-        31
+        20
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "13": {
       "IconLayers": [
         {
-          "Icon": "back8",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star4",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 13: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 3,
       "TokenID": 13,
       "GridPosition": {
         "X": 4,
-        "Y": 4
+        "Y": -6
       },
       "ParentTokenIDs": [
-        4,
-        5
+        10
       ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+        17,
+        18,
+        25,
+        27
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "14": {
       "IconLayers": [
         {
-          "Icon": "back8",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star4",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 14: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 3,
       "TokenID": 14,
       "GridPosition": {
-        "X": 4,
+        "X": 6,
         "Y": -4
       },
       "ParentTokenIDs": [
-        7,
-        6
+        8
       ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+        19,
+        22
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "15": {
       "IconLayers": [
         {
-          "Icon": "back8",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star4",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 15: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 4,
       "TokenID": 15,
       "GridPosition": {
-        "X": -4,
-        "Y": -4
+        "X": 8,
+        "Y": -2
       },
       "ParentTokenIDs": [
-        8,
-        9
+        11
       ],
       "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "16": {
       "IconLayers": [
         {
-          "Icon": "back8",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star4",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 16: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 4,
       "TokenID": 16,
       "GridPosition": {
-        "X": -4,
-        "Y": 4
+        "X": 10,
+        "Y": 0
       },
       "ParentTokenIDs": [
-        10,
-        11
+        12
       ],
       "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "17": {
+      "IconLayers": [
+        {
+          "Icon": "back12",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 110,
+            "G": 210,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 17: channels sunfire and radiant force.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 17,
+      "GridPosition": {
+        "X": 2,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        13,
+        7
+      ],
+      "ChildTokenIDs": [
+        21
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "18": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 18: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 4,
       "TokenID": 18,
       "GridPosition": {
-        "X": 5,
-        "Y": -1
+        "X": 6,
+        "Y": -6
       },
       "ParentTokenIDs": [
-        6
+        13
       ],
-      "ChildTokenIDs": [
-        19
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 125
+        }
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "19": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 19: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 3,
+      "Depth": 4,
       "TokenID": 19,
       "GridPosition": {
-        "X": 6,
-        "Y": -3
+        "X": 8,
+        "Y": -4
       },
       "ParentTokenIDs": [
-        18
+        14
       ],
       "ChildTokenIDs": [
-        22
+        23
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "20": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 20: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 4,
       "TokenID": 20,
       "GridPosition": {
-        "X": 1,
-        "Y": -5
+        "X": 10,
+        "Y": -2
       },
       "ParentTokenIDs": [
-        7
+        12
       ],
-      "ChildTokenIDs": [
-        21
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 125
+        }
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "21": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 21: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 3,
+      "Depth": 4,
       "TokenID": 21,
       "GridPosition": {
-        "X": 3,
-        "Y": -6
+        "X": 2,
+        "Y": -8
       },
       "ParentTokenIDs": [
-        20
+        17
       ],
       "ChildTokenIDs": [
-        22
+        24,
+        25,
+        26
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "22": {
       "IconLayers": [
         {
-          "Icon": "back8",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star4",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 22: channels sunfire and radiant force.",
       "PortalSize": 32,
       "Depth": 4,
       "TokenID": 22,
       "GridPosition": {
-        "X": 7,
-        "Y": -7
+        "X": 8,
+        "Y": -6
       },
       "ParentTokenIDs": [
-        21,
+        14
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "23": {
+      "IconLayers": [
+        {
+          "Icon": "back12",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 110,
+            "G": 210,
+            "R": 255,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 23: channels sunfire and radiant force.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 23,
+      "GridPosition": {
+        "X": 10,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
         19
       ],
       "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "24": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 24: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 5,
       "TokenID": 24,
       "GridPosition": {
-        "X": -1,
-        "Y": -5
+        "X": 2,
+        "Y": -10
       },
       "ParentTokenIDs": [
-        8
+        21
       ],
-      "ChildTokenIDs": [
-        25
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 155
+        }
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.36,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "25": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 25: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 3,
+      "Depth": 4,
       "TokenID": 25,
       "GridPosition": {
-        "X": -3,
-        "Y": -6
+        "X": 4,
+        "Y": -8
       },
       "ParentTokenIDs": [
-        24
+        21,
+        13
       ],
       "ChildTokenIDs": [
-        28
+        26
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 155
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.36,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "26": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 26: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 5,
       "TokenID": 26,
       "GridPosition": {
-        "X": -5,
-        "Y": -1
+        "X": 4,
+        "Y": -10
       },
       "ParentTokenIDs": [
-        9
+        21,
+        25
       ],
-      "ChildTokenIDs": [
-        27
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 170
+        }
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.39,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "27": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back12",
           "Width": 60,
           "Height": 60,
           "Tint": {
-            "B": 255,
-            "G": 255,
+            "B": 110,
+            "G": 210,
             "R": 255,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star3",
+      "ConstellationColor": {
+        "B": 110,
+        "G": 210,
+        "R": 255,
+        "A": 255
+      },
+      "Description": "Eastern circle node 27: channels sunfire and radiant force.",
       "PortalSize": 32,
-      "Depth": 3,
+      "Depth": 4,
       "TokenID": 27,
       "GridPosition": {
-        "X": -6,
-        "Y": -3
+        "X": 6,
+        "Y": -8
       },
       "ParentTokenIDs": [
-        26
+        13
       ],
-      "ChildTokenIDs": [
-        28
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Grass",
+          "Amount": 170
+        }
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Ember",
+          "Value": "Eastern",
+          "Amount": 0.39,
+          "SkillEffectDescription": "Extends sunfire and radiant force through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "28": {
       "IconLayers": [
         {
-          "Icon": "back8",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star4",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 28: channels flowing water and starlight.",
       "PortalSize": 32,
-      "Depth": 4,
+      "Depth": 1,
       "TokenID": 28,
       "GridPosition": {
-        "X": -7,
-        "Y": -7
+        "X": 0,
+        "Y": -4
       },
       "ParentTokenIDs": [
-        27,
-        25
+        1
       ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+        30
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 65
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.18,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "29": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 29: channels flowing water and starlight.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 1,
       "TokenID": 29,
       "GridPosition": {
-        "X": -5,
-        "Y": 1
+        "X": -2,
+        "Y": -2
       },
       "ParentTokenIDs": [
-        10
+        1
       ],
       "ChildTokenIDs": [
-        30
+        31,
+        32
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 65
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.18,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "30": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 30: channels flowing water and starlight.",
       "PortalSize": 32,
-      "Depth": 3,
+      "Depth": 2,
       "TokenID": 30,
       "GridPosition": {
-        "X": -6,
-        "Y": 3
+        "X": 0,
+        "Y": -6
       },
       "ParentTokenIDs": [
-        29
+        28
       ],
       "ChildTokenIDs": [
-        33
+        33,
+        34
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "31": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 31: channels flowing water and starlight.",
       "PortalSize": 32,
       "Depth": 2,
       "TokenID": 31,
       "GridPosition": {
-        "X": -1,
-        "Y": 5
+        "X": -2,
+        "Y": -4
       },
       "ParentTokenIDs": [
-        11
+        29
       ],
       "ChildTokenIDs": [
-        32
+        34,
+        35
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "32": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 32: channels flowing water and starlight.",
       "PortalSize": 32,
-      "Depth": 3,
+      "Depth": 2,
       "TokenID": 32,
       "GridPosition": {
-        "X": -3,
-        "Y": 6
+        "X": -4,
+        "Y": -2
       },
       "ParentTokenIDs": [
-        31
+        29
       ],
       "ChildTokenIDs": [
-        33
+        35,
+        36,
+        40
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "33": {
       "IconLayers": [
         {
-          "Icon": "back8",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star4",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 33: channels flowing water and starlight.",
       "PortalSize": 32,
-      "Depth": 4,
+      "Depth": 3,
       "TokenID": 33,
       "GridPosition": {
-        "X": -7,
-        "Y": 7
+        "X": 0,
+        "Y": -8
       },
       "ParentTokenIDs": [
-        32,
         30
       ],
-      "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ChildTokenIDs": [
+        37,
+        38
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "34": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 34: channels flowing water and starlight.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 3,
       "TokenID": 34,
       "GridPosition": {
-        "X": 5,
-        "Y": 1
+        "X": -2,
+        "Y": -6
       },
       "ParentTokenIDs": [
-        4
+        31,
+        30
       ],
       "ChildTokenIDs": [
-        35
+        38,
+        39,
+        42
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "35": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 35: channels flowing water and starlight.",
       "PortalSize": 32,
       "Depth": 3,
       "TokenID": 35,
       "GridPosition": {
-        "X": 6,
-        "Y": 3
+        "X": -4,
+        "Y": -4
       },
       "ParentTokenIDs": [
-        34
+        32,
+        31
       ],
       "ChildTokenIDs": [
-        38
+        39
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "36": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 36: channels flowing water and starlight.",
       "PortalSize": 32,
-      "Depth": 2,
+      "Depth": 3,
       "TokenID": 36,
       "GridPosition": {
-        "X": 1,
-        "Y": 5
+        "X": -6,
+        "Y": -2
       },
       "ParentTokenIDs": [
-        5
+        32
       ],
-      "ChildTokenIDs": [
-        37
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 95
+        }
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "37": {
       "IconLayers": [
         {
-          "Icon": "back10",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
             "A": 255
           }
         }
       ],
-      "ConstellationStar": "star",
-      "Description": "",
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 37: channels flowing water and starlight.",
       "PortalSize": 32,
-      "Depth": 3,
+      "Depth": 4,
       "TokenID": 37,
       "GridPosition": {
-        "X": 3,
-        "Y": 6
+        "X": 0,
+        "Y": -10
       },
       "ParentTokenIDs": [
-        36
+        33
       ],
-      "ChildTokenIDs": [
-        38
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 110
+        }
       ],
-      "ResourceCosts": [],
-      "Effects": [],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     },
     "38": {
       "IconLayers": [
         {
-          "Icon": "back8",
+          "Icon": "back11",
           "Width": 60,
           "Height": 60,
           "Tint": {
             "B": 255,
-            "G": 255,
-            "R": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 38: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 38,
+      "GridPosition": {
+        "X": -2,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        34,
+        33
+      ],
+      "ChildTokenIDs": [
+        41
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "39": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 39: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 39,
+      "GridPosition": {
+        "X": -4,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        35,
+        34
+      ],
+      "ChildTokenIDs": [
+        43,
+        46
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "40": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 40: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 40,
+      "GridPosition": {
+        "X": -6,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        32
+      ],
+      "ChildTokenIDs": [
+        43,
+        44
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "41": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 41: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 41,
+      "GridPosition": {
+        "X": -2,
+        "Y": -10
+      },
+      "ParentTokenIDs": [
+        38
+      ],
+      "ChildTokenIDs": [
+        45
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "42": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 42: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 42,
+      "GridPosition": {
+        "X": -4,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        34
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "43": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 43: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 43,
+      "GridPosition": {
+        "X": -6,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        39,
+        40
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "44": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 44: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 44,
+      "GridPosition": {
+        "X": -8,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        40
+      ],
+      "ChildTokenIDs": [
+        47,
+        48,
+        49
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "45": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 45: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 6,
+      "TokenID": 45,
+      "GridPosition": {
+        "X": -4,
+        "Y": -10
+      },
+      "ParentTokenIDs": [
+        41
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "46": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 46: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 46,
+      "GridPosition": {
+        "X": -6,
+        "Y": -8
+      },
+      "ParentTokenIDs": [
+        39
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "47": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 47: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 47,
+      "GridPosition": {
+        "X": -8,
+        "Y": -6
+      },
+      "ParentTokenIDs": [
+        44
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "48": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 48: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 48,
+      "GridPosition": {
+        "X": -10,
+        "Y": -4
+      },
+      "ParentTokenIDs": [
+        44
+      ],
+      "ChildTokenIDs": [
+        50
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "49": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 49: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 49,
+      "GridPosition": {
+        "X": -8,
+        "Y": -2
+      },
+      "ParentTokenIDs": [
+        44
+      ],
+      "ChildTokenIDs": [
+        50
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "50": {
+      "IconLayers": [
+        {
+          "Icon": "back11",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 180,
+            "R": 90,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star1",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 180,
+        "R": 90,
+        "A": 255
+      },
+      "Description": "Northern circle node 50: channels flowing water and starlight.",
+      "PortalSize": 32,
+      "Depth": 6,
+      "TokenID": 50,
+      "GridPosition": {
+        "X": -10,
+        "Y": -2
+      },
+      "ParentTokenIDs": [
+        49,
+        48
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 155
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Tide",
+          "Value": "Northern",
+          "Amount": 0.36,
+          "SkillEffectDescription": "Extends flowing water and starlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "51": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
             "A": 255
           }
         }
       ],
       "ConstellationStar": "star4",
-      "Description": "",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 51: channels roots, growth, and living stone.",
       "PortalSize": 32,
-      "Depth": 4,
-      "TokenID": 38,
+      "Depth": 1,
+      "TokenID": 51,
       "GridPosition": {
-        "X": 7,
-        "Y": 7
+        "X": 2,
+        "Y": 2
       },
       "ParentTokenIDs": [
-        37,
-        35
+        3
+      ],
+      "ChildTokenIDs": [
+        53,
+        56,
+        59
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 65
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.18,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "52": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 52: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 52,
+      "GridPosition": {
+        "X": 0,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        3
+      ],
+      "ChildTokenIDs": [
+        54
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 65
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.18,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "53": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 53: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 53,
+      "GridPosition": {
+        "X": 4,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        51
+      ],
+      "ChildTokenIDs": [
+        55,
+        66
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "54": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 54: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 54,
+      "GridPosition": {
+        "X": 0,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        52
+      ],
+      "ChildTokenIDs": [
+        57,
+        69
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "55": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 55: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 55,
+      "GridPosition": {
+        "X": 6,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        53
+      ],
+      "ChildTokenIDs": [
+        58
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "56": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 56: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 56,
+      "GridPosition": {
+        "X": 4,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        51
+      ],
+      "ChildTokenIDs": [
+        59,
+        60
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "57": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 57: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 57,
+      "GridPosition": {
+        "X": 0,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        54
+      ],
+      "ChildTokenIDs": [
+        61
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "58": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 58: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 58,
+      "GridPosition": {
+        "X": 8,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        55
+      ],
+      "ChildTokenIDs": [
+        62,
+        63,
+        67
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "59": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 59: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 59,
+      "GridPosition": {
+        "X": 2,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        56,
+        51
+      ],
+      "ChildTokenIDs": [
+        64
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "60": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 60: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 60,
+      "GridPosition": {
+        "X": 4,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        56
+      ],
+      "ChildTokenIDs": [
+        64,
+        72
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "61": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 61: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 61,
+      "GridPosition": {
+        "X": 0,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        57
+      ],
+      "ChildTokenIDs": [
+        65
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "62": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 62: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 62,
+      "GridPosition": {
+        "X": 10,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        58
       ],
       "ChildTokenIDs": [],
-      "ResourceCosts": [],
-      "Effects": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "63": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 63: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 63,
+      "GridPosition": {
+        "X": 8,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        58
+      ],
+      "ChildTokenIDs": [
+        68
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "64": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 64: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 64,
+      "GridPosition": {
+        "X": 2,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        59,
+        60
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "65": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 65: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 65,
+      "GridPosition": {
+        "X": 2,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        61
+      ],
+      "ChildTokenIDs": [
+        70
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "66": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 66: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 66,
+      "GridPosition": {
+        "X": 6,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        53
+      ],
+      "ChildTokenIDs": [
+        71
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "67": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 67: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 67,
+      "GridPosition": {
+        "X": 10,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        58
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "68": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 68: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 6,
+      "TokenID": 68,
+      "GridPosition": {
+        "X": 8,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        63
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "69": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 69: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 69,
+      "GridPosition": {
+        "X": 2,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        54
+      ],
+      "ChildTokenIDs": [
+        72
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "70": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 70: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 6,
+      "TokenID": 70,
+      "GridPosition": {
+        "X": 4,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        73,
+        65
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "71": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 71: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 71,
+      "GridPosition": {
+        "X": 6,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        66
+      ],
+      "ChildTokenIDs": [
+        73
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 155
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.36,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "72": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 72: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 72,
+      "GridPosition": {
+        "X": 4,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        69,
+        60
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 155
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.36,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "73": {
+      "IconLayers": [
+        {
+          "Icon": "back13",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 130,
+            "G": 230,
+            "R": 100,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star4",
+      "ConstellationColor": {
+        "B": 130,
+        "G": 230,
+        "R": 100,
+        "A": 255
+      },
+      "Description": "Southern circle node 73: channels roots, growth, and living stone.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 73,
+      "GridPosition": {
+        "X": 6,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        71
+      ],
+      "ChildTokenIDs": [
+        70
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Cactus",
+          "Amount": 170
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Grove",
+          "Value": "Southern",
+          "Amount": 0.39,
+          "SkillEffectDescription": "Extends roots, growth, and living stone through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "74": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 74: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 74,
+      "GridPosition": {
+        "X": -4,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        4
+      ],
+      "ChildTokenIDs": [
+        76,
+        79
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 65
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.18,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "75": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 75: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 75,
+      "GridPosition": {
+        "X": -2,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        4
+      ],
+      "ChildTokenIDs": [
+        78
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 65
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.18,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "76": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 76: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 76,
+      "GridPosition": {
+        "X": -6,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        74
+      ],
+      "ChildTokenIDs": [
+        86
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "77": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 77: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 1,
+      "TokenID": 77,
+      "GridPosition": {
+        "X": -4,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        4
+      ],
+      "ChildTokenIDs": [
+        79,
+        80
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "78": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 78: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 78,
+      "GridPosition": {
+        "X": -2,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        75
+      ],
+      "ChildTokenIDs": [
+        80,
+        81
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 80
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.21,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "79": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 79: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 79,
+      "GridPosition": {
+        "X": -6,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        74,
+        77
+      ],
+      "ChildTokenIDs": [
+        82,
+        83
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "80": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 80: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 2,
+      "TokenID": 80,
+      "GridPosition": {
+        "X": -4,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        78,
+        77
+      ],
+      "ChildTokenIDs": [
+        84
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "81": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 81: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 81,
+      "GridPosition": {
+        "X": -2,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        78
+      ],
+      "ChildTokenIDs": [
+        84,
+        85
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 95
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.24,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "82": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 82: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 82,
+      "GridPosition": {
+        "X": -8,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        79
+      ],
+      "ChildTokenIDs": [
+        86,
+        87,
+        96
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "83": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 83: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 83,
+      "GridPosition": {
+        "X": -6,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        79
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "84": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 84: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 84,
+      "GridPosition": {
+        "X": -4,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        81,
+        80
+      ],
+      "ChildTokenIDs": [
+        88,
+        89
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "85": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 85: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 85,
+      "GridPosition": {
+        "X": -2,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        81
+      ],
+      "ChildTokenIDs": [
+        90,
+        94
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 110
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.27,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "86": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 86: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 3,
+      "TokenID": 86,
+      "GridPosition": {
+        "X": -8,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        82,
+        76
+      ],
+      "ChildTokenIDs": [
+        91
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "87": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 87: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 87,
+      "GridPosition": {
+        "X": -10,
+        "Y": 2
+      },
+      "ParentTokenIDs": [
+        82
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "88": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 88: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 88,
+      "GridPosition": {
+        "X": -6,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        84
+      ],
+      "ChildTokenIDs": [
+        92,
+        95
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "89": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 89: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 89,
+      "GridPosition": {
+        "X": -4,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        84
+      ],
+      "ChildTokenIDs": [
+        93,
+        94
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "90": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 90: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 90,
+      "GridPosition": {
+        "X": -2,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        85
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 125
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.3,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "91": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 91: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 91,
+      "GridPosition": {
+        "X": -10,
+        "Y": 0
+      },
+      "ParentTokenIDs": [
+        86
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "92": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 92: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 92,
+      "GridPosition": {
+        "X": -8,
+        "Y": 6
+      },
+      "ParentTokenIDs": [
+        88
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "93": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 93: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 93,
+      "GridPosition": {
+        "X": -6,
+        "Y": 8
+      },
+      "ParentTokenIDs": [
+        94,
+        89
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "94": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 94: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 94,
+      "GridPosition": {
+        "X": -4,
+        "Y": 10
+      },
+      "ParentTokenIDs": [
+        85,
+        89
+      ],
+      "ChildTokenIDs": [
+        93
+      ],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 140
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.33,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "95": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 95: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 5,
+      "TokenID": 95,
+      "GridPosition": {
+        "X": -8,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        88
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 155
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.36,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
+      "IsCollected": true,
+      "IsCollectable": true
+    },
+    "96": {
+      "IconLayers": [
+        {
+          "Icon": "back14",
+          "Width": 60,
+          "Height": 60,
+          "Tint": {
+            "B": 255,
+            "G": 120,
+            "R": 210,
+            "A": 255
+          }
+        }
+      ],
+      "ConstellationStar": "star",
+      "ConstellationColor": {
+        "B": 255,
+        "G": 120,
+        "R": 210,
+        "A": 255
+      },
+      "Description": "Western circle node 96: channels shadow, echo, and moonlight.",
+      "PortalSize": 32,
+      "Depth": 4,
+      "TokenID": 96,
+      "GridPosition": {
+        "X": -10,
+        "Y": 4
+      },
+      "ParentTokenIDs": [
+        82
+      ],
+      "ChildTokenIDs": [],
+      "ResourceCosts": [
+        {
+          "Resource": "Flower",
+          "Amount": 170
+        }
+      ],
+      "Effects": [
+        {
+          "Key": "Veil",
+          "Value": "Western",
+          "Amount": 0.39,
+          "SkillEffectDescription": "Extends shadow, echo, and moonlight through the circle."
+        }
+      ],
       "IsCollected": true,
       "IsCollectable": true
     }

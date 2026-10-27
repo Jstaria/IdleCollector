@@ -25,6 +25,7 @@ namespace SkillTreeCreationTool
                     layer.Height = iconSelect.icon.Height;
                     activeIconSizeField = IconSizeField.None;
                     activeTintLayer = activeTintChannel = -1;
+                    activeConstellationTintChannel = -1;
                     iconSizeText = string.Empty;
                     replaceIconSizeText = false;
                 };

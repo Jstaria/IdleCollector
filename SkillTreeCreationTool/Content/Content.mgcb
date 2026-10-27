@@ -1490,3 +1490,21 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/star4.png
+
+#begin Effects/ConstellationLink.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/ConstellationLink.fx
+
+#begin SaveData/SkillTreeMagicCircle.json
+/copy:SaveData/SkillTreeMagicCircle.json
+
+#begin Effects/SkillTreeHoverAura.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeHoverAura.fx
+
+#begin Effects/SkillTreeHoverPortal.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/build:Effects/SkillTreeHoverPortal.fx

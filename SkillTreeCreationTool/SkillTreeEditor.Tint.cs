@@ -38,6 +38,19 @@ namespace SkillTreeCreationTool
             }
         }
 
+        private void DrawConstellationTint(SpriteBatch sb, SpriteFont font, PanelRow row)
+        {
+            Color tint = newToken.ConstellationColor;
+            for (int channel = 0; channel < tintChannelLabels.Length; channel++)
+            {
+                Rectangle bounds = GetTintChannelBounds(row.Bounds, channel);
+                bool active = activeConstellationTintChannel == channel;
+                string value = active ? constellationTintText : GetTintChannel(tint, channel).ToString(CultureInfo.InvariantCulture);
+                DrawField(sb, font, bounds, tintChannelLabels[channel], value, active,
+                    new Vector2(bounds.X - 24, bounds.Y), Color.LightGray);
+            }
+        }
+
         private void HandleTintClick(PanelRow row, Point mouse)
         {
             for (int channel = 0; channel < tintChannelLabels.Length; channel++)
@@ -48,6 +61,23 @@ namespace SkillTreeCreationTool
                 activeTintChannel = channel;
                 tintText = GetTintChannel(newToken.IconLayers[row.Index].Tint, channel).ToString(CultureInfo.InvariantCulture);
                 replaceTintText = true;
+                ClearCostSelection();
+                ClearEffectSelection();
+                activeIconSizeField = IconSizeField.None;
+                return;
+            }
+        }
+
+        private void HandleConstellationTintClick(PanelRow row, Point mouse)
+        {
+            for (int channel = 0; channel < tintChannelLabels.Length; channel++)
+            {
+                if (!GetTintChannelBounds(row.Bounds, channel).Contains(mouse))
+                    continue;
+
+                activeConstellationTintChannel = channel;
+                constellationTintText = GetTintChannel(newToken.ConstellationColor, channel).ToString(CultureInfo.InvariantCulture);
+                replaceConstellationTintText = true;
                 ClearCostSelection();
                 ClearEffectSelection();
                 activeIconSizeField = IconSizeField.None;
@@ -71,6 +101,29 @@ namespace SkillTreeCreationTool
                 case 3: tint.A = value; break;
             }
             layer.Tint = tint;
+            if (newToken.ParentTokenIDs.Count == 0 && activeTintLayer == 0)
+                newToken.ConstellationColor = tint;
+        }
+
+        private void UpdateConstellationTint(string input, bool backspace)
+        {
+            constellationTintText = SkillTreeEditorTextInput.Edit(constellationTintText, input, backspace, 3,
+                ref replaceConstellationTintText, char.IsDigit);
+            if (!int.TryParse(constellationTintText, NumberStyles.Integer, CultureInfo.InvariantCulture, out int number))
+                return;
+
+            byte value = (byte)Math.Clamp(number, 0, 255);
+            Color tint = newToken.ConstellationColor;
+            switch (activeConstellationTintChannel)
+            {
+                case 0: tint.R = value; break;
+                case 1: tint.G = value; break;
+                case 2: tint.B = value; break;
+                case 3: tint.A = value; break;
+            }
+            newToken.ConstellationColor = tint;
+            if (newToken.IconLayers.Count > 0)
+                newToken.IconLayers[0].Tint = tint;
         }
     }
 }

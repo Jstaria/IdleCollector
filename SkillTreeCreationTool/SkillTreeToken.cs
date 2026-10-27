@@ -45,6 +45,7 @@ namespace SkillTreeCreationTool
 
         public List<IconLayer> IconLayers { get; set; } = new();
         public string ConstellationStar { get; set; } = "star";
+        public Color ConstellationColor { get; set; } = Color.White;
         public string Description { get; set; } = string.Empty;
         public int PortalSize { get; set; } = 32;
         public int Depth { get; set; }
@@ -153,7 +154,7 @@ namespace SkillTreeCreationTool
             _ = FadeConstellationIconsAsync(active ? 0f : 1f, fadeVersion);
         }
 
-        public void DrawConstellationStar(SpriteBatch sb, Vector2 position, float zoom, float time)
+        public void DrawConstellationStar(SpriteBatch sb, Vector2 position, float zoom, float time, Color color)
         {
             float opacity = 1f - constellationIconOpacity;
             if (opacity <= .001f)
@@ -170,7 +171,8 @@ namespace SkillTreeCreationTool
             float sizeVariation = .9f + GetStarVariation(6) * .2f;
             Vector2 origin = starTexture.Bounds.Size.ToVector2() * .5f;
             float rotation = rotationPhase + time * rotationSpeed * rotationDirection;
-            sb.Draw(starTexture, position, null, Color.White * (opacity * twinkle), rotation, origin,
+            Color starColor = Color.Lerp(color, Color.White, .5f);
+            sb.Draw(starTexture, position, null, starColor * (opacity * twinkle), rotation, origin,
                 pulse * sizeVariation * zoom * .5f, SpriteEffects.None, .93f);
         }
 

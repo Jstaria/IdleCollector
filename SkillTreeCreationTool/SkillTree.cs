@@ -47,7 +47,6 @@ namespace SkillTreeCreationTool
         [JsonIgnore] public LinkParticleSettings LinkParticleSettings { get; } = new();
         [JsonIgnore] private SkillTreeShockwave Shockwave { get; }
         [JsonIgnore] private readonly SkillTreeHoverHighlight hoverHighlight;
-        [JsonIgnore] private readonly SkillTreeConstellationGlow constellationGlow;
         [JsonIgnore] private readonly ParticleSystemGroup unlockParticles = new();
         [JsonIgnore] private readonly List<TokenUnlockWisp> unlockWisps = new();
         [JsonIgnore] private Vector2 unlockBurstPosition;
@@ -63,6 +62,7 @@ namespace SkillTreeCreationTool
 
         private BasicEffectRenderable _renderable;
         private LinkPulseRenderable linkPulseRenderable;
+        private LinkPulseRenderable constellationLinkRenderable;
         public string SkillTreeScene = "SkillTreeScene";
         [JsonIgnore] private float time;
         [JsonIgnore] private int hoverAuraTokenId = -1;
@@ -87,6 +87,7 @@ namespace SkillTreeCreationTool
         {
             public HashSet<int> TokenIds { get; } = new();
             public HashSet<(int Parent, int Child)> Links { get; } = new();
+            public Color Color { get; set; } = Color.White;
         }
 
 
@@ -123,6 +124,11 @@ namespace SkillTreeCreationTool
                 DrawLinkPulseLines,
                 () => time);
             Renderer.AddToSceneEarlyDraw(SkillTreeScene, linkPulseRenderable);
+            constellationLinkRenderable = new LinkPulseRenderable(
+                ResourceAtlas.GetEffect("ConstellationLink"),
+                DrawConstellationLinks,
+                () => time);
+            Renderer.AddToSceneEarlyDraw(SkillTreeScene, constellationLinkRenderable);
 
             unlockParticles.Add(CreateUnlockBurstParticles());
             unlockParticles.Add(CreateUnlockWaveParticles());
@@ -134,8 +140,6 @@ namespace SkillTreeCreationTool
                 token => GetWorldPosition(token.GridPosition).ToVector2() * zoom,
                 () => zoom, SkillTreeScene);
             Renderer.AddPostProcess("SkillTreeHoverHighlight", hoverHighlight);
-            constellationGlow = new SkillTreeConstellationGlow(DrawConstellationMask, GetConstellationGlowOpacity, SkillTreeScene);
-            Renderer.AddPostProcess("SkillTreeConstellationGlow", constellationGlow);
             Renderer.AddToSceneUIDraw(SkillTreeScene, DrawDescriptionUi);
             unlockButton = new Button(Game1.Instance, new ButtonConfig
             {
@@ -252,7 +256,7 @@ namespace SkillTreeCreationTool
             foreach (SkillTreeToken token in treeTokens.Values)
             {
                 Vector2 position = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
-                token.DrawConstellationStar(sb, position, zoom, time);
+                token.DrawConstellationStar(sb, position, zoom, time, GetConstellationColor(token.TokenID));
             }
 
         }
@@ -347,11 +351,6 @@ namespace SkillTreeCreationTool
             }
         }
 
-        private float GetConstellationGlowOpacity()
-        {
-            return IsConstellationActive() ? 1f : 0f;
-        }
-
         private void UpdateConstellationFade()
         {
             bool shouldFade = ShouldShowConstellation();
@@ -390,6 +389,7 @@ namespace SkillTreeCreationTool
             foreach (SkillTreeToken root in treeTokens.Values.Where(token => IsConstellationBranchRoot(token, rootIdsByToken)))
             {
                 ConstellationBranch branch = new();
+                branch.Color = root.IconLayers.Count > 0 ? root.IconLayers[0].Tint : root.ConstellationColor;
                 AddTokensToBranch(root, branch, rootIdsByToken);
                 constellationBranches.Add(branch);
             }
@@ -457,8 +457,11 @@ namespace SkillTreeCreationTool
             }
         }
 
-        private void DrawConstellationMask(SpriteBatch sb)
+        private void DrawConstellationLinks(SpriteBatch sb, Effect effect)
         {
+            if (!IsConstellationActive())
+                return;
+
             foreach (ConstellationBranch branch in constellationBranches)
             {
                 if (!branch.TokenIds.All(tokenId =>
@@ -473,10 +476,19 @@ namespace SkillTreeCreationTool
 
                     Vector2 start = GetWorldPosition(parent.GridPosition).ToVector2() * zoom;
                     Vector2 end = GetWorldPosition(child.GridPosition).ToVector2() * zoom;
-                    sb.DrawLineCentered(start, end, Math.Max(1f, 1.5f * zoom), Color.White, .2f);
+                    effect.Parameters["pulseDelay"]?.SetValue(parent.Depth * LinkPulseTravelTime);
+                    sb.DrawLineCentered(start, end, LinkLineThickness * zoom, branch.Color * .65f, .2f);
                 }
             }
+        }
 
+        private Color GetConstellationColor(int tokenId)
+        {
+            foreach (ConstellationBranch branch in constellationBranches)
+                if (branch.TokenIds.Contains(tokenId))
+                    return branch.Color;
+
+            return Color.White;
         }
 
         private void UnlockSkill(int tokenId)
@@ -1110,7 +1122,9 @@ namespace SkillTreeCreationTool
         private Color GetLinkColor(int childId)
         {
             SkillTreeToken child = treeTokens[childId];
-            return child.IsCollected ? Color.White : child.IsCollectable ? Color.White * .25f : Color.White * .05f;
+            float constellationOpacity = IsConstellationActive() ? .5f : 1f;
+            Color baseColor = child.IsCollected ? Color.White : child.IsCollectable ? Color.White * .25f : Color.White * .05f;
+            return baseColor * constellationOpacity;
         }
 
         private static bool CanPulseLink(SkillTreeToken child) =>
