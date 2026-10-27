@@ -28,6 +28,8 @@ namespace SkillTreeCreationTool
         private void HandleEffectEditorClick(PanelLayout layout, Point mouse)
         {
             editingTokenDescription = false;
+            if (TrySelectConstellationStarDropdown(layout, mouse))
+                return;
             if (TrySelectResourceDropdown(layout, mouse))
                 return;
             if (GetUnlockedBounds(layout.Bounds).Contains(mouse))
@@ -53,6 +55,9 @@ namespace SkillTreeCreationTool
                         ClearEffectSelection();
                         activeIconSizeField = IconSizeField.None;
                         activeTintLayer = activeTintChannel = -1;
+                        break;
+                    case PanelRowKind.ConstellationStar:
+                        constellationStarDropdownOpen = !constellationStarDropdownOpen;
                         break;
                     case PanelRowKind.Costs:
                     case PanelRowKind.Effects:
@@ -155,6 +160,25 @@ namespace SkillTreeCreationTool
                 newToken.ResourceCosts[resourceDropdownCostIndex].Resource = resourceOptions[index];
             resourceDropdownCostIndex = -1;
             return selected;
+        }
+
+        private bool TrySelectConstellationStarDropdown(PanelLayout layout, Point mouse)
+        {
+            if (!constellationStarDropdownOpen)
+                return false;
+
+            Rectangle bounds = layout.GetConstellationStarDropdownBounds(constellationStarOptions.Count);
+            if (!bounds.Contains(mouse))
+            {
+                constellationStarDropdownOpen = false;
+                return false;
+            }
+
+            int index = (mouse.Y - bounds.Y) / EffectFieldHeight;
+            if (index >= 0 && index < constellationStarOptions.Count)
+                newToken.ConstellationStar = constellationStarOptions[index];
+            constellationStarDropdownOpen = false;
+            return true;
         }
 
         private void SelectEffectField(int index, EffectField field)

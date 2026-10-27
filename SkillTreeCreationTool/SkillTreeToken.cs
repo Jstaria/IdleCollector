@@ -29,16 +29,22 @@ namespace SkillTreeCreationTool
     {
         private const float RevealDuration = .12f;
         private const float SpringTimeStep = 1f / 60f;
+        private const float ConstellationFadeDuration = .25f;
         [JsonIgnore] private float revealProgress;
         [JsonIgnore] private readonly Spring revealScaleSpring = new Spring(38f, .65f, 1f) { Position = 0f };
         [JsonIgnore] private readonly Spring unlockScaleSpring = new Spring(22f, .85f, 1f);
         [JsonIgnore] private readonly Spring unlockDepthSpring = new Spring(18f, 1f, 0f);
         [JsonIgnore] private float unlockDepthHold;
         [JsonIgnore] private float springElapsed;
+        [JsonIgnore] private float constellationIconOpacity = 1f;
+        [JsonIgnore] private bool constellationFadeActive;
+        [JsonIgnore] private int constellationFadeVersion;
         [JsonIgnore] internal bool IsUnlockElevated => unlockDepthHold > 0f;
         [JsonIgnore] internal float IconDrawScale => revealScaleSpring.Position * unlockScaleSpring.Position;
+        [JsonIgnore] internal float ConstellationIconOpacity => constellationIconOpacity;
 
         public List<IconLayer> IconLayers { get; set; } = new();
+        public string ConstellationStar { get; set; } = "star";
         public string Description { get; set; } = string.Empty;
         public int PortalSize { get; set; } = 32;
         public int Depth { get; set; }
@@ -119,11 +125,84 @@ namespace SkillTreeCreationTool
                 Color tint = Color.FromNonPremultiplied(layer.Tint.ToVector4());
                 Color layerColor = new Color(tint.ToVector4() * drawColor.ToVector4());
                 Vector2 iconSize = new Vector2(layer.Width, layer.Height) * zoom * revealScale;
-                Rectangle bounds = new Rectangle((position - iconSize / 2f).ToPoint(), iconSize.ToPoint());
+                Point center = new Point((int)MathF.Round(position.X), (int)MathF.Round(position.Y));
+                int width = Math.Max(1, (int)MathF.Round(iconSize.X));
+                int height = Math.Max(1, (int)MathF.Round(iconSize.Y));
+                Rectangle bounds = new Rectangle(center.X - width / 2, center.Y - height / 2, width, height);
                 float layerStep = Math.Min(.01f, .08f / Math.Max(1, IconLayers.Count - 1));
                 float depth = .5f + .4f * Math.Clamp(unlockDepthSpring.Position, 0f, 1f) + layerIndex * layerStep;
                 sb.Draw(texture, bounds, null, layerColor, 0f, Vector2.Zero, SpriteEffects.None, depth);
             }
+        }
+
+        public void DrawConstellationIcon(SpriteBatch sb, Vector2 position, float zoom)
+        {
+            if (constellationIconOpacity <= .001f)
+                return;
+
+            DrawIcon(sb, position, zoom, opacity: constellationIconOpacity);
+        }
+
+        public void SetConstellationFadeActive(bool active)
+        {
+            if (constellationFadeActive == active)
+                return;
+
+            constellationFadeActive = active;
+            int fadeVersion = ++constellationFadeVersion;
+            _ = FadeConstellationIconsAsync(active ? 0f : 1f, fadeVersion);
+        }
+
+        public void DrawConstellationStar(SpriteBatch sb, Vector2 position, float zoom, float time)
+        {
+            float opacity = 1f - constellationIconOpacity;
+            if (opacity <= .001f)
+                return;
+
+            Texture2D starTexture = GetConstellationStarTexture();
+            float rotationPhase = GetStarVariation(1) * MathHelper.TwoPi;
+            float rotationSpeed = .4f + GetStarVariation(2) * .8f;
+            float rotationDirection = GetStarVariation(3) < .5f ? -1f : 1f;
+            float twinklePhase = GetStarVariation(4) * MathHelper.TwoPi;
+            float twinkleSpeed = 1.5f + GetStarVariation(5) * 2f;
+            float twinkle = .65f + .35f * ((MathF.Sin(time * twinkleSpeed + twinklePhase) + 1f) * .5f);
+            float pulse = 1f + .12f * MathF.Sin(time * (twinkleSpeed * .75f) + twinklePhase);
+            float sizeVariation = .9f + GetStarVariation(6) * .2f;
+            Vector2 origin = starTexture.Bounds.Size.ToVector2() * .5f;
+            float rotation = rotationPhase + time * rotationSpeed * rotationDirection;
+            sb.Draw(starTexture, position, null, Color.White * (opacity * twinkle), rotation, origin,
+                pulse * sizeVariation * zoom * .5f, SpriteEffects.None, .93f);
+        }
+
+        private async Task FadeConstellationIconsAsync(float targetOpacity, int fadeVersion)
+        {
+            float startingOpacity = constellationIconOpacity;
+            int steps = Math.Max(1, (int)MathF.Ceiling(ConstellationFadeDuration * 60f));
+            int delayMilliseconds = Math.Max(1, (int)MathF.Round(ConstellationFadeDuration * 1000f / steps));
+            for (int step = 0; step <= steps && fadeVersion == constellationFadeVersion; step++)
+            {
+                float progress = step / (float)steps;
+                constellationIconOpacity = MathHelper.Lerp(startingOpacity, targetOpacity, progress);
+                if (step < steps)
+                    await Task.Delay(delayMilliseconds);
+            }
+        }
+
+        private Texture2D GetConstellationStarTexture()
+        {
+            if (!string.IsNullOrWhiteSpace(ConstellationStar) &&
+                ResourceAtlas.TextureCache.TryGetValue(ConstellationStar, out Texture2D starTexture))
+                return starTexture;
+
+            return ResourceAtlas.GetTexture("star");
+        }
+
+        private float GetStarVariation(int salt)
+        {
+            uint value = (uint)TokenID * 73856093u ^ (uint)salt * 19349663u;
+            value ^= value >> 13;
+            value *= 1274126177;
+            return (value & 0x00FFFFFF) / 16777215f;
         }
 
         public void SetParentToken(int parent) => ParentTokenIDs.Add(parent);

@@ -155,6 +155,7 @@ namespace SkillTreeCreationTool
             activeCostIndex = -1;
             activeCostField = CostField.None;
             resourceDropdownCostIndex = -1;
+            constellationStarDropdownOpen = false;
             activeIconSizeField = IconSizeField.None;
             activeIconSlot = 0;
             iconSizeText = string.Empty;

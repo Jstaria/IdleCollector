@@ -51,6 +51,7 @@ namespace SkillTreeCreationTool
             foreach (PanelRow row in layout.Rows)
                 DrawPanelRow(sb, font, panel, row);
             DrawResourceDropdown(sb, font, layout);
+            DrawConstellationStarDropdown(sb, font, layout);
         }
 
         private void DrawPanelRow(SpriteBatch sb, SpriteFont font, Rectangle panel, PanelRow row)
@@ -60,6 +61,9 @@ namespace SkillTreeCreationTool
                 case PanelRowKind.Description:
                     DrawField(sb, font, row.Bounds, row.Label, row.Value, editingTokenDescription,
                         new Vector2(row.Bounds.X + 4, row.Bounds.Y - font.LineSpacing), Color.LightGray);
+                    return;
+                case PanelRowKind.ConstellationStar:
+                    headerDropdown.Draw(sb, font, row.Bounds, row.Label, constellationStarDropdownOpen, expandable: true);
                     return;
                 case PanelRowKind.Costs:
                 case PanelRowKind.Effects:
@@ -126,6 +130,24 @@ namespace SkillTreeCreationTool
                 bool selected = resourceOptions[i] == newToken.ResourceCosts[resourceDropdownCostIndex].Resource;
                 sb.Draw(Drawing.Pixel, option, selected ? Color.DarkSlateGray : Color.Transparent);
                 sb.DrawString(font, resourceOptions[i], option.Location.ToVector2() + new Vector2(7, 0), Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, .98f);
+            }
+        }
+
+        private void DrawConstellationStarDropdown(SpriteBatch sb, SpriteFont font, PanelLayout layout)
+        {
+            if (!constellationStarDropdownOpen || constellationStarOptions.Count == 0)
+                return;
+
+            Rectangle bounds = layout.GetConstellationStarDropdownBounds(constellationStarOptions.Count);
+            sb.Draw(Drawing.Pixel, bounds, Color.Black * .95f);
+            sb.DrawRect(bounds, 1, Color.White * .5f);
+            for (int i = 0; i < constellationStarOptions.Count; i++)
+            {
+                Rectangle option = new Rectangle(bounds.X, bounds.Y + i * EffectFieldHeight, bounds.Width, EffectFieldHeight);
+                bool selected = constellationStarOptions[i] == newToken.ConstellationStar;
+                sb.Draw(Drawing.Pixel, option, selected ? Color.DarkSlateGray : Color.Transparent);
+                sb.DrawString(font, constellationStarOptions[i], option.Location.ToVector2() + new Vector2(7, 0), Color.White,
+                    0, Vector2.Zero, 1f, SpriteEffects.None, .98f);
             }
         }
 

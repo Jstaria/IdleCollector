@@ -2,7 +2,7 @@
   "GridSpacing": 16,
   "IconSize": 60,
   "DefaultIcon": "back10",
-  "TokenID": 43,
+  "TokenID": 44,
   "treeTokens": {
     "0": {
       "IconLayers": [
@@ -18,6 +18,7 @@
           }
         }
       ],
+      "ConstellationStar": "star1",
       "Description": "",
       "PortalSize": 32,
       "Depth": 0,
@@ -38,7 +39,7 @@
         }
       ],
       "Effects": [],
-      "IsCollected": false,
+      "IsCollected": true,
       "IsCollectable": true
     },
     "1": {
@@ -55,6 +56,7 @@
           }
         }
       ],
+      "ConstellationStar": "star1",
       "Description": "",
       "PortalSize": 32,
       "Depth": 0,
@@ -87,6 +89,7 @@
           }
         }
       ],
+      "ConstellationStar": "star1",
       "Description": "",
       "PortalSize": 32,
       "Depth": 0,
@@ -119,6 +122,7 @@
           }
         }
       ],
+      "ConstellationStar": "star1",
       "Description": "",
       "PortalSize": 32,
       "Depth": 0,
@@ -151,6 +155,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 1,
@@ -185,6 +190,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 1,
@@ -219,6 +225,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 1,
@@ -237,7 +244,7 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": true,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "7": {
       "IconLayers": [
@@ -253,6 +260,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 1,
@@ -271,7 +279,7 @@
       "ResourceCosts": [],
       "Effects": [],
       "IsCollected": true,
-      "IsCollectable": false
+      "IsCollectable": true
     },
     "8": {
       "IconLayers": [
@@ -287,6 +295,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 1,
@@ -321,6 +330,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 1,
@@ -355,6 +365,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 1,
@@ -389,6 +400,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 1,
@@ -423,6 +435,7 @@
           }
         }
       ],
+      "ConstellationStar": "star4",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -455,6 +468,7 @@
           }
         }
       ],
+      "ConstellationStar": "star4",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -487,6 +501,7 @@
           }
         }
       ],
+      "ConstellationStar": "star4",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -519,6 +534,7 @@
           }
         }
       ],
+      "ConstellationStar": "star4",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -551,6 +567,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -584,6 +601,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 3,
@@ -617,6 +635,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -650,6 +669,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 3,
@@ -683,6 +703,7 @@
           }
         }
       ],
+      "ConstellationStar": "star4",
       "Description": "",
       "PortalSize": 32,
       "Depth": 4,
@@ -715,6 +736,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -748,6 +770,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 3,
@@ -781,6 +804,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -814,6 +838,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 3,
@@ -847,6 +872,7 @@
           }
         }
       ],
+      "ConstellationStar": "star4",
       "Description": "",
       "PortalSize": 32,
       "Depth": 4,
@@ -879,6 +905,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -912,6 +939,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 3,
@@ -945,6 +973,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -978,6 +1007,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 3,
@@ -1011,6 +1041,7 @@
           }
         }
       ],
+      "ConstellationStar": "star4",
       "Description": "",
       "PortalSize": 32,
       "Depth": 4,
@@ -1043,6 +1074,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -1076,6 +1108,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 3,
@@ -1109,6 +1142,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 2,
@@ -1142,6 +1176,7 @@
           }
         }
       ],
+      "ConstellationStar": "star",
       "Description": "",
       "PortalSize": 32,
       "Depth": 3,
@@ -1175,6 +1210,7 @@
           }
         }
       ],
+      "ConstellationStar": "star4",
       "Description": "",
       "PortalSize": 32,
       "Depth": 4,

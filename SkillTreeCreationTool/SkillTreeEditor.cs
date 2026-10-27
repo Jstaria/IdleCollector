@@ -34,6 +34,7 @@ namespace SkillTreeCreationTool
         private SkillTreeToken newToken;
         private readonly List<IconSelect> iconSelects = new();
         private readonly List<string> resourceOptions = new();
+        private readonly List<string> constellationStarOptions = new();
         private int scroll;
         private readonly HashSet<int> expandedEffects = new();
         private readonly SkillTreeEditorHeaderDropdown headerDropdown = new(string.Empty);
@@ -58,6 +59,7 @@ namespace SkillTreeCreationTool
         private string tintText = string.Empty;
         private bool replaceTintText;
         private bool editingTokenDescription;
+        private bool constellationStarDropdownOpen;
 
         private enum EffectField
         {
@@ -89,6 +91,7 @@ namespace SkillTreeCreationTool
             drawFunction = DrawPreview;
             updateFunction = UpdatePreview;
             LoadIcons();
+            LoadConstellationStarOptions();
             LoadResourceOptions();
         }
 

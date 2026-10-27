@@ -7,11 +7,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SkillTreeCreationTool
 {
@@ -26,6 +24,7 @@ namespace SkillTreeCreationTool
         private const float MinimumZoom = .5f;
         private const float MaximumZoom = 2f;
         private const float ZoomStep = .5f;
+        private const float ConstellationFadeStartZoom = 1f;
         private static readonly Point DescriptionBoxInset = new Point(24, 28);
         private static readonly Vector2 DescriptionTextPadding = new Vector2(12f, 10f);
         private static readonly Point UnlockButtonSize = new Point(48, 12);
@@ -47,6 +46,7 @@ namespace SkillTreeCreationTool
         [JsonIgnore] public LinkParticleSettings LinkParticleSettings { get; } = new();
         [JsonIgnore] private SkillTreeShockwave Shockwave { get; }
         [JsonIgnore] private readonly SkillTreeHoverHighlight hoverHighlight;
+        [JsonIgnore] private readonly SkillTreeConstellationGlow constellationGlow;
         [JsonIgnore] private readonly ParticleSystemGroup unlockParticles = new();
         [JsonIgnore] private readonly List<TokenUnlockWisp> unlockWisps = new();
         [JsonIgnore] private Vector2 unlockBurstPosition;
@@ -127,6 +127,8 @@ namespace SkillTreeCreationTool
                 token => GetWorldPosition(token.GridPosition).ToVector2() * zoom,
                 () => zoom, SkillTreeScene);
             Renderer.AddPostProcess("SkillTreeHoverHighlight", hoverHighlight);
+            constellationGlow = new SkillTreeConstellationGlow(DrawConstellationMask, GetConstellationGlowOpacity, SkillTreeScene);
+            Renderer.AddPostProcess("SkillTreeConstellationGlow", constellationGlow);
             Renderer.AddToSceneUIDraw(SkillTreeScene, DrawDescriptionUi);
             unlockButton = new Button(Game1.Instance, new ButtonConfig
             {
@@ -193,6 +195,7 @@ namespace SkillTreeCreationTool
 
         private void EnsureIconLayers(SkillTreeToken token)
         {
+            token.ConstellationStar ??= "star";
             token.IconLayers ??= new List<IconLayer>();
             if (token.IconLayers.Count == 0)
             {
@@ -233,7 +236,16 @@ namespace SkillTreeCreationTool
 
             foreach (SkillTreeToken token in treeTokens.Values)
                 if (unlockWisps.Count == 0 || token.IsUnlockElevated)
-                    token.DrawIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
+                {
+                    Vector2 position = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
+                    token.DrawConstellationIcon(sb, position, zoom);
+                }
+
+            foreach (SkillTreeToken token in treeTokens.Values)
+            {
+                Vector2 position = GetWorldPosition(token.GridPosition).ToVector2() * zoom;
+                token.DrawConstellationStar(sb, position, zoom, time);
+            }
 
         }
 
@@ -244,7 +256,7 @@ namespace SkillTreeCreationTool
 
             foreach (SkillTreeToken token in treeTokens.Values)
                 if (!token.IsUnlockElevated)
-                    token.DrawIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
+                    token.DrawConstellationIcon(sb, GetWorldPosition(token.GridPosition).ToVector2() * zoom, zoom);
 
             sb.End();
             Effect effect = ResourceAtlas.GetEffect("SkillTreeUnlockWisp");
@@ -327,6 +339,47 @@ namespace SkillTreeCreationTool
             }
         }
 
+        private float GetConstellationGlowOpacity()
+        {
+            return ShouldShowConstellation() && AreAllTokensUnlocked() ? 1f : 0f;
+        }
+
+        private bool AreAllTokensUnlocked()
+        {
+            return treeTokens.Count > 0 &&
+                treeTokens.Values.All(token => token.IsCollected);
+        }
+
+        private void UpdateConstellationFade()
+        {
+            bool shouldFade = ShouldShowConstellation() && AreAllTokensUnlocked();
+            foreach (SkillTreeToken token in treeTokens.Values)
+                token.SetConstellationFadeActive(shouldFade);
+        }
+
+        private bool ShouldShowConstellation()
+        {
+            return zoom < ConstellationFadeStartZoom &&
+                zoomTarget <= zoom;
+        }
+
+        private void DrawConstellationMask(SpriteBatch sb)
+        {
+            foreach (SkillTreeToken child in treeTokens.Values)
+            {
+                foreach (int parentId in child.ParentTokenIDs)
+                {
+                    if (!treeTokens.TryGetValue(parentId, out SkillTreeToken parent))
+                        continue;
+
+                    Vector2 start = GetWorldPosition(parent.GridPosition).ToVector2() * zoom;
+                    Vector2 end = GetWorldPosition(child.GridPosition).ToVector2() * zoom;
+                    sb.DrawLineCentered(start, end, Math.Max(1f, 1.5f * zoom), Color.White, .2f);
+                }
+            }
+
+        }
+
         private void UnlockSkill(int tokenId)
         {
             SkillTreeToken token = GetToken(tokenId);
@@ -402,8 +455,11 @@ namespace SkillTreeCreationTool
             }
             UpdateLinkParticles(gameTime);
 
+            if (!editing && Input.IsMouseInPresentationBounds)
+                zoomTarget -= Input.GetMouseScrollDelta() * ZoomStep;
             zoomTarget = Math.Clamp(MathF.Round(zoomTarget / ZoomStep) * ZoomStep, MinimumZoom, MaximumZoom);
             zoom = MathHelper.Lerp(zoom, zoomTarget, .25f);
+            UpdateConstellationFade();
 
             if (editing)
             {
@@ -445,8 +501,6 @@ namespace SkillTreeCreationTool
                     ResetSkillTree();
             }
 
-            if (Input.IsMouseInPresentationBounds)
-                zoomTarget = Math.Clamp(zoomTarget - Input.GetMouseScrollDelta() * ZoomStep, MinimumZoom, MaximumZoom);
         }
 
         private static Point GetCurrentCameraTargetPosition()

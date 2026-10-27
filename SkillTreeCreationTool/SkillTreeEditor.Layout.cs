@@ -10,7 +10,7 @@ namespace SkillTreeCreationTool
 {
     public partial class SkillTreeEditor
     {
-        private enum PanelRowKind { Description, Costs, Resource, CostAmount, Effects, Effect, EffectField, Layers, Layer, LayerTint }
+        private enum PanelRowKind { Description, ConstellationStar, Costs, Resource, CostAmount, Effects, Effect, EffectField, Layers, Layer, LayerTint }
 
         private readonly record struct PanelRow(PanelRowKind Kind, Rectangle Bounds, int Index = -1,
             EffectField Field = EffectField.None, string Label = "", string Value = "");
@@ -21,6 +21,12 @@ namespace SkillTreeCreationTool
             {
                 Rectangle resource = Rows.Find(row => row.Kind == PanelRowKind.Resource && row.Index == costIndex).Bounds;
                 return new Rectangle(resource.X, resource.Bottom, resource.Width, optionCount * EffectFieldHeight);
+            }
+
+            public Rectangle GetConstellationStarDropdownBounds(int optionCount)
+            {
+                Rectangle star = Rows.Find(row => row.Kind == PanelRowKind.ConstellationStar).Bounds;
+                return new Rectangle(star.X, star.Bottom, star.Width, optionCount * EffectFieldHeight);
             }
         }
 
@@ -54,6 +60,7 @@ namespace SkillTreeCreationTool
                     Math.Max(112, descriptionLines * font.LineSpacing + 16)), Label: "Desc", Value: description));
             y = rows[0].Bounds.Bottom + EffectFieldSpacing;
 
+            Header(PanelRowKind.ConstellationStar, $"Constellation Star: {newToken.ConstellationStar}");
             Header(PanelRowKind.Costs, "Costs");
             for (int i = 0; i < newToken.ResourceCosts.Count; i++)
             {

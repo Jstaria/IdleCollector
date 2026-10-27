@@ -32,6 +32,14 @@ namespace SkillTreeCreationTool
             }
         }
 
+        private void LoadConstellationStarOptions()
+        {
+            constellationStarOptions.AddRange(ResourceAtlas.TextureCache.Keys
+                .Where(key => key.StartsWith("star", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(key => key));
+
+        }
+
         private void UpdateEdit(GameTime gameTime)
         {
             ToggleHoveredToken();
