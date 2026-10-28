@@ -286,28 +286,17 @@ namespace IdleCollector
             Updater.AddToLateUpdate((gt) => { if (isPaused && SceneManager.CurrentSceneName != OptionsScene) optionsButton.StandardUpdate(gt); });
             Updater.AddToLateUpdate((gt) => { if (isPaused && SceneManager.CurrentSceneName != OptionsScene) menuButton.StandardUpdate(gt); });
 
-            Renderer.AddToSceneUIDraw(GameScene, (sb) =>
-            {
-                PauseText.Update(1 / 60.0f);
-
-                if (isPaused)
-                {
-                    sb.Draw(ResourceAtlas.GetTexture("pauseBlock"), new Rectangle(0, 1080 - 400, 1920, 300), Color.Black * .25f);
-
-                    PauseText.Draw();
-                    optionsButton.Draw(sb);
-                    menuButton.Draw(sb);
-                    resumeButton.Draw(sb);
-                }
-            });
+            Renderer.AddToSceneUIDraw(GameScene, DrawPauseMenu);
+            Renderer.AddToSceneUIDraw(Game1.TestSceneName, DrawPauseMenu);
 
             #endregion
 
             Updater.AddToUpdate(UpdateType.Standard, (gameTime) =>
             {
-                if (Input.IsButtonDownOnce(Keys.Escape) && SceneManager.CurrentSceneName != Game1.MainScene && SceneManager.CurrentSceneName != OptionsScene)
+                if (Input.IsButtonDownOnce(Keys.Escape) && SceneManager.CurrentSceneName != Game1.MainScene &&
+                    SceneManager.CurrentSceneName != OptionsScene)
                 {
-                    if (SceneManager.CurrentSceneName != GameScene)
+                    if (SceneManager.CurrentSceneName != GameScene && SceneManager.CurrentSceneName != Game1.TestSceneName)
                     {
                         SceneManager.SwapScene(GameScene);
                     }
@@ -321,6 +310,20 @@ namespace IdleCollector
                     OnIsPaused?.Invoke(isPaused);
                 }
             });
+        }
+
+        private void DrawPauseMenu(SpriteBatch spriteBatch)
+        {
+            PauseText.Update(1 / 60.0f);
+
+            if (!isPaused)
+                return;
+
+            spriteBatch.Draw(ResourceAtlas.GetTexture("pauseBlock"), new Rectangle(0, 1080 - 400, 1920, 300), Color.Black * .25f);
+            PauseText.Draw();
+            optionsButton.Draw(spriteBatch);
+            menuButton.Draw(spriteBatch);
+            resumeButton.Draw(spriteBatch);
         }
 
         private void SetupResources()

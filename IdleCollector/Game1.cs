@@ -26,8 +26,10 @@ namespace IdleCollector
 
         int count = 0;
         private Button button;
+        private Button testSceneButton;
         private GameManager _gameManager;
         public static string MainScene = "Main Scene";
+        public static string TestSceneName = "Test Scene";
         public static float time;
 
         public Game1()
@@ -99,10 +101,16 @@ namespace IdleCollector
                     Renderer.ToggleFullScreen();
             });
 
+            SetupTestScene();
             _gameManager = new GameManager();
-
             LoadButtons();
             LoadEffects();
+        }
+
+        private void SetupTestScene()
+        {
+            SceneManager.AddScene(TestSceneName);
+            SceneManager.AddToScene(TestSceneName, new TestScene());
         }
 
         protected void LoadButtons()
@@ -122,6 +130,20 @@ namespace IdleCollector
 
             Updater.AddToSceneUpdate(button);
             Renderer.AddToSceneUIDraw(button);
+
+            ButtonConfig testConfig = new ButtonConfig
+            {
+                bounds = new Rectangle(10 * Renderer.UIScaler.X, 125 * Renderer.UIScaler.Y,
+                    192 * Renderer.UIScaler.X, 32 * Renderer.UIScaler.Y),
+                texts = new[] { "Test Scene", "<fx 0,0,0,0,1>></fx> Test Scene <fx 0,0,0,0,2><</fx>" },
+                font = "DePixelHalbfettTitle",
+                fontColor = Color.Black,
+                shadowColor = Color.Black * .45f
+            };
+            testSceneButton = new Button(Game1.Instance, testConfig);
+            testSceneButton.OnClick += () => SceneManager.SwapScene(TestSceneName);
+            Updater.AddToSceneUpdate(testSceneButton);
+            Renderer.AddToSceneUIDraw(testSceneButton);
 
             SceneManager.SwapScene(MainScene);
         }

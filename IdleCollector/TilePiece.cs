@@ -86,6 +86,30 @@ namespace IdleCollector
             }
         }
 
+        public void FillWithGrass(Rectangle worldBounds)
+        {
+            foreach (InnerTile tile in innerTiles)
+            {
+                tile.ActivationsLeft = 0;
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector2 position = RandomHelper.Instance.GetVector2(tile.Collider.Bounds);
+                    Grass grass = new Grass
+                    {
+                        Position = position,
+                        Bounds = new Rectangle(position.ToPoint(), ResourceAtlas.GetRandomTileRect("grass").Size),
+                        CollisionType = CollisionType.Circle,
+                        Radius = 8,
+                        WorldDepth = worldBounds.Top,
+                        WorldHeight = worldBounds.Height
+                    };
+                    grass.ApplyColor(Color);
+                    grass.DrawColor = grass.Color;
+                    tile.Add(grass);
+                }
+            }
+        }
+
         public bool SpawnFlora(Entity entity, Rectangle worldBounds)
         {
             bool affectedTile = false;
