@@ -35,6 +35,8 @@ namespace IdleEngine
 
         public string ParticleText;
         public SpriteFont Font;
+        public Color TextShadowColor;
+        public Vector2? TextShadowOffset;
     }
 
     internal class Particle: IRenderable, IUpdatable
@@ -50,6 +52,7 @@ namespace IdleEngine
         private float rotationAngle;
         private Trail trail;
         private Color currentColor;
+        private readonly CustomText text;
 
         public float LifeSpan { get => lifeSpan; }
         public float LayerDepth { get; set; }
@@ -63,6 +66,18 @@ namespace IdleEngine
 
             if (stats.TextureKey != null && stats.TextureKey != "")
                 texture = ResourceAtlas.GetTexture(stats.TextureKey);
+
+            if (stats.Font != null && stats.ParticleText != null)
+            {
+                Vector2 dimension = Vector2.Max(Vector2.One, stats.Font.MeasureString(stats.ParticleText));
+                text = new CustomText(stats.Font, stats.ParticleText, Vector2.Zero, dimension, allowOverflow: true)
+                {
+                    CenterText = true,
+                    ShadowColor = stats.TextShadowColor,
+                    ShadowOffset = stats.TextShadowOffset ?? new Vector2(-4f, 4f)
+                };
+                text.Refresh();
+            }
             
             Reset();
         }
@@ -71,20 +86,18 @@ namespace IdleEngine
         {
             trail?.Draw(sb);
 
-            if (stats.Font == null)
-                DrawAsset(sb); 
-            else if (texture == null)
-                DrawString(sb);
-            else
-            {
+            if (texture != null)
                 DrawAsset(sb);
+            if (text != null)
                 DrawString(sb);
-            }
         }
 
         private void DrawString(SpriteBatch sb)
         {
-            sb.DrawString(stats.Font, stats.ParticleText, position, Color.Black * LifeSpan, 0, stats.Font.MeasureString(stats.ParticleText) / 2, size, SpriteEffects.None, stats.LayerDepth.Invoke());
+            text.Color = currentColor;
+            text.ShadowColor = stats.TextShadowColor * (currentColor.A / 255f);
+            text.LayerDepth = stats.LayerDepth?.Invoke() ?? LayerDepth;
+            text.Draw(sb, position, rotationAngle, size);
         }
 
         private void DrawAsset(SpriteBatch sb)
@@ -109,12 +122,13 @@ namespace IdleEngine
         {
             float t = 1 - lifeSpan / stats.Lifespan;
 
-            size = stats.SizeDecayRate(t) * stats.Size;
+            size = (stats.SizeDecayRate?.Invoke(t) ?? 1f) * stats.Size;
 
-            colorDecay = stats.ColorDecayRate(t);
+            colorDecay = stats.ColorDecayRate?.Invoke(t) ?? t;
             currentColor = Color.Lerp(stats.StartColor, stats.EndColor, colorDecay);
 
-            rotationAngle += stats.RotationSpeed(t);
+            rotationAngle += stats.RotationSpeed?.Invoke(t) ?? 0f;
+            text?.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             trail?.StandardUpdate(gameTime);
         }
 
@@ -130,6 +144,7 @@ namespace IdleEngine
             velocity = stats.StartingVelocity;
             rotationAngle = stats.Rotation;
             currentColor = stats.StartColor;
+            size = stats.Size;
             CreateTrail();
         }
 

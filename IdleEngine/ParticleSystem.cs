@@ -50,7 +50,10 @@ namespace IdleEngine
         public bool ResetParticlesAfterDeath;
 
         public SpriteFont Font;
+        public string FontName;
         public string ParticleText;
+        public Color TextShadowColor;
+        public Vector2? TextShadowOffset;
 
         public Curve ParticleColorDecayRate;
         public Curve ParticleSizeDecayRate;
@@ -65,7 +68,7 @@ namespace IdleEngine
         private Rectangle[][] bounds;
         private int boundsInd;
         private float emitWaitTime;
-        private float boundsScale;
+        private float boundsScale = 1f;
 
         public ParticleSystemStats Stats { get => stats; set => stats = value; }
 
@@ -169,7 +172,7 @@ namespace IdleEngine
             }
         }
 
-        private void EmitParticle()
+        private void EmitParticle(string text = null, bool textOnly = false)
         {
             emitWaitTime = stats.EmitRate.Length == 1
                 ? stats.EmitRate[0]
@@ -181,7 +184,7 @@ namespace IdleEngine
 
             for (int i = 0; i < count; i++)
             {
-                ParticleStats particleStats = new ParticleStats();
+                ParticleStats particleStats = new ParticleStats { Size = 1f };
 
                 particleStats.ColorDecayRate = stats.ParticleColorDecayRate;
                 particleStats.SizeDecayRate = stats.ParticleSizeDecayRate;
@@ -215,7 +218,7 @@ namespace IdleEngine
                     return GetSpawnPosition(bounds[ind][ind2]);
                 };
 
-                if (stats.ParticleTextureKeys != null)
+                if (!textOnly && stats.ParticleTextureKeys != null)
                     particleStats.TextureKey =
                         stats.ParticleTextureKeys[
                             RandomHelper.Instance.GetIntExclusive(
@@ -252,8 +255,10 @@ namespace IdleEngine
                         );
 
                 particleStats.ActingForce = stats.ActingForce;
-                particleStats.Font = stats.Font;
-                particleStats.ParticleText = stats.ParticleText;
+                particleStats.Font = stats.Font ?? (stats.FontName != null ? ResourceAtlas.GetFont(stats.FontName) : null);
+                particleStats.ParticleText = text ?? stats.ParticleText;
+                particleStats.TextShadowColor = stats.TextShadowColor;
+                particleStats.TextShadowOffset = stats.TextShadowOffset;
 
                 if (stats.ParticleRotation != null)
                     particleStats.Rotation = stats.ParticleRotation.Length == 1
@@ -405,6 +410,16 @@ namespace IdleEngine
         {
             UpdateBounds();
             EmitParticle();
+        }
+
+        public void EmitText(string text)
+        {
+            ArgumentNullException.ThrowIfNull(text);
+            if (stats.Font == null && string.IsNullOrWhiteSpace(stats.FontName))
+                throw new InvalidOperationException("Text particles require Font or FontName in ParticleSystemStats.");
+
+            UpdateBounds();
+            EmitParticle(text, textOnly: true);
         }
 
         public void SetCurrentSpawnBounds(int ind) => stats.CurrentBounds = ind;

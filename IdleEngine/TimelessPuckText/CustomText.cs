@@ -28,6 +28,10 @@ public class CustomText
     private int _currentLineIdx;
     private bool _allowOverflow;
     private int _startingLineIdx;
+    private SpriteBatch _drawBatch;
+    private Matrix _drawTransform = Matrix.Identity;
+    private float _drawRotation;
+    private float _drawScale = 1f;
 
     #region Properties
 
@@ -106,10 +110,17 @@ public class CustomText
 
     public CustomText(Game game, string fontName, string text, Vector2 position, Vector2 dimension, Vector2 offset = default, Vector2 padding = default,
         Vector2? scale = null, Color? color = null, Color? shadowColor = null, Vector2? shadowOffset = null, bool allowOverflow = false)
+        : this(game != null ? game.Content.Load<SpriteFont>(fontName) : ResourceAtlas.GetFont(Path.GetFileNameWithoutExtension(fontName)),
+            text, position, dimension, offset, padding, scale, color, shadowColor, shadowOffset, allowOverflow,
+            game?.Services.GetService<SpriteBatch>() ?? Drawing.SpriteBatch)
     {
-        Font = game != null
-            ? game.Content.Load<SpriteFont>(fontName)
-            : ResourceAtlas.GetFont(Path.GetFileNameWithoutExtension(fontName));
+    }
+
+    public CustomText(SpriteFont font, string text, Vector2 position, Vector2 dimension, Vector2 offset = default, Vector2 padding = default,
+        Vector2? scale = null, Color? color = null, Color? shadowColor = null, Vector2? shadowOffset = null, bool allowOverflow = false,
+        SpriteBatch spriteBatch = null)
+    {
+        Font = font ?? throw new ArgumentNullException(nameof(font));
         ShadowColor = shadowColor ?? Color.Transparent;
         ShadowOffset = shadowOffset ?? new(-4f, 4f);
         Color = color ?? Color.White;
@@ -122,7 +133,7 @@ public class CustomText
         Scale = scale ?? Vector2.One;
 
         _lineHeight = Font.MeasureString(" ").Y;
-        _spriteBatch = game?.Services.GetService<SpriteBatch>() ?? Drawing.SpriteBatch;
+        _spriteBatch = spriteBatch ?? Drawing.SpriteBatch;
     }
 
     #region Private methods
@@ -407,11 +418,14 @@ public class CustomText
 
     private void DrawString(string text, Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Color? shadowColor = null)
     {
+        SpriteBatch spriteBatch = _drawBatch ?? _spriteBatch;
         // Draw text shadow.
         if (ShadowColor != Color.Transparent)
-            _spriteBatch.DrawString(Font, text, position + ShadowOffset + Offset, shadowColor ?? ShadowColor, rotation, origin, 1f, SpriteEffects.None, LayerDepth);
+            spriteBatch.DrawString(Font, text, Vector2.Transform(position + ShadowOffset + Offset, _drawTransform),
+                shadowColor ?? ShadowColor, rotation + _drawRotation, origin, _drawScale, SpriteEffects.None, LayerDepth);
 
-        _spriteBatch.DrawString(Font, text, position + Offset, color, rotation, origin, 1f, SpriteEffects.None, Math.Min(1f, LayerDepth + 0.01f));
+        spriteBatch.DrawString(Font, text, Vector2.Transform(position + Offset, _drawTransform),
+            color, rotation + _drawRotation, origin, _drawScale, SpriteEffects.None, Math.Min(1f, LayerDepth + 0.01f));
     }
 
     private Vector2 DrawLines(string[] lines, Vector2 nextCharPos, FxText fxText = null)
@@ -500,6 +514,30 @@ public class CustomText
             fxText.Update(deltaTime);
 
         _time = (_time + deltaTime) % 3600f;
+    }
+
+    public void Draw(SpriteBatch spriteBatch, Vector2 position, float rotation, float scale)
+    {
+        ArgumentNullException.ThrowIfNull(spriteBatch);
+        // Transform the laid-out text around its center without changing the caller's SpriteBatch state.
+        _drawBatch = spriteBatch;
+        _drawRotation = rotation;
+        _drawScale = scale;
+        _drawTransform = Matrix.CreateTranslation(-(Position + Dimension * Scale / 2f).X,
+                -(Position + Dimension * Scale / 2f).Y, 0f)
+            * Matrix.CreateScale(scale) * Matrix.CreateRotationZ(rotation)
+            * Matrix.CreateTranslation(position.X, position.Y, 0f);
+        try
+        {
+            Draw();
+        }
+        finally
+        {
+            _drawBatch = null;
+            _drawTransform = Matrix.Identity;
+            _drawRotation = 0f;
+            _drawScale = 1f;
+        }
     }
 
     public void Refresh()
