@@ -110,7 +110,9 @@ namespace IdleCollector
         public Vector2 Position { get; set; }
         
         [JsonIgnore]
-        private ParticleSystem resourceCollectParticles;
+        private ParticleSystemGroup resourceCollectParticles;
+        [JsonIgnore]
+        private ParticleSystem resourceCollectTextParticles;
         [JsonIgnore]
         private Vector2 particleSpawnPos;
         private Color particleColor;
@@ -205,10 +207,18 @@ namespace IdleCollector
             {
                 particleSpawnPos = Renderer.GetScreenPosition(worldPosition);
                 particleColor = Color.White;//resources[info.Name].ResourceColor;
-                ParticleSystemStats stats = resourceCollectParticles.Stats;
-                stats.ParticleStartColor = new Color[] { particleColor };
-                resourceCollectParticles.Stats = stats;
-                resourceCollectParticles.EmitParticles();
+                foreach (ParticleSystem system in resourceCollectParticles.Systems)
+                {
+                    if (system == resourceCollectTextParticles)
+                        continue;
+
+                    ParticleSystemStats stats = system.Stats;
+                    stats.ParticleStartColor = new Color[] { particleColor };
+                    system.Stats = stats;
+                    system.EmitParticles();
+                }
+                string countText = info.Count.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                resourceCollectTextParticles.EmitText("+" + countText, resources[info.Name].ResourceColor);
 
                 TrailInfo trailInfo = resources[info.Name].trailInfo;
                 trailInfo.SegmentColor = (t) => Color.Lerp(Color.White, resources[info.Name].ResourceColor, MathF.Pow(obj.T, 2));
@@ -293,7 +303,57 @@ namespace IdleCollector
 
             stats.StartingVelocity = new Vector2[] { Vector2.One, -Vector2.One };
 
-            resourceCollectParticles = new ParticleSystem(stats);
+            resourceCollectParticles = new ParticleSystemGroup();
+            resourceCollectParticles.Add(stats);
+
+            ParticleSystemStats starStats = new ParticleSystemStats
+            {
+                ParticleTextureKeys = new[] { "star" },
+                TrackPosition = () => particleSpawnPos,
+                TrackLayerDepth = () => .95f,
+                SpawnBounds = new[] { new[] { new Rectangle(0, 0, 1, 1) } },
+                StartingVelocity = new[] { Vector2.Zero },
+                ActingForce = _ => Vector2.Zero,
+                ParticleSpeed = new[] { 0f },
+                ParticleLifeSpan = new[] { .15f },
+                ParticleDespawnDistance = 2000f,
+                ParticleRotation = new[] { 0f, MathHelper.PiOver2 },
+                ParticleRotationSpeed = _ => 0f,
+                ParticleSize = new[] { 1.5f, 2f },
+                ParticleSizeDecayRate = age => 1f + .35f * age,
+                ParticleStartColor = new[] { Color.White },
+                ParticleEndColor = new[] { Color.Transparent },
+                ParticleColorDecayRate = age => MathHelper.SmoothStep(0f, 1f, age),
+                EmitRate = new[] { 0f },
+                EmitCount = new[] { 2 },
+                MaxParticleCount = 300,
+                ResetParticlesAfterDeath = false
+            };
+            resourceCollectParticles.Add(starStats);
+
+            resourceCollectTextParticles = resourceCollectParticles.Add(new ParticleSystemStats
+            {
+                FontName = UIFontKey,
+                TextShadowColor = Color.Black,
+                TextShadowOffset = new Vector2(3f, 3f),
+                TrackPosition = () => particleSpawnPos,
+                TrackLayerDepth = () => .96f,
+                SpawnBounds = new[] { new[] { new Rectangle(-16, -16, 32, 32) } },
+                StartingVelocity = new[] { new Vector2(-.2f, -1f), new Vector2(.2f, -1.5f) },
+                ParticleSpeed = new[] { 2f },
+                ParticleLifeSpan = new[] { .8f },
+                ParticleDespawnDistance = 2000f,
+                ParticleRotation = new[] { MathHelper.ToRadians(-8f), MathHelper.ToRadians(8f) },
+                ParticleSize = new[] { .66f, 1.10f },
+                ParticleSizeDecayRate = _ => 1f,
+                ParticleStartColor = new[] { Color.White },
+                ParticleEndColor = new[] { Color.Transparent },
+                ParticleColorDecayRate = age => MathHelper.Clamp((age - .5f) * 2f, 0f, 1f),
+                EmitRate = new[] { 0f },
+                EmitCount = new[] { 1 },
+                MaxParticleCount = 300,
+                ResetParticlesAfterDeath = false
+            });
 
             uiObjs = new();
             for (int i = 0; i < resources.Values.Count; i++)

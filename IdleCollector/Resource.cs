@@ -99,7 +99,7 @@ namespace IdleCollector
             int size = (int)(32 * (((offset.Y + floatDistance) / MathF.Pow(floatDistance, 2.25f))));
             sb.Draw(beamTex, new Rectangle((Position + offset).ToPoint(), new Point(8, (int)(50 /** (offset.Y + floatDistance) / 2*/))), null, info.ResourceColor * positiveSin, 0, new Vector2(4, 100), SpriteEffects.None, LayerDepth - .001f);
             sb.Draw(ResourceAtlas.TilemapAtlas, Position + offset, drawRect, Color.White, 0, frameSize.ToVector2() / 2, this.size, SpriteEffects.None, LayerDepth);
-            sb.Draw(shadowTex, new Rectangle(Position.ToPoint() + (Vector2.UnitY * floatDistance * 2).ToPoint(), new Point(size,size)), null, Color.White, 0, new Vector2(32, 32), SpriteEffects.None, LayerDepth);
+            sb.Draw(shadowTex, new Rectangle(Position.ToPoint() + (Vector2.UnitY * floatDistance * 2).ToPoint(), new Point(size,size)), null, Color.White, 0, new Vector2(32, 42), SpriteEffects.None, LayerDepth);
         }
 
         public void OnPlayerWalk(Entity entity)

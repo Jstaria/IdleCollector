@@ -17,6 +17,8 @@ namespace IdleCollector
         private float despawnTimer = .25f;
         private float t;
         private Trail objectTrail;
+        private readonly Texture2D starTexture;
+        private readonly float starRotation;
         private Vector2 position;
         private BezierCurve path;
         private float randomModifier;
@@ -34,6 +36,8 @@ namespace IdleCollector
             totalTime = timeToUI;
             timer = 0f;
             position = pos;
+            starTexture = ResourceAtlas.GetTexture("star");
+            starRotation = RandomHelper.Instance.GetFloat(0f, MathHelper.TwoPi);
             this.LayerDepth = layerDepth;
             this.randomModifier = randomModifier;
             CreatePath(pos, endPos);
@@ -46,9 +50,13 @@ namespace IdleCollector
         {
             float tMax = .999f;
             t = MathHelper.Clamp(timer / totalTime, 0, tMax);
-            if (objectTrail == null) OnDespawn(this);
+            if (objectTrail == null)
+            {
+                OnDespawn(this);
+                return;
+            }
 
-                position = path.GetPointAlongCurve(t);
+            position = path.GetPointAlongCurve(t);
             objectTrail?.ControlledUpdate(gameTime);
 
             if (t == tMax)
@@ -63,6 +71,12 @@ namespace IdleCollector
         public void Draw(SpriteBatch sb)
         {
             objectTrail?.Draw(sb);
+            if (objectTrail == null)
+                return;
+
+            float opacity = MathHelper.Clamp(despawnTimer / .25f, 0f, 1f);
+            sb.Draw(starTexture, position, null, Color.White * opacity, starRotation,
+                starTexture.Bounds.Size.ToVector2() / 2f, 1.2f, SpriteEffects.None, LayerDepth);
         }
 
         private void CreatePath(Vector2 pos, Vector2 endPos)

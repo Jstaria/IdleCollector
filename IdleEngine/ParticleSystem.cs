@@ -172,7 +172,7 @@ namespace IdleEngine
             }
         }
 
-        private void EmitParticle(string text = null, bool textOnly = false)
+        private void EmitParticle(string text = null, bool textOnly = false, Color? textColor = null)
         {
             emitWaitTime = stats.EmitRate.Length == 1
                 ? stats.EmitRate[0]
@@ -203,6 +203,9 @@ namespace IdleEngine
                         stats.ParticleEndColor[0],
                         stats.ParticleEndColor[1]
                     );
+
+                if (textColor.HasValue)
+                    particleStats.StartColor = textColor.Value;
 
                 particleStats.Position += () =>
                 {
@@ -412,14 +415,14 @@ namespace IdleEngine
             EmitParticle();
         }
 
-        public void EmitText(string text)
+        public void EmitText(string text, Color? color = null)
         {
             ArgumentNullException.ThrowIfNull(text);
             if (stats.Font == null && string.IsNullOrWhiteSpace(stats.FontName))
                 throw new InvalidOperationException("Text particles require Font or FontName in ParticleSystemStats.");
 
             UpdateBounds();
-            EmitParticle(text, textOnly: true);
+            EmitParticle(text, textOnly: true, textColor: color);
         }
 
         public void SetCurrentSpawnBounds(int ind) => stats.CurrentBounds = ind;

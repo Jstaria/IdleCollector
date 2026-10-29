@@ -45,12 +45,12 @@ namespace IdleCollector
                 TrackPosition = () => new Vector2(160, 135),
                 TrackLayerDepth = () => .9f,
                 SpawnBounds = new[] { new[] { new Rectangle(-4, -2, 8, 4) } },
-                StartingVelocity = new[] { new Vector2(-.35f, -1.8f), new Vector2(.35f, -2.2f) },
+                StartingVelocity = new[] { new Vector2(-.5f, -1.8f), new Vector2(.5f, -2.2f) },
                 ActingForce = _ => new Vector2(0f, .05f),
                 ParticleSpeed = new[] { 1f },
                 ParticleLifeSpan = new[] { 1.6f },
                 ParticleDespawnDistance = 500f,
-                ParticleRotation = new[] { MathHelper.ToRadians(-12f), MathHelper.ToRadians(12f) },
+                ParticleRotation = new[] { MathHelper.ToRadians(-20f), MathHelper.ToRadians(20f) },
                 ParticleSize = new[] { .35f },
                 ParticleSizeDecayRate = _ => 1f,
                 ParticleStartColor = new[] { Color.White },
@@ -61,6 +61,18 @@ namespace IdleCollector
                 MaxParticleCount = 10,
                 ResetParticlesAfterDeath = false
             });
+
+            // GameManager initializes the shared resource manager after this scene is constructed.
+            Updater.AddToSceneEnter(Game1.TestSceneName, () =>
+                ResourceManager.Instance.MoveTo(new Vector2(20, Renderer.UIBounds.Height - 20)));
+            Updater.AddToSceneUpdate(Game1.TestSceneName, UpdateType.Controlled,
+                gameTime => ResourceManager.Instance.ControlledUpdate(gameTime));
+            Updater.AddToSceneUpdate(Game1.TestSceneName, UpdateType.Standard,
+                gameTime => ResourceManager.Instance.StandardUpdate(gameTime));
+            Updater.AddToSceneUpdate(Game1.TestSceneName, UpdateType.Slow,
+                gameTime => ResourceManager.Instance.SlowUpdate(gameTime));
+            Renderer.AddToSceneUIDraw(Game1.TestSceneName,
+                spriteBatch => ResourceManager.Instance.Draw(spriteBatch));
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -94,7 +106,7 @@ namespace IdleCollector
             {
                 textEmitTimer -= TextEmitInterval;
                 string countText = (++textCount).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                textParticles.EmitText($"<fx 1,1,0,0,0>{countText}</fx>");
+                textParticles.EmitText($"<fx 0,0,0,0,0>{countText}</fx>");
             }
         }
 
@@ -113,6 +125,7 @@ namespace IdleCollector
         private readonly List<TilePiece> tiles = new();
         private readonly WindManager windManager = new();
         private readonly FastNoiseLite noise = new(1);
+        private Cactus cactus;
 
         public float LayerDepth { get; set; }
         public Color Color { get; set; } = Color.White;
@@ -121,6 +134,24 @@ namespace IdleCollector
         {
             noise.SetFrequency(.002f);
             noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+
+            Updater.AddToSceneEnter(Game1.TestSceneName, () =>
+            {
+                if (cactus != null)
+                    return;
+
+                cactus = new Cactus
+                {
+                    Position = new Vector2(240, 80),
+                    CollisionType = CollisionType.Circle,
+                    Radius = 8,
+                    WorldDepth = worldBounds.Top,
+                    WorldHeight = worldBounds.Height,
+                    Color = Color.White,
+                    DrawColor = Color.White
+                };
+                cactus.Bounds = new Rectangle(cactus.Position.ToPoint(), cactus.Bounds.Size);
+            });
 
             for (int y = 0; y < PlotWidth; y++)
             {
@@ -143,6 +174,7 @@ namespace IdleCollector
             {
                 tile.CheckInteractables(entity);
             }
+            cactus?.InteractWith(entity);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -152,12 +184,14 @@ namespace IdleCollector
                 tile.DrawTile(spriteBatch);
                 tile.Draw(spriteBatch);
             }
+            cactus?.Draw(spriteBatch);
         }
 
         public void ControlledUpdate(GameTime gameTime)
         {
             foreach (TilePiece tile in tiles)
                 tile.ControlledUpdate(gameTime);
+            cactus?.ControlledUpdate(gameTime);
         }
 
         public void StandardUpdate(GameTime gameTime)
@@ -167,6 +201,8 @@ namespace IdleCollector
                 tile.ApplyWind(windManager.TotalWindMovement, noise);
                 tile.StandardUpdate(gameTime);
             }
+            cactus?.ApplyWind(windManager.TotalWindMovement, noise);
+            cactus?.StandardUpdate(gameTime);
         }
 
         public void SlowUpdate(GameTime gameTime)
@@ -174,6 +210,7 @@ namespace IdleCollector
             windManager.SlowUpdate(gameTime);
             foreach (TilePiece tile in tiles)
                 tile.SlowUpdate(gameTime);
+            cactus?.SlowUpdate(gameTime);
         }
     }
 }
